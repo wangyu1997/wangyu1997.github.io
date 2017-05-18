@@ -3,21 +3,6 @@
   
     
     <entry>
-      <title><![CDATA[test]]></title>
-      <url>/2017/05/19/test/</url>
-      <content type="html"><![CDATA[<p>测试测试测试测试</p>
-]]></content>
-      
-        <categories>
-            
-            <category> machine learning </category>
-            
-        </categories>
-        
-        
-    </entry>
-    
-    <entry>
       <title><![CDATA[MathJax]]></title>
       <url>/2017/05/18/math/</url>
       <content type="html"><![CDATA[<p>#常用数学符号的 LaTeX 表示方法</p>

@@ -114,7 +114,7 @@
       <url>/2017/05/18/math/</url>
       <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>对LaTex基本用法的学习<br><a id="more"></a></p>
 <p>#常用数学符号的 LaTeX 表示方法<br>１、指数和下标可以用 ^ 和 _ 后加相应字符来实现。比如：</p>
-<p><img src="https://oq5d32gij.bkt.clouddn.com/foot.gif" alt="foot"></p>
+<p><img src="http://oq5d32gij.bkt.clouddn.com/foot.gif" alt="foot"></p>
 <p>2、平方根（square root）的输入命令为：\sqrt，n 次方根相应地为: \sqrt[n]。方根符号的大小由LATEX自动加以调整。也可用\surd 仅给出<br>符号。比如：</p>
 <p><img src="http://oq5d32gij.bkt.clouddn.com/sqrt.gif" alt="sqrt"></p>
 <p>3、命令\overline 和\underline 在表达式的上、下方画出水平线。比如：</p>

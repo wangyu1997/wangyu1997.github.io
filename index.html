@@ -418,11 +418,7 @@
 <p>4、命令\overbrace 和\underbrace 在表达式的上、下方给出一水平的大括号。</p>
 <p><img src="http://oq5d32gij.bkt.clouddn.com/brace.gif" alt="brace"></p>
 <p>5、向量（Vectors）通常用上方有小箭头（arrow symbols）的变量表示。这可由\vec 得到。另两个命令\overrightarrow 和\overleftarrow在定义从A 到B 的向量时非常有用。</p>
-<p><img src="http://oq5d32gij.bkt.clouddn.com/vec.gif" alt="ve"></p>
-<p>6、分数（fraction）使用\frac{…}{…} 排版。一般来说，1/2 这种形式更受欢迎，因为对于少量的分式，它看起来更好些。</p>
-<p><img src="http://oq5d32gij.bkt.clouddn.com/frac.gif" alt="fra"></p>
-<p>7、积分运算符（integral operator）用\int 来生成。求和运算符（sum operator）由\sum 生成。乘积运算符（product operator）由\prod 生成。上限和下限用^ 和_来生成，类似于上标和下标。</p>
-<p><img src="http://oq5d32gij.bkt.clouddn.com/int.gif" alt="int"></p>
+<p><img src="http://oq5d32gij.bkt.clouddn.com/vec.gif" alt="ve"><br>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2017/05/18/math/#more" rel="contents">
@@ -572,7 +568,7 @@
       
         
           
-          12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788//  jokeCell.m//  MyLaugh////  Created by wangyu on 14/05/2017.//  Copyright © 2017 wangyu. All rights reserved.//#import "jokeCell.h"#define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width@implementation jokeCell&#123;    UILabel *_titleLabel;    UILabel *_contentLabel;    UILabel *_updatetimeLabel;&#125;-(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier&#123;    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];    _titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,5,SCREEN_WIDTH,21)];    _titleLabel.backgroundColor = [UIColor clearColor];    _titleLabel.textAlignment = NSTextAlignmentCenter;    _titleLabel.textColor = [UIColor purpleColor];    _titleLabel.font = [UIFont italicSystemFontOfSize:17];    _contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 30, SCREEN_WIDTH, 21)];    _contentLabel.backgroundColor = [UIColor clearColor];    _contentLabel.numberOfLines = 0;    _updatetimeLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 30, SCREEN_WIDTH, 21)];    _updatetimeLabel.textAlignment = NSTextAlignmentRight;    self.selectionStyle = UITableViewCellSelectionStyleNone;    return self;&#125;- (void)layoutSubviews&#123;    [super layoutSubviews];    [self.contentView addSubview:_titleLabel];    [self.contentView addSubview:_c
+          1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878889//  jokeCell.m//  MyLaugh////  Created by wangyu on 14/05/2017.//  Copyright © 2017 wangyu. All rights reserved.//#import "jokeCell.h"#define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width@implementation jokeCell&#123;    UILabel *_titleLabel;    UILabel *_contentLabel;    UILabel *_updatetimeLabel;&#125;-(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier&#123;    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];    _titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,5,SCREEN_WIDTH,21)];    _titleLabel.backgroundColor = [UIColor clearColor];    _titleLabel.textAlignment = NSTextAlignmentCenter;    _titleLabel.textColor = [UIColor purpleColor];    _titleLabel.font = [UIFont italicSystemFontOfSize:17];    _contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 30, SCREEN_WIDTH, 21)];    _contentLabel.backgroundColor = [UIColor clearColor];    _contentLabel.numberOfLines = 0;    _updatetimeLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 30, SCREEN_WIDTH, 21)];    _updatetimeLabel.textAlignment = NSTextAlignmentRight;    self.selectionStyle = UITableViewCellSelectionStyleNone;    return self;&#125;- (void)layoutSubviews&#123;    [super layoutSubviews];    [self.contentView addSubview:_titleLabel];    [self.contentView addSubview:
           ...
           <!--noindex-->
           <div class="post-button text-center">

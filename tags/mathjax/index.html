@@ -259,10 +259,8 @@
                 <div class="post_entry-module mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col fade out">
     <!-- Post Thumbnail -->
     
-        
-            <!-- Random Thumbnail -->
-            <div class="post_thumbnail-random mdl-card__media mdl-color-text--grey-50">
-        
+        <!-- Custom Thumbnail -->
+        <div class="post_thumbnail-custom mdl-card__media mdl-color-text--grey-50 lazy" data-original="http://oq5d32gij.bkt.clouddn.com/96273DB0-3D9F-44B9-8A91-BC3BB7CCA006.png">
     
 
         <!-- Post Title -->
@@ -272,17 +270,7 @@
     <!-- Post Excerpt -->
     <div class="mdl-color-text--grey-600 mdl-card__supporting-text post_entry-content">
         
-            #常用数学符号的 LaTeX 表示方法
-１、指数和下标可以用 ^ 和 _ 后加相应字符来实现。比如：
-
-2、平方根（square root）的输入命令为：\sqrt，n 次方根相应地为: \sqrt[n]。方根符号的大小由LATEX自动加以调整。也可用\surd 仅给出符号。比如：
-
-3、命令\overline 和\underline 在表达式的上、下方画出水平线。比如：
-
-4、命令\overbrace 和\underbrace 在表达式的上、下方给出一水平的大括号。
-
-5、向量（Vectors）通常用上方有小箭头（arrow symbols）的变量表示。这可由\vec 得到。另两个命令\overrightarrow 和\overleftarrow在定义从A 到B 的向量时非常有用。
-
+            对LaTex基本用法的学习
         
         &nbsp;&nbsp;&nbsp;
         <span>
@@ -331,7 +319,7 @@
 
     var locatePost = $('.locate-thumbnail-symbol').next();
     for(var i = 0; i < 10; i++) {
-        randomNum = Math.floor(Math.random() * 19 + 1);
+        randomNum = Math.floor(Math.random() * 6 + 1);
 
         locatePost.children('.post_thumbnail-random').attr('id', 'random_thumbnail-'+randomNum);
         locatePost.children('.post_thumbnail-random').attr('data-original', '/img/random/material-' + randomNum + '.png');
@@ -386,7 +374,7 @@
         <ul id="settings-dropdown" class="dropdown-menu">
             
                 <li>
-                    <a href="#" target="_blank" title="Email Me">
+                    <a href="mailto:wangyu19970819@email.com" target="_blank" title="Email Me">
                         
                             <i class="material-icons sidebar-material-icons sidebar-indent-left1pc-element">email</i>
                         
@@ -410,7 +398,25 @@
         
     
 
-    <!-- Archives  -->
+    <!-- Categories  -->
+    
+        <li class="dropdown">
+            <a href="#" class="ripple-effect dropdown-toggle" data-toggle="dropdown">
+                
+                    <i class="material-icons sidebar-material-icons">chrome_reader_mode</i>
+                
+                分类
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                <a class="sidebar_archives-link" href="/categories/machine-learning/">machine learning<span class="sidebar_archives-count">1</span></a>
+            </ul>
+        </li>
+        
+    
+
+        <!-- Archives  -->
     
         <li class="dropdown">
             <a href="#" class="ripple-effect dropdown-toggle" data-toggle="dropdown">
@@ -422,23 +428,40 @@
             </a>
             <ul class="dropdown-menu">
             <li>
-                <a class="sidebar_archives-link" href="/archives/2017/05/">五月 2017<span class="sidebar_archives-count">2</span></a>
+                <a class="sidebar_archives-link" href="/archives/2017/05/">五月 2017<span class="sidebar_archives-count">1</span></a>
             </ul>
         </li>
         
     
 
-    <!-- Categories  -->
-    
-
     <!-- Pages  -->
     
         <li>
-            <a href="/about" title="About">
+            <a href="/tags" title="标签">
+                
+                    <i class="material-icons sidebar-material-icons">loyalty</i>
+                
+                标签
+            </a>
+        </li>
+        
+    
+        <li>
+            <a href="/links" title="小伙伴们">
+                
+                    <i class="material-icons sidebar-material-icons">group</i>
+                
+                小伙伴们
+            </a>
+        </li>
+        
+    
+        <li>
+            <a href="/about" title="关于">
                 
                     <i class="material-icons sidebar-material-icons">person</i>
                 
-                About
+                关于
             </a>
         </li>
         
@@ -449,11 +472,9 @@
         <li>
             <a href="/archives">
                 文章总数
-                <span class="sidebar-badge">2</span>
+                <span class="sidebar-badge">1</span>
             </a>
         </li>
-        
-            <li class="divider"></li>
         
     
 </ul>
@@ -576,8 +597,8 @@ It will not impact the appearance and can give developers a lot of support :)
 
         <div class="mdl-mini-footer--right-section">
             <div>
-                <div class="footer-develop-div">Powered by <a href="https://hexo.io" target="_blank" class="footer-develop-a">Hexo</a></div>
-                <div class="footer-develop-div">Theme - <a href="https://github.com/viosey/hexo-theme-material" target="_blank" class="footer-develop-a">Material</a></div>
+                <div class="footer-develop-div">Follow me on - <a href="https://www.facebook.com/renburugu" target="_blank" class="footer-develop-a">FaceTime</a></div>
+                <div class="https://github.com/wangyu1997">Fork me on - <a href="https://github.com/viosey/hexo-theme-material" target="_blank" class="footer-develop-a">GitHub</a></div>
             </div>
         </div>
     
@@ -617,6 +638,10 @@ It will not impact the appearance and can give developers a lot of support :)
 
 
 
+    
+        <script src="/js/smoothscroll.js"></script>
+    
+
 
 
 
@@ -630,7 +655,7 @@ It will not impact the appearance and can give developers a lot of support :)
 
 
     <!-- 使用 DISQUS js 代码 -->
-    <script id="dsq-count-scr" src="//null.disqus.com/count.js" async></script>
+    <script id="dsq-count-scr" src="//https-wangyu1997-github-io.disqus.com/count.js" async></script>
 
 
 

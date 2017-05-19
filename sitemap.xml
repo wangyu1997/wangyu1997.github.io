@@ -4,21 +4,7 @@
   <url>
     <loc>https://wangyu1997.github.io/2017/05/19/test/</loc>
     
-    <lastmod>2017-05-19T16:29:44.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://wangyu1997.github.io/prettify/tomorrow.min.css</loc>
-    
-    <lastmod>2017-05-19T16:26:30.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://wangyu1997.github.io/prettify/highlight.min.js</loc>
-    
-    <lastmod>2017-05-19T16:25:44.000Z</lastmod>
+    <lastmod>2017-05-19T16:44:09.000Z</lastmod>
     
   </url>
   
@@ -86,14 +72,14 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-agc.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-apollo.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-apollo.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-agc.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
@@ -114,14 +100,14 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-clj.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-cl.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-cl.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-clj.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
@@ -149,13 +135,6 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-erlang.js</loc>
-    
-    <lastmod>2017-01-13T03:58:20.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://wangyu1997.github.io/assets/prettify/lang-erl.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
@@ -164,6 +143,13 @@
   
   <url>
     <loc>https://wangyu1997.github.io/assets/prettify/lang-fs.js</loc>
+    
+    <lastmod>2017-01-13T03:58:20.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-erlang.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
@@ -184,14 +170,14 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-lassoscript.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-lasso.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-lasso.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-lassoscript.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
@@ -233,13 +219,6 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-logtalk.js</loc>
-    
-    <lastmod>2017-01-13T03:58:20.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://wangyu1997.github.io/assets/prettify/lang-ls.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
@@ -254,6 +233,13 @@
   </url>
   
   <url>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-logtalk.js</loc>
+    
+    <lastmod>2017-01-13T03:58:20.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://wangyu1997.github.io/assets/prettify/lang-lua.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
@@ -261,14 +247,14 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/skins/sunburst.css</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-matlab.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-ml.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/skins/sunburst.css</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
@@ -289,14 +275,14 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-pascal.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-nemerle.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-nemerle.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-pascal.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
@@ -324,13 +310,6 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-rkt.js</loc>
-    
-    <lastmod>2017-01-13T03:58:20.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://wangyu1997.github.io/assets/prettify/lang-rust.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
@@ -338,7 +317,7 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-s.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-rkt.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
@@ -346,6 +325,13 @@
   
   <url>
     <loc>https://wangyu1997.github.io/assets/prettify/lang-scala.js</loc>
+    
+    <lastmod>2017-01-13T03:58:20.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-s.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
@@ -373,14 +359,14 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-swift.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-ss.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-ss.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-swift.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
@@ -436,14 +422,14 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-xq.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-xquery.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-xquery.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-xq.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
@@ -513,7 +499,7 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-matlab.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-ml.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     

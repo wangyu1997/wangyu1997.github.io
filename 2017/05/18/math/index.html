@@ -35,7 +35,7 @@
 
     <meta http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#0097A7">
+    <meta name="theme-color" content="#000">
     <meta name="author" content="人不如故">
     <meta name="description" content="世间一场大梦，人生几度秋凉。">
     <meta name="keywords" content="null,mathjax">
@@ -90,7 +90,7 @@
   }
 
   a {
-    color: #00838F;
+    color: #000;
   }
 
   .mdl-card__media,
@@ -100,13 +100,13 @@
   #scheme-Paradox .sidebar_archives-count,
   #scheme-Paradox .sidebar-colored .sidebar-header,
   #scheme-Paradox .sidebar-colored .sidebar-badge{
-    background-color: #0097A7 !important;
+    background-color: #000 !important;
   }
 
   /* Sidebar User Drop Down Menu Text Color */
   #scheme-Paradox .sidebar-colored .sidebar-nav>.dropdown>.dropdown-menu>li>a:hover,
   #scheme-Paradox .sidebar-colored .sidebar-nav>.dropdown>.dropdown-menu>li>a:focus {
-    color: #0097A7 !important;
+    color: #000 !important;
   }
 
   #post_entry-right-info,
@@ -119,29 +119,29 @@
   .sidebar-colored .sidebar-nav > .open > a:hover,
   .sidebar-colored .sidebar-nav > .open > a:focus,
   #ds-reset #ds-ctx .ds-ctx-entry .ds-ctx-head a {
-    color: #0097A7 !important;
+    color: #000 !important;
   }
 
   .toTop {
-    background: #757575 !important;
+    background: #000 !important;
   }
 
   .material-layout .material-post>.material-nav,
   .material-layout .material-index>.material-nav,
   .material-nav a {
-    color: #757575;
+    color: #000;
   }
 
   #scheme-Paradox .MD-burger-layer {
-    background-color: #757575;
+    background-color: #000;
   }
 
   #scheme-Paradox #post-toc-trigger-btn {
-    color: #757575;
+    color: #000;
   }
 
   .post-toc a:hover {
-    color: #00838F;
+    color: #000;
     text-decoration: underline;
   }
 
@@ -152,7 +152,7 @@
 
     <style>
       body{
-        background-image: url(/img/bg.png);
+        background-image: url(/img/bg.jpg);
       }
     </style>
 
@@ -431,9 +431,8 @@
                 <!-- Post Content -->
                 <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
     
-        <script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>对LaTex基本用法的学习<br><a id="more"></a></p>
-<p>#常用数学符号的 LaTeX 表示方法</p>
-<p>１、指数和下标可以用 ^ 和 _ 后加相应字符来实现。比如：</p>
+            <script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>对LaTex基本用法的学习<br><a id="more"></a></p>
+<p>#常用数学符号的 LaTeX 表示方法<br>１、指数和下标可以用 ^ 和 _ 后加相应字符来实现。比如：</p>
 <p><img src="http://oq5d32gij.bkt.clouddn.com/foot.gif" alt="foot"></p>
 <p>2、平方根（square root）的输入命令为：\sqrt，n 次方根相应地为: \sqrt[n]。方根符号的大小由LATEX自动加以调整。也可用\surd 仅给出<br>符号。比如：</p>
 <p><img src="http://oq5d32gij.bkt.clouddn.com/sqrt.gif" alt="sqrt"></p>
@@ -455,8 +454,94 @@
 <p><img src="http://oq5d32gij.bkt.clouddn.com/5.gif" alt="5"></p>
 <p><img src="http://oq5d32gij.bkt.clouddn.com/6.gif" alt="6"></p>
 <p><img src="http://oq5d32gij.bkt.clouddn.com/7.gif" alt="7"></p>
+<p>大家都喜欢用 $E=mc^2$ 举例子，但是我不是很理解。  </p>
+<p>这个公式 $\cos 2\theta = \cos^2 \theta - \sin^2 \theta =  2 \cos^2 \theta - 1$ 少年可还记得？</p>
+<p>插入方程组（注意多行公式结尾\\需要打成\\，可能是因为markdown会自动转义第一个\）：</p>
+<p>\begin{aligned}<br>\dot{x} &amp; = \sigma(y-x) \\<br>\dot{y} &amp; = \rho x - y - xz \\<br>\dot{z} &amp; = -\beta z + xy<br>\end{aligned}</p>
+<p>插入矩阵（同上）：</p>
+<p>\begin{bmatrix}<br>1 &amp; 2\\<br>3 &amp; 4<br>\end{bmatrix}</p>
+<p>来个复杂点的（注意有的公式开头不会自动识别，用$ $包围）：</p>
+<p>$$\frac{\partial u}{\partial t}= h^2\left( \frac{\partial^2u}{\partial x^2}+ \frac{\partial^2 u}{\partial y^2}+\frac{\partial^2 u}{\partial z^2}\right)$$</p>
+<p>最后来个牛逼的吧，薛定谔方程，大学物理就记得这个了：</p>
+<p>$$ i\hbar\frac{\partial \psi}{\partial t}= \frac{-\hbar^2}{2m} \left(\frac{\partial^2}{\partial x^2}+ \frac{\partial^2}{\partial y^2}+ \frac{\partial^2}{\partial z^2}\right) \psi + V \psi.$$</p>
+<p>$$\begin{cases}\int\Omega \nabla \mathbf{F}&amp;=\int\Gamma \mathbf{F}\cdot d\mathbf{S} \<br>u&amp;=g_0,\quad \Gamma_D \<br>\partial_n u&amp;=g_1 ,\quad \Gamma_N<br>\end{cases} $$</p>
+<p>$$\underbrace{a+b+\cdots+z}_{26}$$</p>
 
+            
+<!-- css -->
+<style type="text/css">
+  .center {
+    text-align: center;
+  }
+  .hidden {
+    display: none;
+  }
+  .donate_bar a.btn_donate{
+    display: inline-block;
+    width: 82px;
+    height: 82px;
+    background: url("http://ojgpkbakj.bkt.clouddn.com/DonateButton.gif") no-repeat;
+    _background: url("http://ojgpkbakj.bkt.clouddn.com/DonateButton.gif") no-repeat;
+    -webkit-transition: background 0s;
+    -moz-transition: background 0s;
+    -o-transition: background 0s;
+    -ms-transition: background 0s;
+    transition: background 0s;
+  }
+  .donate_bar a.btn_donate:hover{ background-position: 0px -82px;}
+  .donate_bar .donate_txt {
+    display: block;
+    color: #9d9d9d;
+    font: 14px/2 "Microsoft Yahei";
+  }
+  .bold{ font-weight: bold; }
+</style>
+<!-- /css -->
+<!-- Donate Module -->
+<div id="donate_module">
+  <!-- btn_donate & tips -->
+  <div id="donate_board" class="donate_bar center">
+    <a id="btn_donate" class="btn_donate" target="_self" href="javascript:;" title="Donate 打赏"></a>
+    <span class="donate_txt">
+      坚持原创技术分享，您的支持将鼓励我继续创作！
+    </span>
+  </div>
+  <!-- /btn_donate & tips -->
+  <!-- donate guide -->
+  <div id="donate_guide" class="donate_bar center hidden">
+    <a href="/uploads/wechat.JPG" title="用微信扫一扫哦~" class="fancybox" rel="article0">
+      <img src="/uploads/wechat.JPG" title="微信打赏 snatic" height="190px" width="auto"/>
+    </a>
+    <a href="/uploads/ali.JPG" title="用支付宝扫一扫即可~" class="fancybox" rel="article0">
+      <img src="/uploads/ali.JPG" title="支付宝打赏 snatic" height="190px" width="auto"/>
+    </a>
+    <span class="donate_txt">
+      坚持原创技术分享，您的支持将鼓励我继续创作！
+    </span>
+  </div>
+  <!-- /donate guide -->
+  <!-- donate script -->
+  <script type="text/javascript">
+    document.getElementById('btn_donate').onclick = function() {
+      $('#donate_board').addClass('hidden');
+      $('#donate_guide').removeClass('hidden');
+    }
+    function donate_on_web(){
+      $('#donate').submit();
+    }
+    var original_window_onload = window.onload;
+    window.onload = function () {
+      if (original_window_onload) {
+        original_window_onload();
+      }
+      document.getElementById('donate_board_wdg').className = 'hidden';
+    }
+  </script>
+  <!-- /donate script -->
+</div>
+<!-- /Donate Module -->
     
+ 
 
     
 </div>
@@ -507,6 +592,14 @@
             <!-- Post Prev & Next Nav -->
             <nav class="material-nav mdl-color-text--grey-50 mdl-cell mdl-cell--12-col">
     <!-- Prev Nav -->
+    
+        <a href="/2017/05/19/test/" id="post_nav-newer" class="prev-content">
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_back</i>
+            </button>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            新篇
+        </a>
     
 
     <!-- Section Spacer -->
@@ -598,7 +691,7 @@
             </a>
             <ul class="dropdown-menu">
                 <li>
-                <a class="sidebar_archives-link" href="/categories/machine-learning/">machine learning<span class="sidebar_archives-count">1</span></a>
+                <a class="sidebar_archives-link" href="/categories/machine-learning/">machine learning<span class="sidebar_archives-count">2</span></a>
             </ul>
         </li>
         
@@ -616,7 +709,7 @@
             </a>
             <ul class="dropdown-menu">
             <li>
-                <a class="sidebar_archives-link" href="/archives/2017/05/">五月 2017<span class="sidebar_archives-count">1</span></a>
+                <a class="sidebar_archives-link" href="/archives/2017/05/">五月 2017<span class="sidebar_archives-count">2</span></a>
             </ul>
         </li>
         
@@ -660,7 +753,7 @@
         <li>
             <a href="/archives">
                 文章总数
-                <span class="sidebar-badge">1</span>
+                <span class="sidebar-badge">2</span>
             </a>
         </li>
         
@@ -797,6 +890,40 @@ It will not impact the appearance and can give developers a lot of support :)
                 <div class="https://github.com/wangyu1997">Fork me on - <a href="https://github.com/viosey/hexo-theme-material" target="_blank" class="footer-develop-a">GitHub</a></div>
             </div>
         </div>
+         
+        <!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});</script>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+        
+         
     
 </footer>
 
@@ -866,6 +993,26 @@ It will not impact the appearance and can give developers a lot of support :)
 </script>
 
 <!-- MathJax Load-->
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({"HTML-CSS": { preferredFont: "TeX", availableFonts: ["STIX","TeX"], linebreaks: { automatic:true }, EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50) },
+        tex2jax: { inlineMath: [ ["$", "$"], ["\\(","\\)"] ], processEscapes: true, ignoreClass: "tex2jax_ignore|dno",skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']},
+        TeX: {  noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } }, Macros: { href: "{}" } },
+        messageStyle: "none"
+    });
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+    <script type="text/javascript" src="/js/mathjax.js"></script>
+
+
 
 <script>
     <!-- Offer LazyLoad -->

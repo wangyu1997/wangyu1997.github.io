@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://wangyu1997.github.io/"/>
-  <updated>2017-05-19T12:11:50.000Z</updated>
+  <updated>2017-05-19T15:24:57.000Z</updated>
   <id>https://wangyu1997.github.io/</id>
   
   <author>
@@ -16,15 +16,129 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>test</title>
+    <link href="https://wangyu1997.github.io/2017/05/19/test/"/>
+    <id>https://wangyu1997.github.io/2017/05/19/test/</id>
+    <published>2017-05-18T16:43:11.000Z</published>
+    <updated>2017-05-19T15:24:57.000Z</updated>
+    
+    <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><pre class="prettyprint lang-java">
+//
+//  jokeCell.m
+//  MyLaugh
+//
+//  Created by wangyu on 14/05/2017.
+//  Copyright © 2017 wangyu. All rights reserved.
+//
+
+#import "jokeCell.h"
+#define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
+
+@implementation jokeCell
+{
+    UILabel *_titleLabel;
+    UILabel *_contentLabel;
+    UILabel *_updatetimeLabel;
+}
+
+-(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    _titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,5,SCREEN_WIDTH,21)];
+    _titleLabel.backgroundColor = [UIColor clearColor];
+    _titleLabel.textAlignment = NSTextAlignmentCenter;
+    _titleLabel.textColor = [UIColor purpleColor];
+    _titleLabel.font = [UIFont italicSystemFontOfSize:17];
+    _contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 30, SCREEN_WIDTH, 21)];
+    _contentLabel.backgroundColor = [UIColor clearColor];
+    _contentLabel.numberOfLines = 0;
+    _updatetimeLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 30, SCREEN_WIDTH, 21)];
+    _updatetimeLabel.textAlignment = NSTextAlignmentRight;
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
+    return self;
+}
+
+
+- (void)layoutSubviews{
+    [super layoutSubviews];
+    [self.contentView addSubview:_titleLabel];
+    [self.contentView addSubview:_contentLabel];
+    [self.contentView addSubview:_updatetimeLabel];
+}
+
+-(void) setTitle:(NSString *)title
+{
+    _title = title;
+    _titleLabel.text = title;
+}
+
+-(void) setContent:(NSString *)content
+{
+    _content = content;
+    _contentLabel.text = content;
+}
+
+-(void)setUpdatetime:(NSString *)updatetime
+{
+    _updatetime = updatetime;
+    _updatetimeLabel.text = updatetime;
+}
+
+-(void) setContentLabelHeight:(CGFloat)height
+{
+    _contentLabel.frame = CGRectMake(0, 30, _contentLabel.frame.size.width, height);
+    _updatetimeLabel.frame = CGRectMake(0, 35+height, _updatetimeLabel.frame.size.width, 21);
+}
+
+-(CGFloat) getHeight
+{
+    //计算文字高度
+    NSDictionary *attribute = @{NSFontAttributeName: _contentLabel.font};
+    CGSize retSize = [_contentLabel.text boundingRectWithSize:CGSizeMake(SCREEN_WIDTH, MAXFLOAT) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:attribute context:nil].size;
+    _contentLabel.frame = CGRectMake(0, 30, _contentLabel.frame.size.width, retSize.height);
+    _updatetimeLabel.frame = CGRectMake(0, 35+_contentLabel.frame.size.height, _updatetimeLabel.frame.size.width, 21);
+    return 30+_contentLabel.frame.size.height+10+21+5;
+}
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    // Initialization code
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+
+    // Configure the view for the selected state
+}
+
+@end
+
+</pre>
+
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;&gt; &lt;/script&gt;&lt;pre class=&quot;prettyprint lang-java&quot;&gt;
+//
+/
+    
+    </summary>
+    
+      <category term="machine learning" scheme="https://wangyu1997.github.io/categories/machine-learning/"/>
+    
+    
+  </entry>
+  
+  <entry>
     <title>MathJax</title>
     <link href="https://wangyu1997.github.io/2017/05/18/math/"/>
     <id>https://wangyu1997.github.io/2017/05/18/math/</id>
     <published>2017-05-18T12:30:00.000Z</published>
-    <updated>2017-05-19T12:11:50.000Z</updated>
+    <updated>2017-05-19T15:20:19.000Z</updated>
     
     <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>对LaTex基本用法的学习<br><a id="more"></a></p>
-<p>#常用数学符号的 LaTeX 表示方法</p>
-<p>１、指数和下标可以用 ^ 和 _ 后加相应字符来实现。比如：</p>
+<p>#常用数学符号的 LaTeX 表示方法<br>１、指数和下标可以用 ^ 和 _ 后加相应字符来实现。比如：</p>
 <p><img src="http://oq5d32gij.bkt.clouddn.com/foot.gif" alt="foot"></p>
 <p>2、平方根（square root）的输入命令为：\sqrt，n 次方根相应地为: \sqrt[n]。方根符号的大小由LATEX自动加以调整。也可用\surd 仅给出<br>符号。比如：</p>
 <p><img src="http://oq5d32gij.bkt.clouddn.com/sqrt.gif" alt="sqrt"></p>
@@ -46,6 +160,18 @@
 <p><img src="http://oq5d32gij.bkt.clouddn.com/5.gif" alt="5"></p>
 <p><img src="http://oq5d32gij.bkt.clouddn.com/6.gif" alt="6"></p>
 <p><img src="http://oq5d32gij.bkt.clouddn.com/7.gif" alt="7"></p>
+<p>大家都喜欢用 $E=mc^2$ 举例子，但是我不是很理解。  </p>
+<p>这个公式 $\cos 2\theta = \cos^2 \theta - \sin^2 \theta =  2 \cos^2 \theta - 1$ 少年可还记得？</p>
+<p>插入方程组（注意多行公式结尾\\需要打成\\，可能是因为markdown会自动转义第一个\）：</p>
+<p>\begin{aligned}<br>\dot{x} &amp; = \sigma(y-x) \\<br>\dot{y} &amp; = \rho x - y - xz \\<br>\dot{z} &amp; = -\beta z + xy<br>\end{aligned}</p>
+<p>插入矩阵（同上）：</p>
+<p>\begin{bmatrix}<br>1 &amp; 2\\<br>3 &amp; 4<br>\end{bmatrix}</p>
+<p>来个复杂点的（注意有的公式开头不会自动识别，用$ $包围）：</p>
+<p>$$\frac{\partial u}{\partial t}= h^2\left( \frac{\partial^2u}{\partial x^2}+ \frac{\partial^2 u}{\partial y^2}+\frac{\partial^2 u}{\partial z^2}\right)$$</p>
+<p>最后来个牛逼的吧，薛定谔方程，大学物理就记得这个了：</p>
+<p>$$ i\hbar\frac{\partial \psi}{\partial t}= \frac{-\hbar^2}{2m} \left(\frac{\partial^2}{\partial x^2}+ \frac{\partial^2}{\partial y^2}+ \frac{\partial^2}{\partial z^2}\right) \psi + V \psi.$$</p>
+<p>$$\begin{cases}\int\Omega \nabla \mathbf{F}&amp;=\int\Gamma \mathbf{F}\cdot d\mathbf{S} \<br>u&amp;=g_0,\quad \Gamma_D \<br>\partial_n u&amp;=g_1 ,\quad \Gamma_N<br>\end{cases} $$</p>
+<p>$$\underbrace{a+b+\cdots+z}_{26}$$</p>
 ]]></content>
     
     <summary type="html">

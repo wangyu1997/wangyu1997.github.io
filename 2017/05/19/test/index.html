@@ -10,7 +10,7 @@
     
     <title>
         
-            guestbook | 
+            test | 
         
         人不如故
     </title>
@@ -35,7 +35,7 @@
 
     <meta http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#0097A7">
+    <meta name="theme-color" content="#000">
     <meta name="author" content="人不如故">
     <meta name="description" content="世间一场大梦，人生几度秋凉。">
     <meta name="keywords" content="null">
@@ -64,7 +64,7 @@
     <!-- The Open Graph protocol -->
     <meta property="og:url" content="https://wangyu1997.github.io">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="guestbook | 人不如故">
+    <meta property="og:title" content="test | 人不如故">
     <meta property="og:description" content="世间一场大梦，人生几度秋凉。">
     
 
@@ -90,7 +90,7 @@
   }
 
   a {
-    color: #00838F;
+    color: #000;
   }
 
   .mdl-card__media,
@@ -100,13 +100,13 @@
   #scheme-Paradox .sidebar_archives-count,
   #scheme-Paradox .sidebar-colored .sidebar-header,
   #scheme-Paradox .sidebar-colored .sidebar-badge{
-    background-color: #0097A7 !important;
+    background-color: #000 !important;
   }
 
   /* Sidebar User Drop Down Menu Text Color */
   #scheme-Paradox .sidebar-colored .sidebar-nav>.dropdown>.dropdown-menu>li>a:hover,
   #scheme-Paradox .sidebar-colored .sidebar-nav>.dropdown>.dropdown-menu>li>a:focus {
-    color: #0097A7 !important;
+    color: #000 !important;
   }
 
   #post_entry-right-info,
@@ -119,29 +119,29 @@
   .sidebar-colored .sidebar-nav > .open > a:hover,
   .sidebar-colored .sidebar-nav > .open > a:focus,
   #ds-reset #ds-ctx .ds-ctx-entry .ds-ctx-head a {
-    color: #0097A7 !important;
+    color: #000 !important;
   }
 
   .toTop {
-    background: #757575 !important;
+    background: #000 !important;
   }
 
   .material-layout .material-post>.material-nav,
   .material-layout .material-index>.material-nav,
   .material-nav a {
-    color: #757575;
+    color: #000;
   }
 
   #scheme-Paradox .MD-burger-layer {
-    background-color: #757575;
+    background-color: #000;
   }
 
   #scheme-Paradox #post-toc-trigger-btn {
-    color: #757575;
+    color: #000;
   }
 
   .post-toc a:hover {
-    color: #00838F;
+    color: #000;
     text-decoration: underline;
   }
 
@@ -152,7 +152,7 @@
 
     <style>
       body{
-        background-image: url(/img/bg.png);
+        background-image: url(/img/bg.jpg);
       }
     </style>
 
@@ -243,6 +243,41 @@
 
                     <!-- Post TOC -->
 
+    
+    <!-- Back Button -->
+    <!--
+    <div class="material-back" id="backhome-div" tabindex="0">
+        <a class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
+           href="#" onclick="window.history.back();return false;"
+           target="_self"
+           role="button"
+           data-upgraded=",MaterialButton,MaterialRipple">
+            <i class="material-icons" role="presentation">arrow_back</i>
+            <span class="mdl-button__ripple-container">
+                <span class="mdl-ripple"></span>
+            </span>
+        </a>
+    </div>
+    -->
+
+    <!-- Left aligned menu below button -->
+    <button id="post-toc-trigger-btn"
+        class="mdl-button mdl-js-button mdl-button--icon">
+        <i class="material-icons">format_list_numbered</i>
+    </button>
+
+    <ul class="post-toc-wrap mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="post-toc-trigger-btn" style="max-height:80vh; overflow-y:scroll;">
+        
+
+        <!--
+        <li class="mdl-menu__item">
+            Some Action
+        </li>
+        -->
+    </ul>
+
+
+
 
 <!-- Layouts -->
 
@@ -269,7 +304,7 @@
         
     
             <p class="article-headline-p">
-                guestbook
+                test
             </p>
         </div>
 
@@ -309,7 +344,7 @@
         </button>
         <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-qrcode-button">
             <li class="mdl-menu__item">在其它设备中阅读本文章</li>
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACbElEQVR42u3ay27bQBAEQP3/TzvXAA7p7n2RMYonw5LJLRnYHfXM5+tXXx88PDw8PDw8PLyX8T7x9ff7/3HTi/ff/9UPCy3XhoeHh3eSlzzm+yNXvXr/keVrw8PDwzvPSw6DmeWOfRz52vDw8PDeyUs27vv7JK/i4eHh/SZewk7iicvF4eHh4f1XvPwLf1JSzwTBj2UteHh4eDFvrAF25ufH+nt4eHh4F7zFA09xuJCU0QuGrvDw8PA28K7igPbKkWPFdBJM4OHh4T3FG3vAfDDRhsKXK8fDw8PbzLvfoPONftUA1thxhYeHh3eSl2zoLT5fYvvOwZIaDw8PbwNv7GBYG9Qmh010jOHh4eE9xGtv3W7lM62yH8p0PDw8vIO8JDwdK6/bQKE9QvDw8PDO89rmfd7On2l3DQ4Z4OHh4W3mta36fOktYGzAqxgdwMPDw1vEaw+DPLaYxyd3qGNcPDw8vM28+SZZe8zksOIbAx4eHt4GXt6Cmt/02yK7Dk3w8PDwDvLaSKIdsWrL6PYOeHh4eOd5bSN//kiYGfDCw8PDe5bXMtqF5sVxO9JaZC14eHh4G3htzJoHrDNB8P2QQT06gIeHh7eIN9bIn4kP8vZY/oHi4eHhneHNt6nuC/GZQYGx4AMPDw9vN29mO84L3zaMmGqk4eHh4R3h5YdBGyXMNLryfwMeHh7eU7ykzM2D3ZnQdurOeHh4eK/kJWX3WCurjSfw8PDw3s/LG115sDvY6MLDw8N7AS9veiW/KbbyeHBhe9aCh4eHVw5dteXy2IJWhREb+3t4eHh4S4eu3n/h4eHh4eHh4eG94PoDbgZno+Xg4ksAAAAASUVORK5CYII=">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACYUlEQVR42u3aQW4jMQwEQP//08l1gUW0TXLEtYPSyYAHMyodJKKp19evHi88PDw8PDw8PLw3473i8Y+X/vHM+fm/3/nTV3pzw8PDw9vh5VPPMeelyd9QnhseHh7eIu+nDTffxPPf50OiNzc8PDy8d+aVA4LjAlWXFQ8PD+8TeZPpJv/i4eHhfQqvt61X39YrqZeyFjw8PLyYlzeZ9n+v9vfw8PDwAl4vVqheFMhj3PnAw8PDu83LN+KnSu0c07sEhoeHh7fDm8QNUZlbDHCrkTEeHh7ePm++HefUvJjuxbt4eHh4t3nnyU0mNFm+yaLj4eHh3ebduPyUF+jVKwLJ8YCHh4e3ycu39ern54dBvnB4eHh4t3m9EnYS1/YWK48k8PDw8G7z8lckhXXe0KqOvATHw8PD2+TlxWve+C+3r47hSFT04+Hh4a3wqptv3hjLY+I8LB41wPDw8PDGvMklqvlVg6cCXzw8PLxN3rwpVdiy42/1Qgo8PDy8TV7vYJgHDfmFqsIxg4eHh7fCO0cJ1SZWHjrkhXW+oHh4eHg7vEkMkSxKEkNULzSMSmo8PDy8h3i9SY8i11aRXe7v4eHh4V3jVSOJHNMDN7+Fh4eHd5lXHUkLalKaPxBV4OHh4V3m9Zr01WZVNQ4+f+WBS1d4eHh4Y14etlYDgknDrHcg4eHh4W3yqhdJq0uQP1+9ooqHh4f3WbzJha3Jv6P+Hh4eHt5/4lU39N4Bk5fdeHh4ePu8JIxIPlyd+vnJ1RgXDw8P70IDLCl5e4V4Ti1cusLDw8O7wPt9Aw8PDw8PDw8P7w3GNy30zkqVj2sCAAAAAElFTkSuQmCC">
         </ul>
     
 
@@ -348,7 +383,7 @@
 
     <!-- Share Weibo -->
     
-        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=guestbook&url=https://wangyu1997.github.io//guestbook/index.html&pic=&searchPic=false&style=simple" target="_blank">
+        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=test&url=https://wangyu1997.github.io//2017/05/19/test/index.html&pic=&searchPic=false&style=simple" target="_blank">
             <li class="mdl-menu__item">
                 分享到微博
             </li>
@@ -357,7 +392,7 @@
 
     <!-- Share Twitter -->
     
-        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=guestbook&url=https://wangyu1997.github.io//guestbook/index.html&via=人不如故" target="_blank">
+        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=test&url=https://wangyu1997.github.io//2017/05/19/test/index.html&via=人不如故" target="_blank">
             <li class="mdl-menu__item">
                 分享到 Twitter
             </li>
@@ -366,7 +401,7 @@
 
     <!-- Share Facebook -->
     
-        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=https://wangyu1997.github.io//guestbook/index.html" target="_blank">
+        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=https://wangyu1997.github.io//2017/05/19/test/index.html" target="_blank">
             <li class="mdl-menu__item">
                 分享到 Facebook
             </li>
@@ -375,7 +410,7 @@
 
     <!-- Share Google+ -->
     
-        <a class="post_share-link" href="https://plus.google.com/share?url=https://wangyu1997.github.io//guestbook/index.html" target="_blank">
+        <a class="post_share-link" href="https://plus.google.com/share?url=https://wangyu1997.github.io//2017/05/19/test/index.html" target="_blank">
             <li class="mdl-menu__item">
                 分享到 Google+
             </li>
@@ -387,7 +422,7 @@
 
     <!-- Share QQ -->
     
-        <a class="post_share-link" href="http://connect.qq.com/widget/shareqq/index.html?site=人不如故&title=guestbook&summary=世间一场大梦，人生几度秋凉。&pics=https://wangyu1997.github.io/img/favicon.png&url=https://wangyu1997.github.io/guestbook/index.html" target="_blank">
+        <a class="post_share-link" href="http://connect.qq.com/widget/shareqq/index.html?site=人不如故&title=test&summary=世间一场大梦，人生几度秋凉。&pics=https://wangyu1997.github.io/img/favicon.png&url=https://wangyu1997.github.io/2017/05/19/test/index.html" target="_blank">
             <li class="mdl-menu__item">
                 分享到 QQ
             </li>
@@ -405,25 +440,102 @@
                 <!-- Post Content -->
                 <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
     
-        <script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script> <script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><blockquote class="blockquote-center">
+            <script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><pre class="prettyprint lang-java">
+//
+//  jokeCell.m
+//  MyLaugh
+//
+//  Created by wangyu on 14/05/2017.
+//  Copyright © 2017 wangyu. All rights reserved.
+//
 
-<link rel="stylesheet" type="text/css" href="http://og9ocpmwk.bkt.clouddn.com/hexo_picanimate.css">
+#import "jokeCell.h"
+#define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
 
-<div class="site-author"><br><br><image class="zz" width="120px" height="120px" src="http://ofx4ie5iq.bkt.clouddn.com/2016120470526IMG_5631.JPG"><br><br></image></div>
+@implementation jokeCell
+{
+    UILabel *_titleLabel;
+    UILabel *_contentLabel;
+    UILabel *_updatetimeLabel;
+}
 
-<p><span>在一起</span><br></p>
-<p><span id="day"></span>天<span id="h"></span>时<span id="m"></span>分<span id="s"></span>秒<br></p>
-<script src="/js/src/set-time.js" type="text/javascript"></script>
+-(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    _titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,5,SCREEN_WIDTH,21)];
+    _titleLabel.backgroundColor = [UIColor clearColor];
+    _titleLabel.textAlignment = NSTextAlignmentCenter;
+    _titleLabel.textColor = [UIColor purpleColor];
+    _titleLabel.font = [UIFont italicSystemFontOfSize:17];
+    _contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 30, SCREEN_WIDTH, 21)];
+    _contentLabel.backgroundColor = [UIColor clearColor];
+    _contentLabel.numberOfLines = 0;
+    _updatetimeLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 30, SCREEN_WIDTH, 21)];
+    _updatetimeLabel.textAlignment = NSTextAlignmentRight;
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
+    return self;
+}
 
 
-<pre><code>&lt;div id=&quot;aplayer2&quot; class=&quot;aplayer&quot; style=&quot;margin-bottom: 20px&quot;&gt;&lt;/div&gt;
-&lt;script&gt;
-    var options = {&quot;narrow&quot;:false,&quot;autoplay&quot;:true,&quot;showlrc&quot;:3,&quot;mode&quot;:&quot;random&quot;,&quot;music&quot;:[{&quot;title&quot;:&quot;平凡之路&quot;,&quot;author&quot;:&quot;朴树&quot;,&quot;url&quot;:&quot;http://og9ocpmwk.bkt.clouddn.com/%E5%B9%B3%E5%87%A1%E4%B9%8B%E8%B7%AF.mp3&quot;,&quot;pic&quot;:&quot;http://og9ocpmwk.bkt.clouddn.com/1.jpg&quot;,&quot;lrc&quot;:&quot;http://og9ocpmwk.bkt.clouddn.com/%E5%B9%B3%E5%87%A1%E4%B9%8B%E8%B7%AF.txt&quot;},{&quot;title&quot;:&quot;野子&quot;,&quot;author&quot;:&quot;苏运莹&quot;,&quot;url&quot;:&quot;http://og9ocpmwk.bkt.clouddn.com/01%20%E9%87%8E%E5%AD%90.m4a&quot;,&quot;pic&quot;:&quot;http://og9ocpmwk.bkt.clouddn.com/%E9%87%8E%E5%AD%90.jpg&quot;,&quot;lrc&quot;:&quot;http://og9ocpmwk.bkt.clouddn.com/%E9%87%8E%E5%AD%90.txt&quot;},{&quot;title&quot;:&quot;月亮代表我的心&quot;,&quot;author&quot;:&quot;张国荣&quot;,&quot;url&quot;:&quot;http://og9ocpmwk.bkt.clouddn.com/2-17%20%E6%9C%88%E4%BA%AE%E4%BB%A3%E8%A1%A8%E6%88%91%E7%9A%84%E5%BF%83.m4a&quot;,&quot;pic&quot;:&quot;http://ofx4ie5iq.bkt.clouddn.com/2016122521151I%20Am%20What%20I%20Am.jpg&quot;,&quot;lrc&quot;:&quot;http://og9ocpmwk.bkt.clouddn.com/%E6%9C%88%E4%BA%AE%E4%BB%A3%E8%A1%A8%E6%88%91%E7%9A%84%E5%BF%83.txt&quot;},{&quot;title&quot;:&quot;风再起时&quot;,&quot;author&quot;:&quot;张国荣&quot;,&quot;url&quot;:&quot;http://og9ocpmwk.bkt.clouddn.com/3e5dba217f8c7276a448cea068963761.m4a&quot;,&quot;pic&quot;:&quot;http://ofx4ie5iq.bkt.clouddn.com/2016122588621Leslie%20Cheung%20Four%20Seasons.jpg&quot;,&quot;lrc&quot;:&quot;http://og9ocpmwk.bkt.clouddn.com/%E9%A3%8E%E5%86%8D%E8%B5%B7%E6%97%B6.txt&quot;},{&quot;title&quot;:&quot;星晴&quot;,&quot;author&quot;:&quot;周杰伦&quot;,&quot;url&quot;:&quot;http://og9ocpmwk.bkt.clouddn.com/03%20%E6%98%9F%E6%99%B4.m4a&quot;,&quot;pic&quot;:&quot;http://ofx4ie5iq.bkt.clouddn.com/201612256156Jay.jpg&quot;,&quot;lrc&quot;:&quot;http://og9ocpmwk.bkt.clouddn.com/%E6%98%9F%E6%99%B4.txt&quot;}]};
-    options.element = document.getElementById(&quot;aplayer2&quot;);
-    new APlayer(options);
-&lt;/script&gt;
-</code></pre></blockquote>
-    
+- (void)layoutSubviews{
+    [super layoutSubviews];
+    [self.contentView addSubview:_titleLabel];
+    [self.contentView addSubview:_contentLabel];
+    [self.contentView addSubview:_updatetimeLabel];
+}
+
+-(void) setTitle:(NSString *)title
+{
+    _title = title;
+    _titleLabel.text = title;
+}
+
+-(void) setContent:(NSString *)content
+{
+    _content = content;
+    _contentLabel.text = content;
+}
+
+-(void)setUpdatetime:(NSString *)updatetime
+{
+    _updatetime = updatetime;
+    _updatetimeLabel.text = updatetime;
+}
+
+-(void) setContentLabelHeight:(CGFloat)height
+{
+    _contentLabel.frame = CGRectMake(0, 30, _contentLabel.frame.size.width, height);
+    _updatetimeLabel.frame = CGRectMake(0, 35+height, _updatetimeLabel.frame.size.width, 21);
+}
+
+-(CGFloat) getHeight
+{
+    //计算文字高度
+    NSDictionary *attribute = @{NSFontAttributeName: _contentLabel.font};
+    CGSize retSize = [_contentLabel.text boundingRectWithSize:CGSizeMake(SCREEN_WIDTH, MAXFLOAT) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:attribute context:nil].size;
+    _contentLabel.frame = CGRectMake(0, 30, _contentLabel.frame.size.width, retSize.height);
+    _updatetimeLabel.frame = CGRectMake(0, 35+_contentLabel.frame.size.height, _updatetimeLabel.frame.size.width, 21);
+    return 30+_contentLabel.frame.size.height+10+21+5;
+}
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    // Initialization code
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+
+    // Configure the view for the selected state
+}
+
+@end
+
+</pre>
+
+
+            
+ 
 
     
 </div>
@@ -443,8 +555,8 @@
         <div id="disqus_thread"></div>
 <script>
     var disqus_config = function () {
-        this.page.url = 'https://wangyu1997.github.io/guestbook/index.html';  // Replace PAGE_URL with your page's canonical URL variable
-        this.page.identifier = 'https://wangyu1997.github.io/guestbook/index.html'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        this.page.url = 'https://wangyu1997.github.io/2017/05/19/test/';  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'https://wangyu1997.github.io/2017/05/19/test/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
     };
     queue.offer(function() {
             (function() { // DON'T EDIT BELOW THIS LINE
@@ -480,6 +592,14 @@
     <div class="section-spacer"></div>
 
     <!-- Next Nav -->
+    
+        <a href="/2017/05/18/math/" id="post_nav-older" class="next-content">
+            旧篇
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_forward</i>
+            </button>
+        </a>
     
 </nav>
 
@@ -565,7 +685,7 @@
             </a>
             <ul class="dropdown-menu">
                 <li>
-                <a class="sidebar_archives-link" href="/categories/machine-learning/">machine learning<span class="sidebar_archives-count">1</span></a>
+                <a class="sidebar_archives-link" href="/categories/machine-learning/">machine learning<span class="sidebar_archives-count">2</span></a>
             </ul>
         </li>
         
@@ -583,7 +703,7 @@
             </a>
             <ul class="dropdown-menu">
             <li>
-                <a class="sidebar_archives-link" href="/archives/2017/05/">五月 2017<span class="sidebar_archives-count">1</span></a>
+                <a class="sidebar_archives-link" href="/archives/2017/05/">五月 2017<span class="sidebar_archives-count">2</span></a>
             </ul>
         </li>
         
@@ -627,7 +747,7 @@
         <li>
             <a href="/archives">
                 文章总数
-                <span class="sidebar-badge">1</span>
+                <span class="sidebar-badge">2</span>
             </a>
         </li>
         
@@ -675,6 +795,14 @@ It will not impact the appearance and can give developers a lot of support :)
 </aside>
 
                     
+
+                    
+                        <!-- Footer Top Button -->
+                        <div class="toTop-wrap">
+    <a href="#top" class="toTop">
+        <i class="material-icons footer_top-i">expand_less</i>
+    </a>
+</div>
 
                     
 
@@ -756,6 +884,24 @@ It will not impact the appearance and can give developers a lot of support :)
                 <div class="https://github.com/wangyu1997">Fork me on - <a href="https://github.com/viosey/hexo-theme-material" target="_blank" class="footer-develop-a">GitHub</a></div>
             </div>
         </div>
+         
+         
+        <style type="text/css">
+pre{
+    word-break: break-all;
+    word-wrap: break-word;
+  }
+</style>
+<link rel="stylesheet" href="http://http://oq5d32gij.bkt.clouddn.com/tomorrow-night-bright.min.css" type="text/css">
+<script src="http://http://oq5d32gij.bkt.clouddn.com/highlight.min.js" type="text/javascript"></script>
+<script>
+$(window).load(function(){
+ $('pre').addClass('prettyprint linenums').attr('style', 'overflow:auto;');
+   prettyPrint();
+ })
+</script>
+
+        
     
 </footer>
 

@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://wangyu1997.github.io/"/>
-  <updated>2017-05-20T05:08:16.000Z</updated>
+  <updated>2017-05-20T08:47:36.000Z</updated>
   <id>https://wangyu1997.github.io/</id>
   
   <author>
@@ -20,10 +20,11 @@
     <link href="https://wangyu1997.github.io/2017/05/19/uicell/"/>
     <id>https://wangyu1997.github.io/2017/05/19/uicell/</id>
     <published>2017-05-18T16:43:11.000Z</published>
-    <updated>2017-05-20T05:08:16.000Z</updated>
+    <updated>2017-05-20T08:47:36.000Z</updated>
     
     <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>自定义的UITableCell<br><a id="more"></a></p>
-<pre><code class="mm">//
+<pre><code class="objective-c">
+//
 //  jokeCell.m
 //  MyLaugh
 //
@@ -31,7 +32,7 @@
 //  Copyright © 2017 wangyu. All rights reserved.
 //
 
-#import &quot;jokeCell.h&quot;
+#import "jokeCell.h"
 #define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
 
 @implementation jokeCell
@@ -112,7 +113,9 @@
 }
 
 @end
+
 </code></pre>
+
 ]]></content>
     
     <summary type="html">
@@ -133,7 +136,7 @@
     <link href="https://wangyu1997.github.io/2017/05/18/math/"/>
     <id>https://wangyu1997.github.io/2017/05/18/math/</id>
     <published>2017-05-18T12:30:00.000Z</published>
-    <updated>2017-05-20T05:08:27.000Z</updated>
+    <updated>2017-05-20T06:48:54.000Z</updated>
     
     <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>对LaTex基本用法的学习<br><a id="more"></a></p>
 <p>#常用数学符号的 LaTeX 表示方法<br>１、指数和下标可以用 ^ 和 _ 后加相应字符来实现。比如：</p>

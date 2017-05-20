@@ -219,14 +219,6 @@
 
     <!-- Custom Head -->
     
-    
-        <link href="https://cdn.bootcss.com/highlight.js/8.0/styles/tomorrow-night.min.css" rel="stylesheet"> 
-         <style type="text/css">
-          #post-content pre{
-            background-color: #000 !important;
-          }
-        </style>
-    
 </head>
 
 
@@ -440,7 +432,8 @@
    
     
             <script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>自定义的UITableCell<br><a id="more"></a></p>
-<pre><code class="mm">//
+<pre><code class="objective-c">
+//
 //  jokeCell.m
 //  MyLaugh
 //
@@ -448,7 +441,7 @@
 //  Copyright © 2017 wangyu. All rights reserved.
 //
 
-#import &quot;jokeCell.h&quot;
+#import "jokeCell.h"
 #define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
 
 @implementation jokeCell
@@ -529,88 +522,224 @@
 }
 
 @end
+
 </code></pre>
 
+
            
-<script src="https://cdn.bootcss.com/highlight.js/8.0/highlight.min.js"></script>  
+         <style type="text/css">
+.hljs-comment,
+.hljs-quote {
+  color: #999999;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+  color: #f2777a;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+  color: #f99157;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+  color: #ffcc66;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+  color: #99cc99;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+  color: #6699cc;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+  color: #cc99cc;
+}
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  background: #2d2d2d !important;
+  color: #cccccc !important;
+  padding: 1em !important;
+}
+
+pre{
+    background: #2d2d2d !important;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+</style>
+<script type="text/javascript">
+// $(function(){
+// 	//代码高亮自定义
+// 	$("code").each(function(){
+// 		$(this).html("<ul><li>" + $(this).html().replace(/\n/g,"\n</li><li>") +"\n</li></ul>");
+// 	});
+// });
+</script>
+
+<style type="text/css">
+/*.hljs {
+	border: 0;
+	font-family: "Consulas", "Courier New", Courier, mono, serif;
+	font-size: 12px;
+	background: #eee !important;
+	display: block;
+	padding: 1px;
+	margin: 0;
+	width: 100%;
+	font-weight: 200;
+	color: #333;
+	white-space: pre-wrap
+}*/
+.hljs ul {
+	list-style: decimal;
+	/*background-color: #fff;*/
+	margin: 0px 0px 0 0px !important;
+	padding: 0px;
+}
+/*.hljs ul li {
+	list-style: decimal-leading-zero;
+	border-left: 1px solid #ddd !important;
+	background: #fff;
+	padding: 5px!important;
+	margin: 0 !important;
+  width: 20px !important;
+	line-height: 14px;
+	word-break: break-all;
+	word-wrap: break-word;
+}*/
+/*.hljs ul li:nth-of-type(even) {
+	background-color: #fcfcfc;
+	color: inherit;
+}*/
+</style>
+<script src="https://cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
        <script >hljs.initHighlightingOnLoad();</script>  
          
-            
-<!-- css -->
-<style type="text/css">
-  .center {
-    text-align: center;
-  }
-  .hidden {
-    display: none;
-  }
-  .donate_bar a.btn_donate{
-    display: inline-block;
-    width: 82px;
-    height: 82px;
-    background: url("http://ojgpkbakj.bkt.clouddn.com/DonateButton.gif") no-repeat;
-    _background: url("http://ojgpkbakj.bkt.clouddn.com/DonateButton.gif") no-repeat;
-    -webkit-transition: background 0s;
-    -moz-transition: background 0s;
-    -o-transition: background 0s;
-    -ms-transition: background 0s;
-    transition: background 0s;
-  }
-  .donate_bar a.btn_donate:hover{ background-position: 0px -82px;}
-  .donate_bar .donate_txt {
-    display: block;
-    color: #9d9d9d;
-    font: 14px/2 "Microsoft Yahei";
-  }
-  .bold{ font-weight: bold; }
-</style>
-<!-- /css -->
-<!-- Donate Module -->
-<div id="donate_module">
-  <!-- btn_donate & tips -->
-  <div id="donate_board" class="donate_bar center">
-    <a id="btn_donate" class="btn_donate" target="_self" href="javascript:;" title="Donate 打赏"></a>
-    <span class="donate_txt">
-      坚持原创技术分享，您的支持将鼓励我继续创作！
-    </span>
-  </div>
-  <!-- /btn_donate & tips -->
-  <!-- donate guide -->
-  <div id="donate_guide" class="donate_bar center hidden">
-    <a href="/uploads/wechat.JPG" title="用微信扫一扫哦~" class="fancybox" rel="article0">
-      <img src="/uploads/wechat.JPG" title="微信打赏 snatic" height="190px" width="auto"/>
-    </a>
-    <a href="/uploads/ali.JPG" title="用支付宝扫一扫即可~" class="fancybox" rel="article0">
-      <img src="/uploads/ali.JPG" title="支付宝打赏 snatic" height="190px" width="auto"/>
-    </a>
-    <span class="donate_txt">
-      坚持原创技术分享，您的支持将鼓励我继续创作！
-    </span>
-  </div>
-  <!-- /donate guide -->
-  <!-- donate script -->
-  <script type="text/javascript">
-    document.getElementById('btn_donate').onclick = function() {
-      $('#donate_board').addClass('hidden');
-      $('#donate_guide').removeClass('hidden');
-    }
-    function donate_on_web(){
-      $('#donate').submit();
-    }
-    var original_window_onload = window.onload;
-    window.onload = function () {
-      if (original_window_onload) {
-        original_window_onload();
-      }
-      document.getElementById('donate_board_wdg').className = 'hidden';
-    }
-  </script>
-  <!-- /donate script -->
-</div>
-<!-- /Donate Module -->
     
- 
+             
+           <style type="text/css">
+           #rewardButton {
+    cursor: pointer;
+    border: 0;
+    outline: 0;
+    border-radius: 100%;
+    padding: 0;
+    margin: 0;
+    letter-spacing: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+}
+#rewardButton span {
+    display: inline-block;
+    width: 80px;
+    height: 35px;
+    border-radius: 5px;
+    padding-top: 5px;
+    color: #fff;
+    font-weight: 400;
+    font-style: normal;
+    font-variant: normal;
+    font-stretch: normal;
+    font-size: 18px;
+    font-family: "Microsoft Yahei";
+    background: #F44336;
+}
+#rewardButton span:hover{
+    background: #F7877F;
+}
+#QR{
+    padding-top:20px;
+}
+#QR a{
+    border:0;
+}
+#QR img{
+    width: 180px;
+    max-width: 100%;
+    display: inline-block;
+    margin: 0.8em 2em 0 2em;
+}
+#wechat:hover p{
+    animation: roll 0.1s infinite linear;
+    -webkit-animation: roll 0.1s infinite linear;
+    -moz-animation: roll 0.1s infinite linear;
+}
+#alipay:hover p{
+    animation: roll 0.1s infinite linear;
+    -webkit-animation: roll 0.1s infinite linear;
+    -moz-animation: roll 0.1s infinite linear;
+}
+@keyframes roll {
+    from {
+      transform(rotateZ(30deg));
+    }
+    to {
+      transform(rotateZ(-30deg));
+    }
+}
 
+           </style>
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/uploads/wechat.JPG" alt="人不如故 WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/uploads/ali.JPG" alt="人不如故 Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+           
+
+
+     
+    
     
 </div>
 
@@ -883,6 +1012,31 @@ It will not impact the appearance and can give developers a lot of support :)
 
                     
 
+                    
+ 
+  <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+   <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+ 
+
+
                     <!--Footer-->
 <footer class="mdl-mini-footer" id="bottom">
     
@@ -945,14 +1099,6 @@ It will not impact the appearance and can give developers a lot of support :)
             &nbsp;人不如故
         </div>
 
-        <div>
-		<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-		<div>
-		本站总访问量 <span id="busuanzi_value_site_pv"></span> &nbsp&nbsp&nbsp
-		你是第<span id="busuanzi_value_site_uv"></span>个来到的小伙伴
-		</div>
-		</div>
-
         <!-- Paradox Footer Right Section -->
 
         <!--
@@ -969,7 +1115,6 @@ It will not impact the appearance and can give developers a lot of support :)
                 <div class="footer-develop-div">Fork me on - <a href="https://github.com/wangyu1997" target="_blank" class="footer-develop-a">GitHub</a></div>
             </div>
         </div>
-         
     
 </footer>
 
@@ -1017,6 +1162,7 @@ It will not impact the appearance and can give developers a lot of support :)
 
     <!-- Busuanzi -->
     <script src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
 
 
 

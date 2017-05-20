@@ -4,7 +4,7 @@
     
     <entry>
       <title><![CDATA[iOS UICollectionView自定义cell]]></title>
-      <url>/2017/05/19/test/</url>
+      <url>/2017/05/19/uicell/</url>
       <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>自定义的UITableCell<br><a id="more"></a></p>
 <pre><code class="mm">//
 //  jokeCell.m
@@ -162,7 +162,7 @@
         
         <tags>
             
-            <tag> mathjax </tag>
+            <tag> math </tag>
             
         </tags>
         

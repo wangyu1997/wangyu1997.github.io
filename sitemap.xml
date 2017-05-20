@@ -4,7 +4,7 @@
   <url>
     <loc>https://wangyu1997.github.io/2017/05/19/uicell/</loc>
     
-    <lastmod>2017-05-20T08:47:36.000Z</lastmod>
+    <lastmod>2017-05-20T10:09:42.000Z</lastmod>
     
   </url>
   
@@ -142,7 +142,7 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-go.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-erlang.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
@@ -156,6 +156,13 @@
   </url>
   
   <url>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-go.js</loc>
+    
+    <lastmod>2017-01-13T03:58:20.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://wangyu1997.github.io/assets/prettify/lang-hs.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
@@ -163,7 +170,7 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-erlang.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-lasso.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
@@ -171,13 +178,6 @@
   
   <url>
     <loc>https://wangyu1997.github.io/assets/prettify/lang-lassoscript.js</loc>
-    
-    <lastmod>2017-01-13T03:58:20.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-lasso.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
@@ -268,14 +268,14 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-nemerle.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-n.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-n.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-nemerle.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
@@ -296,14 +296,14 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-rd.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-r.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-r.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-rd.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
@@ -373,14 +373,14 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-tcl.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-tex.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-tex.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-tcl.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
@@ -443,20 +443,6 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/prettify.css</loc>
-    
-    <lastmod>2017-01-13T03:58:20.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/run_prettify.js</loc>
-    
-    <lastmod>2017-01-13T03:58:20.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://wangyu1997.github.io/assets/prettify/lang-yml.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
@@ -464,7 +450,21 @@
   </url>
   
   <url>
+    <loc>https://wangyu1997.github.io/assets/prettify/prettify.css</loc>
+    
+    <lastmod>2017-01-13T03:58:20.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://wangyu1997.github.io/assets/prettify/prettify.js</loc>
+    
+    <lastmod>2017-01-13T03:58:20.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangyu1997.github.io/assets/prettify/run_prettify.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
@@ -485,14 +485,14 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/skins/sons-of-obsidian.css</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/skins/doxy.css</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/skins/doxy.css</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/skins/sons-of-obsidian.css</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     

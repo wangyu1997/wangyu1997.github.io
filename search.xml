@@ -6,8 +6,7 @@
       <title><![CDATA[iOS UICollectionView自定义cell]]></title>
       <url>/2017/05/19/uicell/</url>
       <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>自定义的UITableCell<br><a id="more"></a></p>
-<pre><code class="objective-c">
-//
+<pre><code class="mm">//
 //  jokeCell.m
 //  MyLaugh
 //
@@ -15,7 +14,7 @@
 //  Copyright © 2017 wangyu. All rights reserved.
 //
 
-#import "jokeCell.h"
+#import &quot;jokeCell.h&quot;
 #define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
 
 @implementation jokeCell
@@ -96,9 +95,7 @@
 }
 
 @end
-
 </code></pre>
-
 ]]></content>
       
         <categories>

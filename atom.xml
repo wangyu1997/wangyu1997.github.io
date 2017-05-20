@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://wangyu1997.github.io/"/>
-  <updated>2017-05-20T08:47:36.000Z</updated>
+  <updated>2017-05-20T10:09:42.000Z</updated>
   <id>https://wangyu1997.github.io/</id>
   
   <author>
@@ -20,11 +20,10 @@
     <link href="https://wangyu1997.github.io/2017/05/19/uicell/"/>
     <id>https://wangyu1997.github.io/2017/05/19/uicell/</id>
     <published>2017-05-18T16:43:11.000Z</published>
-    <updated>2017-05-20T08:47:36.000Z</updated>
+    <updated>2017-05-20T10:09:42.000Z</updated>
     
     <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>自定义的UITableCell<br><a id="more"></a></p>
-<pre><code class="objective-c">
-//
+<pre><code class="mm">//
 //  jokeCell.m
 //  MyLaugh
 //
@@ -32,7 +31,7 @@
 //  Copyright © 2017 wangyu. All rights reserved.
 //
 
-#import "jokeCell.h"
+#import &quot;jokeCell.h&quot;
 #define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
 
 @implementation jokeCell
@@ -113,9 +112,7 @@
 }
 
 @end
-
 </code></pre>
-
 ]]></content>
     
     <summary type="html">

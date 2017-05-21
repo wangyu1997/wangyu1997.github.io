@@ -133,7 +133,7 @@
     <link href="https://wangyu1997.github.io/2017/05/18/math/"/>
     <id>https://wangyu1997.github.io/2017/05/18/math/</id>
     <published>2017-05-18T12:30:00.000Z</published>
-    <updated>2017-05-20T06:48:54.000Z</updated>
+    <updated>2017-05-20T10:37:45.000Z</updated>
     
     <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>对LaTex基本用法的学习<br><a id="more"></a></p>
 <p>#常用数学符号的 LaTeX 表示方法<br>１、指数和下标可以用 ^ 和 _ 后加相应字符来实现。比如：</p>

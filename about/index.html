@@ -414,14 +414,15 @@
 
 
 
-			<div id="aplayer1" class="aplayer" style="margin-bottom: 20px;"></div>
+			<div id="aplayer0" class="aplayer" style="margin-bottom: 20px;"></div>
 			<script>
 				var options = {"narrow":false,"autoplay":true,"showlrc":3,"mode":"random","music":[{"title":"平凡之路","author":"朴树","url":"http://og9ocpmwk.bkt.clouddn.com/%E5%B9%B3%E5%87%A1%E4%B9%8B%E8%B7%AF.mp3","pic":"https://ogd99kckh.qnssl.com/1.jpg","lrc":"http://og9ocpmwk.bkt.clouddn.com/%E5%B9%B3%E5%87%A1%E4%B9%8B%E8%B7%AF.txt"},{"title":"野子","author":"苏运莹","url":"http://og9ocpmwk.bkt.clouddn.com/01%20%E9%87%8E%E5%AD%90.m4a","pic":"http://og9ocpmwk.bkt.clouddn.com/%E9%87%8E%E5%AD%90.jpg","lrc":"https://ogd99kckh.qnssl.com/%E9%87%8E%E5%AD%90.txt"}]};
-				options.element = document.getElementById("aplayer1");
+				options.element = document.getElementById("aplayer0");
 				new APlayer(options);
 			</script>
 
 		
+<p><img src="media/14952810362006.jpg" alt=""></p>
 
            
      
@@ -567,6 +568,7 @@
         
     
 
+
     <!-- Categories  -->
     
         <li class="dropdown">
@@ -585,7 +587,30 @@
         
     
 
-        <!-- Archives  -->
+    <!-- Pages  -->
+    
+        <li>
+            <a href="/links" title="小伙伴们">
+                
+                    <i class="material-icons sidebar-material-icons">group</i>
+                
+                小伙伴们
+            </a>
+        </li>
+        
+    
+        <li>
+            <a href="/tags" title="标签">
+                
+                    <i class="material-icons sidebar-material-icons">loyalty</i>
+                
+                标签
+            </a>
+        </li>
+        
+    
+
+            <!-- Archives  -->
     
         <li class="dropdown">
             <a href="#" class="ripple-effect dropdown-toggle" data-toggle="dropdown">
@@ -603,26 +628,44 @@
         
     
 
-    <!-- Pages  -->
+          <!-- rss -->
     
-        <li>
-            <a href="/tags" title="标签">
+        <li id="sidebar-first-li">
+            <a href="/gallery" target="_self">
                 
-                    <i class="material-icons sidebar-material-icons">loyalty</i>
+                    <i class="material-icons sidebar-material-icons">favorite</i>
                 
-                标签
+                情愫
             </a>
         </li>
         
     
-        <li>
-            <a href="/links" title="小伙伴们">
+
+      <!-- board -->
+    
+        <li id="sidebar-first-li">
+            <a href="/board" target="_self">
                 
-                    <i class="material-icons sidebar-material-icons">group</i>
+                    <i class="material-icons sidebar-material-icons">question_answer</i>
                 
-                小伙伴们
+                留言板
             </a>
         </li>
+        
+    
+
+      <!-- rss -->
+    
+        <li id="sidebar-first-li">
+            <a href="/atom.xml" target="_blank">
+                
+                    <i class="material-icons sidebar-material-icons">cast_connected</i>
+                
+                RSS订阅
+            </a>
+        </li>
+        
+            <li class="divider"></li>
         
     
 

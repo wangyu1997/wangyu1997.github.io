@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://wangyu1997.github.io/"/>
-  <updated>2017-05-26T16:09:00.000Z</updated>
+  <updated>2017-05-26T16:10:53.000Z</updated>
   <id>https://wangyu1997.github.io/</id>
   
   <author>
@@ -20,9 +20,9 @@
     <link href="https://wangyu1997.github.io/2017/05/26/LDA/"/>
     <id>https://wangyu1997.github.io/2017/05/26/LDA/</id>
     <published>2017-05-26T14:38:00.000Z</published>
-    <updated>2017-05-26T16:09:00.000Z</updated>
+    <updated>2017-05-26T16:10:53.000Z</updated>
     
-    <content type="html"><![CDATA[<script src="/assets/js/APlayer.min.js"> </script><script src="/assets/js/DPlayer.min.js"> </script><h3 id="线性判别分析LDA原理总结"><a href="#线性判别分析LDA原理总结" class="headerlink" title="线性判别分析LDA原理总结"></a><center>线性判别分析LDA原理总结</center></h3><p>　　　　线性判别分析（Linear Discriminant Analysis, 以下简称LDA）,一种经典的降维方法。LDA在模式识别领域（比如人脸识别，舰艇识别等图形图像识别领域）中有非常广泛的应用，因此我们有必要了解下它的算法原理。</p>
+    <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><h3 id="线性判别分析LDA原理总结"><a href="#线性判别分析LDA原理总结" class="headerlink" title="线性判别分析LDA原理总结"></a><center>线性判别分析LDA原理总结</center></h3><p>　　　　线性判别分析（Linear Discriminant Analysis, 以下简称LDA）,一种经典的降维方法。LDA在模式识别领域（比如人脸识别，舰艇识别等图形图像识别领域）中有非常广泛的应用，因此我们有必要了解下它的算法原理。</p>
 <p>　　　　在学习LDA之前，有必要将其自然语言处理领域的LDA区别开来，在自然语言处理领域， LDA是隐含狄利克雷分布（Latent Dirichlet Allocation，简称LDA），他是一种处理文档的主题模型。我们本文只讨论线性判别分析，因此后面所有的LDA均指线性判别分析。</p>
 <ol>
 <li>LDA的思想</li>
@@ -31,7 +31,7 @@
 <center><br><img src="http://oq5d32gij.bkt.clouddn.com/14958087329231.jpg" alt=""><br></center>
 
 <p>　　　　可能还是有点抽象，我们先看看最简单的情况。假设我们有两类数据 分别为红色和蓝色，如下图所示，这些数据特征是二维的，我们希望将这些数据投影到一维的一条直线，让每一种类别数据的投影点尽可能的接近，而红色和蓝色数据中心之间的距离尽可能的大。</p>
-<p>　　　　上图中国提供了两种投影方式，哪一种能更好的满足我们的标准呢？从直观上可以看出，右图要比左图的投影效果好，因为右图的黑色数据和蓝色数据各个较为集中，且类别之间的距离明显。左图则在边界处数据混杂。以上就是LDA的主要思想了，当然在实际应用中，我们的数据是多个类别的，我们的原始数据一般也是超过二维的，投影后的也一般不是直线，而是一个低维的超平面。</p>
+<p>　　　　上图中提供了两种投影方式，哪一种能更好的满足我们的标准呢？从直观上可以看出，右图要比左图的投影效果好，因为右图的黑色数据和蓝色数据各个较为集中，且类别之间的距离明显。左图则在边界处数据混杂。以上就是LDA的主要思想了，当然在实际应用中，我们的数据是多个类别的，我们的原始数据一般也是超过二维的，投影后的也一般不是直线，而是一个低维的超平面。</p>
 <p>　　　　在我们将上面直观的内容转化为可以度量的问题之前，我们先了解些必要的数学基础知识，这些在后面讲解具体LDA原理时会用到。</p>
 <ol>
 <li>瑞利商（Rayleigh quotient）与广义瑞利商（genralized Rayleigh quotient）<br>   我们首先来看看瑞利商的定义。瑞利商是指这样的函数$R(A,x)$:<br>$$R(A,x)=\frac{x^HAx}{x^Hx}$$<br>　　　　其中x为非零向量，而A为n×n的Hermitan矩阵。所谓的Hermitan矩阵就是满足共轭转置矩阵和自己相等的矩阵，即$A^H=A$。如果我们的矩阵A是实矩阵，则满足$A^H=A$的矩阵即为Hermitan矩阵。</li>
@@ -105,7 +105,7 @@
     
     <summary type="html">
     
-      &lt;script src=&quot;/assets/js/APlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;h3 id=&quot;线性判别分析LDA原理总结&quot;&gt;&lt;a href=&quot;#线性判别分析L
+      &lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;&gt; &lt;/script&gt;&lt;h3 id=&quot;线性判别分析LDA原理总结&quot;&gt;&lt;a href=&quot;#线性判别分析L
     
     </summary>
     
@@ -123,7 +123,7 @@
     <published>2017-05-18T16:43:11.000Z</published>
     <updated>2017-05-20T10:09:42.000Z</updated>
     
-    <content type="html"><![CDATA[<script src="/assets/js/APlayer.min.js"> </script><script src="/assets/js/DPlayer.min.js"> </script><p>自定义的UITableCell<br><a id="more"></a></p>
+    <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>自定义的UITableCell<br><a id="more"></a></p>
 <pre><code class="mm">//
 //  jokeCell.m
 //  MyLaugh
@@ -236,7 +236,7 @@
     <published>2017-05-18T12:30:00.000Z</published>
     <updated>2017-05-26T15:34:55.000Z</updated>
     
-    <content type="html"><![CDATA[<script src="/assets/js/APlayer.min.js"> </script><script src="/assets/js/DPlayer.min.js"> </script><p>对LaTex基本用法的学习<br><a id="more"></a><br>$$T = \{(\vec{x_1},y_1),((\vec{x_2},y_2),\cdots,(\vec{x_N},y_N)\},\vec{x_i} $$</p>
+    <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>对LaTex基本用法的学习<br><a id="more"></a><br>$$T = \{(\vec{x_1},y_1),((\vec{x_2},y_2),\cdots,(\vec{x_N},y_N)\},\vec{x_i} $$</p>
 <h2 id="常用数学符号的-LaTeX-表示方法"><a href="#常用数学符号的-LaTeX-表示方法" class="headerlink" title="常用数学符号的 LaTeX 表示方法"></a>常用数学符号的 LaTeX 表示方法</h2><p>１、指数和下标可以用 ^ 和 _ 后加相应字符来实现。比如：</p>
 <p><img src="http://oq5d32gij.bkt.clouddn.com/foot.gif" alt="foot"></p>
 <p>2、平方根（square root）的输入命令为：\sqrt，n 次方根相应地为: \sqrt[n]。方根符号的大小由LATEX自动加以调整。也可用\surd 仅给出<br>符号。比如：</p>

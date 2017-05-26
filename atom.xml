@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://wangyu1997.github.io/"/>
-  <updated>2017-05-26T16:07:14.000Z</updated>
+  <updated>2017-05-26T16:09:00.000Z</updated>
   <id>https://wangyu1997.github.io/</id>
   
   <author>
@@ -20,9 +20,9 @@
     <link href="https://wangyu1997.github.io/2017/05/26/LDA/"/>
     <id>https://wangyu1997.github.io/2017/05/26/LDA/</id>
     <published>2017-05-26T14:38:00.000Z</published>
-    <updated>2017-05-26T16:07:14.000Z</updated>
+    <updated>2017-05-26T16:09:00.000Z</updated>
     
-    <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><h3 id="线性判别分析LDA原理总结"><a href="#线性判别分析LDA原理总结" class="headerlink" title="线性判别分析LDA原理总结"></a><center>线性判别分析LDA原理总结</center></h3><p>　　　　线性判别分析（Linear Discriminant Analysis, 以下简称LDA）,一种经典的降维方法。LDA在模式识别领域（比如人脸识别，舰艇识别等图形图像识别领域）中有非常广泛的应用，因此我们有必要了解下它的算法原理。</p>
+    <content type="html"><![CDATA[<script src="/assets/js/APlayer.min.js"> </script><script src="/assets/js/DPlayer.min.js"> </script><h3 id="线性判别分析LDA原理总结"><a href="#线性判别分析LDA原理总结" class="headerlink" title="线性判别分析LDA原理总结"></a><center>线性判别分析LDA原理总结</center></h3><p>　　　　线性判别分析（Linear Discriminant Analysis, 以下简称LDA）,一种经典的降维方法。LDA在模式识别领域（比如人脸识别，舰艇识别等图形图像识别领域）中有非常广泛的应用，因此我们有必要了解下它的算法原理。</p>
 <p>　　　　在学习LDA之前，有必要将其自然语言处理领域的LDA区别开来，在自然语言处理领域， LDA是隐含狄利克雷分布（Latent Dirichlet Allocation，简称LDA），他是一种处理文档的主题模型。我们本文只讨论线性判别分析，因此后面所有的LDA均指线性判别分析。</p>
 <ol>
 <li>LDA的思想</li>
@@ -43,7 +43,7 @@
 </ol>
 <p>　　　　现在我们回到LDA的原理上，我们在第一节说讲到了LDA希望投影后希望同一种类别数据的投影点尽可能的接近，而不同类别的数据的类别中心之间的距离尽可能的大，但是这只是一个感官的度量。现在我们首先从比较简单的二类LDA入手，严谨的分析LDA的原理。</p>
 <p>　　　　假设我们的数据集$D={(x_1,y_1),(x_2,y_2),\cdots,((x_m,y_m))}$,其中任意样本$x_i$为n维向量，$y_i\in{0,1}$。我们定义$N_j(j=0,1)$为第j类样本的个数，$X_j(j=0,1)$为第j类样本的集合，而$μ_j(j=0,1)$为第j类样本的均值向量，定义$Σ_j(j=0,1)$为第j类样本的协方差矩阵。</p>
-<p>　　　　$μ_j$的表达式为：<br>$$μ_j=\frac{1}{Nj}\sum_{x\in{X_j}}x(j=0,1)$$<br>　　　　$∑_j$的表达式为：<br>$$∑_j=\sum_{x\in{Xj}}(x−μ_j)(x−μ_j)^T(j=0,1)$$<br>　　　　由于是两类数据，因此我们只需要将数据投影到一条直线上即可。假设我们的投影直线是向量w,则对任意一个样本本$x_i$,它在直线w的投影为$w^Tx_i$,对于我们的两个类别的中心点$μ_0,μ_1$,在在直线w的投影为$w^Tμ_0$和$w^Tμ_1$。由于LDA需要让不同类别的数据的类别中心之间的距离尽可能的大，也就是我们要最大化$||w^Tμ_0−w^Tμ_1||^2_2$,同时我们希望同一种类别数据的投影点尽可能的接近，也就是要同类样本投影点的协方差$w^T\sum_0w$和$w^T\sum_1w$尽可能的小，即最小化$w^T\sum_0w+w^TΣ_1w$。综上所述，我们的优化目标为：<br>$$\underbrace{arg\ max}_w\ J(w)=\frac{||w^Tμ_0−w^Tμ_1||^2_2}{w^T\sum_0w+w^T\sum_1w}=\frac{w^T(μ_0−μ_1)(μ_0−μ_1)^Tw}{w^T(\sum_0+\sum_1)w}$$<br>　　　　我们一般定义类内散度矩阵$S_w$为：<br>$$S_w=∑_0+∑_1=\sum_{x\in{X0}}(x−μ0)(x−μ0)^T+\sum_{x\in{X1}}(x−μ1)(x−μ1)^T$$<br>　　　　同时定义类间散度矩阵$S_b$为：<br>$$S_b=(μ_0−μ_1)(μ_0−μ_1)^T$$<br>　　　　这样我们的优化目标重写为：<br>$$\underbrace{arg\ max}_w\ J(w)=\frac{w^TS_bw}{w^TS_ww}$$<br>　　　　仔细一看上式，这不就是我们的广义瑞利商嘛！这就简单了，利用我们第二节讲到的广义瑞利商的性质，我们知道我们的$J(w)$最大值为矩阵$S^{−1}_wS_b$的最大特征值，而对应的$w$为$S^{−1}_wS_b$的最大特征值对应的特征向量!</p>
+<p>　　　　$μ_j$的表达式为：<br>$$μ_j=\frac{1}{Nj}\sum_{x\in{X_j}}x(j=0,1)$$<br>　　　　$∑_j$的表达式为：<br>$$∑_j=\sum_{x\in{Xj}}(x−μ_j)(x−μ_j)^T(j=0,1)$$<br>　　　　由于是两类数据，因此我们只需要将数据投影到一条直线上即可。假设我们的投影直线是向量w,则对任意一个样本本$x_i$,它在直线w的投影为$w^Tx_i$,对于我们的两个类别的中心点$μ_0,μ_1$,在在直线w的投影为$w^Tμ_0$和$w^Tμ_1$。由于LDA需要让不同类别的数据的类别中心之间的距离尽可能的大，也就是我们要最大化$||w^Tμ_0−w^Tμ_1||^2_2$,同时我们希望同一种类别数据的投影点尽可能的接近，也就是要同类样本投影点的协方差$w^T\sum_0w$和$w^T\sum_1w$尽可能的小，即最小化$w^T\sum_0w+w^T\sum_1w$。综上所述，我们的优化目标为：<br>$$\underbrace{arg\ max}_w\ J(w)=\frac{||w^Tμ_0−w^Tμ_1||^2_2}{w^T\sum_0w+w^T\sum_1w}=\frac{w^T(μ_0−μ_1)(μ_0−μ_1)^Tw}{w^T(\sum_0+\sum_1)w}$$<br>　　　　我们一般定义类内散度矩阵$S_w$为：<br>$$S_w=∑_0+∑_1=\sum_{x\in{X0}}(x−μ0)(x−μ0)^T+\sum_{x\in{X1}}(x−μ1)(x−μ1)^T$$<br>　　　　同时定义类间散度矩阵$S_b$为：<br>$$S_b=(μ_0−μ_1)(μ_0−μ_1)^T$$<br>　　　　这样我们的优化目标重写为：<br>$$\underbrace{arg\ max}_w\ J(w)=\frac{w^TS_bw}{w^TS_ww}$$<br>　　　　仔细一看上式，这不就是我们的广义瑞利商嘛！这就简单了，利用我们第二节讲到的广义瑞利商的性质，我们知道我们的$J(w)$最大值为矩阵$S^{−1}_wS_b$的最大特征值，而对应的$w$为$S^{−1}_wS_b$的最大特征值对应的特征向量!</p>
 <p>　　　　注意到对于二类的时候，$S_bw$的方向恒为$μ_0−μ_1$,不妨令$S_bw=\lambda (μ_0−μ_1)$，将其带入：$(S^{−1}_wS_b)w=λw$，可以得到$w=S^{−1}_w(μ_0−μ_1)$， 也就是说我们只要求出原始二类样本的均值和方差就可以确定最佳的投影方向$w$了。</p>
 <ol>
 <li>多类LDA原理</li>
@@ -105,7 +105,7 @@
     
     <summary type="html">
     
-      &lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;&gt; &lt;/script&gt;&lt;h3 id=&quot;线性判别分析LDA原理总结&quot;&gt;&lt;a href=&quot;#线性判别分析L
+      &lt;script src=&quot;/assets/js/APlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;h3 id=&quot;线性判别分析LDA原理总结&quot;&gt;&lt;a href=&quot;#线性判别分析L
     
     </summary>
     
@@ -123,7 +123,7 @@
     <published>2017-05-18T16:43:11.000Z</published>
     <updated>2017-05-20T10:09:42.000Z</updated>
     
-    <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>自定义的UITableCell<br><a id="more"></a></p>
+    <content type="html"><![CDATA[<script src="/assets/js/APlayer.min.js"> </script><script src="/assets/js/DPlayer.min.js"> </script><p>自定义的UITableCell<br><a id="more"></a></p>
 <pre><code class="mm">//
 //  jokeCell.m
 //  MyLaugh
@@ -236,7 +236,7 @@
     <published>2017-05-18T12:30:00.000Z</published>
     <updated>2017-05-26T15:34:55.000Z</updated>
     
-    <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>对LaTex基本用法的学习<br><a id="more"></a><br>$$T = \{(\vec{x_1},y_1),((\vec{x_2},y_2),\cdots,(\vec{x_N},y_N)\},\vec{x_i} $$</p>
+    <content type="html"><![CDATA[<script src="/assets/js/APlayer.min.js"> </script><script src="/assets/js/DPlayer.min.js"> </script><p>对LaTex基本用法的学习<br><a id="more"></a><br>$$T = \{(\vec{x_1},y_1),((\vec{x_2},y_2),\cdots,(\vec{x_N},y_N)\},\vec{x_i} $$</p>
 <h2 id="常用数学符号的-LaTeX-表示方法"><a href="#常用数学符号的-LaTeX-表示方法" class="headerlink" title="常用数学符号的 LaTeX 表示方法"></a>常用数学符号的 LaTeX 表示方法</h2><p>１、指数和下标可以用 ^ 和 _ 后加相应字符来实现。比如：</p>
 <p><img src="http://oq5d32gij.bkt.clouddn.com/foot.gif" alt="foot"></p>
 <p>2、平方根（square root）的输入命令为：\sqrt，n 次方根相应地为: \sqrt[n]。方根符号的大小由LATEX自动加以调整。也可用\surd 仅给出<br>符号。比如：</p>

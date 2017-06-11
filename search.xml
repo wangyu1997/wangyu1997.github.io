@@ -3,6 +3,77 @@
   
     
     <entry>
+      <title><![CDATA[iOS动画中的枚举UIViewAnimationOptions]]></title>
+      <url>/2017/06/11/2017-06-11/</url>
+      <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a>
+<p>首先这个枚举属于UIViewAnimation。我们经常使用的函数是 <code>[UIView animateWithDuration: animations:^{} completion:^(BOOL finished) {}];</code><br>和<code>[UIView animateWithDuration: animations:^{}];</code>如果动画稍微复杂点，例如需要组合等等就可能用到这个函数：<code>[UIView animateWithDuration: delay: options: animations: completion:^(BOOL finished) {}];</code>刚开始接触的朋友看到一堆枚举可能就觉得烦，尤其是苹果那混乱的动画框架东一坨，西一坨。又是Quartz2D，又是核心动画跟臭袜子一样……没关系，捡回来接着穿。</p>
+<p>　　以上方法中的options一项需要传入一个枚举，这个枚举大概控制的是这几个要素：当前动画嵌套中的动画执行随时间的快慢种类（先快后慢等..）。动画要一直重复吗。如果我使用转场动画那么我用哪种转场效果。还有子动画嵌套在父动画中时我们如何对待父动画中的相同选项等等..</p>
+<p>　正文：</p>
+<pre><code>UIViewAnimationOptionLayoutSubviews            //提交动画的时候布局子控件，表示子控件将和父控件一同动画。
+
+UIViewAnimationOptionAllowUserInteraction      //动画时允许用户交流，比如触摸
+
+UIViewAnimationOptionBeginFromCurrentState     //从当前状态开始动画
+
+UIViewAnimationOptionRepeat                    //动画无限重复
+
+UIViewAnimationOptionAutoreverse               //执行动画回路,前提是设置动画无限重复
+
+UIViewAnimationOptionOverrideInheritedDuration //忽略外层动画嵌套的执行时间
+
+UIViewAnimationOptionOverrideInheritedCurve    //忽略外层动画嵌套的时间变化曲线
+
+UIViewAnimationOptionAllowAnimatedContent      //通过改变属性和重绘实现动画效果，如果key没有提交动画将使用快照
+
+UIViewAnimationOptionShowHideTransitionViews   //用显隐的方式替代添加移除图层的动画效果
+
+UIViewAnimationOptionOverrideInheritedOptions  //忽略嵌套继承的选项
+</code></pre><p>   //时间函数曲线相关</p>
+<pre><code>UIViewAnimationOptionCurveEaseInOut            //时间曲线函数，由慢到快
+
+UIViewAnimationOptionCurveEaseIn               //时间曲线函数，由慢到特别快
+
+UIViewAnimationOptionCurveEaseOut              //时间曲线函数，由快到慢
+
+UIViewAnimationOptionCurveLinear               //时间曲线函数，匀速
+</code></pre><p>   //转场动画相关的</p>
+<pre><code>UIViewAnimationOptionTransitionNone            //无转场动画
+
+UIViewAnimationOptionTransitionFlipFromLeft    //转场从左翻转
+
+UIViewAnimationOptionTransitionFlipFromRight   //转场从右翻转
+
+UIViewAnimationOptionTransitionCurlUp          //上卷转场
+
+UIViewAnimationOptionTransitionCurlDown        //下卷转场
+
+UIViewAnimationOptionTransitionCrossDissolve   //转场交叉消失
+
+UIViewAnimationOptionTransitionFlipFromTop     //转场从上翻转
+
+UIViewAnimationOptionTransitionFlipFromBottom  //转场从下翻转
+</code></pre><p>　 浅略理解，待友人的指正。</p>
+<p>　补充：关于最后一组转场动画它一般是用在这个方法中的：</p>
+<p>　　　　<code>[UIView transitionFromView: toView: duration: options: completion:^(BOOL finished) {}];</code></p>
+<p>　该方法效果是插入一面视图移除一面视图，期间可以使用一些转场动画效果。</p>
+]]></content>
+      
+        <categories>
+            
+            <category> iOS </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> UIViewAnimationOptions </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[LDA Algorithm]]></title>
       <url>/2017/05/26/LDA/</url>
       <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><h3 id="线性判别分析LDA原理总结"><a href="#线性判别分析LDA原理总结" class="headerlink" title="线性判别分析LDA原理总结"></a><center>线性判别分析LDA原理总结</center></h3><p>　　　　线性判别分析（Linear Discriminant Analysis, 以下简称LDA）,一种经典的降维方法。LDA在模式识别领域（比如人脸识别，舰艇识别等图形图像识别领域）中有非常广泛的应用，因此我们有必要了解下它的算法原理。</p>

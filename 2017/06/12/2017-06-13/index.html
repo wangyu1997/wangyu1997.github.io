@@ -1,92 +1,439 @@
-<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
-  <title>人不如故</title>
-  
-  <link href="/atom.xml" rel="self"/>
-  
-  <link href="https://wangyu1997.github.io/"/>
-  <updated>2017-06-13T01:23:38.000Z</updated>
-  <id>https://wangyu1997.github.io/</id>
-  
-  <author>
-    <name>人不如故</name>
-    
-  </author>
-  
-  <generator uri="http://hexo.io/">Hexo</generator>
-  
-  <entry>
-    <title>UIPopoverPresentationController</title>
-    <link href="https://wangyu1997.github.io/2017/06/12/2017-06-12/"/>
-    <id>https://wangyu1997.github.io/2017/06/12/2017-06-12/</id>
-    <published>2017-06-12T12:43:11.000Z</published>
-    <updated>2017-06-13T01:23:38.000Z</updated>
-    
-    <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a>
-<p>UIPopoverPresentationController 是 iOS8 后新增的，相当于pad端的UIPopOverController，以后我们也可以在iPhone上使用popOver啦。自己写了一个小demo，大概了熟悉了一下用法。后面有开发需求时会详细补充。<br>首先要知道一点是，我们并不需要创建一个UIPopoverPresentationController，他相当于UIViewController的属性，因此我们只需要创建UIViewController即可。<br>举个例子：假设我们要在 ViewController窗体弹窗，弹窗为FirstViewController（kind of UIViewController）我们用两种方式来实现<br>1、在self.view上创建一个button，给button添加弹窗事件；<br>2、在导航栏添加barButtonItem，给其添加弹窗时间。<br>弹窗事件：</p>
-<pre><code class="swift">1、button
-[objc] view plain copy
-- (void)buttonClick  
-{  
-    FirstViewController *firstVC = [[FirstViewController alloc] init];  
-    firstVC.modalPresentationStyle = UIModalPresentationPopover;  
-    firstVC.popoverPresentationController.sourceView = popOverButton;  //rect参数是以view的左上角为坐标原点（0，0）  
-    firstVC.popoverPresentationController.sourceRect = popOverButton.bounds; //指定箭头所指区域的矩形框范围（位置和尺寸），以view的左上角为坐标原点  
-    firstVC.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp; //箭头方向  
-    firstVC.popoverPresentationController.delegate = self;  
-    firstVC.preferredContentSize = CGSizeMake(100, 200);  
-    [self presentViewController:firstVC animated:YES completion:nil];  
-}  
+<!DOCTYPE html>
+<html lang="zh">
+    <head>
+    <!--
+        © Material Theme
+        https://github.com/viosey/hexo-theme-material
+        Version: 1.3.3 -->
 
-2、barButtonItem
-[objc] view plain copy
-- (void)rightBarButtonItemClick  
-{  
-    FirstViewController *firstVC = [[FirstViewController alloc]init];  
-    firstVC.modalPresentationStyle = UIModalPresentationPopover;  
-    /** 
-     *  由于导航上的控件没有指定frame，无法设置sourceView和sourceRect，用下面的。 
-     */  
-    firstVC.popoverPresentationController.barButtonItem = self.navigationItem.rightBarButtonItem;  
-    firstVC.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp;  
-    firstVC.popoverPresentationController.delegate = self;  
-    firstVC.preferredContentSize = CGSizeMake(100, 200);  
-    [self presentViewController:firstVC animated:YES completion:nil];  
-//    firstVC.popoverPresentationController.passthroughViews = nil;  
-}  
-注意几点：
-1、遵守代理：UIPopoverPresentationControllerDelegate
-2、在phone端必须要适配设备，要设置下面代理方法：
-[objc] view plain copy
-/* For iOS8.0, the only supported adaptive presentation styles are UIModalPresentationFullScreen and UIModalPresentationOverFullScreen. */  
-- (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller;  
--
-</code></pre>
-<p>iPhone下默认是UIModalPresentationFullScreen，需要手动设置为UIModalPresentationNone，否则，是普通的present全屏显示，没有弹窗效果。iPad不需要。<br>3、其他设置根据需求翻相关文档即可。<br>demo：<a href="https://github.com/Lynnll/UIPopOverLearning.git" target="_blank" rel="external">https://github.com/Lynnll/UIPopOverLearning.git</a></p>
-]]></content>
+    <!-- Title -->
     
-    <summary type="html">
-    
-      &lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;&gt; &lt;/script&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
-&lt;p&gt;UIPopoverPresentati
-    
-    </summary>
-    
-      <category term="iOS" scheme="https://wangyu1997.github.io/categories/iOS/"/>
+    <title>
+        
+            Alamofire 4.0 Migration Guide | 
+        
+        人不如故
+    </title>
+
+    <!-- Meta & Info -->
+    <meta charset="utf-8">
+
+    <!-- dns prefetch -->
+    <meta http-equiv="x-dns-prefetch-control" content="on">
     
     
-      <category term="popover" scheme="https://wangyu1997.github.io/tags/popover/"/>
     
-  </entry>
-  
-  <entry>
-    <title>Alamofire 4.0 Migration Guide</title>
-    <link href="https://wangyu1997.github.io/2017/06/12/2017-06-13/"/>
-    <id>https://wangyu1997.github.io/2017/06/12/2017-06-13/</id>
-    <published>2017-06-12T12:43:11.000Z</published>
-    <updated>2017-06-13T01:23:37.000Z</updated>
     
-    <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
+        <link rel="dns-prefetch" href="https://hm.baidu.com"/>
+    
+    
+        <link rel="dns-prefetch" href="https://www.google-analytics.com"/>
+    
+    
+        <link rel="dns-prefetch" href="https://busuanzi.ibruce.info"/>
+    
+
+    <meta http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#000">
+    <meta name="author" content="人不如故">
+    <meta name="description" content="世间一场大梦，人生几度秋凉。">
+    <meta name="keywords" content="null,Alamofire">
+
+    <!-- Favicons -->
+    <link rel="icon shortcut" type="image/ico" href="/img/favicon.png">
+    <link rel="icon" sizes="192x192" href="/img/favicon.png">
+    <link rel="apple-touch-icon" href="/img/favicon.png">
+
+    <!--iOS -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-title" content="Title">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="480">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="人不如故">
+
+    <!-- The Open Graph protocol -->
+    <meta property="og:url" content="https://wangyu1997.github.io">
+    <meta property="og:type" content="blog">
+    <meta property="og:title" content="Alamofire 4.0 Migration Guide | 人不如故">
+    <meta property="og:description" content="世间一场大梦，人生几度秋凉。">
+    <meta property="og:article:tag" content="Alamofire"> 
+
+    <!--[if lte IE 9]>
+        <link rel="stylesheet" href="/css/ie-blocker.css">
+
+        
+            <script src="/js/ie-blocker.zhCN.js"></script>
+        
+    <![endif]-->
+    <!-- Import CSS & jQuery -->
+    
+        <link rel="stylesheet" href="/css/material.min.css">
+        <link rel="stylesheet" href="/css/style.min.css">
+        <!-- Config CSS -->
+
+
+<!-- Other Styles -->
+<style>
+  body, html {
+    font-family: Roboto, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+  }
+
+  a {
+    color: #000;
+  }
+
+  .mdl-card__media,
+  #search-label,
+  #search-form-label:after,
+  #scheme-Paradox .hot_tags-count,
+  #scheme-Paradox .sidebar_archives-count,
+  #scheme-Paradox .sidebar-colored .sidebar-header,
+  #scheme-Paradox .sidebar-colored .sidebar-badge{
+    background-color: #000 !important;
+  }
+
+  /* Sidebar User Drop Down Menu Text Color */
+  #scheme-Paradox .sidebar-colored .sidebar-nav>.dropdown>.dropdown-menu>li>a:hover,
+  #scheme-Paradox .sidebar-colored .sidebar-nav>.dropdown>.dropdown-menu>li>a:focus {
+    color: #000 !important;
+  }
+
+  #post_entry-right-info,
+  .sidebar-colored .sidebar-nav li:hover > a,
+  .sidebar-colored .sidebar-nav li:hover > a i,
+  .sidebar-colored .sidebar-nav li > a:hover,
+  .sidebar-colored .sidebar-nav li > a:hover i,
+  .sidebar-colored .sidebar-nav li > a:focus i,
+  .sidebar-colored .sidebar-nav > .open > a,
+  .sidebar-colored .sidebar-nav > .open > a:hover,
+  .sidebar-colored .sidebar-nav > .open > a:focus,
+  #ds-reset #ds-ctx .ds-ctx-entry .ds-ctx-head a {
+    color: #000 !important;
+  }
+
+  .toTop {
+    background: #000 !important;
+  }
+
+  .material-layout .material-post>.material-nav,
+  .material-layout .material-index>.material-nav,
+  .material-nav a {
+    color: #000;
+  }
+
+  #scheme-Paradox .MD-burger-layer {
+    background-color: #000;
+  }
+
+  #scheme-Paradox #post-toc-trigger-btn {
+    color: #000;
+  }
+
+  .post-toc a:hover {
+    color: #000;
+    text-decoration: underline;
+  }
+
+</style>
+
+
+<!-- Theme Background Related-->
+
+    <style>
+      body{
+        background-image: url(/img/bg.jpg);
+      }
+    </style>
+
+
+
+
+<!-- Fade Effect -->
+
+    <style>
+      .fade {
+        transition: all 800ms linear;
+        -webkit-transform: translate3d(0,0,0);
+        -moz-transform: translate3d(0,0,0);
+        -ms-transform: translate3d(0,0,0);
+        -o-transform: translate3d(0,0,0);
+        transform: translate3d(0,0,0);
+        opacity: 1;
+      }
+
+      .fade.out{
+        opacity: 0;
+      }
+    </style>
+
+
+        <script src="/js/jquery.min.js"></script>
+        <script src="/js/queue.js"></script>
+    
+
+    <!-- UC Browser Compatible -->
+    <script>
+        var agent = navigator.userAgent.toLowerCase();
+        if(agent.indexOf('ucbrowser')>0) {
+            document.write("<link rel=\"stylesheet\" href=\"/css/uc.css\">");
+            alert('由于 UC 浏览器使用极旧的内核，而本网站使用了一些新的特性。\n为了您能更好的浏览，推荐使用 Chrome 或 Firefox 浏览器。');
+        }
+    </script>
+
+    
+    <!-- Baidu Analytics -->
+    <script>
+        var _hmt = _hmt || [];
+        (function() {var hm = document.createElement('script');
+        hm.src = 'https://hm.baidu.com/hm.js?0c1235d6c5795e257894fa96152e0154';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    
+
+    
+    <!-- Google Analytics -->
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-99567775-1', 'auto');ga('send', 'pageview');
+    </script>
+    
+
+
+    <!-- Bing Background -->
+    
+
+    <!-- Custom Head -->
+    
+</head>
+
+
+    
+        <body id="scheme-Paradox" class="lazy">
+            <div class="material-layout  mdl-js-layout has-drawer is-upgraded">
+                
+
+                <!-- Main Container -->
+                <main class="material-layout__content" id="main">
+
+                    <!-- Top Anchor -->
+                    <div id="top">
+                        
+                    </div>
+
+                    
+                        <!-- Hamburger Button -->
+                        <button class="MD-burger-icon sidebar-toggle">
+                            <span class="MD-burger-layer"></span>
+                        </button>
+                    
+
+                    <!-- Post TOC -->
+
+    
+    <!-- Back Button -->
+    <!--
+    <div class="material-back" id="backhome-div" tabindex="0">
+        <a class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
+           href="#" onclick="window.history.back();return false;"
+           target="_self"
+           role="button"
+           data-upgraded=",MaterialButton,MaterialRipple">
+            <i class="material-icons" role="presentation">arrow_back</i>
+            <span class="mdl-button__ripple-container">
+                <span class="mdl-ripple"></span>
+            </span>
+        </a>
+    </div>
+    -->
+
+    <!-- Left aligned menu below button -->
+    <button id="post-toc-trigger-btn"
+        class="mdl-button mdl-js-button mdl-button--icon">
+        <i class="material-icons">format_list_numbered</i>
+    </button>
+
+    <ul class="post-toc-wrap mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="post-toc-trigger-btn" style="max-height:80vh; overflow-y:scroll;">
+        <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Alamofire-4-0-Migration-Guide"><span class="post-toc-number">1.</span> <span class="post-toc-text">Alamofire 4.0 Migration Guide</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Requirements"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">Requirements</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Benefits-of-Upgrading"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">Benefits of Upgrading</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Breaking-API-Changes"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">Breaking API Changes</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Namespace-Changes"><span class="post-toc-number">1.3.1.</span> <span class="post-toc-text">Namespace Changes</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Making-Requests"><span class="post-toc-number">1.3.2.</span> <span class="post-toc-text">Making Requests</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Data-Request-Simple-with-URL-string"><span class="post-toc-number">1.3.2.1.</span> <span class="post-toc-text">Data Request - Simple with URL string</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Data-Request-Complex-with-URL-string"><span class="post-toc-number">1.3.2.2.</span> <span class="post-toc-text">Data Request - Complex with URL string</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Download-Request-Simple-with-URL-string"><span class="post-toc-number">1.3.2.3.</span> <span class="post-toc-text">Download Request - Simple with URL string</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Download-Request-Simple-with-URL-request"><span class="post-toc-number">1.3.2.4.</span> <span class="post-toc-text">Download Request - Simple with URL request</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Download-Request-Complex-with-URL-string"><span class="post-toc-number">1.3.2.5.</span> <span class="post-toc-text">Download Request - Complex with URL string</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Upload-Request-Simple-with-URL-string"><span class="post-toc-number">1.3.2.6.</span> <span class="post-toc-text">Upload Request - Simple with URL string</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Upload-Request-Simple-with-URL-request"><span class="post-toc-number">1.3.2.7.</span> <span class="post-toc-text">Upload Request - Simple with URL request</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Upload-Request-Complex-with-URL-string"><span class="post-toc-number">1.3.2.8.</span> <span class="post-toc-text">Upload Request - Complex with URL string</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#URLStringConvertible"><span class="post-toc-number">1.3.3.</span> <span class="post-toc-text">URLStringConvertible</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#URLConvertible"><span class="post-toc-number">1.3.3.1.</span> <span class="post-toc-text">URLConvertible</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#URLRequest-Conformance"><span class="post-toc-number">1.3.3.2.</span> <span class="post-toc-text">URLRequest Conformance</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#URLRequestConvertible"><span class="post-toc-number">1.3.4.</span> <span class="post-toc-text">URLRequestConvertible</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#New-Features"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">New Features</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Request-Adapter"><span class="post-toc-number">1.4.1.</span> <span class="post-toc-text">Request Adapter</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Request-Retrier"><span class="post-toc-number">1.4.2.</span> <span class="post-toc-text">Request Retrier</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Task-Metrics"><span class="post-toc-number">1.4.3.</span> <span class="post-toc-text">Task Metrics</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Updated-Features"><span class="post-toc-number">1.5.</span> <span class="post-toc-text">Updated Features</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Errors"><span class="post-toc-number">1.5.1.</span> <span class="post-toc-text">Errors</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Parameter-Encoding-Protocol"><span class="post-toc-number">1.5.2.</span> <span class="post-toc-text">Parameter Encoding Protocol</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#URL-Encoding"><span class="post-toc-number">1.5.2.1.</span> <span class="post-toc-text">URL Encoding</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#JSON-Encoding"><span class="post-toc-number">1.5.2.2.</span> <span class="post-toc-text">JSON Encoding</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Property-List-Encoding"><span class="post-toc-number">1.5.2.3.</span> <span class="post-toc-text">Property List Encoding</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Custom-Encoding"><span class="post-toc-number">1.5.2.4.</span> <span class="post-toc-text">Custom Encoding</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Request-Subclasses"><span class="post-toc-number">1.5.3.</span> <span class="post-toc-text">Request Subclasses</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Download-and-Upload-Progress"><span class="post-toc-number">1.5.3.1.</span> <span class="post-toc-text">Download and Upload Progress</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Download-File-Destinations"><span class="post-toc-number">1.5.3.2.</span> <span class="post-toc-text">Download File Destinations</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Download-Options"><span class="post-toc-number">1.5.3.3.</span> <span class="post-toc-text">Download Options</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Response-Validation"><span class="post-toc-number">1.5.4.</span> <span class="post-toc-text">Response Validation</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Data-Request"><span class="post-toc-number">1.5.4.1.</span> <span class="post-toc-text">Data Request</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Download-Request"><span class="post-toc-number">1.5.4.2.</span> <span class="post-toc-text">Download Request</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Response-Serializers"><span class="post-toc-number">1.5.5.</span> <span class="post-toc-text">Response Serializers</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Default-Data-Response"><span class="post-toc-number">1.5.5.1.</span> <span class="post-toc-text">Default Data Response</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Data-Response"><span class="post-toc-number">1.5.5.2.</span> <span class="post-toc-text">Data Response</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Default-Download-Response"><span class="post-toc-number">1.5.5.3.</span> <span class="post-toc-text">Default Download Response</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Download-Response"><span class="post-toc-number">1.5.5.4.</span> <span class="post-toc-text">Download Response</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Custom-Response-Serializers"><span class="post-toc-number">1.5.5.5.</span> <span class="post-toc-text">Custom Response Serializers</span></a></li></ol></li></ol></li></ol></li></ol>
+
+        <!--
+        <li class="mdl-menu__item">
+            Some Action
+        </li>
+        -->
+    </ul>
+
+
+
+
+<!-- Layouts -->
+
+    <!-- Post Module -->
+    <div class="material-post_container">
+
+        <div class="material-post mdl-grid">
+            <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
+
+                <!-- Post Header(Thumbnail & Title) -->
+                
+    <!-- Paradox Post Header -->
+    
+        <!-- Custom Thumbnail -->
+        <div class="post_thumbnail-custom mdl-card__media mdl-color-text--grey-50" style="background-image:url(http://oq5d32gij.bkt.clouddn.com/14952159759791.jpg)">
+    
+            <p class="article-headline-p">
+                Alamofire 4.0 Migration Guide
+            </p>
+        </div>
+
+
+
+
+
+                
+                    <!-- Paradox Post Info -->
+                    <div class="mdl-color-text--grey-700 mdl-card__supporting-text meta">
+
+    <!-- Author Avatar -->
+    <div id="author-avatar">
+        <img src="/img/avatar.png" width="44px" height="44px" alt="Author Avatar"/>
+    </div>
+    <!-- Author Name & Date -->
+    <div>
+        <strong>人不如故</strong>
+        <span>6月 12, 2017</span>
+    </div>
+
+    <div class="section-spacer"></div>
+
+    <!-- Favorite -->
+    <!--
+        <button id="article-functions-like-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon btn-like">
+            <i class="material-icons" role="presentation">favorite</i>
+            <span class="visuallyhidden">favorites</span>
+        </button>
+    -->
+
+    <!-- Qrcode -->
+    
+        <button id="article-functions-qrcode-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+            <i class="material-icons" role="presentation">devices other</i>
+            <span class="visuallyhidden">devices other</span>
+        </button>
+        <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-qrcode-button">
+            <li class="mdl-menu__item">在其它设备中阅读本文章</li>
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACcUlEQVR42u3aQW7DMAwEwPz/0+0DCjtLUlLcYHwyAjvW6CAKK75+vvp64eHh4eHh4eHhPYz3iq+/b13dJ8/nb5XHhoeHh3eE92apvf3wPSAfevLdaGx4eHh4B3lXn7y6T4Zy/27+rWRseHh4eE/mJUt2juwVGzw8PLz/xcupyVa7Oq14eHh4z+H1lvX7Dydl4EFZCx4eHl7MmyzWu++Pnu/h4eHhBbxyS1O+tS0+Uw04oqYrPDw8vA28fCHOy0kvxk2mMoo/8PDw8Dbz7oOD5Jfkf/ItclJaCjEuHh4e3gbepOW0N+heC0JeWvDw8PB283oxRD4F+fO9d5fFuHh4eHhFXj7EvJmg2gTQm9xyGIGHh4e3iFdd6CfNVdU2hWqzLB4eHt4Z3qQJIHk+H1z1Hwp1Dw8PD28Rr3AkP2gpyAOFasCBh4eH9yleHgRES3OxkFTD4jfBBx4eHt5m3mQ7m7cI5PFEMqGj8z08PDy8RbzJ3/XihkmLQLnpCg8PD28pr9c0MIkMkkFXj8rw8PDwzvNWLdbVw7NCOJuXGTw8PLwH8KqRa1Ja8gO2agMBHh4e3kleHqQmi3VvoV/QsIWHh4d3kNdrFOgVgGqjAB4eHt7zefMYorpBzwPcNyUEDw8PbzOvevVgk3Ah3+7j4eHhneFNDuknkW61uWpZ0xUeHh7eIl6vGPQW/WYrVTzdeHh4eCd51QU632RXW69GJQoPDw/vkbxeuJDgq8+Um67w8PDwPsTLN99Ji8AkJt5e9/Dw8PDGYcQc2YwYzsS4eHh4eBsOwKpb6l4YkRSGy9/x8PDwNvO+78LDw8PDw8PDw3vA9Qstcu05z9+L4AAAAABJRU5ErkJggg==">
+        </ul>
+    
+
+    <!-- Tags (bookmark) -->
+    
+    <button id="article-functions-viewtags-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+        <i class="material-icons" role="presentation">bookmark</i>
+        <span class="visuallyhidden">bookmark</span>
+    </button>
+    <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-viewtags-button">
+        <li class="mdl-menu__item">
+        <a class="post_tag-link" href="/tags/Alamofire/">Alamofire</a>
+    </ul>
+    
+
+    <!-- Share -->
+    <button id="article-fuctions-share-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+    <i class="material-icons" role="presentation">share</i>
+    <span class="visuallyhidden">share</span>
+</button>
+<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-fuctions-share-button">
+    
+
+    
+        
+            <!-- Busuanzi Views -->
+            <a class="post_share-link" href="#">
+                <li class="mdl-menu__item">
+                    <span id="busuanzi_container_page_pv">
+                        <span id="busuanzi_value_page_pv"></span>&nbsp;浏览量
+                    </span>
+                </li>
+            </a>
+        
+    
+
+    <!-- Share Weibo -->
+    
+        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=Alamofire 4.0 Migration Guide&url=https://wangyu1997.github.io//2017/06/12/2017-06-13/index.html&pic=&searchPic=false&style=simple" target="_blank">
+            <li class="mdl-menu__item">
+                分享到微博
+            </li>
+        </a>
+    
+
+    <!-- Share Twitter -->
+    
+        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=Alamofire 4.0 Migration Guide&url=https://wangyu1997.github.io//2017/06/12/2017-06-13/index.html&via=人不如故" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Twitter
+            </li>
+        </a>
+    
+
+    <!-- Share Facebook -->
+    
+        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=https://wangyu1997.github.io//2017/06/12/2017-06-13/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Facebook
+            </li>
+        </a>
+    
+
+    <!-- Share Google+ -->
+    
+        <a class="post_share-link" href="https://plus.google.com/share?url=https://wangyu1997.github.io//2017/06/12/2017-06-13/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Google+
+            </li>
+        </a>
+    
+
+    <!-- Share LinkedIn -->
+    
+
+    <!-- Share QQ -->
+    
+        <a class="post_share-link" href="http://connect.qq.com/widget/shareqq/index.html?site=人不如故&title=Alamofire 4.0 Migration Guide&summary=世间一场大梦，人生几度秋凉。&pics=https://wangyu1997.github.io/img/favicon.png&url=https://wangyu1997.github.io/2017/06/12/2017-06-13/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 QQ
+            </li>
+        </a>
+    
+
+    <!-- Share Telegram -->
+    
+</ul>
+
+</div>
+
+                
+
+                <!-- Post Content -->
+                <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
+   
+    
+            <script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
 <h1 id="Alamofire-4-0-Migration-Guide"><a href="#Alamofire-4-0-Migration-Guide" class="headerlink" title="Alamofire 4.0 Migration Guide"></a>Alamofire 4.0 Migration Guide</h1><p>Alamofire 4.0 is the latest major release of Alamofire, an HTTP networking library for iOS, tvOS, macOS and watchOS written in Swift. As a major release, following Semantic Versioning conventions, 4.0 introduces API-breaking changes.</p>
 <p>This guide is provided in order to ease the transition of existing applications using Alamofire 3.x to the latest APIs, as well as explain the design and structure of new and updated functionality.</p>
 <ul>
@@ -813,365 +1160,737 @@ Alamofire.upload(fileURL, to: urlString).responseData { response in
 <blockquote>
 <p>See <a href="https://github.com/Alamofire/Alamofire/pull/1457" target="_blank" rel="external">PR-1457</a> for more info.</p>
 </blockquote>
-]]></content>
+
+           
+         <style type="text/css">
+.hljs-comment,
+.hljs-quote {
+  color: #999999;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+  color: #f2777a;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+  color: #f99157;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+  color: #ffcc66;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+  color: #99cc99;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+  color: #6699cc;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+  color: #cc99cc;
+}
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  background: #2d2d2d !important;
+  color: #cccccc !important;
+  padding: 1em !important;
+}
+
+pre{
+    background: #2d2d2d !important;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+</style>
+<script type="text/javascript">
+// $(function(){
+// 	//代码高亮自定义
+// 	$("code").each(function(){
+// 		$(this).html("<ul><li>" + $(this).html().replace(/\n/g,"\n</li><li>") +"\n</li></ul>");
+// 	});
+// });
+</script>
+
+<style type="text/css">
+/*.hljs {
+	border: 0;
+	font-family: "Consulas", "Courier New", Courier, mono, serif;
+	font-size: 12px;
+	background: #eee !important;
+	display: block;
+	padding: 1px;
+	margin: 0;
+	width: 100%;
+	font-weight: 200;
+	color: #333;
+	white-space: pre-wrap
+}*/
+/*.hljs ul {
+	list-style: decimal;
+	background-color: #fff;
+	margin: 0px 0px 0 0px !important;
+	padding: 0px;
+}*/
+/*.hljs ul li {
+	list-style: decimal-leading-zero;
+	border-left: 1px solid #ddd !important;
+	background: #fff;
+	padding: 5px!important;
+	margin: 0 !important;
+  width: 20px !important;
+	line-height: 14px;
+	word-break: break-all;
+	word-wrap: break-word;
+}*/
+/*.hljs ul li:nth-of-type(even) {
+	background-color: #fcfcfc;
+	color: inherit;
+}*/
+</style>
+<script src="https://cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+       <script >hljs.initHighlightingOnLoad();</script>  
+         
     
-    <summary type="html">
+             
+           <style type="text/css">
+           #rewardButton {
+    cursor: pointer;
+    border: 0;
+    outline: 0;
+    border-radius: 100%;
+    padding: 0;
+    margin: 0;
+    letter-spacing: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+}
+#rewardButton span {
+    display: inline-block;
+    width: 80px;
+    height: 35px;
+    border-radius: 5px;
+    padding-top: 5px;
+    color: #fff;
+    font-weight: 400;
+    font-style: normal;
+    font-variant: normal;
+    font-stretch: normal;
+    font-size: 18px;
+    font-family: "Microsoft Yahei";
+    background: #F44336;
+}
+#rewardButton span:hover{
+    background: #F7877F;
+}
+#QR{
+    padding-top:20px;
+}
+#QR a{
+    border:0;
+}
+#QR img{
+    width: 180px;
+    max-width: 100%;
+    display: inline-block;
+    margin: 0.8em 2em 0 2em;
+}
+#wechat:hover p{
+    animation: roll 0.1s infinite linear;
+    -webkit-animation: roll 0.1s infinite linear;
+    -moz-animation: roll 0.1s infinite linear;
+}
+#alipay:hover p{
+    animation: roll 0.1s infinite linear;
+    -webkit-animation: roll 0.1s infinite linear;
+    -moz-animation: roll 0.1s infinite linear;
+}
+@keyframes roll {
+    from {
+      transform(rotateZ(30deg));
+    }
+    to {
+      transform(rotateZ(-30deg));
+    }
+}
+
+           </style>
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/uploads/wechat.JPG" alt="人不如故 WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/uploads/ali.JPG" alt="人不如故 Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+           
+
+
+     
     
-      &lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;&gt; &lt;/script&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt; 
-&lt;h1 id=&quot;Alamofire-4-0
     
-    </summary>
+</div>
+
+
+                
+
+                <!-- Post Comments -->
+                
+                    
+
+
+
+
+    <!-- 使用 DISQUS -->
+    <div id="disqus-comment">
+        <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+        this.page.url = 'https://wangyu1997.github.io/2017/06/12/2017-06-13/';  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'https://wangyu1997.github.io/2017/06/12/2017-06-13/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    queue.offer(function() {
+            (function() { // DON'T EDIT BELOW THIS LINE
+                var d = document;
+                var s = d.createElement('script');
+                s.src = '//https-wangyu1997-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', + new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        });
+</script>
+
+    </div>
+    <style>
+        #disqus-comment{
+            background-color: #eee;
+            padding: 2pc;
+        }
+    </style>
+
+
+
+
+                
+            </div>
+
+            <!-- Post Prev & Next Nav -->
+            <nav class="material-nav mdl-color-text--grey-50 mdl-cell mdl-cell--12-col">
+    <!-- Prev Nav -->
     
-      <category term="iOS" scheme="https://wangyu1997.github.io/categories/iOS/"/>
+        <a href="/2017/06/12/2017-06-12/" id="post_nav-newer" class="prev-content">
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_back</i>
+            </button>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            新篇
+        </a>
     
+
+    <!-- Section Spacer -->
+    <div class="section-spacer"></div>
+
+    <!-- Next Nav -->
     
-      <category term="Alamofire" scheme="https://wangyu1997.github.io/tags/Alamofire/"/>
+        <a href="/2017/06/11/2017-06-11/" id="post_nav-older" class="next-content">
+            旧篇
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_forward</i>
+            </button>
+        </a>
     
-  </entry>
+</nav>
+
+        </div>
+    </div>
+
+
+
+                    
+                        <!-- Overlay For Active Sidebar -->
+<div class="sidebar-overlay"></div>
+
+<!-- Material sidebar -->
+<aside id="sidebar" class="sidebar sidebar-colored sidebar-fixed-left" role="navigation">
+    <div id="sidebar-main">
+        <!-- Sidebar Header -->
+        <div class="sidebar-header header-cover" style="background-image: url(/img/sidebar_header.png);">
+    <!-- Top bar -->
+    <div class="top-bar"></div>
+
+    <!-- Sidebar toggle button -->
+    <button type="button" class="sidebar-toggle mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" style="display: initial;" data-upgraded=",MaterialButton,MaterialRipple">
+        <i class="material-icons">clear_all</i>
+        <span class="mdl-button__ripple-container">
+            <span class="mdl-ripple">
+            </span>
+        </span>
+    </button>
+
+    <!-- Sidebar Avatar -->
+    <div class="sidebar-image">
+        <img src="/img/avatar.png" alt="人不如故's avatar">
+    </div>
+
+    <!-- Sidebar Email -->
+    <a data-toggle="dropdown" class="sidebar-brand" href="#settings-dropdown">
+        wangyu19970819@gmail.com
+        <b class="caret"></b>
+    </a>
+</div>
+
+
+        <!-- Sidebar Navigation  -->
+        <ul class="nav sidebar-nav">
+    <!-- User dropdown  -->
+    <li class="dropdown">
+        <ul id="settings-dropdown" class="dropdown-menu">
+            
+                <li>
+             
+                    <a href="mailto:wangyu19970819@gmail.com" target="_blank" title="Email Me">
+               
+                        
+                            <i class="material-icons sidebar-material-icons sidebar-indent-left1pc-element">email</i>
+                        
+                        Email Me
+                    </a>
+                </li>
+            
+                <li>
+             
+                    <a href="/about" target="_self" title="关于">
+              
+                        
+                            <i class="material-icons sidebar-material-icons sidebar-indent-left1pc-element">person</i>
+                        
+                        关于
+                    </a>
+                </li>
+            
+        </ul>
+    </li>
+
+    <!-- Homepage -->
+    
+        <li id="sidebar-first-li">
+            <a href="/" target="_self">
+                
+                    <i class="material-icons sidebar-material-icons">home</i>
+                
+                主页
+            </a>
+        </li>
+        
+    
+
+
+    <!-- Categories  -->
+    
+        <li class="dropdown">
+            <a href="#" class="ripple-effect dropdown-toggle" data-toggle="dropdown">
+                
+                    <i class="material-icons sidebar-material-icons">chrome_reader_mode</i>
+                
+                分类
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                <a class="sidebar_archives-link" href="/categories/iOS/">iOS<span class="sidebar_archives-count">4</span></a></li><li><a class="sidebar_archives-link" href="/categories/machine-learning/">machine learning<span class="sidebar_archives-count">2</span></a>
+            </ul>
+        </li>
+        
+    
+
+    <!-- Pages  -->
+    
+        <li>
+            <a href="/links" title="小伙伴们">
+                
+                    <i class="material-icons sidebar-material-icons">group</i>
+                
+                小伙伴们
+            </a>
+        </li>
+        
+    
+        <li>
+            <a href="/tags" title="标签">
+                
+                    <i class="material-icons sidebar-material-icons">loyalty</i>
+                
+                标签
+            </a>
+        </li>
+        
+    
+
+            <!-- Archives  -->
+    
+        <li class="dropdown">
+            <a href="#" class="ripple-effect dropdown-toggle" data-toggle="dropdown">
+                
+                    <i class="material-icons sidebar-material-icons">inbox</i>
+                
+                    归档
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+            <li>
+                <a class="sidebar_archives-link" href="/archives/2017/06/">六月 2017<span class="sidebar_archives-count">3</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/05/">五月 2017<span class="sidebar_archives-count">3</span></a>
+            </ul>
+        </li>
+        
+    
+
+          <!-- rss -->
+    
+        <li id="sidebar-first-li">
+            <a href="/gallery" target="_self">
+                
+                    <i class="material-icons sidebar-material-icons">favorite</i>
+                
+                情愫
+            </a>
+        </li>
+        
+    
+
+      <!-- board -->
+    
+        <li id="sidebar-first-li">
+            <a href="/board" target="_self">
+                
+                    <i class="material-icons sidebar-material-icons">question_answer</i>
+                
+                留言板
+            </a>
+        </li>
+        
+    
+
+      <!-- rss -->
+    
+        <li id="sidebar-first-li">
+            <a href="/atom.xml" target="_blank">
+                
+                    <i class="material-icons sidebar-material-icons">cast_connected</i>
+                
+                RSS订阅
+            </a>
+        </li>
+        
+            <li class="divider"></li>
+        
+    
+
+    <!-- Article Number  -->
+    
+        <li>
+            <a href="/archives">
+                文章总数
+                <span class="sidebar-badge">6</span>
+            </a>
+        </li>
+        
+    
+</ul>
+
+
+        <!-- Sidebar Footer -->
+        <!--
+I'm glad you use this theme, the development is no so easy, I hope you can keep the copyright, I will thank you so much.
+If you still want to delete the copyrights, could you still retain the first one? Which namely "Theme Material"
+It will not impact the appearance and can give developers a lot of support :)
+
+很高兴您使用并喜欢该主题，开发不易 十分谢谢与希望您可以保留一下版权声明。
+如果您仍然想删除的话 能否只保留第一项呢？即 "Theme Material"
+它不会影响美观并可以给开发者很大的支持和动力。 :)
+-->
+
+<!-- Sidebar Divider -->
+
+
+<!-- Theme Material -->
+
+
+<!-- Help & Support -->
+<!--
+
+-->
+
+<!-- Feedback -->
+<!--
+
+-->
+
+<!-- About Theme -->
+<!--
+
+-->
+
+    </div>
+
+    <!-- Sidebar Image -->
+    
+
+</aside>
+
+                    
+
+                    
+                        <!-- Footer Top Button -->
+                        <div class="toTop-wrap">
+    <a href="#top" class="toTop">
+        <i class="material-icons footer_top-i">expand_less</i>
+    </a>
+</div>
+
+                    
+
+                    
+ 
+  <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+   <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
   
-  <entry>
-    <title>iOS动画中的枚举UIViewAnimationOptions</title>
-    <link href="https://wangyu1997.github.io/2017/06/11/2017-06-11/"/>
-    <id>https://wangyu1997.github.io/2017/06/11/2017-06-11/</id>
-    <published>2017-06-11T12:43:11.000Z</published>
-    <updated>2017-06-11T12:12:45.000Z</updated>
+ 
+
+
+                    <!--Footer-->
+<footer class="mdl-mini-footer" id="bottom">
     
-    <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a>
-<p>首先这个枚举属于UIViewAnimation。我们经常使用的函数是 <code>[UIView animateWithDuration: animations:^{} completion:^(BOOL finished) {}];</code><br>和<code>[UIView animateWithDuration: animations:^{}];</code>如果动画稍微复杂点，例如需要组合等等就可能用到这个函数：<code>[UIView animateWithDuration: delay: options: animations: completion:^(BOOL finished) {}];</code>刚开始接触的朋友看到一堆枚举可能就觉得烦，尤其是苹果那混乱的动画框架东一坨，西一坨。又是Quartz2D，又是核心动画跟臭袜子一样……没关系，捡回来接着穿。</p>
-<p>　　以上方法中的options一项需要传入一个枚举，这个枚举大概控制的是这几个要素：当前动画嵌套中的动画执行随时间的快慢种类（先快后慢等..）。动画要一直重复吗。如果我使用转场动画那么我用哪种转场效果。还有子动画嵌套在父动画中时我们如何对待父动画中的相同选项等等..</p>
-<p>　正文：</p>
-<pre><code>UIViewAnimationOptionLayoutSubviews            //提交动画的时候布局子控件，表示子控件将和父控件一同动画。
-
-UIViewAnimationOptionAllowUserInteraction      //动画时允许用户交流，比如触摸
-
-UIViewAnimationOptionBeginFromCurrentState     //从当前状态开始动画
-
-UIViewAnimationOptionRepeat                    //动画无限重复
-
-UIViewAnimationOptionAutoreverse               //执行动画回路,前提是设置动画无限重复
-
-UIViewAnimationOptionOverrideInheritedDuration //忽略外层动画嵌套的执行时间
-
-UIViewAnimationOptionOverrideInheritedCurve    //忽略外层动画嵌套的时间变化曲线
-
-UIViewAnimationOptionAllowAnimatedContent      //通过改变属性和重绘实现动画效果，如果key没有提交动画将使用快照
-
-UIViewAnimationOptionShowHideTransitionViews   //用显隐的方式替代添加移除图层的动画效果
-
-UIViewAnimationOptionOverrideInheritedOptions  //忽略嵌套继承的选项
-</code></pre><p>   //时间函数曲线相关</p>
-<pre><code>UIViewAnimationOptionCurveEaseInOut            //时间曲线函数，由慢到快
-
-UIViewAnimationOptionCurveEaseIn               //时间曲线函数，由慢到特别快
-
-UIViewAnimationOptionCurveEaseOut              //时间曲线函数，由快到慢
-
-UIViewAnimationOptionCurveLinear               //时间曲线函数，匀速
-</code></pre><p>   //转场动画相关的</p>
-<pre><code>UIViewAnimationOptionTransitionNone            //无转场动画
-
-UIViewAnimationOptionTransitionFlipFromLeft    //转场从左翻转
-
-UIViewAnimationOptionTransitionFlipFromRight   //转场从右翻转
-
-UIViewAnimationOptionTransitionCurlUp          //上卷转场
-
-UIViewAnimationOptionTransitionCurlDown        //下卷转场
-
-UIViewAnimationOptionTransitionCrossDissolve   //转场交叉消失
-
-UIViewAnimationOptionTransitionFlipFromTop     //转场从上翻转
-
-UIViewAnimationOptionTransitionFlipFromBottom  //转场从下翻转
-</code></pre><p>　 浅略理解，待友人的指正。</p>
-<p>　补充：关于最后一组转场动画它一般是用在这个方法中的：</p>
-<p>　　　　<code>[UIView transitionFromView: toView: duration: options: completion:^(BOOL finished) {}];</code></p>
-<p>　该方法效果是插入一面视图移除一面视图，期间可以使用一些转场动画效果。</p>
-]]></content>
+        <!-- Paradox Footer Left Section -->
+        <div class="mdl-mini-footer--left-section sns-list">
+    <!-- Twitter -->
     
-    <summary type="html">
-    
-      &lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;&gt; &lt;/script&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
-&lt;p&gt;首先这个枚举属于UIViewAnima
-    
-    </summary>
-    
-      <category term="iOS" scheme="https://wangyu1997.github.io/categories/iOS/"/>
-    
-    
-      <category term="UIViewAnimationOptions" scheme="https://wangyu1997.github.io/tags/UIViewAnimationOptions/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>LDA Algorithm</title>
-    <link href="https://wangyu1997.github.io/2017/05/26/LDA/"/>
-    <id>https://wangyu1997.github.io/2017/05/26/LDA/</id>
-    <published>2017-05-26T14:38:00.000Z</published>
-    <updated>2017-05-27T08:46:13.000Z</updated>
-    
-    <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><h3 id="线性判别分析LDA原理总结"><a href="#线性判别分析LDA原理总结" class="headerlink" title="线性判别分析LDA原理总结"></a><center>线性判别分析LDA原理总结</center></h3><p>　　　　线性判别分析（Linear Discriminant Analysis, 以下简称LDA）,一种经典的降维方法。LDA在模式识别领域（比如人脸识别，舰艇识别等图形图像识别领域）中有非常广泛的应用，因此我们有必要了解下它的算法原理。</p>
-<p>　　　　在学习LDA之前，有必要将其自然语言处理领域的LDA区别开来，在自然语言处理领域， LDA是隐含狄利克雷分布（Latent Dirichlet Allocation，简称LDA），他是一种处理文档的主题模型。我们本文只讨论线性判别分析，因此后面所有的LDA均指线性判别分析。</p>
-<ol>
-<li>LDA的思想</li>
-</ol>
-<p>　　　　LDA是一种监督学习的降维技术，也就是说它的数据集的每个样本是有类别输出的。这点和PCA不同。PCA是不考虑样本类别输出的无监督降维技术。LDA的思想可以用一句话概括，就是“投影后类内方差最小，类间方差最大”。什么意思呢？ 我们要将数据在低维度上进行投影，投影后希望每一种类别数据的投影点尽可能的接近，而不同类别的数据的类别中心之间的距离尽可能的大。</p>
-<center><br><img src="http://oq5d32gij.bkt.clouddn.com/14958087329231.jpg" alt=""><br></center>
 
-<p>　　　　可能还是有点抽象，我们先看看最简单的情况。假设我们有两类数据 分别为红色和蓝色，如下图所示，这些数据特征是二维的，我们希望将这些数据投影到一维的一条直线，让每一种类别数据的投影点尽可能的接近，而红色和蓝色数据中心之间的距离尽可能的大。</p>
-<p>　　　　上图中提供了两种投影方式，哪一种能更好的满足我们的标准呢？从直观上可以看出，右图要比左图的投影效果好，因为右图的黑色数据和蓝色数据各个较为集中，且类别之间的距离明显。左图则在边界处数据混杂。以上就是LDA的主要思想了，当然在实际应用中，我们的数据是多个类别的，我们的原始数据一般也是超过二维的，投影后的也一般不是直线，而是一个低维的超平面。</p>
-<p>　　　　在我们将上面直观的内容转化为可以度量的问题之前，我们先了解些必要的数学基础知识，这些在后面讲解具体LDA原理时会用到。</p>
-<ol>
-<li>瑞利商（Rayleigh quotient）与广义瑞利商（genralized Rayleigh quotient）<br>   我们首先来看看瑞利商的定义。瑞利商是指这样的函数$R(A,x)$:<br>$$R(A,x)=\frac{x^HAx}{x^Hx}$$<br>　　　　其中x为非零向量，而A为n×n的Hermitan矩阵。所谓的Hermitan矩阵就是满足共轭转置矩阵和自己相等的矩阵，即$A^H=A$。如果我们的矩阵A是实矩阵，则满足$A^H=A$的矩阵即为Hermitan矩阵。</li>
-</ol>
-<p>　　　　瑞利商$R(A,x)$有一个非常重要的性质，即它的最大值等于矩阵A最大的特征值，而最小值等于矩阵A的最小的特征值，也就是满足<br>$$\lambda_{min}≤\frac{x^HAx}{x^Hx}≤\lambda_{max}$$<br>　　　　具体的证明这里就不给出了。当向量x是标准正交基时，即满足$x^Hx=1$时，瑞利商退化为：$R(A,x)=x^HAx$，这个形式在谱聚类和PCA中都有出现。</p>
-<p>　　　　以上就是瑞利商的内容，现在我们再看看广义瑞利商。广义瑞利商是指这样的函数$R(A,B,x)$:<br>$$R(A,x)=\frac{x^HAx}{x^HBx}$$<br>　　　　其中x为非零向量，而A,B为n×n的Hermitan矩阵。B为正定矩阵。它的最大值和最小值是什么呢？其实我们只要通过将其通过标准化就可以转化为瑞利商的格式。我们令$x′=B^{−1/2}x$,则分母转化为：<br>$$x^HBx=x′^H(B^{−1/2})^HBB^{−1/2}x′=x′^HB^{−1/2}BB^{−1/2}x′=x′^Hx′$$<br>　　　　而分子转化为：<br>$$x^HAx=x′^HB^{−1/2}AB^{−1/2}x′$$<br>　　　　此时我们的$R(A,B,x)$转化为$R(A,B,x′)$:<br>$$R(A,B,x′)=\frac{x′^HB^{−1/2}AB^{−1/2}x′}{x′^Hx′}$$<br>　　　　利用前面的瑞利商的性质，我们可以很快的知道，$R(A,B,x)$的最大值为矩阵$B^{−1/2}AB^{−1/2}$的最大特征值，或者说矩阵$B^{−1}A$的最大特征值，而最小值为矩阵$B^{−1}A$的最小特征值。这里使用了一个的技巧，即对矩阵进行标准化。</p>
-<ol>
-<li>二类LDA原理</li>
-</ol>
-<p>　　　　现在我们回到LDA的原理上，我们在第一节说讲到了LDA希望投影后希望同一种类别数据的投影点尽可能的接近，而不同类别的数据的类别中心之间的距离尽可能的大，但是这只是一个感官的度量。现在我们首先从比较简单的二类LDA入手，严谨的分析LDA的原理。</p>
-<p>　　　　假设我们的数据集$D={(x_1,y_1),(x_2,y_2),\cdots,((x_m,y_m))}$,其中任意样本$x_i$为n维向量，$y_i\in{0,1}$。我们定义$N_j(j=0,1)$为第j类样本的个数，$X_j(j=0,1)$为第j类样本的集合，而$μ_j(j=0,1)$为第j类样本的均值向量，定义$Σ_j(j=0,1)$为第j类样本的协方差矩阵。</p>
-<p>　　　　$μ_j$的表达式为：<br>$$μ_j=\frac{1}{N_j}\sum_{x\in{X_j}}x(j=0,1)$$<br>　　　　$∑_j$的表达式为：<br>$$∑_j=\sum_{x\in{Xj}}(x−μ_j)(x−μ_j)^T(j=0,1)$$<br>　　　　由于是两类数据，因此我们只需要将数据投影到一条直线上即可。假设我们的投影直线是向量w,则对任意一个样本本$x_i$,它在直线w的投影为$w^Tx_i$,对于我们的两个类别的中心点$μ_0,μ_1$,在在直线w的投影为$w^Tμ_0$和$w^Tμ_1$。由于LDA需要让不同类别的数据的类别中心之间的距离尽可能的大，也就是我们要最大化$||w^Tμ_0−w^Tμ_1||^2_2$,同时我们希望同一种类别数据的投影点尽可能的接近，也就是要同类样本投影点的协方差$w^T\sum_0w$和$w^T\sum_1w$尽可能的小，即最小化$w^T\sum_0w+w^T\sum_1w$。综上所述，我们的优化目标为：<br>$$\underbrace{arg\ max}_w\ J(w)=\frac{||w^Tμ_0−w^Tμ_1||^2_2}{w^T\sum_0w+w^T\sum_1w}=\frac{w^T(μ_0−μ_1)(μ_0−μ_1)^Tw}{w^T(\sum_0+\sum_1)w}$$<br>　　　　我们一般定义类内散度矩阵$S_w$为：<br>$$S_w=∑_0+∑_1=\sum_{x\in{X0}}(x−μ0)(x−μ0)^T+\sum_{x\in{X1}}(x−μ1)(x−μ1)^T$$<br>　　　　同时定义类间散度矩阵$S_b$为：<br>$$S_b=(μ_0−μ_1)(μ_0−μ_1)^T$$<br>　　　　这样我们的优化目标重写为：<br>$$\underbrace{arg\ max}_w\ J(w)=\frac{w^TS_bw}{w^TS_ww}$$<br>　　　　仔细一看上式，这不就是我们的广义瑞利商嘛！这就简单了，利用我们第二节讲到的广义瑞利商的性质，我们知道我们的$J(w)$最大值为矩阵$S^{−1}_wS_b$的最大特征值，而对应的$w$为$S^{−1}_wS_b$的最大特征值对应的特征向量!</p>
-<p>　　　　注意到对于二类的时候，$S_bw$的方向恒为$μ_0−μ_1$,不妨令$S_bw=\lambda (μ_0−μ_1)$，将其带入：$(S^{−1}_wS_b)w=λw$，可以得到$w=S^{−1}_w(μ_0−μ_1)$， 也就是说我们只要求出原始二类样本的均值和方差就可以确定最佳的投影方向$w$了。</p>
-<ol>
-<li>多类LDA原理</li>
-</ol>
-<p>　　　　有了二类LDA的基础，我们再来看看多类别LDA的原理。</p>
-<p>　　　　假设我们的数据集$D={(x_1,y_1),(x_2,y_2),\cdots,((x_m,y_m))}$,其中任意样本$x_i$为n维向量，$y_i\in{C_1,C_2,\cdots,C_k}$。我们定义$N_j(j=1,2\cdots k)$为第j类样本的个数，$X_j(j=1,2\cdots k)$为第j类样本的集合，而$μ_j(j=1,2\cdots k)$为第j类样本的均值向量，定义$Σ_j(j=1,2\cdots k)$为第j类样本的协方差矩阵。在二类LDA里面定义的公式可以很容易的类推到多类LDA。</p>
-<p>　　　　由于我们是多类向低维投影，则此时投影到的低维空间就不是一条直线，而是一个超平面了。假设我们投影到的低维空间的维度为d，对应的基向量为$(w_1,w_2,\cdots w_d)$，基向量组成的矩阵为$W$, 它是一个$m×d$的矩阵。</p>
-<p>　　　　此时我们的优化目标应该可以变成为:<br>$$\frac{W^TS_bW}{W^TS_wW}$$<br>　　　　其中$Sb=\sum_{j=1}^kN_j(μ_j−μ)(μ_j−μ)^T$,μ为所有样本均值向量。$S_w=\sum_{j=1}^kS_{wj}=\sum_{j=1}^k\sum_{x\in{X_j}}(x−μ_j)(x−μ_j)^T$<br>　　　　但是有一个问题，就是$W^TS_bW$和$W^TS_wW$都是矩阵，不是标量，无法作为一个标量函数来优化！也就是说，我们无法直接用二类LDA的优化方法，怎么办呢？一般来说，我们可以用其他的一些替代优化目标来实现。</p>
-<p>　　　　常见的一个LDA多类优化目标函数定义为：<br>$$\underbrace{arg\ max}_W\ J(W)=\frac{\prod_{diag}W^TS_bW}{\prod_{diag}W^TS_wW}$$<br>　　　　其中$\prod_{diag}A$为A的主对角线元素的乘积，$W$为$m×d$的矩阵。</p>
-<p> 　　　　$J(W)$的优化过程可以转化为：<br>$$J(W)=\frac{\prod_{i=1}^dw^T_iS_bw_i}{\prod_{i=1}^dw^T_iS_ww_i}=\prod_{i=1}^d\frac{w^T_iS_bw_i}{w^T_iS_ww_i}$$<br>　　　　仔细观察上式最右边，这不就是广义瑞利商嘛！最大值是矩阵$S^{−1}_wS_b$的最大特征值,最大的d个值的乘积就是矩阵$S^{−1}_wS_b$的最大的d个特征值的乘积,此时对应的矩阵$W$为这最大的d个特征值对应的特征向量张成的矩阵。</p>
-<p>　　　　由于W是一个利用了样本的类别得到的投影矩阵，因此它的降维到的维度d最大值为k-1。为什么最大维度不是类别数k呢？因为$S_b$中每个$μ_j−μ$的秩为1，因此协方差矩阵相加后最大的秩为k(矩阵的秩小于等于各个相加矩阵的秩的和)，但是由于如果我们知道前k-1个$μ_j$后，最后一个$μ_k$可以由前k-1个$μ_j$线性表示，因此$S_b$的秩最大为k-1，即特征向量最多有k-1个。</p>
-<ol>
-<li>LDA算法流程</li>
-</ol>
-<p>　　　　在第三节和第四节我们讲述了LDA的原理，现在我们对LDA降维的流程做一个总结。</p>
-<p>　　　　输入：数据集$D={(x_1,y_1),(x_2,y_2),\cdots,((x_m,y_m))}$,其中任意样本$x_i$为n维向量，$y_i\in{C_1,C_2,\cdots,C_k}$，降维到的维度d。</p>
-<p>　　　　输出：降维后的样本集 $D′$</p>
-<p>　　　　1) 计算类内散度矩阵$S_w$</p>
-<p>　　　　2) 计算类间散度矩阵$S_b$</p>
-<p>　　　　3) 计算矩阵$S^{−1}_wS_b$</p>
-<p>　　　　4）计算$S^{−1}_wS_b$的最大的d个特征值和对应的d个特征向量$(w_1,w_2,\cdots w_d)$,得到投影矩阵$W$</p>
-<p>　　　　5) 对样本集中的每一个样本特征$x_i$,转化为新的样本$z_i=W^Tx_i$<br>　　　　6) 得到输出样本集$D′={(z_1,y_1),(z_2,y_2),\cdots,((z_m,y_m))}$</p>
-<p>　　　　以上就是使用LDA进行降维的算法流程。实际上LDA除了可以用于降维以外，还可以用于分类。一个常见的LDA分类基本思想是假设各个类别的样本数据符合高斯分布，这样利用LDA进行投影后，可以利用极大似然估计计算各个类别投影数据的均值和方差，进而得到该类别高斯分布的概率密度函数。当一个新的样本到来后，我们可以将它投影，然后将投影后的样本特征分别带入各个类别的高斯分布概率密度函数，计算它属于这个类别的概率，最大的概率对应的类别即为预测类别。</p>
-<p>　　　　由于LDA应用于分类现在似乎也不是那么流行，这里我就不多讲了。</p>
-<ol>
-<li>LDA vs PCA</li>
-</ol>
-<p>　　　　LDA用于降维，和PCA有很多相同，也有很多不同的地方，因此值得好好的比较一下两者的降维异同点。</p>
-<p>　　　　首先我们看看相同点：</p>
-<p>　　　　1）两者均可以对数据进行降维。</p>
-<p>　　　　2）两者在降维时均使用了矩阵特征分解的思想。</p>
-<p>　　　　3）两者都假设数据符合高斯分布。</p>
-<p>　　　　我们接着看看不同点：</p>
-<p>　　　　1）LDA是有监督的降维方法，而PCA是无监督的降维方法</p>
-<p>　　　　2）LDA降维最多降到类别数k-1的维数，而PCA没有这个限制。</p>
-<p>　　　　3）LDA除了可以用于降维，还可以用于分类。</p>
-<p>　　　　4）LDA选择分类性能最好的投影方向，而PCA选择样本点投影具有最大方差的方向。</p>
-<p>　　　　这点可以从下图形象的看出，在某些数据分布下LDA比PCA降维较优。
-　　　　</p>
-<center><br><img src="http://oq5d32gij.bkt.clouddn.com/14958087681939.jpg" alt=""><br></center>
+    <!-- Facebook -->
+    
+        <a href="https://www.facebook.com/renburugu" target="_blank">
+            <button class="mdl-mini-footer--social-btn social-btn" style="background-image: url(/img/footer/footer_ico-facebook.svg);">
+                <span class="visuallyhidden">Facebook</span>
+            </button><!--
+     --></a>
+    
 
-<p>　　　　当然，某些某些数据分布下PCA比LDA降维较优，如下图所示：
-　　　　</p>
-<center><br><img src="http://oq5d32gij.bkt.clouddn.com/14958087756706.jpg" alt=""><br></center>
+    <!-- Google + -->
+    
 
-<ol>
-<li>LDA算法小结</li>
-</ol>
-<p>　　　　LDA算法既可以用来降维，又可以用来分类，但是目前来说，主要还是用于降维。在我们进行图像识别图像识别相关的数据分析时，LDA是一个有力的工具。下面总结下LDA算法的优缺点。</p>
-<p>　　　　LDA算法的主要优点有：</p>
-<p>　　　　1）在降维过程中可以使用类别的先验知识经验，而像PCA这样的无监督学习则无法使用类别先验知识。</p>
-<p>　　　　2）LDA在样本分类信息依赖均值而不是方差的时候，比PCA之类的算法较优。</p>
-<p>　　　　LDA算法的主要缺点有：</p>
-<p>　　　　1）LDA不适合对非高斯分布样本进行降维，PCA也有这个问题。</p>
-<p>　　　　2）LDA降维最多降到类别数k-1的维数，如果我们降维的维度大于k-1，则不能使用LDA。当然目前有一些LDA的进化版算法可以绕过这个问题。</p>
-<p>　　　　3）LDA在样本分类信息依赖方差而不是均值的时候，降维效果不好。</p>
-<p>　　　　4）LDA可能过度拟合数据。</p>
-]]></content>
+    <!-- Weibo -->
     
-    <summary type="html">
-    
-      &lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;&gt; &lt;/script&gt;&lt;h3 id=&quot;线性判别分析LDA原理总结&quot;&gt;&lt;a href=&quot;#线性判别分析L
-    
-    </summary>
-    
-      <category term="machine learning" scheme="https://wangyu1997.github.io/categories/machine-learning/"/>
-    
-    
-      <category term="LDA" scheme="https://wangyu1997.github.io/tags/LDA/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>iOS UICollectionView自定义cell</title>
-    <link href="https://wangyu1997.github.io/2017/05/19/uicell/"/>
-    <id>https://wangyu1997.github.io/2017/05/19/uicell/</id>
-    <published>2017-05-18T16:43:11.000Z</published>
-    <updated>2017-05-20T10:09:42.000Z</updated>
-    
-    <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>自定义的UITableCell<br><a id="more"></a></p>
-<pre><code class="mm">//
-//  jokeCell.m
-//  MyLaugh
-//
-//  Created by wangyu on 14/05/2017.
-//  Copyright © 2017 wangyu. All rights reserved.
-//
 
-#import &quot;jokeCell.h&quot;
-#define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
+    <!-- Instagram -->
+    
 
-@implementation jokeCell
-{
-    UILabel *_titleLabel;
-    UILabel *_contentLabel;
-    UILabel *_updatetimeLabel;
-}
+    <!-- Tumblr -->
+    
 
--(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
-    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    _titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,5,SCREEN_WIDTH,21)];
-    _titleLabel.backgroundColor = [UIColor clearColor];
-    _titleLabel.textAlignment = NSTextAlignmentCenter;
-    _titleLabel.textColor = [UIColor purpleColor];
-    _titleLabel.font = [UIFont italicSystemFontOfSize:17];
-    _contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 30, SCREEN_WIDTH, 21)];
-    _contentLabel.backgroundColor = [UIColor clearColor];
-    _contentLabel.numberOfLines = 0;
-    _updatetimeLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 30, SCREEN_WIDTH, 21)];
-    _updatetimeLabel.textAlignment = NSTextAlignmentRight;
-    self.selectionStyle = UITableViewCellSelectionStyleNone;
-    return self;
-}
+    <!-- Github -->
+    
+        <a href="https://github.com/wangyu1997" target="_blank">
+            <button class="mdl-mini-footer--social-btn social-btn" style="background-image: url(/img/footer/footer_ico-github.svg);">
+                <span class="visuallyhidden">Github</span>
+            </button><!--
+     --></a>
+    
+
+    <!-- LinkedIn -->
+    
+
+    <!-- Zhihu -->
+    
+
+    <!-- Bilibili -->
+    
+
+    <!-- Telegram -->
+    
+</div>
 
 
-- (void)layoutSubviews{
-    [super layoutSubviews];
-    [self.contentView addSubview:_titleLabel];
-    [self.contentView addSubview:_contentLabel];
-    [self.contentView addSubview:_updatetimeLabel];
-}
+        <!--Copyright-->
+        <div id="copyright">
+            Copyright&nbsp;©&nbsp;
+            <script type="text/javascript">
+                var fd = new Date();
+                document.write(fd.getFullYear());
+            </script>
+            &nbsp;人不如故
+        </div>
 
--(void) setTitle:(NSString *)title
-{
-    _title = title;
-    _titleLabel.text = title;
-}
+        <!-- Paradox Footer Right Section -->
 
--(void) setContent:(NSString *)content
-{
-    _content = content;
-    _contentLabel.text = content;
-}
+        <!--
+        I am glad you use this theme, the development is no so easy, I hope you can keep the copyright.
+        It will not impact the appearance and can give developers a lot of support :)
 
--(void)setUpdatetime:(NSString *)updatetime
-{
-    _updatetime = updatetime;
-    _updatetimeLabel.text = updatetime;
-}
+        很高兴您使用该主题，开发不易，希望您可以保留一下版权声明。
+        它不会影响美观并可以给开发者很大的支持。 :)
+        -->
 
--(void) setContentLabelHeight:(CGFloat)height
-{
-    _contentLabel.frame = CGRectMake(0, 30, _contentLabel.frame.size.width, height);
-    _updatetimeLabel.frame = CGRectMake(0, 35+height, _updatetimeLabel.frame.size.width, 21);
-}
+        <div class="mdl-mini-footer--right-section">
+            <div>
+                <div class="footer-develop-div">Follow me on - <a href="https://www.facebook.com/renburugu" target="_blank" class="footer-develop-a">FaceTime</a></div>
+                <div class="footer-develop-div">Fork me on - <a href="https://github.com/wangyu1997" target="_blank" class="footer-develop-a">GitHub</a></div>
+            </div>
+        </div>
+    
+</footer>
 
--(CGFloat) getHeight
-{
-    //计算文字高度
-    NSDictionary *attribute = @{NSFontAttributeName: _contentLabel.font};
-    CGSize retSize = [_contentLabel.text boundingRectWithSize:CGSizeMake(SCREEN_WIDTH, MAXFLOAT) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:attribute context:nil].size;
-    _contentLabel.frame = CGRectMake(0, 30, _contentLabel.frame.size.width, retSize.height);
-    _updatetimeLabel.frame = CGRectMake(0, 35+_contentLabel.frame.size.height, _updatetimeLabel.frame.size.width, 21);
-    return 30+_contentLabel.frame.size.height+10+21+5;
-}
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    // Initialization code
-}
+                    <!-- Import File -->
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
+    <script src="/js/lazyload.min.js"></script>
+    <script src="/js/js.min.js"></script>
 
-    // Configure the view for the selected state
-}
 
-@end
-</code></pre>
-]]></content>
+
+    <script src="/js/nprogress.js"></script>
+
+
+<script type="text/javascript">
+    NProgress.configure({
+        showSpinner: true
+    });
+    NProgress.start();
+    $('#nprogress .bar').css({
+        'background': '#29d'
+    });
+    $('#nprogress .peg').css({
+        'box-shadow': '0 0 10px #29d, 0 0 15px #29d'
+    });
+    $('#nprogress .spinner-icon').css({
+        'border-top-color': '#29d',
+        'border-left-color': '#29d'
+    });
+    setTimeout(function() {
+        NProgress.done();
+        $('.fade').removeClass('out');
+    }, 800);
+</script>
+
+
+
     
-    <summary type="html">
+        <script src="/js/smoothscroll.js"></script>
     
-      &lt;p&gt;自定义的UITableCell&lt;br&gt;
+
+
+
+
+
+    <!-- Busuanzi -->
+    <script src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+
+    <!-- 使用 DISQUS js 代码 -->
+    <script id="dsq-count-scr" src="//https-wangyu1997-github-io.disqus.com/count.js" async></script>
+
+
+
+
+
+<!-- Window Load-->
+<script>
+    $(window).load(function() {
+        // Post_Toc parent position fixed
+        $('.post-toc-wrap').parent('.mdl-menu__container').css('position', 'fixed');
+    });
+</script>
+
+<!-- MathJax Load-->
+
+<script>
+    <!-- Offer LazyLoad -->
+    queue.offer(function(){
+        $('.lazy').lazyload({
+            effect : 'show'
+        });
+    });
+
+    <!-- Start Queue -->
+    $(document).ready(function(){
+        setTimeout(function(){
+            setInterval(function(){
+                queue.execNext();
+            },200);
+        },3000);
+    });
+</script>
+
+                </main>
+            </div>
+        </body>
     
-    </summary>
-    
-      <category term="iOS" scheme="https://wangyu1997.github.io/categories/iOS/"/>
-    
-    
-      <category term="ios" scheme="https://wangyu1997.github.io/tags/ios/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>MathJax</title>
-    <link href="https://wangyu1997.github.io/2017/05/18/math/"/>
-    <id>https://wangyu1997.github.io/2017/05/18/math/</id>
-    <published>2017-05-18T12:30:00.000Z</published>
-    <updated>2017-05-26T15:34:55.000Z</updated>
-    
-    <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>对LaTex基本用法的学习<br><a id="more"></a><br>$$T = \{(\vec{x_1},y_1),((\vec{x_2},y_2),\cdots,(\vec{x_N},y_N)\},\vec{x_i} $$</p>
-<h2 id="常用数学符号的-LaTeX-表示方法"><a href="#常用数学符号的-LaTeX-表示方法" class="headerlink" title="常用数学符号的 LaTeX 表示方法"></a>常用数学符号的 LaTeX 表示方法</h2><p>１、指数和下标可以用 ^ 和 _ 后加相应字符来实现。比如：</p>
-<p><img src="http://oq5d32gij.bkt.clouddn.com/foot.gif" alt="foot"></p>
-<p>2、平方根（square root）的输入命令为：\sqrt，n 次方根相应地为: \sqrt[n]。方根符号的大小由LATEX自动加以调整。也可用\surd 仅给出<br>符号。比如：</p>
-<p><img src="http://oq5d32gij.bkt.clouddn.com/sqrt.gif" alt="sqrt"></p>
-<p>3、命令\overline 和\underline 在表达式的上、下方画出水平线。比如：</p>
-<p><img src="http://oq5d32gij.bkt.clouddn.com/overline.gif" alt="overline"></p>
-<p>4、命令\overbrace 和\underbrace 在表达式的上、下方给出一水平的大括号。</p>
-<p><img src="http://oq5d32gij.bkt.clouddn.com/brace.gif" alt="brace"></p>
-<p>5、向量（Vectors）通常用上方有小箭头（arrow symbols）的变量表示。这可由\vec 得到。另两个命令\overrightarrow 和\overleftarrow在定义从A 到B 的向量时非常有用。</p>
-<p><img src="http://oq5d32gij.bkt.clouddn.com/vec.gif" alt="ve"></p>
-<p>6、分数（fraction）使用\frac{…}{…} 排版。一般来说，1/2 这种形式更受欢迎，因为对于少量的分式，它看起来更好些。</p>
-<p><img src="http://oq5d32gij.bkt.clouddn.com/frac.gif" alt="fra"></p>
-<p>7、积分运算符（integral operator）用\int 来生成。求和运算符（sum operator）由\sum 生成。乘积运算符（product operator）由\prod 生成。上限和下限用^ 和_来生成，类似于上标和下标。</p>
-<p><img src="http://oq5d32gij.bkt.clouddn.com/int.gif" alt="int"></p>
-<p>###以下提供一些常用符号的表示方法</p>
-<p><img src="http://oq5d32gij.bkt.clouddn.com/1.gif" alt="1"></p>
-<p><img src="http://oq5d32gij.bkt.clouddn.com/2.gif" alt="2"></p>
-<p><img src="http://oq5d32gij.bkt.clouddn.com/3.gif" alt="3"></p>
-<p><img src="http://oq5d32gij.bkt.clouddn.com/4.gif" alt="4"></p>
-<p><img src="http://oq5d32gij.bkt.clouddn.com/5.gif" alt="5"></p>
-<p><img src="http://oq5d32gij.bkt.clouddn.com/6.gif" alt="6"></p>
-<p><img src="http://oq5d32gij.bkt.clouddn.com/7.gif" alt="7"></p>
-<p>大家都喜欢用 $E=mc^2$ 举例子，但是我不是很理解。  </p>
-<p>这个公式 $\cos 2\theta = \cos^2 \theta - \sin^2 \theta =  2 \cos^2 \theta - 1$ 少年可还记得？</p>
-<p>插入方程组（注意多行公式结尾\\\需要打成\\\，可能是因为markdown会自动转义第一个\\）：</p>
-<p>\begin{aligned}<br>\dot{x} &amp; = \sigma(y-x) \\\<br>\dot{y} &amp; = \rho x - y - xz \\\<br>\dot{z} &amp; = -\beta z + xy<br>\end{aligned}</p>
-<p>插入矩阵（同上）：</p>
-<p>\begin{bmatrix}<br>1 &amp; 2\\\<br>3 &amp; 4<br>\end{bmatrix}</p>
-<p>来个复杂点的（注意有的公式开头不会自动识别，用$ $包围）：</p>
-<p>$$\frac{\partial u}{\partial t}= h^2\left( \frac{\partial^2u}{\partial x^2}+ \frac{\partial^2 u}{\partial y^2}+\frac{\partial^2 u}{\partial z^2}\right)$$</p>
-<p>最后来个牛逼的吧，薛定谔方程，大学物理就记得这个了：</p>
-<p>$$ i\hbar\frac{\partial \psi}{\partial t}= \frac{-\hbar^2}{2m} \left(\frac{\partial^2}{\partial x^2}+ \frac{\partial^2}{\partial y^2}+ \frac{\partial^2}{\partial z^2}\right) \psi + V \psi.$$</p>
-<p>$$\begin{cases}\int\Omega \nabla \mathbf{F}&amp;=\int\Gamma \mathbf{F}\cdot d\mathbf{S} \<br>u&amp;=g_0,\quad \Gamma_D \<br>\partial_n u&amp;=g_1 ,\quad \Gamma_N<br>\end{cases} $$</p>
-<p>$$\underbrace{a+b+\cdots+z}_{26}$$</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;对LaTex基本用法的学习&lt;br&gt;
-    
-    </summary>
-    
-      <category term="machine learning" scheme="https://wangyu1997.github.io/categories/machine-learning/"/>
-    
-    
-      <category term="math" scheme="https://wangyu1997.github.io/tags/math/"/>
-    
-  </entry>
-  
-</feed>
+</html>

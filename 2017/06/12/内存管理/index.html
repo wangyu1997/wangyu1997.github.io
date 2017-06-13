@@ -10,7 +10,7 @@
     
     <title>
         
-            iOS动画中的枚举UIViewAnimationOptions | 
+            内存管理 | 
         
         人不如故
     </title>
@@ -38,7 +38,7 @@
     <meta name="theme-color" content="#000">
     <meta name="author" content="人不如故">
     <meta name="description" content="世间一场大梦，人生几度秋凉。">
-    <meta name="keywords" content="null,UIViewAnimationOptions">
+    <meta name="keywords" content="null,cpu">
 
     <!-- Favicons -->
     <link rel="icon shortcut" type="image/ico" href="/img/favicon.png">
@@ -64,9 +64,9 @@
     <!-- The Open Graph protocol -->
     <meta property="og:url" content="https://wangyu1997.github.io">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="iOS动画中的枚举UIViewAnimationOptions | 人不如故">
+    <meta property="og:title" content="内存管理 | 人不如故">
     <meta property="og:description" content="世间一场大梦，人生几度秋凉。">
-    <meta property="og:article:tag" content="UIViewAnimationOptions"> 
+    <meta property="og:article:tag" content="cpu"> 
 
     <!--[if lte IE 9]>
         <link rel="stylesheet" href="/css/ie-blocker.css">
@@ -293,10 +293,10 @@
     <!-- Paradox Post Header -->
     
         <!-- Custom Thumbnail -->
-        <div class="post_thumbnail-custom mdl-card__media mdl-color-text--grey-50" style="background-image:url(http://oq5d32gij.bkt.clouddn.com/14971831448187.jpg)">
+        <div class="post_thumbnail-custom mdl-card__media mdl-color-text--grey-50" style="background-image:url(http://images.cnitblog.com/blog/48332/201311/13090353-a81e30238dea4811b9b5382d3eeb0427.png)">
     
             <p class="article-headline-p">
-                iOS动画中的枚举UIViewAnimationOptions
+                内存管理
             </p>
         </div>
 
@@ -315,7 +315,7 @@
     <!-- Author Name & Date -->
     <div>
         <strong>人不如故</strong>
-        <span>6月 11, 2017</span>
+        <span>6月 12, 2017</span>
     </div>
 
     <div class="section-spacer"></div>
@@ -336,7 +336,7 @@
         </button>
         <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-qrcode-button">
             <li class="mdl-menu__item">在其它设备中阅读本文章</li>
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACaUlEQVR42u3aQY7jMAwEwPz/07sPWCTTTdqKd1A+BRh5rNJBJEi+/vzq54WHh4eHh4eHh/cw3it+/n3r3e9kff5WvTc8PDy8I7wfrtpyTX5A7/662RseHh7eSd67T7ZXfxJCPgeJ2d7w8PDwnszLL+78rfxY8fDw8P5f3iww5MUFPDw8vOfz7rjWk/UPqrXg4eHhxbzNZX3376P9PTw8PLyAV480BR9Iigt5eKh3iIeHh3czL7+I9wn0rPibHygeHh7eGV673TYYtOl7u6sopcbDw8O7lNcWBdoywewgNqEFDw8P7wwvbzUlyDZlTwAXVKnx8PDwbuDlW0zS7nYIYHa4RWDAw8PDu4iXpLCfm1U/JLijJyGtRgfw8PDw1rw8MLSkJL3e/Ie6AYaHh4e35rVjT3nLqi3+zlJ8PDw8vG/xZs2n/FqfpeDDoIWHh4d3My8pQ7TlifatnFQ3wPDw8PBu4G2S4FlJIgk8+ZDBqr+Hh4eHN+IliWy7Mi/RJs2t9nDx8PDw7ubl7a7PV/OsMLFvquHh4eF9izcLAEmJdnYQeem2KEbg4eHhXcrLP7aBzY71c8I9HB3Aw8PDu4i3KTG0KXI7KICHh4f3TN4GmYSB/FDa8QI8PDy8k7z2aUPFPjVP2mN4eHh4J3mbJv2ekQ9XXTxThoeHh7fmtcEgb+pfNkqVj8ni4eHhHeTNSqh5QtyuHIYoPDw8vAfz2uJCMi7Qrimq1Hh4eHhf5SXJ7r6R1g4r4OHh4Z3n5Y3/Nhi0R9MWRPDw8PDO82ajTvkAVluMaAvEeHh4eCd5v+/Bw8PDw8PDw8N7wPMXjCzEcOUY3nEAAAAASUVORK5CYII=">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPYAAAD2CAAAAADAeSUUAAACx0lEQVR42u3aS47cMAwE0Ln/pZMDBO1UkUbSkJ5XQY8/esqiQFI/v668frCxsbGxsbGxsbG/kv0TX9GrPzz1/MvznclXkjVjY2Njn81OMC3vz9/zLyZfr5/CxsbGvoDdLjq5Pw+55/dv1oyNjY2NvWG3hU1OxcbGxsZ+i7EvEvLowsbGxsbeN5WSBc1CKBkA/LdeGjY2NvbXs/Oh6ff8+5/Ot7GxsbG/mN1es4IhaRu1pUu9cmxsbOxD2XkwJFswaxu1a5gdEsXGxsa+h50PXP/SxCmDKnnbbM3Y2NjYZ7PzBn0bMG3gPW/0C4d+sLGxsQ9lz8IgD6pkoDsb9z6vARsbG/s2dhtIz8HWLqs97pkHHjY2NvYN7E2jPylU2pZQHp9tuwobGxv7VPYmWjZDgnz8MDtqiY2NjY3dNutni5uVPcPfsbGxsQ9lJ4342eGbtpyYbX1SIGFjY2OfzU6KgU0Tv21d7dtbH+/ExsbGvoydBFg+3H1r/LCJW2xsbOxT2XmzPg+nWaP/rcM6H7+OjY2NfQF7FhJtBM5Gy7OVYGNjY9/DnjX922IjKV3yw0D5X7GxsbHvZLfL3beQ2pFD8kVsbGzsG9h5qLTRlUdL+x8wG1pgY2Njn83eB9LsqOVb7aroWWxsbOwL2HnYtBvRxlg7No7eiY2NjX0BOx8DzIJnVuTkLapVbmNjY2MfxE7KibeaSsWBm/V7sLGxsW9gzwaxbRy2kdYGKjY2NvZt7NnYtT1GmTeh9hv68Q3Y2NjYh7JnkbBvAOUFxmazsLGxse9ht2PdlpEMFWakfNyLjY2NfQN7E0XJ8CDf0FkLaXX4EhsbG/sydtLK2beW8giMwhUbGxsbOx7BJne2a8iHFsV4ABsbG/s4dlIwbJ5qy5XNPdjY2Ni3sfeNm1l7qN2O9lAmNjY29g3sey5sbGxsbGxsbGzsr7l+A25Mmt0MGcBSAAAAAElFTkSuQmCC">
         </ul>
     
 
@@ -348,7 +348,7 @@
     </button>
     <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-viewtags-button">
         <li class="mdl-menu__item">
-        <a class="post_tag-link" href="/tags/UIViewAnimationOptions/">UIViewAnimationOptions</a>
+        <a class="post_tag-link" href="/tags/cpu/">cpu</a>
     </ul>
     
 
@@ -375,7 +375,7 @@
 
     <!-- Share Weibo -->
     
-        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=iOS动画中的枚举UIViewAnimationOptions&url=https://wangyu1997.github.io//2017/06/11/2017-06-11/index.html&pic=&searchPic=false&style=simple" target="_blank">
+        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=内存管理&url=https://wangyu1997.github.io//2017/06/12/内存管理/index.html&pic=&searchPic=false&style=simple" target="_blank">
             <li class="mdl-menu__item">
                 分享到微博
             </li>
@@ -384,7 +384,7 @@
 
     <!-- Share Twitter -->
     
-        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=iOS动画中的枚举UIViewAnimationOptions&url=https://wangyu1997.github.io//2017/06/11/2017-06-11/index.html&via=人不如故" target="_blank">
+        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=内存管理&url=https://wangyu1997.github.io//2017/06/12/内存管理/index.html&via=人不如故" target="_blank">
             <li class="mdl-menu__item">
                 分享到 Twitter
             </li>
@@ -393,7 +393,7 @@
 
     <!-- Share Facebook -->
     
-        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=https://wangyu1997.github.io//2017/06/11/2017-06-11/index.html" target="_blank">
+        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=https://wangyu1997.github.io//2017/06/12/内存管理/index.html" target="_blank">
             <li class="mdl-menu__item">
                 分享到 Facebook
             </li>
@@ -402,7 +402,7 @@
 
     <!-- Share Google+ -->
     
-        <a class="post_share-link" href="https://plus.google.com/share?url=https://wangyu1997.github.io//2017/06/11/2017-06-11/index.html" target="_blank">
+        <a class="post_share-link" href="https://plus.google.com/share?url=https://wangyu1997.github.io//2017/06/12/内存管理/index.html" target="_blank">
             <li class="mdl-menu__item">
                 分享到 Google+
             </li>
@@ -414,7 +414,7 @@
 
     <!-- Share QQ -->
     
-        <a class="post_share-link" href="http://connect.qq.com/widget/shareqq/index.html?site=人不如故&title=iOS动画中的枚举UIViewAnimationOptions&summary=世间一场大梦，人生几度秋凉。&pics=https://wangyu1997.github.io/img/favicon.png&url=https://wangyu1997.github.io/2017/06/11/2017-06-11/index.html" target="_blank">
+        <a class="post_share-link" href="http://connect.qq.com/widget/shareqq/index.html?site=人不如故&title=内存管理&summary=世间一场大梦，人生几度秋凉。&pics=https://wangyu1997.github.io/img/favicon.png&url=https://wangyu1997.github.io/2017/06/12/内存管理/index.html" target="_blank">
             <li class="mdl-menu__item">
                 分享到 QQ
             </li>
@@ -433,57 +433,77 @@
                 <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
    
     
-            <script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a>
-<p>首先这个枚举属于UIViewAnimation。我们经常使用的函数是 <code>[UIView animateWithDuration: animations:^{} completion:^(BOOL finished) {}];</code><br>和<code>[UIView animateWithDuration: animations:^{}];</code>如果动画稍微复杂点，例如需要组合等等就可能用到这个函数：<code>[UIView animateWithDuration: delay: options: animations: completion:^(BOOL finished) {}];</code>刚开始接触的朋友看到一堆枚举可能就觉得烦，尤其是苹果那混乱的动画框架东一坨，西一坨。又是Quartz2D，又是核心动画跟臭袜子一样……没关系，捡回来接着穿。</p>
-<p>　　以上方法中的options一项需要传入一个枚举，这个枚举大概控制的是这几个要素：当前动画嵌套中的动画执行随时间的快慢种类（先快后慢等..）。动画要一直重复吗。如果我使用转场动画那么我用哪种转场效果。还有子动画嵌套在父动画中时我们如何对待父动画中的相同选项等等..</p>
-<p>　正文：</p>
-<pre><code>UIViewAnimationOptionLayoutSubviews            //提交动画的时候布局子控件，表示子控件将和父控件一同动画。
-
-UIViewAnimationOptionAllowUserInteraction      //动画时允许用户交流，比如触摸
-
-UIViewAnimationOptionBeginFromCurrentState     //从当前状态开始动画
-
-UIViewAnimationOptionRepeat                    //动画无限重复
-
-UIViewAnimationOptionAutoreverse               //执行动画回路,前提是设置动画无限重复
-
-UIViewAnimationOptionOverrideInheritedDuration //忽略外层动画嵌套的执行时间
-
-UIViewAnimationOptionOverrideInheritedCurve    //忽略外层动画嵌套的时间变化曲线
-
-UIViewAnimationOptionAllowAnimatedContent      //通过改变属性和重绘实现动画效果，如果key没有提交动画将使用快照
-
-UIViewAnimationOptionShowHideTransitionViews   //用显隐的方式替代添加移除图层的动画效果
-
-UIViewAnimationOptionOverrideInheritedOptions  //忽略嵌套继承的选项
-</code></pre><p>   //时间函数曲线相关</p>
-<pre><code>UIViewAnimationOptionCurveEaseInOut            //时间曲线函数，由慢到快
-
-UIViewAnimationOptionCurveEaseIn               //时间曲线函数，由慢到特别快
-
-UIViewAnimationOptionCurveEaseOut              //时间曲线函数，由快到慢
-
-UIViewAnimationOptionCurveLinear               //时间曲线函数，匀速
-</code></pre><p>   //转场动画相关的</p>
-<pre><code>UIViewAnimationOptionTransitionNone            //无转场动画
-
-UIViewAnimationOptionTransitionFlipFromLeft    //转场从左翻转
-
-UIViewAnimationOptionTransitionFlipFromRight   //转场从右翻转
-
-UIViewAnimationOptionTransitionCurlUp          //上卷转场
-
-UIViewAnimationOptionTransitionCurlDown        //下卷转场
-
-UIViewAnimationOptionTransitionCrossDissolve   //转场交叉消失
-
-UIViewAnimationOptionTransitionFlipFromTop     //转场从上翻转
-
-UIViewAnimationOptionTransitionFlipFromBottom  //转场从下翻转
-</code></pre><p>　 浅略理解，待友人的指正。</p>
-<p>　补充：关于最后一组转场动画它一般是用在这个方法中的：</p>
-<p>　　　　<code>[UIView transitionFromView: toView: duration: options: completion:^(BOOL finished) {}];</code></p>
-<p>　该方法效果是插入一面视图移除一面视图，期间可以使用一些转场动画效果。</p>
+            <script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
+<p><strong>1. 物理地址和逻辑地址</strong></p>
+<p><strong>物理地址</strong>：加载到内存地址寄存器中的地址，内存单元的真正地址。在前端总线上传输的内存地址都是物理内存地址，编号从0开始一直到可用物理内存的最高端。这些数字被北桥(Nortbridge chip)映射到实际的内存条上。物理地址是明确的、最终用在总线上的编号，不必转换，不必分页，也没有特权级检查(no translation, no paging, no privilege checks)。 </p>
+<p><strong>逻辑地址</strong>：CPU所生成的地址。逻辑地址是内部和编程使用的、并不唯一。例如，你在进行C语言指针编程中，可以读取指针变量本身值(&amp;操作)，实际上这个值就是逻辑地址，它是相对于你当前进程数据段的地址（偏移地址），不和绝对物理地址相干。 </p>
+<p>为什么会有这两种地址？ </p>
+<p>个人觉的原因在于逻辑地址分配更加灵活，可以允许不唯一，看起来也较为直观，例如，一段代码中分配数组，逻辑地址上是连续的，然而在物理地址上，这个数组所占用的页可能分散开来，物理地址上就是不连续的，这样对程序的可理解性上有影响。另外，有了逻辑地址这个概念，才能使用虚拟内存技术。 </p>
+<p><strong>2. </strong>Paging，分页内存管理方案 </p>
+<p>(1) 分页的最大作用就在于：使得进程的物理地址空间可以是非连续的。 </p>
+<p>物理内存被划分为一小块一小块，每块被称为帧(Frame)。分配内存时，帧是分配时的最小单位，最少也要给一帧。在逻辑内存中，与帧对应的概念就是页(Page)。 </p>
+<p>逻辑地址的表示方式是：前部分是页码后部分是页偏移。 </p>
+<p>例如，已知逻辑空间地址为2^m个字节（也就是说逻辑地址的长度是m位），已知页大小是2^n字节。那么一共可以有2^(m-n)个页。因此页码部分会占m-n位，之后的n位，用来存储页偏移。 </p>
+<p>举个例子， 页大小为4B，而逻辑内存为32B（8页），逻辑地址0的页号为0，页号0对应帧5，因此逻辑地址映射为物理地址5<em>4+0=20。逻辑地址3映射物理地址5</em>4+3=23。逻辑地址13(4*3+1，页号为3，偏移为1，因此帧号为2)，映射到物理地址9。 </p>
+<p><img src="http://images.cnitblog.com/blog/48332/201311/12230204-439af747b09c4d9b9fc18cf69f531141.png" alt=""></p>
+<p>采用分页技术不会产生外部碎片(内存都被划分为帧)，但可能产生内部碎片(帧已经是最小单元，因此帧内部可能有空间没有用到)。 </p>
+<p>按概率计算下来，每个进程平均可有半个帧大小的内部碎片。 </p>
+<p>(2) 页表的硬件实现 </p>
+<p>上一小节中写到页表是逻辑地址转化到物理地址的关键所在。那么页表如何存储？ </p>
+<p>每个操作系统都有自己的方法来保存页表。绝大多数都会为每个进程分配一个页表。现在由于页表都比较大，所以放在内存中(以往是放在一组专用寄存器里)，其指针存在进程控制块(PCB)里，当进程被调度程序选中投入运行时，系统将其页表指针从进程控制块中取出并送入用户寄存器中。随后可以根据此首地址访问页表。 </p>
+<p>页表的存储方式是<strong>TBL(Translation look-aside buffer, 翻译后备缓冲器)</strong>+内存。TBL实际上是一组硬件缓冲所关联的快速内存。若没有TBL，操作系统需要两次内存访问来完成逻辑地址到物理地址的转换，访问页表算一次，在页表中查找算一次。TBL中存储页表中的一小部分条目，条目以键值对方式存储。 </p>
+<p><img src="http://images.cnitblog.com/blog/48332/201311/13090353-a81e30238dea4811b9b5382d3eeb0427.png" alt=""></p>
+<p>(3) 页表的数据结构 </p>
+<p>a. </p>
+<p>今年是2013年，现有的笔记本电脑，内存地址空间一般为2^32字节以上。对于具有32位逻辑地址空间的计算机系统，如果系统的页大小为4KB(2^12B)，那么页表可以拥有2^(32-12)个，也就是一百多万个条目，假设每个条目占有4B，那每个进程都需要4MB的物理地址空间来存放页表本身。而且，页表本身需要分配在连续内存中。 </p>
+<p>为此，<strong>Hierarchical Paging(层次化分页)</strong>被提出，实际上就是将页号分为两部分，第一部分作为索引，第二部分作为页号的偏移。 </p>
+<p>以一个4kb页大小的32位系统为例。一个逻辑地址被分为20位的页码和12位的页偏移。因为要对页表进行再分页，所以该页号可分为10位的页码和10位的页偏移。这样一个逻辑地址就表示如下形式： </p>
+<p><img src="http://images.cnitblog.com/blog/48332/201311/13090739-306c82d13f914d7197a114eeae246ab5.png" alt=""></p>
+<p>地址转换过程如下： </p>
+<p><img src="http://images.cnitblog.com/blog/48332/201311/13091011-3f2922b4ed65405b8ccc65b9737fa014.png" alt=""></p>
+<p>地址由外向内转换，因此此方法也被称为<strong>forward-mapped page table(向前映射表)</strong>。 </p>
+<p>b. Hashed Page Tables 哈希页表 </p>
+<p>处理超过32位地址空间的常用方法是使用<strong>hashed page table(哈希页表)</strong>，并以虚拟页码作为哈希值。哈希页表的每一条目都包括一个链表的元素，这些元素哈希成同一位置。每个元素有三个域：虚拟页码，所映射的帧号，指向链表中下一个元素的指针。 </p>
+<p>个人看来，哈希页表的地址转换方式，实际上是<strong>Chaining(链接)</strong>方式，也就是一种哈希函数的溢出处理方式(另一种溢出处理方式叫做Open Addressing，开放寻址)，具体过程如下： </p>
+<p>逻辑地址需要大于32bit的地址空间来表示，但是操作系统仍只有32bit来表示地址。此时人们便想到虚拟页地址，虚拟地址可以在32bit表示范围之内，然后利用哈希函数完成逻辑地址到虚拟地址的映射，由于虚拟地址更少，哈希函数会出现溢出，这里使用Chaining来解决溢出。 </p>
+<p>逻辑地址中的页号(下图中的p)经过哈希函数的计算，算出虚拟地址中的页号，根据虚拟页号可以在哈希表中以O(1)方式寻址，用p与链表中的每一个元素的第一个域相比较。如果匹配，那么相应的帧号就用来形成物理地址。如果不匹配，就对链表中的下一个节点进行比较，以寻找一个匹配的页号。 </p>
+<p><img src="http://images.cnitblog.com/blog/48332/201311/13104212-e3957ec532234cbab06e42ac4d1b5311.png" alt=""></p>
+<p>c. Inverted page table 反向页表 </p>
+<p>时间关系，这段暂时略过。 </p>
+<p><strong>3. Segmentation，分段内存管理方案</strong></p>
+<p>采用分页内存管理有一个不可避免的问题：用户视角的内存和实际内存的分离。设想一段main函数代码，里面包含Sqrt函数的调用。按照编写者的理解，这段代码运行时，操作系统应该分配内存给：符号表(编译时使用)，栈(存放局部变量与函数参数值)，Sqrt代码段，主函数代码段等。这样，编写者就可以方便地指出：”函数sqrt内存模块的第五条指令”，来定位一个元素。而实际上，由于采用Paging的管理方式，所有的一切都只是散落在物理内存中的各个帧上，并不是以编写者的理解来划分模块。 </p>
+<p><img src="http://images.cnitblog.com/blog/48332/201311/13105648-d82857a6bb2a46e38469058978e92f8b.png" alt=""></p>
+<p>Segmentation的内存管理方式可以支持这种思路。逻辑地址空间由一组段组成。每个段都有名字和长度。地址指定了段名称和段内偏移。因此用户通过两个量来指定地址：段名称和偏移。段是编号的，通过段号而非段名称来引用。因此逻辑地址由有序对构成： </p>
+<p> <segment-number,offset>(&lt;段号s, 段内偏移d&gt;) </segment-number,offset></p>
+<p>段偏移d因该在0和段界限之间，如果合法，那么就与基地址相加而得到所需字节在物理内存中的地址。因此段表是一组基地址和界限寄存器对。 </p>
+<p><img src="http://images.cnitblog.com/blog/48332/201311/13112137-0cac9e80dbfc4bc7b9e8aa9ae664087c.png" alt=""></p>
+<p>例如下图，有5个段，编号0~4，例如段2为400B开始于位置4300，对段2第53字节的引用映射成位置4300+53=4353。而段0字节1222的引用则会触发地址错误，因为该段的仅为1000B长(界限为1000)。 </p>
+<p><img src="http://images.cnitblog.com/blog/48332/201311/13112441-167f767f7e1546a5ab123abbd4fad1e2.png" alt=""></p>
+<p><strong>4. 合并分段和分页的管理方案</strong></p>
+<p>在现有的Intel兼容计算机(x86)上，采用的内存管理方案是分段和分页合并的管理方案。 </p>
+<p>在这个方案中，逻辑地址，如前一节中所说，是由一个段标识符加上一个指定段内相对地址的偏移量，表示为 [段标识符：段内偏移量]。 </p>
+<p>这样的逻辑地址转换的过程是怎样呢？如下图所示： </p>
+<p><img src="http://images.cnitblog.com/blog/48332/201311/15110509-3e98d0a333644e01952e7675ee2dbb71.png" alt=""></p>
+<p>当CPU要执行一条引用了内存地址的指令时，转换过程就开始了。第一步是把逻辑地址转换成<strong>线性地址</strong>。但是，为什么不跳过这一步，而让软件直接使用线性地址（或物理地址呢？）原因主要是因为：</p>
+<p>(1) Intel的更新是渐进式而非革命式，新的处理器需要兼容和保留过往的设置。具体的原因，博文Memory Translation and Segmentation (<a href="http://blog.csdn.net/drshenlei/article/details/4261909" target="_blank" rel="external">http://blog.csdn.net/drshenlei/article/details/4261909</a>) 中讲的较为清楚。</p>
+<p>(2) 如上节所说，采用段内存管理，可以跟方便地进行地址保护(同一类型的地址逻辑地址在一起)。 </p>
+<p>下面讲逻辑地址到线性地址的部分。 </p>
+<p>在IBM OS/2 32位版本的操作系统，和Intel 386的环境下。操作系统采用的内存分配方式就是分段和分页合并的方式。 </p>
+<p>逻辑地址的实际上是一对&lt;选择符，偏移&gt;。 </p>
+<p>选择符的内容如下： </p>
+<p><img src="http://images.cnitblog.com/blog/48332/201311/15225957-67836817299c459db5405bbc75f15be0.jpg" alt=""></p>
+<p>从左开始，13位是索引(或者称为段号)，通过这个索引，可以定位到<strong>段描述符(segment descriptor)</strong>，而段描述符是可以真正记载了有关一个段的位置和大小信息， 以及访问控制的状态信息。段描述符一般由8个字节组成。由于8B较大，而Intel为了保持向后兼容，将段寄存器仍然规定为16-bit(尽管每个段寄存器事实上有一个64-bit长的不可见部分，但对于程序员来说，段寄存器就是16-bit的)，那么很明显，我们无法通过16-bit长度的段寄存器来直接引用64-bit的段描述符。因此在逻辑地址中，只用13bit记录其索引。而真正的段描述符，被放于数组之中。 </p>
+<p>这个内存中的数组就叫做<strong>GDT(Global Descriptor Table，全局描述表)</strong>，Intel的设计者门提供了一个寄存器GDTR用来存放GDT的入口地址。程序员将GDT设定在内存中某个位置之后，可以通过LGDT指令将GDT的入口地址装入此寄存器，从此以后，CPU就根据此寄存器中的内容作为GDT的入口来访问GDT了。 </p>
+<p>除了GDT之外，还有<strong>LDT(Local Descriptor **</strong>Table，本地描述表)**，但与GDT不同的是，LDT在系统中可以存在多个，每个进程可以拥有自己的LDT。LDT的内存地址在LDTR寄存器中。 </p>
+<p>在之前图中的TI位，就是用来表示此索引所指向的段描述符是存于全局描述表中，还是本地描述表中。=0，表示用GDT，=1表示用LDT。 </p>
+<p>RPL位，占2bit，是保护信息位，还没有仔细了解过这一块，暂时先不写。 </p>
+<p>找到，段描述符后，加上偏移量，便是线性地址。转换过程如下： </p>
+<p><img src="http://images.cnitblog.com/blog/48332/201311/15232144-4db8ba86c9564fcab7bab1c90bd9bf10.jpg" alt=""></p>
+<p>在Intel 386的环境下，线性地址转换为物理地址的过程，和第二节分页式内存管理中，层次分页中，逻辑地址转换为物理地址的方法类似。如下图。 </p>
+<p><img src="http://images.cnitblog.com/blog/48332/201311/15232858-b7f7f3c854a84da2b409e1a6bbe2211d.jpg" alt=""></p>
+<p>Intel 80386的地址转换全过程如下图： </p>
+<p><img src="http://images.cnitblog.com/blog/48332/201311/15224432-4c36b374c6db48898a6922b98c577313.png" alt=""></p>
+<p>内存管理部分是操作系统的核心功能之一，这次将理论部分整理出来，一是为了复习，二也是为了提纲挈领地为深入学习操作系统做准备。 </p>
 
            
          <style type="text/css">
@@ -717,8 +737,8 @@ pre{
         <div id="disqus_thread"></div>
 <script>
     var disqus_config = function () {
-        this.page.url = 'https://wangyu1997.github.io/2017/06/11/2017-06-11/';  // Replace PAGE_URL with your page's canonical URL variable
-        this.page.identifier = 'https://wangyu1997.github.io/2017/06/11/2017-06-11/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        this.page.url = 'https://wangyu1997.github.io/2017/06/12/内存管理/';  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'https://wangyu1997.github.io/2017/06/12/内存管理/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
     };
     queue.offer(function() {
             (function() { // DON'T EDIT BELOW THIS LINE
@@ -749,7 +769,7 @@ pre{
             <nav class="material-nav mdl-color-text--grey-50 mdl-cell mdl-cell--12-col">
     <!-- Prev Nav -->
     
-        <a href="/2017/06/12/2017-06-13/" id="post_nav-newer" class="prev-content">
+        <a href="/2017/06/12/Alamofire/" id="post_nav-newer" class="prev-content">
             <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
                 <i class="material-icons">arrow_back</i>
             </button>
@@ -763,7 +783,7 @@ pre{
 
     <!-- Next Nav -->
     
-        <a href="/2017/05/26/LDA/" id="post_nav-older" class="next-content">
+        <a href="/2017/06/11/UIViewAnimationOptions/" id="post_nav-older" class="next-content">
             旧篇
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">

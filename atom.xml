@@ -834,7 +834,7 @@ Alamofire.upload(fileURL, to: urlString).responseData { response in
     <link href="https://wangyu1997.github.io/2017/06/12/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/"/>
     <id>https://wangyu1997.github.io/2017/06/12/内存管理/</id>
     <published>2017-06-12T12:43:11.000Z</published>
-    <updated>2017-06-13T11:04:09.000Z</updated>
+    <updated>2017-06-13T11:20:05.000Z</updated>
     
     <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
 <p><strong>1. 物理地址和逻辑地址</strong></p>
@@ -854,11 +854,11 @@ Alamofire.upload(fileURL, to: urlString).responseData { response in
 <p>(2) 页表的硬件实现 </p>
 <p>上一小节中写到页表是逻辑地址转化到物理地址的关键所在。那么页表如何存储？ </p>
 <p>每个操作系统都有自己的方法来保存页表。绝大多数都会为每个进程分配一个页表。现在由于页表都比较大，所以放在内存中(以往是放在一组专用寄存器里)，其指针存在进程控制块(PCB)里，当进程被调度程序选中投入运行时，系统将其页表指针从进程控制块中取出并送入用户寄存器中。随后可以根据此首地址访问页表。 </p>
-<p>页表的存储方式是<strong>TBL(Translation look-aside buffer, 翻译后备缓冲器)</strong>+内存。TBL实际上是一组硬件缓冲所关联的快速内存。若没有TBL，操作系统需要两次内存访问来完成逻辑地址到物理地址的转换，访问页表算一次，在页表中查找算一次。TBL中存储页表中的一小部分条目，条目以键值对方式存储。 </p>
+<p>页表的存储方式是<strong>TLB(Translation look-aside buffer, 翻译后备缓冲器)</strong>+内存。TLB实际上是一组硬件缓冲所关联的快速内存。若没有TBL，操作系统需要两次内存访问来完成逻辑地址到物理地址的转换，访问页表算一次，在页表中查找算一次。TLB中存储页表中的一小部分条目，条目以键值对方式存储。 </p>
 <p><img src="http://images.cnitblog.com/blog/48332/201311/13090353-a81e30238dea4811b9b5382d3eeb0427.png" alt=""></p>
 <p>(3) 页表的数据结构 </p>
 <p>a. </p>
-<p>今年是2013年，现有的笔记本电脑，内存地址空间一般为2^32字节以上。对于具有32位逻辑地址空间的计算机系统，如果系统的页大小为4KB(2^12B)，那么页表可以拥有2^(32-12)个，也就是一百多万个条目，假设每个条目占有4B，那每个进程都需要4MB的物理地址空间来存放页表本身。而且，页表本身需要分配在连续内存中。 </p>
+<p>现有的笔记本电脑，内存地址空间一般为2^32字节以上。对于具有32位逻辑地址空间的计算机系统，如果系统的页大小为4KB(2^12B)，那么页表可以拥有2^(32-12)个，也就是一百多万个条目，假设每个条目占有4B，那每个进程都需要4MB的物理地址空间来存放页表本身。而且，页表本身需要分配在连续内存中。 </p>
 <p>为此，<strong>Hierarchical Paging(层次化分页)</strong>被提出，实际上就是将页号分为两部分，第一部分作为索引，第二部分作为页号的偏移。 </p>
 <p>以一个4kb页大小的32位系统为例。一个逻辑地址被分为20位的页码和12位的页偏移。因为要对页表进行再分页，所以该页号可分为10位的页码和10位的页偏移。这样一个逻辑地址就表示如下形式： </p>
 <p><img src="http://images.cnitblog.com/blog/48332/201311/13090739-306c82d13f914d7197a114eeae246ab5.png" alt=""></p>

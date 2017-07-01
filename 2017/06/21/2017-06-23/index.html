@@ -10,7 +10,7 @@
     
     <title>
         
-            内存管理 | 
+            Centos搭建LNMP环境 | 
         
         人不如故
     </title>
@@ -38,7 +38,7 @@
     <meta name="theme-color" content="#000">
     <meta name="author" content="人不如故">
     <meta name="description" content="世间一场大梦，人生几度秋凉。">
-    <meta name="keywords" content="null,cpu">
+    <meta name="keywords" content="null,lnmp">
 
     <!-- Favicons -->
     <link rel="icon shortcut" type="image/ico" href="/img/favicon.png">
@@ -64,9 +64,9 @@
     <!-- The Open Graph protocol -->
     <meta property="og:url" content="https://wangyu1997.github.io">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="内存管理 | 人不如故">
+    <meta property="og:title" content="Centos搭建LNMP环境 | 人不如故">
     <meta property="og:description" content="世间一场大梦，人生几度秋凉。">
-    <meta property="og:article:tag" content="cpu"> 
+    <meta property="og:article:tag" content="lnmp"> 
 
     <!--[if lte IE 9]>
         <link rel="stylesheet" href="/css/ie-blocker.css">
@@ -292,11 +292,20 @@
                 
     <!-- Paradox Post Header -->
     
-        <!-- Custom Thumbnail -->
-        <div class="post_thumbnail-custom mdl-card__media mdl-color-text--grey-50" style="background-image:url(http://images.cnitblog.com/blog/48332/201311/13090353-a81e30238dea4811b9b5382d3eeb0427.png)">
+        
+            <!-- Random Thumbnail -->
+            <div class="post_thumbnail-random mdl-card__media mdl-color-text--grey-50">
+            <script>
+    var randomNum = Math.floor(Math.random() * 6 + 1);
+
+    $('.post_thumbnail-random').attr('data-original', '/img/random/material-' + randomNum + '.png');
+    $('.post_thumbnail-random').addClass('lazy');
+</script>
+
+        
     
             <p class="article-headline-p">
-                内存管理
+                Centos搭建LNMP环境
             </p>
         </div>
 
@@ -315,7 +324,7 @@
     <!-- Author Name & Date -->
     <div>
         <strong>人不如故</strong>
-        <span>6月 12, 2017</span>
+        <span>6月 21, 2017</span>
     </div>
 
     <div class="section-spacer"></div>
@@ -336,7 +345,7 @@
         </button>
         <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-qrcode-button">
             <li class="mdl-menu__item">在其它设备中阅读本文章</li>
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPYAAAD2CAAAAADAeSUUAAACx0lEQVR42u3aS47cMAwE0Ln/pZMDBO1UkUbSkJ5XQY8/esqiQFI/v668frCxsbGxsbGxsbG/kv0TX9GrPzz1/MvznclXkjVjY2Njn81OMC3vz9/zLyZfr5/CxsbGvoDdLjq5Pw+55/dv1oyNjY2NvWG3hU1OxcbGxsZ+i7EvEvLowsbGxsbeN5WSBc1CKBkA/LdeGjY2NvbXs/Oh6ff8+5/Ot7GxsbG/mN1es4IhaRu1pUu9cmxsbOxD2XkwJFswaxu1a5gdEsXGxsa+h50PXP/SxCmDKnnbbM3Y2NjYZ7PzBn0bMG3gPW/0C4d+sLGxsQ9lz8IgD6pkoDsb9z6vARsbG/s2dhtIz8HWLqs97pkHHjY2NvYN7E2jPylU2pZQHp9tuwobGxv7VPYmWjZDgnz8MDtqiY2NjY3dNutni5uVPcPfsbGxsQ9lJ4342eGbtpyYbX1SIGFjY2OfzU6KgU0Tv21d7dtbH+/ExsbGvoydBFg+3H1r/LCJW2xsbOxT2XmzPg+nWaP/rcM6H7+OjY2NfQF7FhJtBM5Gy7OVYGNjY9/DnjX922IjKV3yw0D5X7GxsbHvZLfL3beQ2pFD8kVsbGzsG9h5qLTRlUdL+x8wG1pgY2Njn83eB9LsqOVb7aroWWxsbOwL2HnYtBvRxlg7No7eiY2NjX0BOx8DzIJnVuTkLapVbmNjY2MfxE7KibeaSsWBm/V7sLGxsW9gzwaxbRy2kdYGKjY2NvZt7NnYtT1GmTeh9hv68Q3Y2NjYh7JnkbBvAOUFxmazsLGxse9ht2PdlpEMFWakfNyLjY2NfQN7E0XJ8CDf0FkLaXX4EhsbG/sydtLK2beW8giMwhUbGxsbOx7BJne2a8iHFsV4ABsbG/s4dlIwbJ5qy5XNPdjY2Ni3sfeNm1l7qN2O9lAmNjY29g3sey5sbGxsbGxsbGzsr7l+A25Mmt0MGcBSAAAAAElFTkSuQmCC">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACZ0lEQVR42u3aQXLCMAwFUO5/6XbbTcyXFLuBeVkxkBA/LyyNpNfPV18vPDw8PDw8PDy8h/Fe8XX5d39+vbp/fc/6qera8PDw8M7w3hy1xXuiRQTb11sbHh4e3kne1SuvPidLWT+bvytZGx4eHt7zeQm7ukF4eHh4383rwfLiAh4eHt7zeb1jPVnQOgw8qNaCh4eHF/Mmh/Xuz0f7e3h4eHgBrzzSVBwpyMu4SRiIVoiHh4e3mZcfxHk46ZVxk62MthUPDw9vM299iCfN/t6v1U0sBBs8PDy8I7xeU79XLEg2YhJa8PDw8Hbzeo3/NbKasudttmaVGg8PD28Db/3KfAvybybl4zdhDA8PD28zr/xwfGcv+c5LD4XRATw8PLzNvDydzZPv/J48gW4GBjw8PLwxr9qYX29HftD3/qFZxsXDw8PbwMvT6N54QS8Fz4MWHh4e3kledYCgGk56raxR2MDDw8PbzKse9HnyXU3Q52UIPDw8vDO8yRBAr2SQD13lrTI8PDy8k7zqET9JoPOUfRRm8PDw8I7wkoN+HkiqASMfQcDDw8P7L94k8b3roL9hYAsPDw/vAbzqnb1G2m3bioeHh3eQl4xVNUdIgwQ9L+C+WQkeHh7eZl71yg/ovARcLfKOZsrw8PDwxrxek76X8k6Gq0YzZXh4eHgbeNVgMFlic5QqH5PFw8PDO8jbt8ReUTjH4+Hh4X0K767iRXWDysUIPDw8vAfwkmS31zabbCUeHh7eeV7e+E/A1dGEfPhgY60FDw8Pb0MDLC+5TooRSWC4/B4PDw9vM+/7Ljw8PDw8PDw8vAdcvzec7TlcYLMHAAAAAElFTkSuQmCC">
         </ul>
     
 
@@ -348,7 +357,7 @@
     </button>
     <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-viewtags-button">
         <li class="mdl-menu__item">
-        <a class="post_tag-link" href="/tags/cpu/">cpu</a>
+        <a class="post_tag-link" href="/tags/lnmp/">lnmp</a>
     </ul>
     
 
@@ -375,7 +384,7 @@
 
     <!-- Share Weibo -->
     
-        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=内存管理&url=https://wangyu1997.github.io//2017/06/12/内存管理/index.html&pic=&searchPic=false&style=simple" target="_blank">
+        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=Centos搭建LNMP环境&url=https://wangyu1997.github.io//2017/06/21/2017-06-23/index.html&pic=&searchPic=false&style=simple" target="_blank">
             <li class="mdl-menu__item">
                 分享到微博
             </li>
@@ -384,7 +393,7 @@
 
     <!-- Share Twitter -->
     
-        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=内存管理&url=https://wangyu1997.github.io//2017/06/12/内存管理/index.html&via=人不如故" target="_blank">
+        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=Centos搭建LNMP环境&url=https://wangyu1997.github.io//2017/06/21/2017-06-23/index.html&via=人不如故" target="_blank">
             <li class="mdl-menu__item">
                 分享到 Twitter
             </li>
@@ -393,7 +402,7 @@
 
     <!-- Share Facebook -->
     
-        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=https://wangyu1997.github.io//2017/06/12/内存管理/index.html" target="_blank">
+        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=https://wangyu1997.github.io//2017/06/21/2017-06-23/index.html" target="_blank">
             <li class="mdl-menu__item">
                 分享到 Facebook
             </li>
@@ -402,7 +411,7 @@
 
     <!-- Share Google+ -->
     
-        <a class="post_share-link" href="https://plus.google.com/share?url=https://wangyu1997.github.io//2017/06/12/内存管理/index.html" target="_blank">
+        <a class="post_share-link" href="https://plus.google.com/share?url=https://wangyu1997.github.io//2017/06/21/2017-06-23/index.html" target="_blank">
             <li class="mdl-menu__item">
                 分享到 Google+
             </li>
@@ -414,7 +423,7 @@
 
     <!-- Share QQ -->
     
-        <a class="post_share-link" href="http://connect.qq.com/widget/shareqq/index.html?site=人不如故&title=内存管理&summary=世间一场大梦，人生几度秋凉。&pics=https://wangyu1997.github.io/img/favicon.png&url=https://wangyu1997.github.io/2017/06/12/内存管理/index.html" target="_blank">
+        <a class="post_share-link" href="http://connect.qq.com/widget/shareqq/index.html?site=人不如故&title=Centos搭建LNMP环境&summary=世间一场大梦，人生几度秋凉。&pics=https://wangyu1997.github.io/img/favicon.png&url=https://wangyu1997.github.io/2017/06/21/2017-06-23/index.html" target="_blank">
             <li class="mdl-menu__item">
                 分享到 QQ
             </li>
@@ -434,76 +443,410 @@
    
     
             <script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
-<p><strong>1. 物理地址和逻辑地址</strong></p>
-<p><strong>物理地址</strong>：加载到内存地址寄存器中的地址，内存单元的真正地址。在前端总线上传输的内存地址都是物理内存地址，编号从0开始一直到可用物理内存的最高端。这些数字被北桥(Nortbridge chip)映射到实际的内存条上。物理地址是明确的、最终用在总线上的编号，不必转换，不必分页，也没有特权级检查(no translation, no paging, no privilege checks)。 </p>
-<p><strong>逻辑地址</strong>：CPU所生成的地址。逻辑地址是内部和编程使用的、并不唯一。例如，你在进行C语言指针编程中，可以读取指针变量本身值(&amp;操作)，实际上这个值就是逻辑地址，它是相对于你当前进程数据段的地址（偏移地址），不和绝对物理地址相干。 </p>
-<p>为什么会有这两种地址？ </p>
-<p>个人觉的原因在于逻辑地址分配更加灵活，可以允许不唯一，看起来也较为直观，例如，一段代码中分配数组，逻辑地址上是连续的，然而在物理地址上，这个数组所占用的页可能分散开来，物理地址上就是不连续的，这样对程序的可理解性上有影响。另外，有了逻辑地址这个概念，才能使用虚拟内存技术。 </p>
-<p><strong>2. </strong>Paging，分页内存管理方案 </p>
-<p>(1) 分页的最大作用就在于：使得进程的物理地址空间可以是非连续的。 </p>
-<p>物理内存被划分为一小块一小块，每块被称为帧(Frame)。分配内存时，帧是分配时的最小单位，最少也要给一帧。在逻辑内存中，与帧对应的概念就是页(Page)。 </p>
-<p>逻辑地址的表示方式是：前部分是页码后部分是页偏移。 </p>
-<p>例如，已知逻辑空间地址为2^m个字节（也就是说逻辑地址的长度是m位），已知页大小是2^n字节。那么一共可以有2^(m-n)个页。因此页码部分会占m-n位，之后的n位，用来存储页偏移。 </p>
-<p>举个例子， 页大小为4B，而逻辑内存为32B（8页），逻辑地址0的页号为0，页号0对应帧5，因此逻辑地址映射为物理地址5<em>4+0=20。逻辑地址3映射物理地址5</em>4+3=23。逻辑地址13(4*3+1，页号为3，偏移为1，因此帧号为2)，映射到物理地址9。 </p>
-<p><img src="http://images.cnitblog.com/blog/48332/201311/12230204-439af747b09c4d9b9fc18cf69f531141.png" alt=""></p>
-<p>采用分页技术不会产生外部碎片(内存都被划分为帧)，但可能产生内部碎片(帧已经是最小单元，因此帧内部可能有空间没有用到)。 </p>
-<p>按概率计算下来，每个进程平均可有半个帧大小的内部碎片。 </p>
-<p>(2) 页表的硬件实现 </p>
-<p>上一小节中写到页表是逻辑地址转化到物理地址的关键所在。那么页表如何存储？ </p>
-<p>每个操作系统都有自己的方法来保存页表。绝大多数都会为每个进程分配一个页表。现在由于页表都比较大，所以放在内存中(以往是放在一组专用寄存器里)，其指针存在进程控制块(PCB)里，当进程被调度程序选中投入运行时，系统将其页表指针从进程控制块中取出并送入用户寄存器中。随后可以根据此首地址访问页表。 </p>
-<p>页表的存储方式是<strong>TLB(Translation look-aside buffer, 翻译后备缓冲器)</strong>+内存。TLB实际上是一组硬件缓冲所关联的快速内存。若没有TBL，操作系统需要两次内存访问来完成逻辑地址到物理地址的转换，访问页表算一次，在页表中查找算一次。TLB中存储页表中的一小部分条目，条目以键值对方式存储。 </p>
-<p><img src="http://images.cnitblog.com/blog/48332/201311/13090353-a81e30238dea4811b9b5382d3eeb0427.png" alt=""></p>
-<p>(3) 页表的数据结构 </p>
-<p>a. </p>
-<p>现有的笔记本电脑，内存地址空间一般为2^32字节以上。对于具有32位逻辑地址空间的计算机系统，如果系统的页大小为4KB(2^12B)，那么页表可以拥有2^(32-12)个，也就是一百多万个条目，假设每个条目占有4B，那每个进程都需要4MB的物理地址空间来存放页表本身。而且，页表本身需要分配在连续内存中。 </p>
-<p>为此，<strong>Hierarchical Paging(层次化分页)</strong>被提出，实际上就是将页号分为两部分，第一部分作为索引，第二部分作为页号的偏移。 </p>
-<p>以一个4kb页大小的32位系统为例。一个逻辑地址被分为20位的页码和12位的页偏移。因为要对页表进行再分页，所以该页号可分为10位的页码和10位的页偏移。这样一个逻辑地址就表示如下形式： </p>
-<p><img src="http://images.cnitblog.com/blog/48332/201311/13090739-306c82d13f914d7197a114eeae246ab5.png" alt=""></p>
-<p>地址转换过程如下： </p>
-<p><img src="http://images.cnitblog.com/blog/48332/201311/13091011-3f2922b4ed65405b8ccc65b9737fa014.png" alt=""></p>
-<p>地址由外向内转换，因此此方法也被称为<strong>forward-mapped page table(向前映射表)</strong>。 </p>
-<p>b. Hashed Page Tables 哈希页表 </p>
-<p>处理超过32位地址空间的常用方法是使用<strong>hashed page table(哈希页表)</strong>，并以虚拟页码作为哈希值。哈希页表的每一条目都包括一个链表的元素，这些元素哈希成同一位置。每个元素有三个域：虚拟页码，所映射的帧号，指向链表中下一个元素的指针。 </p>
-<p>个人看来，哈希页表的地址转换方式，实际上是<strong>Chaining(链接)</strong>方式，也就是一种哈希函数的溢出处理方式(另一种溢出处理方式叫做Open Addressing，开放寻址)，具体过程如下： </p>
-<p>逻辑地址需要大于32bit的地址空间来表示，但是操作系统仍只有32bit来表示地址。此时人们便想到虚拟页地址，虚拟地址可以在32bit表示范围之内，然后利用哈希函数完成逻辑地址到虚拟地址的映射，由于虚拟地址更少，哈希函数会出现溢出，这里使用Chaining来解决溢出。 </p>
-<p>逻辑地址中的页号(下图中的p)经过哈希函数的计算，算出虚拟地址中的页号，根据虚拟页号可以在哈希表中以O(1)方式寻址，用p与链表中的每一个元素的第一个域相比较。如果匹配，那么相应的帧号就用来形成物理地址。如果不匹配，就对链表中的下一个节点进行比较，以寻找一个匹配的页号。 </p>
-<p><img src="http://images.cnitblog.com/blog/48332/201311/13104212-e3957ec532234cbab06e42ac4d1b5311.png" alt=""></p>
-<p>c. Inverted page table 反向页表 </p>
-<p>时间关系，这段暂时略过。 </p>
-<p><strong>3. Segmentation，分段内存管理方案</strong></p>
-<p>采用分页内存管理有一个不可避免的问题：用户视角的内存和实际内存的分离。设想一段main函数代码，里面包含Sqrt函数的调用。按照编写者的理解，这段代码运行时，操作系统应该分配内存给：符号表(编译时使用)，栈(存放局部变量与函数参数值)，Sqrt代码段，主函数代码段等。这样，编写者就可以方便地指出：”函数sqrt内存模块的第五条指令”，来定位一个元素。而实际上，由于采用Paging的管理方式，所有的一切都只是散落在物理内存中的各个帧上，并不是以编写者的理解来划分模块。 </p>
-<p><img src="http://images.cnitblog.com/blog/48332/201311/13105648-d82857a6bb2a46e38469058978e92f8b.png" alt=""></p>
-<p>Segmentation的内存管理方式可以支持这种思路。逻辑地址空间由一组段组成。每个段都有名字和长度。地址指定了段名称和段内偏移。因此用户通过两个量来指定地址：段名称和偏移。段是编号的，通过段号而非段名称来引用。因此逻辑地址由有序对构成： </p>
-<p> <segment-number,offset>(&lt;段号s, 段内偏移d&gt;) </segment-number,offset></p>
-<p>段偏移d因该在0和段界限之间，如果合法，那么就与基地址相加而得到所需字节在物理内存中的地址。因此段表是一组基地址和界限寄存器对。 </p>
-<p><img src="http://images.cnitblog.com/blog/48332/201311/13112137-0cac9e80dbfc4bc7b9e8aa9ae664087c.png" alt=""></p>
-<p>例如下图，有5个段，编号0~4，例如段2为400B开始于位置4300，对段2第53字节的引用映射成位置4300+53=4353。而段0字节1222的引用则会触发地址错误，因为该段的仅为1000B长(界限为1000)。 </p>
-<p><img src="http://images.cnitblog.com/blog/48332/201311/13112441-167f767f7e1546a5ab123abbd4fad1e2.png" alt=""></p>
-<p><strong>4. 合并分段和分页的管理方案</strong></p>
-<p>在现有的Intel兼容计算机(x86)上，采用的内存管理方案是分段和分页合并的管理方案。 </p>
-<p>在这个方案中，逻辑地址，如前一节中所说，是由一个段标识符加上一个指定段内相对地址的偏移量，表示为 [段标识符：段内偏移量]。 </p>
-<p>这样的逻辑地址转换的过程是怎样呢？如下图所示： </p>
-<p><img src="http://images.cnitblog.com/blog/48332/201311/15110509-3e98d0a333644e01952e7675ee2dbb71.png" alt=""></p>
-<p>当CPU要执行一条引用了内存地址的指令时，转换过程就开始了。第一步是把逻辑地址转换成<strong>线性地址</strong>。但是，为什么不跳过这一步，而让软件直接使用线性地址（或物理地址呢？）原因主要是因为：</p>
-<p>(1) Intel的更新是渐进式而非革命式，新的处理器需要兼容和保留过往的设置。具体的原因，博文Memory Translation and Segmentation (<a href="http://blog.csdn.net/drshenlei/article/details/4261909" target="_blank" rel="external">http://blog.csdn.net/drshenlei/article/details/4261909</a>) 中讲的较为清楚。</p>
-<p>(2) 如上节所说，采用段内存管理，可以跟方便地进行地址保护(同一类型的地址逻辑地址在一起)。 </p>
-<p>下面讲逻辑地址到线性地址的部分。 </p>
-<p>在IBM OS/2 32位版本的操作系统，和Intel 386的环境下。操作系统采用的内存分配方式就是分段和分页合并的方式。 </p>
-<p>逻辑地址的实际上是一对&lt;选择符，偏移&gt;。 </p>
-<p>选择符的内容如下： </p>
-<p><img src="http://images.cnitblog.com/blog/48332/201311/15225957-67836817299c459db5405bbc75f15be0.jpg" alt=""></p>
-<p>从左开始，13位是索引(或者称为段号)，通过这个索引，可以定位到<strong>段描述符(segment descriptor)</strong>，而段描述符是可以真正记载了有关一个段的位置和大小信息， 以及访问控制的状态信息。段描述符一般由8个字节组成。由于8B较大，而Intel为了保持向后兼容，将段寄存器仍然规定为16-bit(尽管每个段寄存器事实上有一个64-bit长的不可见部分，但对于程序员来说，段寄存器就是16-bit的)，那么很明显，我们无法通过16-bit长度的段寄存器来直接引用64-bit的段描述符。因此在逻辑地址中，只用13bit记录其索引。而真正的段描述符，被放于数组之中。 </p>
-<p>这个内存中的数组就叫做<strong>GDT(Global Descriptor Table，全局描述表)</strong>，Intel的设计者门提供了一个寄存器GDTR用来存放GDT的入口地址。程序员将GDT设定在内存中某个位置之后，可以通过LGDT指令将GDT的入口地址装入此寄存器，从此以后，CPU就根据此寄存器中的内容作为GDT的入口来访问GDT了。 </p>
-<p>除了GDT之外，还有<strong>LDT(Local Descriptor **</strong>Table，本地描述表)**，但与GDT不同的是，LDT在系统中可以存在多个，每个进程可以拥有自己的LDT。LDT的内存地址在LDTR寄存器中。 </p>
-<p>在之前图中的TI位，就是用来表示此索引所指向的段描述符是存于全局描述表中，还是本地描述表中。=0，表示用GDT，=1表示用LDT。 </p>
-<p>RPL位，占2bit，是保护信息位，还没有仔细了解过这一块，暂时先不写。 </p>
-<p>找到，段描述符后，加上偏移量，便是线性地址。转换过程如下： </p>
-<p><img src="http://images.cnitblog.com/blog/48332/201311/15232144-4db8ba86c9564fcab7bab1c90bd9bf10.jpg" alt=""></p>
-<p>在Intel 386的环境下，线性地址转换为物理地址的过程，和第二节分页式内存管理中，层次分页中，逻辑地址转换为物理地址的方法类似。如下图。 </p>
-<p><img src="http://images.cnitblog.com/blog/48332/201311/15232858-b7f7f3c854a84da2b409e1a6bbe2211d.jpg" alt=""></p>
-<p>Intel 80386的地址转换全过程如下图： </p>
-<p><img src="http://images.cnitblog.com/blog/48332/201311/15224432-4c36b374c6db48898a6922b98c577313.png" alt=""></p>
-<p>内存管理部分是操作系统的核心功能之一，这次将理论部分整理出来，一是为了复习，二也是为了提纲挈领地为深入学习操作系统做准备。 </p>
+<p><strong>1. 安装关联库</strong></p>
+<pre><code># mkdir -p /data/tgz
+# cd /data/tgz
+# yum install wget
+# yum install pcre
+# yum install openssl*
+# yum install tar
+# yum -y install gcc gcc-c++ autoconf libjpeg libjpeg-devel libpng libpng-devel freetype freetype-devel libxml2 libxml2-devel zlib zlib-devel glibc glibc-devel glib2 glib2-devel bzip2 bzip2-devel ncurses ncurses-devel curl curl-devel e2fsprogs e2fsprogs-devel krb5 krb5-devel libidn libidn-devel openssl openssl-devel openldap openldap-devel nss_ldap openldap-clients openldap-servers make gd gd2 gd-devel gd2-devel
+
+# ulimit -SHn 65535
+# wget ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.36.tar.gz
+# tar zxvf pcre-8.36.tar.gz
+# cd pcre-8.36
+# ./configure --prefix=/data/apps/pcre
+# make &amp;&amp; make install
+# cd ../
+</code></pre><p><strong>  
+</strong></p>
+<p><strong>2. 安装nginx</strong>  </p>
+<pre><code># /usr/sbin/groupadd nginx
+# /usr/sbin/useradd -g nginx nginx
+
+# wget http://nginx.org/download/nginx-1.7.9.tar.gz
+# tar zxvf nginx-1.7.9.tar.gz
+# cd nginx-1.7.9
+# ./configure --user=nginx --group=nginx --prefix=/data/apps/nginx --with-http_stub_status_module --with-http_ssl_module --with-pcre=/data/tgz/pcre-8.36 --with-http_realip_module --with-http_image_filter_module
+# make &amp;&amp; make install
+# cd ../
+</code></pre><p><strong>  
+</strong></p>
+<p><strong>3. 安装MySQL</strong></p>
+<pre><code># /usr/sbin/groupadd mysql
+# /usr/sbin/useradd -g mysql mysql
+
+# wget http://dev.mysql.com/get/Downloads/MySQL-5.6/mysql-5.6.25-linux-glibc2.5-x86_64.tar.gz
+# tar zxvf mysql-5.6.22-linux-glibc2.5-x86_64.tar.gz
+# mv mysql-5.6.22-linux-glibc2.5-x86_64 /data/apps/mysql
+</code></pre><p><strong>    配置运行MySQL</strong></p>
+<pre><code>1）创建数据库存放目录  
+
+
+# mkdir -p /data/data/mysql/data
+# mkdir -p /data/data/mysql/binlog/
+# mkdir -p /data/data/mysql/relaylog/
+# chown -R mysql:mysql /data/data/mysql/
+# yum install libaio
+
+
+2）创建mysql配置文件  
+
+
+# vi /etc/my.cnf
+
+
+    输入以下内容
+
+[client]
+port    = 3306
+socket  = /tmp/mysql.sock
+
+[mysqld]
+character-set-server = utf8
+replicate-ignore-db = mysql
+replicate-ignore-db = test
+replicate-ignore-db = information_schema
+user    = mysql
+port    = 3306
+socket  = /tmp/mysql.sock
+basedir = /data/apps/mysql
+datadir = /data/data/mysql/data
+log-error = /data/data/mysql/mysql_error.log
+pid-file = /data/data/mysql/mysql.pid
+open_files_limit    = 10240
+back_log = 600
+max_connections = 5000
+max_connect_errors = 6000
+external-locking = FALSE
+max_allowed_packet = 32M
+sort_buffer_size = 1M
+join_buffer_size = 1M
+thread_cache_size = 300
+#thread_concurrency = 8
+query_cache_size = 512M
+query_cache_limit = 2M
+query_cache_min_res_unit = 2k
+default-storage-engine = MyISAM
+thread_stack = 192K
+transaction_isolation = READ-COMMITTED
+tmp_table_size = 246M
+max_heap_table_size = 246M
+long_query_time = 3
+log-slave-updates
+log-bin = /data/data/mysql/binlog/binlog
+binlog_cache_size = 4M
+binlog_format = MIXED
+max_binlog_cache_size = 8M
+max_binlog_size = 1G
+relay-log-index = /data/data/mysql/relaylog/relaylog
+relay-log-info-file = /data/data/mysql/relaylog/relaylog
+relay-log = /data/data/mysql/relaylog/relaylog
+expire_logs_days = 30
+key_buffer_size = 256M
+read_buffer_size = 1M
+read_rnd_buffer_size = 16M
+bulk_insert_buffer_size = 64M
+myisam_sort_buffer_size = 128M
+myisam_max_sort_file_size = 10G
+myisam_repair_threads = 1
+myisam_recover
+
+interactive_timeout = 120
+wait_timeout = 120
+
+skip-name-resolve
+#master-connect-retry = 10
+slave-skip-errors = 1032,1062,126,1114,1146,1048,1396
+
+server-id = 1
+
+innodb_additional_mem_pool_size = 16M
+innodb_buffer_pool_size = 512M
+innodb_data_file_path = ibdata1:256M:autoextend
+innodb_file_io_threads = 4
+innodb_thread_concurrency = 8
+innodb_flush_log_at_trx_commit = 2
+innodb_log_buffer_size = 16M
+innodb_log_file_size = 128M
+innodb_log_files_in_group = 3
+innodb_max_dirty_pages_pct = 90
+innodb_lock_wait_timeout = 120
+innodb_file_per_table = 0
+
+slow-query-log-file = /data/data/mysql/slow.log
+long_query_time = 10
+
+[mysqldump]
+quick
+max_allowed_packet = 32M
+
+
+3）以mysql用户帐号的身份建立数据表 
+
+# /data/apps/mysql/scripts/mysql_install_db --basedir=/data/apps/mysql --datadir=/data/data/mysql/data --user=mysql
+# sed -i &quot;s#/usr/local/mysql#/data/apps/mysql#g&quot; /data/apps/mysql/bin/mysqld_safe
+
+
+4）创建mysql启动，重启，停止shell脚本  
+
+
+# vi /data/apps/mysql/mysql
+
+
+    输入以下内容（这里的用户名admin和密码12345678接下来的步骤会创建）
+
+#!/bin/sh
+
+mysql_port=3306
+mysql_username=&quot;admin&quot;
+mysql_password=&quot;12345678&quot;
+
+function_start_mysql()
+{
+    printf &quot;Starting MySQL...\n&quot;
+    /bin/sh /data/apps/mysql/bin/mysqld_safe --defaults-file=/etc/my.cnf 2&gt;&amp;1 &gt; /dev/null &amp;
+}
+
+function_stop_mysql()
+{
+    printf &quot;Stoping MySQL...\n&quot;
+    /data/apps/mysql/bin/mysqladmin -u ${mysql_username} -p${mysql_password} -S /tmp/mysql.sock shutdown
+}
+
+function_restart_mysql()
+{
+    printf &quot;Restarting MySQL...\n&quot;
+    function_stop_mysql
+    sleep 5
+    function_start_mysql
+}
+
+function_kill_mysql()
+{
+    kill -9 $(ps -ef | grep &#39;bin/mysqld_safe&#39; | grep ${mysql_port} | awk &#39;{printf $2}&#39;)
+    kill -9 $(ps -ef | grep &#39;libexec/mysqld&#39; | grep ${mysql_port} | awk &#39;{printf $2}&#39;)
+}
+
+if [ &quot;$1&quot; = &quot;start&quot; ]; then
+    function_start_mysql
+elif [ &quot;$1&quot; = &quot;stop&quot; ]; then
+    function_stop_mysql
+elif [ &quot;$1&quot; = &quot;restart&quot; ]; then
+function_restart_mysql
+elif [ &quot;$1&quot; = &quot;kill&quot; ]; then
+function_kill_mysql
+else
+    printf &quot;Usage: /data/data/mysql/mysql {start|stop|restart|kill}\n&quot;
+fi
+
+
+5）赋予shell脚本可执行权限  
+
+
+# chmod +x /data/apps/mysql/mysql
+
+
+6）启动MySQL  
+
+
+# /data/apps/mysql/mysql start
+
+
+7）通过命令行登录管理MySQL服务器（提示输入密码时直接回车） 
+
+# /data/apps/mysql/bin/mysql -uroot -p -S /tmp/mysql.sock
+
+
+8）输入以下SQL语句，创建一个具有root权限的用户（admin）和密码（12345678） 
+
+&gt; GRANT ALL PRIVILEGES ON *.* TO &#39;admin&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;12345678&#39;;
+&gt; GRANT ALL PRIVILEGES ON *.* TO &#39;admin&#39;@&#39;127.0.0.1&#39; IDENTIFIED BY &#39;12345678&#39;;
+&gt; quit
+</code></pre><p>![blob.png][2]</p>
+<p>   [2]: <a href="http://www.vckai.com/static/up/image/20150101/1420523394.png" target="_blank" rel="external">http://www.vckai.com/static/up/image/20150101/1420523394.png</a> ()</p>
+<pre><code>9）（可选）重启/停止MySQL 
+
+# /data/apps/mysql/mysql restart
+# /data/apps/mysql/mysql stop
+</code></pre><p><strong>  
+</strong></p>
+<p><strong>4. 编译安装PHP依赖库</strong>  </p>
+<pre><code># mkdir -p /data/apps/libs/
+
+# wget http://www.ijg.org/files/jpegsrc.v9.tar.gz   
+# tar zxvf jpegsrc.v9.tar.gz
+# cd jpeg-9/
+# ./configure --prefix=/data/apps/libs --enable-shared --enable-static
+# make &amp;&amp; make install
+# cd ../
+
+# wget http://prdownloads.sourceforge.net/libpng/libpng-1.6.2.tar.gz
+# tar zxvf libpng-1.6.2.tar.gz
+# cd libpng-1.6.2/
+# ./configure --prefix=/data/apps/libs
+# make &amp;&amp; make install
+# cd ../
+
+# wget http://download.savannah.gnu.org/releases/freetype/freetype-2.4.12.tar.gz
+# tar zxvf freetype-2.4.12.tar.gz
+# cd freetype-2.4.12/
+# ./configure --prefix=/data/apps/libs
+# make &amp;&amp; make install
+# cd ../
+
+
+# wget --content-disposition &quot;http://downloads.sourceforge.net/mhash/mhash-0.9.9.9.tar.gz?big_mirror=0&quot;
+# wget --content-disposition &quot;http://downloads.sourceforge.net/mcrypt/libmcrypt-2.5.8.tar.gz?big_mirror=0&quot;
+# wget --content-disposition &quot;http://downloads.sourceforge.net/mcrypt/mcrypt-2.6.8.tar.gz?big_mirror=0&quot;
+
+# tar zxvf libmcrypt-2.5.8.tar.gz
+# cd libmcrypt-2.5.8/
+# ./configure --prefix=/data/apps/libs
+# make &amp;&amp; make install
+# cd libltdl/
+# ./configure --prefix=/data/apps/libs --enable-ltdl-install
+# make &amp;&amp; make install
+# cd ../../
+
+# tar zxvf mhash-0.9.9.9.tar.gz
+# cd mhash-0.9.9.9/
+# ./configure --prefix=/data/apps/libs
+# make &amp;&amp; make install
+# cd ../
+
+# vi /etc/ld.so.conf
+
+
+    在文件末尾添加以下内容  
+
+
+/data/apps/libs/lib
+
+
+    重新加载该文件，使其即刻生效  
+
+
+# ldconfig
+
+
+# tar zxvf mcrypt-2.6.8.tar.gz
+# cd mcrypt-2.6.8/
+# export LDFLAGS=&quot;-L/data/apps/libs/lib -L/usr/lib&quot;
+# export CFLAGS=&quot;-I/data/apps/libs/include -I/usr/include&quot;
+# touch malloc.h
+# ./configure --prefix=/data/apps/libs --with-libmcrypt-prefix=/data/apps/libs
+# make &amp;&amp; make install
+# cd ../
+</code></pre><p><strong>  
+</strong></p>
+<p><strong>5. 安装PHP</strong>  </p>
+<pre><code># wget --content-disposition http://cn2.php.net/get/php-5.6.4.tar.gz/from/this/mirror
+# tar zxvf php-5.6.4.tar.gz
+# cd php-5.6.4/
+# export LIBS=&quot;-lm -ltermcap -lresolv&quot;
+# export DYLD_LIBRARY_PATH=&quot;/data/apps/mysql/lib/:/lib/:/usr/lib/:/usr/local/lib:/lib64/:/usr/lib64/:/usr/local/lib64&quot;
+# export LD_LIBRARY_PATH=&quot;/data/apps/mysql/lib/:/lib/:/usr/lib/:/usr/local/lib:/lib64/:/usr/lib64/:/usr/local/lib64&quot;
+# ./configure --prefix=/data/apps/php --with-config-file-path=/data/apps/php/etc --with-mysql=/data/apps/mysql --with-mysqli=/data/apps/mysql/bin/mysql_config --with-iconv-dir --with-freetype-dir=/data/apps/libs --with-jpeg-dir=/data/apps/libs --with-png-dir=/data/apps/libs --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization --with-curl --enable-mbregex --enable-fpm --enable-mbstring --with-mcrypt=/data/apps/libs --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --enable-opcache --with-pdo-mysql --enable-maintainer-zts
+# make &amp;&amp; make install
+# cp php.ini-development /data/apps/php/etc/php.ini
+# cd ../
+</code></pre><p><strong>  
+</strong></p>
+<p><strong>6. 安装PHP扩展</strong></p>
+<pre><code># wget http://ftp.gnu.org/gnu/autoconf/autoconf-latest.tar.gz
+# tar zxvf autoconf-latest.tar.gz
+# cd autoconf-2.69/
+# ./configure --prefix=/data/apps/libs
+# make &amp;&amp; make install
+# cd ../
+
+# wget http://pecl.php.net/get/memcache-2.2.7.tgz
+# tar zxvf memcache-2.2.7.tgz
+# cd memcache-2.2.7/
+# export PHP_AUTOCONF=&quot;/data/apps/libs/bin/autoconf&quot;
+# export PHP_AUTOHEADER=&quot;/data/apps/libs/bin/autoheader&quot;
+# /data/apps/php/bin/phpize
+# ./configure --with-php-config=/data/apps/php/bin/php-config
+# make &amp;&amp; make install
+# cd ../
+</code></pre><p>![blob.png][3]</p>
+<p>   [3]: <a href="http://www.vckai.com/static/up/image/20150101/1420527473.png" target="_blank" rel="external">http://www.vckai.com/static/up/image/20150101/1420527473.png</a> ()</p>
+<pre><code>1）php.ini配置文件中添加memcache扩展  
+
+
+# vi /data/apps/php/etc/php.ini
+
+
+    在文件末尾添加以下内容  
+
+
+extension_dir=&quot;/data/apps/php/lib/php/extensions/no-debug-zts-20131226/&quot;
+extension=memcache.so
+</code></pre><p><strong>7. 启动nginx+php</strong></p>
+<pre><code>mysql的启动就不在这里多说，可参考上面。  
+
+
+1）调整nginx配置文件(这里只是最简单的可运行php的nginx的配置,详细的自行)**  
+</code></pre><p>**</p>
+<pre><code># mv /data/apps/nginx/conf/nginx.conf /data/apps/nginx/conf/nginx.conf.default
+# vi /data/apps/nginx/conf/nginx.conf
+
+
+    输入以下内容  
+
+
+user  nginx;
+worker_processes  1;
+
+events {
+    worker_connections  1024;
+}
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    sendfile        on;
+
+    keepalive_timeout  65;
+
+    server {
+        listen       80;
+        server_name  localhost;
+        root /data/www;
+
+        location / {
+            index  index.html index.htm index.php;
+        }
+
+        location ~ \.php$ {
+            fastcgi_pass   127.0.0.1:9000;
+            fastcgi_index  index.php;
+            include        fastcgi.conf;
+        }
+    }
+}
+
+
+2）创建web目录 
+
+# mkdir -p /data/www
+# chown -R nginx:nginx /data/www
+
+
+3）启动nginx  
+
+
+# /data/apps/nginx/sbin/nginx
+
+
+4）启动php-fpm  
+
+
+# /data/apps/php/sbin/php-fpm
+</code></pre><p>OK，现在已经安装完成了，可以在浏览器中输入<a href="http://localhost" target="_blank" rel="external">http://localhost</a>访问你的网站了！ </p>
 
            
          <style type="text/css">
@@ -737,8 +1080,8 @@ pre{
         <div id="disqus_thread"></div>
 <script>
     var disqus_config = function () {
-        this.page.url = 'https://wangyu1997.github.io/2017/06/12/内存管理/';  // Replace PAGE_URL with your page's canonical URL variable
-        this.page.identifier = 'https://wangyu1997.github.io/2017/06/12/内存管理/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        this.page.url = 'https://wangyu1997.github.io/2017/06/21/2017-06-23/';  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'https://wangyu1997.github.io/2017/06/21/2017-06-23/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
     };
     queue.offer(function() {
             (function() { // DON'T EDIT BELOW THIS LINE
@@ -769,7 +1112,7 @@ pre{
             <nav class="material-nav mdl-color-text--grey-50 mdl-cell mdl-cell--12-col">
     <!-- Prev Nav -->
     
-        <a href="/2017/06/12/Alamofire/" id="post_nav-newer" class="prev-content">
+        <a href="/2017/06/25/2017-06-25-1/" id="post_nav-newer" class="prev-content">
             <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
                 <i class="material-icons">arrow_back</i>
             </button>
@@ -783,7 +1126,7 @@ pre{
 
     <!-- Next Nav -->
     
-        <a href="/2017/06/12/UIPopoverPresentationController/" id="post_nav-older" class="next-content">
+        <a href="/2017/06/14/2017-06-21/" id="post_nav-older" class="next-content">
             旧篇
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">

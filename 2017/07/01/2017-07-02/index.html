@@ -10,7 +10,7 @@
     
     <title>
         
-            UIPopoverPresentationController | 
+            使用Vultr搭建ShadowSocks教程 | 
         
         人不如故
     </title>
@@ -38,7 +38,7 @@
     <meta name="theme-color" content="#000">
     <meta name="author" content="人不如故">
     <meta name="description" content="世间一场大梦，人生几度秋凉。">
-    <meta name="keywords" content="null,popover">
+    <meta name="keywords" content="null,shadowsocks">
 
     <!-- Favicons -->
     <link rel="icon shortcut" type="image/ico" href="/img/favicon.png">
@@ -64,9 +64,9 @@
     <!-- The Open Graph protocol -->
     <meta property="og:url" content="https://wangyu1997.github.io">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="UIPopoverPresentationController | 人不如故">
+    <meta property="og:title" content="使用Vultr搭建ShadowSocks教程 | 人不如故">
     <meta property="og:description" content="世间一场大梦，人生几度秋凉。">
-    <meta property="og:article:tag" content="popover"> 
+    <meta property="og:article:tag" content="shadowsocks"> 
 
     <!--[if lte IE 9]>
         <link rel="stylesheet" href="/css/ie-blocker.css">
@@ -268,7 +268,7 @@
     </button>
 
     <ul class="post-toc-wrap mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="post-toc-trigger-btn" style="max-height:80vh; overflow-y:scroll;">
-        
+        <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#使用Vultr搭建ShadowSocks教程"><span class="post-toc-number">1.</span> <span class="post-toc-text">使用Vultr搭建ShadowSocks教程</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#实现原理"><span class="post-toc-number">2.</span> <span class="post-toc-text">实现原理</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#网速自测"><span class="post-toc-number">3.</span> <span class="post-toc-text">网速自测</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#知识储备"><span class="post-toc-number">4.</span> <span class="post-toc-text">知识储备</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#具体步骤"><span class="post-toc-number">5.</span> <span class="post-toc-text">具体步骤</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#购买服务器"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">购买服务器</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#远程连接服务器"><span class="post-toc-number">5.2.</span> <span class="post-toc-text">远程连接服务器</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#搭建-Shadowsocks-服务"><span class="post-toc-number">5.3.</span> <span class="post-toc-text">搭建 Shadowsocks 服务</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#安装组件"><span class="post-toc-number">5.3.1.</span> <span class="post-toc-text">安装组件</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#安装完成后配置服务器参数"><span class="post-toc-number">5.3.2.</span> <span class="post-toc-text">安装完成后配置服务器参数</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#配置防火墙"><span class="post-toc-number">5.4.</span> <span class="post-toc-text">配置防火墙</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#开启防火墙相应的端口"><span class="post-toc-number">5.4.1.</span> <span class="post-toc-text">开启防火墙相应的端口</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#启动-Shadowsocks-服务"><span class="post-toc-number">5.5.</span> <span class="post-toc-text">启动 Shadowsocks 服务</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#连接"><span class="post-toc-number">6.</span> <span class="post-toc-text">连接</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#PC连接"><span class="post-toc-number">6.1.</span> <span class="post-toc-text">PC连接</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#iOS连接"><span class="post-toc-number">6.2.</span> <span class="post-toc-text">iOS连接</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#MacOS连接"><span class="post-toc-number">6.3.</span> <span class="post-toc-text">MacOS连接</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Android连接"><span class="post-toc-number">6.4.</span> <span class="post-toc-text">Android连接</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#国外站点"><span class="post-toc-number">7.</span> <span class="post-toc-text">国外站点</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#"><span class="post-toc-number">8.</span> <span class="post-toc-text"> </span></a></li></ol>
 
         <!--
         <li class="mdl-menu__item">
@@ -293,10 +293,10 @@
     <!-- Paradox Post Header -->
     
         <!-- Custom Thumbnail -->
-        <div class="post_thumbnail-custom mdl-card__media mdl-color-text--grey-50" style="background-image:url(http://oq5d32gij.bkt.clouddn.com/14971831448187.jpg)">
+        <div class="post_thumbnail-custom mdl-card__media mdl-color-text--grey-50" style="background-image:url(http://oq5d32gij.bkt.clouddn.com/14989266795354.jpg)">
     
             <p class="article-headline-p">
-                UIPopoverPresentationController
+                使用Vultr搭建ShadowSocks教程
             </p>
         </div>
 
@@ -315,7 +315,7 @@
     <!-- Author Name & Date -->
     <div>
         <strong>人不如故</strong>
-        <span>6月 12, 2017</span>
+        <span>7月 01, 2017</span>
     </div>
 
     <div class="section-spacer"></div>
@@ -336,7 +336,7 @@
         </button>
         <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-qrcode-button">
             <li class="mdl-menu__item">在其它设备中阅读本文章</li>
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPYAAAD2CAAAAADAeSUUAAAC1UlEQVR42u3aQW7jMBAEQP//09nrAoGV7qE2K5OlkyFIMksGMuH0vL6OPF7Y2NjY2NjY2NjYj2S/4uPdXX+f+X7Nu8/XT0ieVq8ZGxsbe2v2D3/631xzfT55cVHhGd2LjY2NfSb7rtLSvprre5P1RE/DxsbGxh5d8+5MUvaSF4SNjY2NvVLA8s/XC0ruWlkzNjY29jnspEFz3TBaafEnhe2/9dKwsbGxH8/OQ9PnfP7VfBsbGxv7wez2mDWM8gD4+ruWVo6NjY29KTsvDG24myPbNbTPx8bGxt6bnUSts9KVj+DMRn/yZhY2Njb2Cey7Wkuztv6sHLY/BjY2Nvau7KRQJcMx0dBMudxZxDvMt7GxsbE/lt1GAiul667hnl8KerGxsbE/ip038dvCs7IhSWLg4jw2Njb2pux7C1IbFc+e07aZsLGxsfdm3xWmtqHCvZuQYd3GxsbG3og9a/q3wz1J02pW3qIRImxsbOxN2bOlt9uSpHU1ezWJBRsbG/sEdgvOm0RtK39ps5EHvdjY2NiHsfO2UV7qZtFyEgC/dWFjY2Nvym7/6c9bPLPYYGUA6IfNDDY2NvaR7HbUph3faYPkvFxhY2NjY8/GbpJS1Ea8d8W92NjY2Oew241KHgC00Wz7WpeaStjY2Ngfy26j1mFrfrSRmDWwsLGxsbFnm4T1LUrbVEp+AGxsbOzT2O3ozCweXgmPlwaJsLGxsY9h5wWpPdOGyivlqi5g2NjY2FuwZ4WhDRXWX2s7DISNjY29N3sGWGruxNuV9eYXNjY29gnstjDkS1/ZPKx8IzY2NvaZ7LbktCPss0C3jS7qAoaNjY29HTtp0Mw2D/nLnR3RerCxsbGxr8vD+lZhFAknw0PY2NjY2Cvbg9lz7gqVsbGxsU9jr4S7baHKQ4jZ9gMbGxv7NPascTO7pkXmAcM/zLexsbGxH8w+58DGxsbGxsbGxsZ+zPEHkWU0NvDXNzMAAAAASUVORK5CYII=">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACbklEQVR42u3aQXLDIBAEQP//08k1F+MZEISkWqdUBQtaB9ia5fX1r58XHh4eHh4eHh7eZbxX/Lx93Y//vhs/HjP+Vbs2PDw8vDO8D1vtcLljQL70ZN5obXh4eHgHee+mbMeM3/8OOR6fz4uHh4d3Jy9Zeo7MqXh4eHh/nReFqkGp/eyBhIeHh3eSt7Kt55Hu1VkLHh4eXsxb2ax3/320v4eHh4cX8OorTfHFgqj8jS8oFCvEw8PD28zLN+L8OFkpyldmwcPDwzvDG2/iyXWr8Xva8r1dVVRS4+Hh4R3kJdR20cmHWIqS8fDw8A7y2oZWvrkn49vYoohx8fDw8DbwkqUslbnLEW0yCx4eHt4NvJUGWFt2tx/ugYMBDw8Pb4E3F6cm5W9eoCfrmTwY8PDw8B7lzV14aoPdPFBoAw48PDy83+K1YW5edtftqwA8puLh4eGd5OXIZOKVVtbSsYGHh4d3kNdONld2t423vPWFh4eHd4ZXN+aDNtVcCy1HfjiK8PDw8Dbz5tr/c8FuW7JPHjN4eHh4B3ntdh+Fqo8eGNEa8PDw8I7w8kI2PzDaGKL9rEVJjYeHh7eZ14YOK420tvWFh4eHdydvDplECW3bLI968fDw8E7y2idvROXj25C3uHSFh4eHt4G31KRfiHTby1VLd8rw8PDwNvDysDXfoOdi4rw9hoeHh3cDby5CnbuSNXeBYPLSFR4eHt41vLlSOLmCkI9ZunSFh4eHd5DXbv152yw5hLYfDHh4eHiPhhH5svKoN2+kbY9x8fDw8DY0wNrodi6MGB8nH96Ah4eHt5n3/x48PDw8PDw8PLwLnm8Fd+051No0FQAAAABJRU5ErkJggg==">
         </ul>
     
 
@@ -348,7 +348,7 @@
     </button>
     <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-viewtags-button">
         <li class="mdl-menu__item">
-        <a class="post_tag-link" href="/tags/popover/">popover</a>
+        <a class="post_tag-link" href="/tags/shadowsocks/">shadowsocks</a>
     </ul>
     
 
@@ -375,7 +375,7 @@
 
     <!-- Share Weibo -->
     
-        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=UIPopoverPresentationController&url=https://wangyu1997.github.io//2017/06/12/UIPopoverPresentationController/index.html&pic=&searchPic=false&style=simple" target="_blank">
+        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=使用Vultr搭建ShadowSocks教程&url=https://wangyu1997.github.io//2017/07/01/2017-07-02/index.html&pic=&searchPic=false&style=simple" target="_blank">
             <li class="mdl-menu__item">
                 分享到微博
             </li>
@@ -384,7 +384,7 @@
 
     <!-- Share Twitter -->
     
-        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=UIPopoverPresentationController&url=https://wangyu1997.github.io//2017/06/12/UIPopoverPresentationController/index.html&via=人不如故" target="_blank">
+        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=使用Vultr搭建ShadowSocks教程&url=https://wangyu1997.github.io//2017/07/01/2017-07-02/index.html&via=人不如故" target="_blank">
             <li class="mdl-menu__item">
                 分享到 Twitter
             </li>
@@ -393,7 +393,7 @@
 
     <!-- Share Facebook -->
     
-        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=https://wangyu1997.github.io//2017/06/12/UIPopoverPresentationController/index.html" target="_blank">
+        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=https://wangyu1997.github.io//2017/07/01/2017-07-02/index.html" target="_blank">
             <li class="mdl-menu__item">
                 分享到 Facebook
             </li>
@@ -402,7 +402,7 @@
 
     <!-- Share Google+ -->
     
-        <a class="post_share-link" href="https://plus.google.com/share?url=https://wangyu1997.github.io//2017/06/12/UIPopoverPresentationController/index.html" target="_blank">
+        <a class="post_share-link" href="https://plus.google.com/share?url=https://wangyu1997.github.io//2017/07/01/2017-07-02/index.html" target="_blank">
             <li class="mdl-menu__item">
                 分享到 Google+
             </li>
@@ -414,7 +414,7 @@
 
     <!-- Share QQ -->
     
-        <a class="post_share-link" href="http://connect.qq.com/widget/shareqq/index.html?site=人不如故&title=UIPopoverPresentationController&summary=世间一场大梦，人生几度秋凉。&pics=https://wangyu1997.github.io/img/favicon.png&url=https://wangyu1997.github.io/2017/06/12/UIPopoverPresentationController/index.html" target="_blank">
+        <a class="post_share-link" href="http://connect.qq.com/widget/shareqq/index.html?site=人不如故&title=使用Vultr搭建ShadowSocks教程&summary=世间一场大梦，人生几度秋凉。&pics=https://wangyu1997.github.io/img/favicon.png&url=https://wangyu1997.github.io/2017/07/01/2017-07-02/index.html" target="_blank">
             <li class="mdl-menu__item">
                 分享到 QQ
             </li>
@@ -433,47 +433,161 @@
                 <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
    
     
-            <script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a>
-<p>UIPopoverPresentationController 是 iOS8 后新增的，相当于pad端的UIPopOverController，以后我们也可以在iPhone上使用popOver啦。自己写了一个小demo，大概了熟悉了一下用法。后面有开发需求时会详细补充。<br>首先要知道一点是，我们并不需要创建一个UIPopoverPresentationController，他相当于UIViewController的属性，因此我们只需要创建UIViewController即可。<br>举个例子：假设我们要在 ViewController窗体弹窗，弹窗为FirstViewController（kind of UIViewController）我们用两种方式来实现<br>1、在self.view上创建一个button，给button添加弹窗事件；<br>2、在导航栏添加barButtonItem，给其添加弹窗时间。<br>弹窗事件：</p>
-<pre><code class="swift">1、button
-[objc] view plain copy
-- (void)buttonClick  
-{  
-    FirstViewController *firstVC = [[FirstViewController alloc] init];  
-    firstVC.modalPresentationStyle = UIModalPresentationPopover;  
-    firstVC.popoverPresentationController.sourceView = popOverButton;  //rect参数是以view的左上角为坐标原点（0，0）  
-    firstVC.popoverPresentationController.sourceRect = popOverButton.bounds; //指定箭头所指区域的矩形框范围（位置和尺寸），以view的左上角为坐标原点  
-    firstVC.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp; //箭头方向  
-    firstVC.popoverPresentationController.delegate = self;  
-    firstVC.preferredContentSize = CGSizeMake(100, 200);  
-    [self presentViewController:firstVC animated:YES completion:nil];  
-}  
-
-2、barButtonItem
-[objc] view plain copy
-- (void)rightBarButtonItemClick  
-{  
-    FirstViewController *firstVC = [[FirstViewController alloc]init];  
-    firstVC.modalPresentationStyle = UIModalPresentationPopover;  
-    /** 
-     *  由于导航上的控件没有指定frame，无法设置sourceView和sourceRect，用下面的。 
-     */  
-    firstVC.popoverPresentationController.barButtonItem = self.navigationItem.rightBarButtonItem;  
-    firstVC.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp;  
-    firstVC.popoverPresentationController.delegate = self;  
-    firstVC.preferredContentSize = CGSizeMake(100, 200);  
-    [self presentViewController:firstVC animated:YES completion:nil];  
-//    firstVC.popoverPresentationController.passthroughViews = nil;  
-}  
-注意几点：
-1、遵守代理：UIPopoverPresentationControllerDelegate
-2、在phone端必须要适配设备，要设置下面代理方法：
-[objc] view plain copy
-/* For iOS8.0, the only supported adaptive presentation styles are UIModalPresentationFullScreen and UIModalPresentationOverFullScreen. */  
-- (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller;  
--
-</code></pre>
-<p>iPhone下默认是UIModalPresentationFullScreen，需要手动设置为UIModalPresentationNone，否则，是普通的present全屏显示，没有弹窗效果。iPad不需要。<br>3、其他设置根据需求翻相关文档即可。<br>demo：<a href="https://github.com/Lynnll/UIPopOverLearning.git" target="_blank" rel="external">https://github.com/Lynnll/UIPopOverLearning.git</a></p>
+            <script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
+<h2 id="使用Vultr搭建ShadowSocks教程"><a href="#使用Vultr搭建ShadowSocks教程" class="headerlink" title="使用Vultr搭建ShadowSocks教程"></a>使用Vultr搭建ShadowSocks教程</h2><h2 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h2><p>本地发起连接请求，由远程服务器响应后然后将我们需要的数据返回到本地。 </p>
+<p>最低消费 </p>
+<p>  2.5美元/月 </p>
+<h2 id="网速自测"><a href="#网速自测" class="headerlink" title="网速自测"></a>网速自测</h2><p>经过我个人测试后选择的Dallas节点，浏览youtube视频，网速能达到1MB/s<br>，玩美服lol的延迟是200ms-250ms，这个速度已经很不错了，具体分析参考<a href="http://www.vpnps.com/usa_vpn_ping.html" target="_blank" rel="external">《国内连接美国VPN延迟(PING)多少算正常？》</a>。 </p>
+<p>PS：浏览其他人的博客都推荐的是LosAngeles节点，具体的自己通过测试后拿主意吧，懒得测试就选洛杉矶节点吧。 </p>
+<p>了解更多，请戳<a href="https://www.v2ex.com/t/276585" target="_blank" rel="external">Vultr 节点哪个比较快？</a></p>
+<h2 id="知识储备"><a href="#知识储备" class="headerlink" title="知识储备"></a>知识储备</h2><ol>
+<li>懂Linux最好，不懂就按照下面操作来吧</li>
+<li>肯折腾</li>
+<li>懂英语，不懂的话…搭建SS（Shadow Socks）干吗？</li>
+</ol>
+<h2 id="具体步骤"><a href="#具体步骤" class="headerlink" title="具体步骤"></a>具体步骤</h2><h3 id="购买服务器"><a href="#购买服务器" class="headerlink" title="购买服务器"></a>购买服务器</h3><ol>
+<li>打开<a href="http://www.vultr.com/?ref=7123587" target="_blank" rel="external">链接1：我的夏季促销推广链接</a>，无效的话尝试 <a href="http://www.vultr.com/?ref=7123587" target="_blank" rel="external">链接2：我的普通推广链接</a>。<br>这两个都指向官网，信不过我的自己去百度搜索vultr官网。【更多信息见最后的Vlutr服务器链接详细说明】 </li>
+</ol>
+<ol>
+<li><p>注册账号并验证邮箱。 </p>
+</li>
+<li><p>测试速度或直接选择洛杉矶节点，<a href="https://www.vultr.com/faq/" target="_blank" rel="external">测试节点网速请戳我并拉到页面最下面</a>。如果感觉不满意，去试试其他的服务器提供商比如搬瓦工等等，个人感觉vultr还可以。</p>
+</li>
+<li>充值，点击左侧的Billing，最低五美元，这一步因人而异。我个人选择使用Paypal支付的$5。</li>
+<li>搭建服务器，点击左侧的Servers，依次选择Server Location——你测试的最快的或者洛杉矶；Server Type——Cent OS7 x64（这个我可以提供技术支持，本文基于CentOS 7 x64）或其他你懂的；Server Size——只是搭建ss，选第一个就够了($5/mon)；其他的选填。然后点击右下角的Deploy Now。稍等片刻，服务器就可以装好了。</li>
+<li>装好后，你可以看到如下界面：</li>
+</ol>
+<p><img src="https://static.oschina.net/uploads/img/201703/04105521_mL6K.png" alt=""></p>
+<p>servers </p>
+<p>点击可以查看服务器的相关信息： </p>
+<p><img src="https://static.oschina.net/uploads/img/201703/04105521_SgBL.png" alt=""></p>
+<p>server information </p>
+<p>接下来操作需要的信息是IP Address，Username和Password。这个页面不要关，一会直接复制粘贴相关信息。 </p>
+<h3 id="远程连接服务器"><a href="#远程连接服务器" class="headerlink" title="远程连接服务器"></a>远程连接服务器</h3><blockquote>
+<p>方法①点击刚才的网页的右上角的五个按钮最左边的View Console进行操作。 </p>
+<p>方法②下载Xshell进行操作，建议后者，方面使用（主要是支持复制粘贴）管理。 </p>
+</blockquote>
+<p>以Xshell为例。 </p>
+<ol>
+<li>下载安装Xshell。</li>
+<li>安装完成后新建会话（Alt+N）。依次填写图中信息。<br>名称可以是Vultr或者其他，协议选择SSH，主机填写之前的IP Address，端口号选择22。</li>
+</ol>
+<p><img src="https://static.oschina.net/uploads/img/201703/04105522_g2pw.png" alt=""></p>
+<p>连接 </p>
+<p>点击左侧的用户身份验证，填写信息。方法选择Password，用户名为之前的Username（一般都是root），密码为之前的Password（这个建议直接复制粘贴过来，系统给的有点复杂） </p>
+<p><img src="https://static.oschina.net/uploads/img/201703/04105522_X2Iw.png" alt=""></p>
+<p>用户身份验证 </p>
+<p>填写完之后点击确定。然后点击连接。出现其他提示的话选择接受就可以了。这时你就可以看到一个命令控制台了。这时就算连接成功了。 </p>
+<h3 id="搭建-Shadowsocks-服务"><a href="#搭建-Shadowsocks-服务" class="headerlink" title="搭建 Shadowsocks 服务"></a>搭建 Shadowsocks 服务</h3><h4 id="安装组件"><a href="#安装组件" class="headerlink" title="安装组件"></a>安装组件</h4><pre><code>$ yum install m2crypto python-setuptools
+$ easy_install pip
+$ pip install shadowsocks
+</code></pre><h4 id="安装完成后配置服务器参数"><a href="#安装完成后配置服务器参数" class="headerlink" title="安装完成后配置服务器参数"></a>安装完成后配置服务器参数</h4><pre><code>$ vi  /etc/shadowsocks.json
+</code></pre><p>写入如下配置: </p>
+<pre><code>{
+    &quot;server&quot;:&quot;0.0.0.0&quot;,
+    &quot;server_port&quot;:443,
+    &quot;local_address&quot;: &quot;127.0.0.1&quot;,
+    &quot;local_port&quot;:1080,
+    &quot;password&quot;:&quot;123456&quot;,
+    &quot;timeout&quot;:300,
+    &quot;method&quot;:&quot;aes-256-cfb&quot;,
+    &quot;fast_open&quot;: false
+}
+</code></pre><p>多端口的如下： </p>
+<pre><code>{
+    &quot;server&quot;:&quot;0.0.0.0&quot;,
+    &quot;local_address&quot;: &quot;127.0.0.1&quot;,
+    &quot;local_port&quot;:1080,
+    &quot;port_password&quot;: {
+         &quot;443&quot;: &quot;443&quot;,
+         &quot;8888&quot;: &quot;8888&quot;
+     },
+    &quot;timeout&quot;:300,
+    &quot;method&quot;:&quot;aes-256-cfb&quot;,
+    &quot;fast_open&quot;: false
+}
+</code></pre><p>其中server字段与local_address填写之前的IP Address。password是自己用于连接这个shadow socks的密码，自定义就好。<br>其他的不需要更改。 </p>
+<p>然后保存退出。 </p>
+<p>vi 的命令: 按 “i” 进入编辑模式，编辑后按 “esc” 退出编辑模式， 输入 “:wq” 保存退出vi。 </p>
+<h3 id="配置防火墙"><a href="#配置防火墙" class="headerlink" title="配置防火墙"></a>配置防火墙</h3><p>这一步主要是为了提高系统安全性。 </p>
+<pre><code># 安装防火墙
+$ yum install firewalld
+# 启动防火墙
+$ systemctl start firewalld
+</code></pre><h4 id="开启防火墙相应的端口"><a href="#开启防火墙相应的端口" class="headerlink" title="开启防火墙相应的端口"></a>开启防火墙相应的端口</h4><p>方法一(推荐) </p>
+<pre><code># 端口号是你自己设置的端口
+$ firewall-cmd --permanent --zone=public --add-port=443/tcp
+$ firewall-cmd --reload
+</code></pre><p>方法二（麻烦，没必要） </p>
+<p>新建文件ss.xml </p>
+<pre><code>$ vi /usr/lib/firewalld/services/ss.xml
+</code></pre><p>粘贴下面的代码 </p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;service&gt;
+  &lt;short&gt;SS&lt;/short&gt;
+  &lt;description&gt;Shadowsocks port
+  &lt;/description&gt;
+  &lt;port protocol=&quot;tcp&quot; port=&quot;443&quot;/&gt;
+&lt;/service&gt;
+</code></pre><p>保存退出。 </p>
+<p>开启端口，重启firewalld 服务，下面的ss是上述的文件的名字，区分大小写 </p>
+<pre><code>$ firewall-cmd --permanent --add-service=ss
+$ firewall-cmd --reload
+</code></pre><h3 id="启动-Shadowsocks-服务"><a href="#启动-Shadowsocks-服务" class="headerlink" title="启动 Shadowsocks 服务"></a>启动 Shadowsocks 服务</h3><pre><code>$ ssserver -c /etc/shadowsocks.json
+</code></pre><p>如果想干点其他的实现后台运行，使用 </p>
+<pre><code>$ nohup ssserver -c /etc/shadowsocks.json &amp;
+</code></pre><h2 id="连接"><a href="#连接" class="headerlink" title="连接"></a>连接</h2><p>这样服务器就搭建好了。<a href="http://ssspeed.net/cms/help" target="_blank" rel="external">全平台的连接方法戳我</a>。 </p>
+<h3 id="PC连接"><a href="#PC连接" class="headerlink" title="PC连接"></a>PC连接</h3><p>下载Shadow Socks客户端。<a href="http://ssspeed.net/index/download" target="_blank" rel="external">SS加速器客户端下载</a><br>选择适合的版本，下载并解压运行。 </p>
+<p>填写信息:服务器地址，端口号，密码，加密方式与代理端口默认即可 </p>
+<p><img src="https://static.oschina.net/uploads/img/201703/04105522_sfWq.png" alt=""></p>
+<p>SS信息填写 </p>
+<p>填写完之后点击确定，然后到托盘中右键选择开启”启用系统代理”。 </p>
+<h3 id="iOS连接"><a href="#iOS连接" class="headerlink" title="iOS连接"></a>iOS连接</h3><p>在App Store下载Wingy。 </p>
+<p>填写信息:服务器，端口，密码，代理模式，加密方式默认即可。 </p>
+<p><img src="https://static.oschina.net/uploads/img/201703/04105522_WJOl.png" alt=""></p>
+<p>Wingy信息填写 </p>
+<h3 id="MacOS连接"><a href="#MacOS连接" class="headerlink" title="MacOS连接"></a>MacOS连接</h3><p><a href="http://ssspeed.net/cms/22" target="_blank" rel="external">官方教程</a></p>
+<h3 id="Android连接"><a href="#Android连接" class="headerlink" title="Android连接"></a>Android连接</h3><p><a href="http://ssspeed.net/cms/26" target="_blank" rel="external">官方教程</a></p>
+<h2 id="国外站点"><a href="#国外站点" class="headerlink" title="国外站点"></a>国外站点</h2><p><a href="http://www.google.com/" target="_blank" rel="external">Google</a></p>
+<p><a href="http://www.youtube.com/" target="_blank" rel="external">Youtube</a></p>
+<p><a href="http://www.facebook.com/" target="_blank" rel="external">Facebook</a></p>
+<p>如果以上没有问题的话，这时候你就可以畅游外面的世界了。点击上述链接测试吧。 </p>
+<h2 id=""><a href="#" class="headerlink" title=" "></a> </h2><p>_本文原创来自：<a href="https://www.vultrclub.com/174.html_" target="_blank" rel="external">https://www.vultrclub.com/174.html_</a></p>
+<p>一般而言，服务器本身的速度是决定我们项目打开速度、下载速度的关键，但是我们也可以借助第三方软件工具等提高加速效果，比如我们肯定很多人都熟悉的锐速、Net-Speeder可以双倍发包流量，可以减少超时和提高下载速度。这不在前一段时间，来自大名鼎鼎的谷歌发布开源<a href="https://www.vultrclub.com/tag/google-bbr/" target="_blank" rel="external">Google BBR</a>工具，可以提高发包数据量，起到加速作用。 </p>
+<p>这里，我们也在<a href="https://www.vultrclub.com/" target="_blank" rel="external">Vultr VPS</a>中安装Google BBR工具，因为是支持KVM和XEN架构的，我们的VULTR都是KVM架构所以肯定支持，但是由于内核的问题，我们需要调试和安装必备的内核和组件才 可以使用，我们一起安装试试吧。 </p>
+<p>第一、准备工作 </p>
+<p>这里我选择使用Vultr美国洛杉矶机房5美金月付方案，系统采用CENTOS7 64BIT。很多人要问为什么不选择速度较好的日本机房，因为日本机房虽然目前用NTT线路，PING速度看着还可以，但是稳定性不行，所以我不选择，尤其是晚上速度很差。 </p>
+<p>第二、查看当前核心 </p>
+<p>uname -r </p>
+<p>这里我们看到当前CENTOS7核心是3.10.0-514.2.2.el7.x86_64，这个核心是不可以安装BBR的。 </p>
+<p>第三、更新内核 </p>
+<p>rpm –import <a href="https://www.elrepo.org/RPM-GPG-KEY-elrepo.org" target="_blank" rel="external">https://www.elrepo.org/RPM-GPG-KEY-elrepo.org</a> </p>
+<p>rpm -Uvh <a href="http://www.elrepo.org/elrepo-release-7.0-2.el7.elrepo.noarch.rpm" target="_blank" rel="external">http://www.elrepo.org/elrepo-release-7.0-2.el7.elrepo.noarch.rpm</a> </p>
+<p>安装4.9.0内核 </p>
+<p>yum –enablerepo=elrepo-kernel install kernel-ml -y </p>
+<p>我们要知道，BBR目前只支持4.9.0内核，其他内核是不行的，需要更换内核才可以。 </p>
+<p>第四、检查内核是否更新 </p>
+<p>rpm -qa | grep kernel </p>
+<p>我们看到了有4.9.0内核，需要启动才可以。 </p>
+<p>grub2-set-default 1 </p>
+<p>然后重启 </p>
+<p>shutdown -r now </p>
+<p>第五、检查是否生效 </p>
+<p>uname -r </p>
+<p>检查当前内核是不是4.9.4-1.el7.elrepo.x86_64. </p>
+<p>看来内核是搞定了，我们那就开始安装BBR了。 </p>
+<p>第六、安装Google BBR </p>
+<p>echo ‘net.core.default_qdisc=fq’ | sudo tee -a /etc/sysctl.conf </p>
+<p>echo ‘net.ipv4.tcp_congestion_control=bbr’ | sudo tee -a /etc/sysctl.conf </p>
+<p>sysctl -p </p>
+<p>第七、检查BBR是否成功 </p>
+<p>sysctl net.ipv4.tcp_available_congestion_control </p>
+<p>执行命令，看看是否是提示”net.ipv4.tcp_available_congestion_control = bbr cubic reno” </p>
+<p>sysctl -n net.ipv4.tcp_congestion_control </p>
+<p>执行命令，是否提示bbr </p>
+<p>lsmod | grep bbr </p>
+<p>执行命令，是否看到BBR提示。 </p>
+<p>能看到上面提示，就说明BBR安装成功。后面，我们再去安装需要的工具，比如SS或者其他项目，速度上是有明显提升的。 </p>
 
            
          <style type="text/css">
@@ -707,8 +821,8 @@ pre{
         <div id="disqus_thread"></div>
 <script>
     var disqus_config = function () {
-        this.page.url = 'https://wangyu1997.github.io/2017/06/12/UIPopoverPresentationController/';  // Replace PAGE_URL with your page's canonical URL variable
-        this.page.identifier = 'https://wangyu1997.github.io/2017/06/12/UIPopoverPresentationController/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        this.page.url = 'https://wangyu1997.github.io/2017/07/01/2017-07-02/';  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'https://wangyu1997.github.io/2017/07/01/2017-07-02/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
     };
     queue.offer(function() {
             (function() { // DON'T EDIT BELOW THIS LINE
@@ -739,21 +853,13 @@ pre{
             <nav class="material-nav mdl-color-text--grey-50 mdl-cell mdl-cell--12-col">
     <!-- Prev Nav -->
     
-        <a href="/2017/06/14/Alamofire 中文使用指南/" id="post_nav-newer" class="prev-content">
-            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
-                <i class="material-icons">arrow_back</i>
-            </button>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            新篇
-        </a>
-    
 
     <!-- Section Spacer -->
     <div class="section-spacer"></div>
 
     <!-- Next Nav -->
     
-        <a href="/2017/06/12/内存管理/" id="post_nav-older" class="next-content">
+        <a href="/2017/07/01/MarkDown 语法入门/" id="post_nav-older" class="next-content">
             旧篇
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">

@@ -1113,153 +1113,6 @@ http {
     </entry>
     
     <entry>
-      <title><![CDATA[七牛云储存]]></title>
-      <url>/2017/06/14/%E4%B8%83%E7%89%9B%E4%BA%91%E5%82%A8%E5%AD%98/</url>
-      <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
-<ul>
-<li><p>初始化<br>一般情况下直接使用默认设置，不用单独配置。 可以配置超时时长、分片上传阀值等。</p>
-<p>Configuration config = new Configuration.Builder()</p>
-<pre><code>                .chunkSize(256 * 1024)  //分片上传时，每片的大小。 默认 256K
-                .putThreshhold(512 * 1024)  // 启用分片上传阀值。默认 512K
-                .connectTimeout(10) // 链接超时。默认 10秒
-                .responseTimeout(60) // 服务器响应超时。默认 60秒
-                .recorder(recorder)  // recorder 分片上传时，已上传片记录器。默认 null
-                .recorder(recorder, keyGen)  // keyGen 分片上传时，生成标识符，用于片记录器区分是那个文件的上传记录
-                .zone(Zone.zone0) // 设置区域，指定不同区域的上传域名、备用域名、备用IP。默认 Zone.zone0
-                .build()
-</code></pre><p>// 重用 uploadManager。一般地，只需要创建一个 uploadManager 对象<br>UploadManager uploadManager = new UploadManager(config)</p>
-</li>
-<li><p>上传文件<br>七牛上传文件主要用到两个方法：<br>一、 UploadManager.put(data, key, token, handler, options);</p>
-<p> /**</p>
-<ul>
-<li><p>UploadManager.put参数说明：<br><em>
-</em>@data                  byte[]/String/File    数据，可以是byte数组，文件路径，文件。<br><em>@key                   String                保存在服务器上的资源唯一标识。请参考键值对。
-</em>@token                 String                服务器分配的token。<br><em>@completionHandler     UpCompletionHandler   上传回调函数，必填。
-</em>@options               UploadOptions         如果需要进度通知、crc校验、中途取消、指定mimeType则需要填写相应字段，详见UploadOptions参数说明。</p>
-<pre><code> */
-</code></pre><p>二、 UploadOptions(params, mimeType, checkCrc, progressHandler, cancellationSignal);</p>
-</li>
-</ul>
-</li>
-</ul>
-<pre><code>    /**
-     * UploadOptions参数说明：
-     * 
-     *参数                   类型                   说明
-     *params               Map&lt;String, String&gt;  自定义变量，key必须以 x: 开始。
-     *mimeType             String               指定文件的mimeType。
-     *checkCrc             boolean              是否验证上传文件。
-     *progressHandler      UpProgressHandler    上传进度回调。
-     *cancellationSignal   UpCancellationSignal 取消上传，当isCancelled()返回true时，不再执行更多上传。
-     */
-</code></pre><h4 id="现在就比较清楚了"><a href="#现在就比较清楚了" class="headerlink" title="现在就比较清楚了"></a>现在就比较清楚了</h4><p>下面主要是各种上传姿势了  </p>
-<ul>
-<li>简单上传 </li>
-</ul>
-<pre><code>UploadManager uploadManager = new UploadManager();
-data = &lt;File对象、或 文件路径、或 字节数组&gt;
-String key = &lt;指定七牛服务上的文件名，或 null&gt;;
-String token = &lt;从服务端SDK获取&gt;;
-uploadManager.put(data, key, token,
- /**
-  * UpCompletionHandler参数说明
-  * 
-  *@key        即uploadManager.put(file, key, ...)方法指定的key。
-  *@info       http请求的状态信息等，可记入日志。isOK()返回 true表示上传成功。
-  *@response   七牛反馈的信息。可从中解析保存在七牛服务的key等信息，具体字段取决于上传策略的设置。
-  */
-new UpCompletionHandler() {
-    @Override
-    public void complete(String key, ResponseInfo info, JSONObject res) {
-
-        Log.i(&quot;qiniu&quot;, key + &quot;,\r\n &quot; + info + &quot;,\r\n &quot; + res);
-    }
-}, null);
-</code></pre><ul>
-<li>记录上传进度</li>
-</ul>
-<pre><code>    private void uploadProgress() {
-
-        uploadManager.put(data, key, token, handler,
-                new UploadOptions(null, null, false,
-                        new UpProgressHandler() {
-                            /**
-                             * @param key      即uploadManager.put(file, key, ...)方法指定的key
-                             * @param percent  进度
-                             */
-                            public void progress(String key, double percent) {
-                                Log.i(&quot;qiniu&quot;, key + &quot;: &quot; + percent);
-                            }
-                        }, null));
-
-    }
-</code></pre><ul>
-<li>取消上传<br>内部代码会检测UpCancellationSignal##isCancelled()的返回值，当其返回true时，将停止上传。 可外部维护一个变量isCancelled，当点击取消按钮时，设置isCancelled = true;。如：</li>
-</ul>
-<pre><code>private volatile boolean isCancelled = false;
-
-uploadManager.put(data, key, token,handler,
-    new UploadOptions(null, null, false, progressHandler,
-        new UpCancellationSignal(){
-            public boolean isCancelled(){
-                return isCancelled;
-            }
-        }));
-
-
-
-private void cancell() {
-    isCancelled = true;
-}
-</code></pre><ul>
-<li>记录断点</li>
-</ul>
-<p>分片上传中，可将各个已上传的块记录下来，再次上传时，已上传的部分不用再次上传。 断点记录类需实现 com.qiniu.android.storage.Recorder 接口。已提供保存到文件的 FileRecorder 实现。 </p>
-<pre><code>String dirPath = &lt;断点记录文件保存的文件夹位置&gt;
-Recorder recorder = new FileRecorder(dirPath);
-
-
-
-
-KeyGenerator keyGen = new KeyGenerator(){
-    public String gen(String key, File file){
-
-
-        return key + &quot;_._&quot; + new StringBuffer(file.getAbsolutePath()).reverse();
-    }
-};
-
-
-
-
-
-Configuration config = new Configuration.Builder()
-
-
-                    .recorder(recorder, keyGen)  
-                    .build();
-
-UploadManager uploadManager = new UploadManager(config);
-
-uploadManager.put(data, key, ...)
-</code></pre><h3 id="初始化设置和上传文件的基本用法就记录到这啦！"><a href="#初始化设置和上传文件的基本用法就记录到这啦！" class="headerlink" title="初始化设置和上传文件的基本用法就记录到这啦！"></a>初始化设置和上传文件的基本用法就记录到这啦！</h3>]]></content>
-      
-        <categories>
-            
-            <category> Android </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> qiniu </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
       <title><![CDATA[Alamofire 中文使用指南]]></title>
       <url>/2017/06/14/Alamofire%20%E4%B8%AD%E6%96%87%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/</url>
       <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><hr>
@@ -1984,6 +1837,214 @@ Alamofire.upload(fileURL, to: urlString).responseData { response in
         <tags>
             
             <tag> Alamofire </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[七牛云储存]]></title>
+      <url>/2017/06/14/%E4%B8%83%E7%89%9B%E4%BA%91%E5%82%A8%E5%AD%98/</url>
+      <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
+<ul>
+<li><p>初始化<br>一般情况下直接使用默认设置，不用单独配置。 可以配置超时时长、分片上传阀值等。</p>
+<p>Configuration config = new Configuration.Builder()</p>
+<pre><code>                .chunkSize(256 * 1024)  //分片上传时，每片的大小。 默认 256K
+                .putThreshhold(512 * 1024)  // 启用分片上传阀值。默认 512K
+                .connectTimeout(10) // 链接超时。默认 10秒
+                .responseTimeout(60) // 服务器响应超时。默认 60秒
+                .recorder(recorder)  // recorder 分片上传时，已上传片记录器。默认 null
+                .recorder(recorder, keyGen)  // keyGen 分片上传时，生成标识符，用于片记录器区分是那个文件的上传记录
+                .zone(Zone.zone0) // 设置区域，指定不同区域的上传域名、备用域名、备用IP。默认 Zone.zone0
+                .build()
+</code></pre><p>// 重用 uploadManager。一般地，只需要创建一个 uploadManager 对象<br>UploadManager uploadManager = new UploadManager(config)</p>
+</li>
+<li><p>上传文件<br>七牛上传文件主要用到两个方法：<br>一、 UploadManager.put(data, key, token, handler, options);</p>
+<p> /**</p>
+<ul>
+<li><p>UploadManager.put参数说明：<br><em>
+</em>@data                  byte[]/String/File    数据，可以是byte数组，文件路径，文件。<br><em>@key                   String                保存在服务器上的资源唯一标识。请参考键值对。
+</em>@token                 String                服务器分配的token。<br><em>@completionHandler     UpCompletionHandler   上传回调函数，必填。
+</em>@options               UploadOptions         如果需要进度通知、crc校验、中途取消、指定mimeType则需要填写相应字段，详见UploadOptions参数说明。</p>
+<pre><code> */
+</code></pre><p>二、 UploadOptions(params, mimeType, checkCrc, progressHandler, cancellationSignal);</p>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code>    /**
+     * UploadOptions参数说明：
+     * 
+     *参数                   类型                   说明
+     *params               Map&lt;String, String&gt;  自定义变量，key必须以 x: 开始。
+     *mimeType             String               指定文件的mimeType。
+     *checkCrc             boolean              是否验证上传文件。
+     *progressHandler      UpProgressHandler    上传进度回调。
+     *cancellationSignal   UpCancellationSignal 取消上传，当isCancelled()返回true时，不再执行更多上传。
+     */
+</code></pre><h4 id="现在就比较清楚了"><a href="#现在就比较清楚了" class="headerlink" title="现在就比较清楚了"></a>现在就比较清楚了</h4><p>下面主要是各种上传姿势了  </p>
+<ul>
+<li>简单上传 </li>
+</ul>
+<pre><code>UploadManager uploadManager = new UploadManager();
+data = &lt;File对象、或 文件路径、或 字节数组&gt;
+String key = &lt;指定七牛服务上的文件名，或 null&gt;;
+String token = &lt;从服务端SDK获取&gt;;
+uploadManager.put(data, key, token,
+ /**
+  * UpCompletionHandler参数说明
+  * 
+  *@key        即uploadManager.put(file, key, ...)方法指定的key。
+  *@info       http请求的状态信息等，可记入日志。isOK()返回 true表示上传成功。
+  *@response   七牛反馈的信息。可从中解析保存在七牛服务的key等信息，具体字段取决于上传策略的设置。
+  */
+new UpCompletionHandler() {
+    @Override
+    public void complete(String key, ResponseInfo info, JSONObject res) {
+
+        Log.i(&quot;qiniu&quot;, key + &quot;,\r\n &quot; + info + &quot;,\r\n &quot; + res);
+    }
+}, null);
+</code></pre><ul>
+<li>记录上传进度</li>
+</ul>
+<pre><code>    private void uploadProgress() {
+
+        uploadManager.put(data, key, token, handler,
+                new UploadOptions(null, null, false,
+                        new UpProgressHandler() {
+                            /**
+                             * @param key      即uploadManager.put(file, key, ...)方法指定的key
+                             * @param percent  进度
+                             */
+                            public void progress(String key, double percent) {
+                                Log.i(&quot;qiniu&quot;, key + &quot;: &quot; + percent);
+                            }
+                        }, null));
+
+    }
+</code></pre><ul>
+<li>取消上传<br>内部代码会检测UpCancellationSignal##isCancelled()的返回值，当其返回true时，将停止上传。 可外部维护一个变量isCancelled，当点击取消按钮时，设置isCancelled = true;。如：</li>
+</ul>
+<pre><code>private volatile boolean isCancelled = false;
+
+uploadManager.put(data, key, token,handler,
+    new UploadOptions(null, null, false, progressHandler,
+        new UpCancellationSignal(){
+            public boolean isCancelled(){
+                return isCancelled;
+            }
+        }));
+
+
+
+private void cancell() {
+    isCancelled = true;
+}
+</code></pre><ul>
+<li>记录断点</li>
+</ul>
+<p>分片上传中，可将各个已上传的块记录下来，再次上传时，已上传的部分不用再次上传。 断点记录类需实现 com.qiniu.android.storage.Recorder 接口。已提供保存到文件的 FileRecorder 实现。 </p>
+<pre><code>String dirPath = &lt;断点记录文件保存的文件夹位置&gt;
+Recorder recorder = new FileRecorder(dirPath);
+
+
+
+
+KeyGenerator keyGen = new KeyGenerator(){
+    public String gen(String key, File file){
+
+
+        return key + &quot;_._&quot; + new StringBuffer(file.getAbsolutePath()).reverse();
+    }
+};
+
+
+
+
+
+Configuration config = new Configuration.Builder()
+
+
+                    .recorder(recorder, keyGen)  
+                    .build();
+
+UploadManager uploadManager = new UploadManager(config);
+
+uploadManager.put(data, key, ...)
+</code></pre><h3 id="初始化设置和上传文件的基本用法就记录到这啦！"><a href="#初始化设置和上传文件的基本用法就记录到这啦！" class="headerlink" title="初始化设置和上传文件的基本用法就记录到这啦！"></a>初始化设置和上传文件的基本用法就记录到这啦！</h3>]]></content>
+      
+        <categories>
+            
+            <category> Android </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> qiniu </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[UIPopoverPresentationController]]></title>
+      <url>/2017/06/12/UIPopoverPresentationController/</url>
+      <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a>
+<p>UIPopoverPresentationController 是 iOS8 后新增的，相当于pad端的UIPopOverController，以后我们也可以在iPhone上使用popOver啦。自己写了一个小demo，大概了熟悉了一下用法。后面有开发需求时会详细补充。<br>首先要知道一点是，我们并不需要创建一个UIPopoverPresentationController，他相当于UIViewController的属性，因此我们只需要创建UIViewController即可。<br>举个例子：假设我们要在 ViewController窗体弹窗，弹窗为FirstViewController（kind of UIViewController）我们用两种方式来实现<br>1、在self.view上创建一个button，给button添加弹窗事件；<br>2、在导航栏添加barButtonItem，给其添加弹窗时间。<br>弹窗事件：</p>
+<pre><code class="swift">1、button
+[objc] view plain copy
+- (void)buttonClick  
+{  
+    FirstViewController *firstVC = [[FirstViewController alloc] init];  
+    firstVC.modalPresentationStyle = UIModalPresentationPopover;  
+    firstVC.popoverPresentationController.sourceView = popOverButton;  //rect参数是以view的左上角为坐标原点（0，0）  
+    firstVC.popoverPresentationController.sourceRect = popOverButton.bounds; //指定箭头所指区域的矩形框范围（位置和尺寸），以view的左上角为坐标原点  
+    firstVC.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp; //箭头方向  
+    firstVC.popoverPresentationController.delegate = self;  
+    firstVC.preferredContentSize = CGSizeMake(100, 200);  
+    [self presentViewController:firstVC animated:YES completion:nil];  
+}  
+
+2、barButtonItem
+[objc] view plain copy
+- (void)rightBarButtonItemClick  
+{  
+    FirstViewController *firstVC = [[FirstViewController alloc]init];  
+    firstVC.modalPresentationStyle = UIModalPresentationPopover;  
+    /** 
+     *  由于导航上的控件没有指定frame，无法设置sourceView和sourceRect，用下面的。 
+     */  
+    firstVC.popoverPresentationController.barButtonItem = self.navigationItem.rightBarButtonItem;  
+    firstVC.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp;  
+    firstVC.popoverPresentationController.delegate = self;  
+    firstVC.preferredContentSize = CGSizeMake(100, 200);  
+    [self presentViewController:firstVC animated:YES completion:nil];  
+//    firstVC.popoverPresentationController.passthroughViews = nil;  
+}  
+注意几点：
+1、遵守代理：UIPopoverPresentationControllerDelegate
+2、在phone端必须要适配设备，要设置下面代理方法：
+[objc] view plain copy
+/* For iOS8.0, the only supported adaptive presentation styles are UIModalPresentationFullScreen and UIModalPresentationOverFullScreen. */  
+- (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller;  
+-
+</code></pre>
+<p>iPhone下默认是UIModalPresentationFullScreen，需要手动设置为UIModalPresentationNone，否则，是普通的present全屏显示，没有弹窗效果。iPad不需要。<br>3、其他设置根据需求翻相关文档即可。<br>demo：<a href="https://github.com/Lynnll/UIPopOverLearning.git" target="_blank" rel="external">https://github.com/Lynnll/UIPopOverLearning.git</a></p>
+]]></content>
+      
+        <categories>
+            
+            <category> iOS </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> popover </tag>
             
         </tags>
         
@@ -2822,67 +2883,6 @@ Alamofire.upload(fileURL, to: urlString).responseData { response in
         <tags>
             
             <tag> cpu </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[UIPopoverPresentationController]]></title>
-      <url>/2017/06/12/UIPopoverPresentationController/</url>
-      <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a>
-<p>UIPopoverPresentationController 是 iOS8 后新增的，相当于pad端的UIPopOverController，以后我们也可以在iPhone上使用popOver啦。自己写了一个小demo，大概了熟悉了一下用法。后面有开发需求时会详细补充。<br>首先要知道一点是，我们并不需要创建一个UIPopoverPresentationController，他相当于UIViewController的属性，因此我们只需要创建UIViewController即可。<br>举个例子：假设我们要在 ViewController窗体弹窗，弹窗为FirstViewController（kind of UIViewController）我们用两种方式来实现<br>1、在self.view上创建一个button，给button添加弹窗事件；<br>2、在导航栏添加barButtonItem，给其添加弹窗时间。<br>弹窗事件：</p>
-<pre><code class="swift">1、button
-[objc] view plain copy
-- (void)buttonClick  
-{  
-    FirstViewController *firstVC = [[FirstViewController alloc] init];  
-    firstVC.modalPresentationStyle = UIModalPresentationPopover;  
-    firstVC.popoverPresentationController.sourceView = popOverButton;  //rect参数是以view的左上角为坐标原点（0，0）  
-    firstVC.popoverPresentationController.sourceRect = popOverButton.bounds; //指定箭头所指区域的矩形框范围（位置和尺寸），以view的左上角为坐标原点  
-    firstVC.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp; //箭头方向  
-    firstVC.popoverPresentationController.delegate = self;  
-    firstVC.preferredContentSize = CGSizeMake(100, 200);  
-    [self presentViewController:firstVC animated:YES completion:nil];  
-}  
-
-2、barButtonItem
-[objc] view plain copy
-- (void)rightBarButtonItemClick  
-{  
-    FirstViewController *firstVC = [[FirstViewController alloc]init];  
-    firstVC.modalPresentationStyle = UIModalPresentationPopover;  
-    /** 
-     *  由于导航上的控件没有指定frame，无法设置sourceView和sourceRect，用下面的。 
-     */  
-    firstVC.popoverPresentationController.barButtonItem = self.navigationItem.rightBarButtonItem;  
-    firstVC.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp;  
-    firstVC.popoverPresentationController.delegate = self;  
-    firstVC.preferredContentSize = CGSizeMake(100, 200);  
-    [self presentViewController:firstVC animated:YES completion:nil];  
-//    firstVC.popoverPresentationController.passthroughViews = nil;  
-}  
-注意几点：
-1、遵守代理：UIPopoverPresentationControllerDelegate
-2、在phone端必须要适配设备，要设置下面代理方法：
-[objc] view plain copy
-/* For iOS8.0, the only supported adaptive presentation styles are UIModalPresentationFullScreen and UIModalPresentationOverFullScreen. */  
-- (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller;  
--
-</code></pre>
-<p>iPhone下默认是UIModalPresentationFullScreen，需要手动设置为UIModalPresentationNone，否则，是普通的present全屏显示，没有弹窗效果。iPad不需要。<br>3、其他设置根据需求翻相关文档即可。<br>demo：<a href="https://github.com/Lynnll/UIPopOverLearning.git" target="_blank" rel="external">https://github.com/Lynnll/UIPopOverLearning.git</a></p>
-]]></content>
-      
-        <categories>
-            
-            <category> iOS </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> popover </tag>
             
         </tags>
         

@@ -10,7 +10,7 @@
     
     <title>
         
-            docker django+mysql开发环境 | 
+            Kindeditor在Django中使用 | 
         
         人不如故
     </title>
@@ -38,7 +38,7 @@
     <meta name="theme-color" content="#000">
     <meta name="author" content="人不如故">
     <meta name="description" content="世间一场大梦，人生几度秋凉。">
-    <meta name="keywords" content="null,django">
+    <meta name="keywords" content="null,kindeditor">
 
     <!-- Favicons -->
     <link rel="icon shortcut" type="image/ico" href="/img/favicon.png">
@@ -64,9 +64,9 @@
     <!-- The Open Graph protocol -->
     <meta property="og:url" content="https://wangyu1997.github.io">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="docker django+mysql开发环境 | 人不如故">
+    <meta property="og:title" content="Kindeditor在Django中使用 | 人不如故">
     <meta property="og:description" content="世间一场大梦，人生几度秋凉。">
-    <meta property="og:article:tag" content="django"> 
+    <meta property="og:article:tag" content="kindeditor"> 
 
     <!--[if lte IE 9]>
         <link rel="stylesheet" href="/css/ie-blocker.css">
@@ -268,7 +268,7 @@
     </button>
 
     <ul class="post-toc-wrap mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="post-toc-trigger-btn" style="max-height:80vh; overflow-y:scroll;">
-        <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1、项目目录"><span class="post-toc-number">1.</span> <span class="post-toc-text">1、项目目录</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2、配置文件"><span class="post-toc-number">2.</span> <span class="post-toc-text">2、配置文件</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#3、构建镜像"><span class="post-toc-number">3.</span> <span class="post-toc-text">3、构建镜像</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#4、创建django工程"><span class="post-toc-number">4.</span> <span class="post-toc-text">4、创建django工程</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#5、运行"><span class="post-toc-number">5.</span> <span class="post-toc-text">5、运行</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#6、打包镜像"><span class="post-toc-number">6.</span> <span class="post-toc-text">6、打包镜像</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#7、加载镜像"><span class="post-toc-number">7.</span> <span class="post-toc-text">7、加载镜像</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#8、其他"><span class="post-toc-number">8.</span> <span class="post-toc-text">8、其他</span></a></li></ol>
+        <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1：下载该文件，解压至相应的js文件目录"><span class="post-toc-number">1.</span> <span class="post-toc-text">1：下载该文件，解压至相应的js文件目录</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2：settings-py和urls-py配置"><span class="post-toc-number">2.</span> <span class="post-toc-text">2：settings.py和urls.py配置</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#3：编写upload-py文件"><span class="post-toc-number">3.</span> <span class="post-toc-text">3：编写upload.py文件</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#4：config-js-配置"><span class="post-toc-number">4.</span> <span class="post-toc-text">4：config.js 配置</span></a></li></ol>
 
         <!--
         <li class="mdl-menu__item">
@@ -293,10 +293,10 @@
     <!-- Paradox Post Header -->
     
         <!-- Custom Thumbnail -->
-        <div class="post_thumbnail-custom mdl-card__media mdl-color-text--grey-50" style="background-image:url(http://oq5d32gij.bkt.clouddn.com/15006317147910.jpg)">
+        <div class="post_thumbnail-custom mdl-card__media mdl-color-text--grey-50" style="background-image:url(http://oq5d32gij.bkt.clouddn.com/15006313836602.jpg)">
     
             <p class="article-headline-p">
-                docker django+mysql开发环境
+                Kindeditor在Django中使用
             </p>
         </div>
 
@@ -315,7 +315,7 @@
     <!-- Author Name & Date -->
     <div>
         <strong>人不如故</strong>
-        <span>7月 05, 2017</span>
+        <span>7月 20, 2017</span>
     </div>
 
     <div class="section-spacer"></div>
@@ -336,7 +336,7 @@
         </button>
         <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-qrcode-button">
             <li class="mdl-menu__item">在其它设备中阅读本文章</li>
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPYAAAD2CAAAAADAeSUUAAAC1ElEQVR42u3aUU7rUAwFwO5/0/D7pKemx3ZAwXfyVaUkZIzEke28vo48XtjY2NjY2NjY2NiPZL/i4+3t/vv23Zl/z7+7f/4bq8+MjY2NvZv94V//m5+5fvRrcCF4grJGV2FjY2MfwM4ZeVDlxUpK1ntmbGxsbOxJCRJqUrgkILGxsbGxe+x8YJQ0NkkQYmNjY2NPBjR5K3JXS9MbS2FjY2Ofxs6Xps/5/Kv7bWxsbOwHs6tH0nj0xkbVNXP5ybGxsbGXsvNg6BWoNwxKQrRcbmxsbOyl7Hxknwzxf6dk1WfGxsbGPoF9V8BUF7T5YjgaG/WGStjY2Ngr2Ne3SApxfVUeh/m6d7ToxcbGxl7HzsNm0h5MitU7sLGxsc9kzxuGKjgpxHwBjI2Njb2VnUROHmbVJiRfA1Rbo+idU2xsbOxF7Oiy1oq3GnuT8VY5wLCxsbFXs+8F/1zbkzcw2NjY2Cewe8EwKV/vc7W9wcbGxt7NzgdMvcVtddh0V4AVFr3Y2NjYf5xdfaBJsXpFyYdTH85gY2Njr2Yno5/JOKlHza+NFNjY2NhL2RNkb2BUDbz5t9jY2Ni72b1Q6a1dE/A8ugpDJWxsbOwV7LwhyRcD1WjJh1YRDxsbG/tIdj6Ozwf0CaDX8PRWyNjY2Nhb2dXlbmEcP36VMz/T3IpgY2Njr2P3YqbXkEwWxtf3LL98iY2Njb2IXW0Dqu3BPA57UYeNjY19Djsf3/Tahjzkei96fnhObGxs7KXs+dq1txjIP+d/ng/PgI2Njb2U3YuE6ko4D795sZrvnGJjY2P/cXYvtBJS9QWgPNJuCDBsbGzsdex8vVp9uWdS0N4aGBsbGxu7GiTVwdAkqHp/EmxsbGzs61v3XtmsDoZ6awxsbGzsc9j5La5bjslSIQmtfAGMjY2NfQ67OriZLAaqRUlK/OP7bWxsbOwHs885sLGxsbGxsbGxsR9zfAM0XLnMbE91zgAAAABJRU5ErkJggg==">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPYAAAD2CAAAAADAeSUUAAAC20lEQVR42u3ay1LDMAwF0P7/T8OWTcKV5EJqn6yYNtg+ZgaNHq+vI58XNjY2NjY2NjY29iPZr/i5XO7Ht1fvX72TfJ6skJwZGxsbe2/2L//6Lw5xf7j7N692SVZonhkbGxv7APZ9aElg88Pdn613ZmxsbGzsahpwH5wS6n16g42NjY29KoDl1CRoVVfGxsbGxu4lDL0WQn4p97v8Wy0NGxsb+/HsPMF4zs9/2t/GxsbGfjC7+kwKTO8oQhVOjo2Njb0pu5dmJAOU1YQnZzeHRLGxsbE3Za8apskbtJOmQtQGuFoZGxsbe1N2EnLyI+aXVW0VLLg4bGxs7K3Zk6JSfhHV9m0+gvmW/jY2Njb2h7BzTG/7Obja3C00erGxsbG3YE+SkPxSqmtOEptyVwQbGxt7C3Y1weilJfnF5WGv0GzGxsbG3pQ9L9kkWyYpSu+TQjjExsbG3pRdDU7JdVQvolpy6rWBsbGxsfdmjwJDvvF45eofDBsbG/sEdvQLwSBOEpZ6KU0+BlQuKmFjY2Nvwa5uMGkYVK+ml9iUi0rY2NjYH86uBpIeo9qynbd7o1QEGxsbewt2r5SfF5XuD10tIVWTKGxsbOxz2ElKkCQhay8x33FxUQkbGxv7Y9nJcnk7YVWzNgc3Axg2Njb2FuxViUF1ULK3fjV0YWNjY5/DTkZhEkyvtDRJhxa0B7CxsbG3YN8HjDyc5KWiSTqUl7ewsbGxz2FXj9JLYyaFoWpBChsbG/tMdi8s5WnGqpC2uKiEjY2N/bHsXtjosd/XkCgPX2JjY2NvxJ6X8nut3EmzuXn12NjY2FuzJ0FrVbm/+ma16YuNjY19Ajtvr1bbwNVCf2/0ZzSphI2NjY1dbBLk6c0ksGFjY2NjrxrrWTXEmSdL2NjY2Geyq+X7XsEoCWbVMZ1RAMPGxsbegj0p3CQpR6/cnzeAo+Y0NjY29qbscx5sbGxsbGxsbGzsxzzf1dxJSxsV/HwAAAAASUVORK5CYII=">
         </ul>
     
 
@@ -348,7 +348,7 @@
     </button>
     <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-viewtags-button">
         <li class="mdl-menu__item">
-        <a class="post_tag-link" href="/tags/django/">django</a>
+        <a class="post_tag-link" href="/tags/kindeditor/">kindeditor</a>
     </ul>
     
 
@@ -375,7 +375,7 @@
 
     <!-- Share Weibo -->
     
-        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=docker django+mysql开发环境&url=https://wangyu1997.github.io//2017/07/05/django+mysql/index.html&pic=&searchPic=false&style=simple" target="_blank">
+        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=Kindeditor在Django中使用&url=https://wangyu1997.github.io//2017/07/20/Kindeditor在Django中使用/index.html&pic=&searchPic=false&style=simple" target="_blank">
             <li class="mdl-menu__item">
                 分享到微博
             </li>
@@ -384,7 +384,7 @@
 
     <!-- Share Twitter -->
     
-        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=docker django+mysql开发环境&url=https://wangyu1997.github.io//2017/07/05/django+mysql/index.html&via=人不如故" target="_blank">
+        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=Kindeditor在Django中使用&url=https://wangyu1997.github.io//2017/07/20/Kindeditor在Django中使用/index.html&via=人不如故" target="_blank">
             <li class="mdl-menu__item">
                 分享到 Twitter
             </li>
@@ -393,7 +393,7 @@
 
     <!-- Share Facebook -->
     
-        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=https://wangyu1997.github.io//2017/07/05/django+mysql/index.html" target="_blank">
+        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=https://wangyu1997.github.io//2017/07/20/Kindeditor在Django中使用/index.html" target="_blank">
             <li class="mdl-menu__item">
                 分享到 Facebook
             </li>
@@ -402,7 +402,7 @@
 
     <!-- Share Google+ -->
     
-        <a class="post_share-link" href="https://plus.google.com/share?url=https://wangyu1997.github.io//2017/07/05/django+mysql/index.html" target="_blank">
+        <a class="post_share-link" href="https://plus.google.com/share?url=https://wangyu1997.github.io//2017/07/20/Kindeditor在Django中使用/index.html" target="_blank">
             <li class="mdl-menu__item">
                 分享到 Google+
             </li>
@@ -414,7 +414,7 @@
 
     <!-- Share QQ -->
     
-        <a class="post_share-link" href="http://connect.qq.com/widget/shareqq/index.html?site=人不如故&title=docker django+mysql开发环境&summary=世间一场大梦，人生几度秋凉。&pics=https://wangyu1997.github.io/img/favicon.png&url=https://wangyu1997.github.io/2017/07/05/django+mysql/index.html" target="_blank">
+        <a class="post_share-link" href="http://connect.qq.com/widget/shareqq/index.html?site=人不如故&title=Kindeditor在Django中使用&summary=世间一场大梦，人生几度秋凉。&pics=https://wangyu1997.github.io/img/favicon.png&url=https://wangyu1997.github.io/2017/07/20/Kindeditor在Django中使用/index.html" target="_blank">
             <li class="mdl-menu__item">
                 分享到 QQ
             </li>
@@ -434,165 +434,90 @@
    
     
             <script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
-<p>使用docker来搭建开发环境不仅能够跟我们主机的已有的各种软件配置隔离，而且也能够很方便地分发给别人，从而使团队能够在统一的开发环境下快速开始开发、测试和部署。本文采用Docker的docker-compose来搭建python2.7+django1.7.5+mysql的web开发环境，希望可以给需要的同学参考。 </p>
-<h2 id="1、项目目录"><a href="#1、项目目录" class="headerlink" title="1、项目目录"></a>1、项目目录</h2><p>创建工程目录mysite </p>
-<pre><code>yhc@yhc-E540:~/workspaces/docker$ mkdir mysite &amp;&amp; cd mysite
-</code></pre><p>创建以下2个目录（这里为方便放置各个文件，可以根据需要自己组织，后面配置文件做相应修改即可） </p>
-<pre><code>yhc@yhc-E540:~/workspaces/docker/mysite$ mkdir db mysite
-</code></pre><h2 id="2、配置文件"><a href="#2、配置文件" class="headerlink" title="2、配置文件"></a>2、配置文件</h2><p>（1）Dockerfile </p>
-<p>Dockerfile包含创建镜像所需要的全部指令。在项目根目录下创建<code>Dockerfile</code>文件，其内容如下： </p>
-<pre><code>FROM python:2.7
-ENV PYTHONUNBUFFERED 1
-RUN mkdir /code
-RUN mkdir /code/db
-WORKDIR /code
-ADD ./mysite/requirements.txt /code/
-RUN pip install -r requirements.txt
-ADD . /code/
-</code></pre><p>第1行的<code>FROM</code>指令表示新的镜像将基于python:2.7的镜像来构建<br>第2行的<code>ENV</code>为环境变量（PYTHONUNBUFFERED见<a href="https://docs.python.org/2/using/cmdline.html" target="_blank" rel="external">这里</a>）<br>第3行的<code>RUN</code>指令表示在镜像内新建/code目录<br>第4行指定指定RUN、CMD与ENTRYPOINT命令的工作目录<br>第5行是将<code>./mysite/requirements.txt</code>文件添加到刚才新建的code目录中<br>第6行运行<code>pip</code>安装所需的软件 </p>
-<p>Dockerfile详细可以参见《<a href="http://yuedu.baidu.com/ebook/d817967416fc700abb68fca1" target="_blank" rel="external">Docker入门实战</a>》<br>以及<a href="http://docs.docker.com/reference/builder/" target="_blank" rel="external">官方参考</a></p>
-<p>（2）docker-compose.yml </p>
-<p>之前的Dockerfile定义了一个应用，而使用compose，可以在一个文件里，定义多容器的应用。该YAML配置语言，用于描述和组装多容器的分布式应用。在项目根目录创建<code>docker-compose.yml</code>文件，其内容如下： </p>
-<pre><code>db:
-  image: mysql
-  expose:
-    - &quot;3306&quot;
-  volumes:
-    - ./db:/var/lib/mysql
-  environment:
-    - MYSQL_DATABASE=mysitedb
-    - MYSQL_ROOT_PASSWORD=11111111  
-
-web:
-  build: .
-  command: python ./mysite/manage.py runserver 0.0.0.0:8000
-  volumes:
-    - .:/code
-  ports:
-    - &quot;8000:8000&quot;
-  links:
-    - db
-</code></pre><p>db标签：<br>images表示使用mysql镜像<br>expose表示暴露端口3306，但不发布到宿主机上<br>volume表示挂载宿主机的路径作为卷，冒号左边为宿主机路径，右边为镜像内路径<br>environment为环境变量，每个容器都有自己定义的环境变量，具体查看<a href="https://github.com/docker-library/docs" target="_blank" rel="external">镜像手册</a>中的mysql </p>
-<p>web标签：<br>build指定建立Dockerfile路径<br>command将覆盖默认的命令<br>ports指定主机开放的端口<br>links指向其他容器中的服务 </p>
-<p>更多该配置文件参见<a href="http://docs.docker.com/compose/yml/" target="_blank" rel="external">这里</a></p>
-<p>（3）requirements.txt </p>
-<p>在子目录mysite下<code>requirements.txt</code>文件，该文件内容如下: </p>
-<pre><code>django==1.7.5
-MySQL-python
-</code></pre><h2 id="3、构建镜像"><a href="#3、构建镜像" class="headerlink" title="3、构建镜像"></a>3、构建镜像</h2><p>在项目根目录执行以下命令 </p>
-<pre><code>yhc@yhc-E540:~/workspaces/docker/mysite$ docker-compose build
-db uses an image, skipping
-Building web...
-Step 0 : FROM python:2.7
- ---&gt; d833e0b23482
-Step 1 : ENV PYTHONUNBUFFERED 1
- ---&gt; Using cache
- ---&gt; df633fc1ab0e
-Step 2 : RUN mkdir /code
- ---&gt; Using cache
- ---&gt; 49bb20e37bfc
-Step 3 : WORKDIR /code
- ---&gt; Using cache
- ---&gt; f84fca46a343
-Step 4 : ADD ./mysite/requirements.txt /code/
- ---&gt; e8f756bed13e
-Removing intermediate container 91e677d50cd4
-Step 5 : RUN pip install -r requirements.txt
- ---&gt; Running in 7eb86e071025
-Collecting django==1.7.5 (from -r requirements.txt (line 1))
-  Downloading Django-1.7.5-py2.py3-none-any.whl (7.4MB)
-Collecting MySQL-python (from -r requirements.txt (line 2))
-  Downloading MySQL-python-1.2.5.zip (108kB)
-Installing collected packages: django, MySQL-python
-  Running setup.py install for MySQL-python
-Successfully installed MySQL-python-1.2.5 django-1.7.5
- ---&gt; 3e5c9b891397
-Removing intermediate container 7eb86e071025
-Step 6 : ADD . /code/
- ---&gt; 251dea7e2af2
-Removing intermediate container b4b0c2b08538
-Successfully built 251dea7e2af2
-</code></pre><p>如果本地没有python和mysql镜像的话下载需要多等待一些时间。完成之后就构建好了python+django+mysql的镜像。 </p>
-<h2 id="4、创建django工程"><a href="#4、创建django工程" class="headerlink" title="4、创建django工程"></a>4、创建django工程</h2><p>执行以下命令 </p>
-<pre><code>yhc@yhc-E540:~/workspaces/docker/mysite$ docker-compose run web django-admin.py startproject mysite ./mysite
-Starting dockermysite_db_1...
-</code></pre><p>完成之后就在子目录mysite下创建了一个新的django工程<br>因为在镜像内是以root权限创建的，所以宿主机中对工程文件无法进行更改，这里修改一下权限 </p>
-<pre><code>yhc@yhc-E540:~/workspaces/docker/mysite$ sudo chmod -R 777 mysite/
-</code></pre><p>修改<code>setttings.py</code>文件中数据库配置 </p>
-<pre><code>DATABASES = {
-    &#39;default&#39;: {
-        &#39;ENGINE&#39;: &#39;django.db.backends.mysql&#39;,
-        &#39;NAME&#39;: &#39;mysitedb&#39;,
-        &#39;USER&#39;: &#39;root&#39;,
-        &#39;PASSWORD&#39;: &#39;11111111&#39;,
-        &#39;HOST&#39;: &#39;db&#39;,
-        &#39;PORT&#39;: 3306,
-    }
-}
-</code></pre><h2 id="5、运行"><a href="#5、运行" class="headerlink" title="5、运行"></a>5、运行</h2><pre><code>yhc@yhc-E540:~/workspaces/docker/mysite$ docker-compose up
-</code></pre><p>![这里写图片描述][6]</p>
-<p>   [6]: <a href="http://img.blog.csdn.net/20150513192620732" target="_blank" rel="external">http://img.blog.csdn.net/20150513192620732</a> ()</p>
-<p>浏览器地址栏中输入：<a href="http://127.0.0.1:8000/" target="_blank" rel="external">http://127.0.0.1:8000/</a><br>可以看到成功运行 </p>
+<hr>
+<p>一路走来，DJango也用了挺久了，自己也做了一些基于Django的小项目，具体可看github，但是Django默认的admin后台编辑文本框实在是太丑了，而且单一，其实在很久之前就想写这篇文章了，但是由于种种原因拖延到了现在，终于下定了决心来写，现在时间是00:17。 </p>
+<hr>
+<p>官网地址是：<a href="http://kindeditor.net" target="_blank" rel="external">http://kindeditor.net</a><br>目前最新版本是4.1.1，我现在做这个东西是用python3.5 ，django 1.10.4 ，三者之间完全兼容<br>看一张效果图吧：<br>![这里写图片描述][6]</p>
+<p>   [6]: <a href="http://img.blog.csdn.net/20170326235323922?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvR2FtZXJfZ3l0/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" target="_blank" rel="external">http://img.blog.csdn.net/20170326235323922?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvR2FtZXJfZ3l0/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast</a> ()</p>
+<hr>
+<h2 id="1：下载该文件，解压至相应的js文件目录"><a href="#1：下载该文件，解压至相应的js文件目录" class="headerlink" title="1：下载该文件，解压至相应的js文件目录"></a>1：下载该文件，解压至相应的js文件目录</h2><p>例如我的目录是：<br>![这里写图片描述][7]<br>这里我删除了多余的文件，因为是python项目，其他的都用不到，所以选择删除，节省空间 </p>
+<p>   [7]: <a href="http://img.blog.csdn.net/20170326235519253?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvR2FtZXJfZ3l0/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" target="_blank" rel="external">http://img.blog.csdn.net/20170326235519253?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvR2FtZXJfZ3l0/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast</a> ()</p>
+<h2 id="2：settings-py和urls-py配置"><a href="#2：settings-py和urls-py配置" class="headerlink" title="2：settings.py和urls.py配置"></a>2：settings.py和urls.py配置</h2><p>在项目的settings.py 中设置MEDIA_ROOT 目录<br>eg： </p>
+<blockquote>
+<p>#文件上传配置<br>MEDIA_ROOT = os.path.join(BASE_DIR,’uploads’) </p>
+</blockquote>
+<p>项目的根urls.py 配置<br>eg： </p>
+<pre><code>url(r&#39;^admin/uploads/(?P&lt;dir_name&gt;[^/]+)$&#39;, upload_image, name=&#39;upload_image&#39;),
+url(r&quot;^uploads/(?P&lt;path&gt;.*)$&quot;, views.static.serve, {&quot;document_root&quot;: settings.MEDIA_ROOT, }),
+</code></pre><h2 id="3：编写upload-py文件"><a href="#3：编写upload-py文件" class="headerlink" title="3：编写upload.py文件"></a>3：编写upload.py文件</h2><p>该文件存放于项目的根目录同名文件夹下，eg： </p>
 <p>![这里写图片描述][8]</p>
-<p>   [8]: <a href="http://img.blog.csdn.net/20150513192443902" target="_blank" rel="external">http://img.blog.csdn.net/20150513192443902</a> ()</p>
-<h2 id="6、打包镜像"><a href="#6、打包镜像" class="headerlink" title="6、打包镜像"></a>6、打包镜像</h2><p>（1）查看镜像 </p>
-<pre><code>yhc@yhc-E540:~/workspaces/docker/mysite$ docker images
-REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
-mysite_web          latest              251dea7e2af2        8 minutes ago       783 MB
-python              2.7                 d833e0b23482        13 days ago         747.9 MB
-postgres            latest              b733b00eb1ae        13 days ago         213.9 MB
-mysql               latest              56f320bd6adc        3 weeks ago         282.9 MB
-</code></pre><p>（2）打包 </p>
-<pre><code>yhc@yhc-E540:~/workspaces/docker/mysite$ docker save -o docker-mysite-image.tar.gz mysite_web
-yhc@yhc-E540:~/workspaces/docker/mysite$ ls
-db  docker-compose.yml  Dockerfile  docker-mysite-image.tar.gz  mysite
-</code></pre><p>最后目录如下所示 </p>
-<pre><code>yhc@yhc-E540:~/workspaces/docker/mysite$ tree
-.
-├── db
-│   ├── auto.cnf
-│   ├── ibdata1
-│   ├── ib_logfile0
-│   ├── ib_logfile1
-│   ├── mysitedb [error opening dir]
-│   ├── mysql [error opening dir]
-│   └── performance_schema [error opening dir]
-├── docker-compose.yml
-├── Dockerfile
-├── docker-mysite-image.tar.gz
-└── mysite
-    ├── manage.py
-    ├── mysite
-    │   ├── __init__.py
-    │   ├── __init__.pyc
-    │   ├── settings.py
-    │   ├── settings.pyc
-    │   ├── urls.py
-    │   ├── urls.pyc
-    │   ├── wsgi.py
-    │   └── wsgi.pyc
-    └── requirements.txt
+<p>   [8]: <a href="http://img.blog.csdn.net/20170327000237410?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvR2FtZXJfZ3l0/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" target="_blank" rel="external">http://img.blog.csdn.net/20170327000237410?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvR2FtZXJfZ3l0/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast</a> ()</p>
+<p>upload.py：主要是对上传的图片做一些限制 </p>
+<pre><code>from django.http import HttpResponse
+from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+import os
+import uuid
+import json
+import datetime as dt
 
-6 directories, 17 files
-</code></pre><h2 id="7、加载镜像"><a href="#7、加载镜像" class="headerlink" title="7、加载镜像"></a>7、加载镜像</h2><p>​镜像打包好后就可以分发给别的其他的开发人员，只需要加载镜像即可。<br>这里在本机进行测试镜像的加载，首先将原来的镜像删除了 </p>
-<pre><code>yhc@yhc-E540:~/workspaces/docker/mysite$ docker rmi -f mysite_web
-Untagged: mysite_web:latest
-Deleted: 251dea7e2af26522b9e74612163972cb0aca2ec071e7b1696d815097db105770
-Deleted: 3e5c9b8913971f90b4c94e8b0e04ed4dc2a09da6261fe0a9b3dffa7b0392ce92
-Deleted: e8f756bed13e2172a8f522b93728f6aca75795bec0bb032ba154003f4a15b440
-</code></pre><p>运行看看 </p>
-<pre><code>yhc@yhc-E540:~/workspaces/docker/mysite$ docker-compose up
-Recreating mysite_db_1...
-Recreating mysite_web_1...
-No such image: mysite_web:latest (tag: latest)
-</code></pre><p>发现无法运行了<br>​接下来加载镜像 </p>
-<pre><code>yhc@yhc-E540:~/workspaces/docker/mysite$ docker load -i docker-mysite-image.tar.gz
-</code></pre><p>​再次运行 </p>
-<pre><code>yhc@yhc-E540:~/workspaces/docker/mysite$ docker-compose up
-</code></pre><p>​ok没问题了～ </p>
-<h2 id="8、其他"><a href="#8、其他" class="headerlink" title="8、其他"></a>8、其他</h2><p>还可以运行python shell，命令如下： </p>
-<pre><code>yhc@yhc-E540:~/workspaces/docker/mysite$ docker-compose run web mysite/manage.py shell
-</code></pre><p>注意按照自己目录结构修改manage.py的位置 </p>
+@csrf_exempt
+def upload_image(request, dir_name):
+
+
+
+
+
+    result = {&quot;error&quot;: 1, &quot;message&quot;: &quot;上传出错&quot;}
+    files = request.FILES.get(&quot;imgFile&quot;, None)
+    if files:
+        result =image_upload(files, dir_name)
+    return HttpResponse(json.dumps(result), content_type=&quot;application/json&quot;)
+
+
+def upload_generation_dir(dir_name):
+    today = dt.datetime.today()
+    dir_name = dir_name + &#39;/%d/%d/&#39; %(today.year,today.month)
+    if not os.path.exists(settings.MEDIA_ROOT):
+        os.makedirs(settings.MEDIA_ROOT)
+    return dir_name
+
+
+def image_upload(files, dir_name):
+
+    allow_suffix =[&#39;jpg&#39;, &#39;png&#39;, &#39;jpeg&#39;, &#39;gif&#39;, &#39;bmp&#39;]
+    file_suffix = files.name.split(&quot;.&quot;)[-1]
+    if file_suffix not in allow_suffix:
+        return {&quot;error&quot;: 1, &quot;message&quot;: &quot;图片格式不正确&quot;}
+    relative_path_file = upload_generation_dir(dir_name)
+    path=os.path.join(settings.MEDIA_ROOT, relative_path_file)
+    if not os.path.exists(path): 
+        os.makedirs(path)
+    file_name=str(uuid.uuid1())+&quot;.&quot;+file_suffix
+    path_file=os.path.join(path, file_name)
+    file_url = settings.MEDIA_URL + relative_path_file + file_name
+    open(path_file, &#39;wb&#39;).write(files.file.read())
+    return {&quot;error&quot;: 0, &quot;url&quot;: file_url}
+</code></pre><h2 id="4：config-js-配置"><a href="#4：config-js-配置" class="headerlink" title="4：config.js 配置"></a>4：config.js 配置</h2><p>该配置文件主要是对django admin后台作用的，比如说我们现在有一个news的app，我们需要对该模块下的 news类的content加上富文本编辑器，这里需要做两步 </p>
+<p>第一：在news 的admin.py中加入 </p>
+<pre><code>class Media:
+    js = (
+        &#39;/static/js/kindeditor-4.1.10/kindeditor-min.js&#39;,
+        &#39;/static/js/kindeditor-4.1.10/lang/zh_CN.js&#39;,
+        &#39;/static/js/kindeditor-4.1.10/config.js&#39;,
+    )
+</code></pre><p>第二：config.js 中配置<br>上边说了我们是要对news的content加上富文本编辑器，那么我们首先要定位到该文本框的name属性，鼠标右键查看源代码，如下红线标示：<br>![这里写图片描述][9]</p>
+<p>   [9]: <a href="http://img.blog.csdn.net/20170327001347482?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvR2FtZXJfZ3l0/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" target="_blank" rel="external">http://img.blog.csdn.net/20170327001347482?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvR2FtZXJfZ3l0/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast</a> ()</p>
+<p>config.js 中加入： </p>
+<pre><code>KindEditor.ready(function(K) {
+    K.create(&#39;textarea[name=&quot;new_content&quot;]&#39;, {
+        width : &quot;800px&quot;,
+        height : &quot;500px&quot;,
+        uploadJson: &#39;/admin/uploads/kindeditor&#39;,
+    });
+});
+</code></pre><p>至此，已经完成，如果你还有什么不懂的，可以加我关注我的微信公众号，进行提问，谢谢！ </p>
+<hr>
 
            
          <style type="text/css">
@@ -826,8 +751,8 @@ pre{
         <div id="disqus_thread"></div>
 <script>
     var disqus_config = function () {
-        this.page.url = 'https://wangyu1997.github.io/2017/07/05/django+mysql/';  // Replace PAGE_URL with your page's canonical URL variable
-        this.page.identifier = 'https://wangyu1997.github.io/2017/07/05/django+mysql/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        this.page.url = 'https://wangyu1997.github.io/2017/07/20/Kindeditor在Django中使用/';  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'https://wangyu1997.github.io/2017/07/20/Kindeditor在Django中使用/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
     };
     queue.offer(function() {
             (function() { // DON'T EDIT BELOW THIS LINE
@@ -858,21 +783,13 @@ pre{
             <nav class="material-nav mdl-color-text--grey-50 mdl-cell mdl-cell--12-col">
     <!-- Prev Nav -->
     
-        <a href="/2017/07/20/Kindeditor在Django中使用/" id="post_nav-newer" class="prev-content">
-            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
-                <i class="material-icons">arrow_back</i>
-            </button>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            新篇
-        </a>
-    
 
     <!-- Section Spacer -->
     <div class="section-spacer"></div>
 
     <!-- Next Nav -->
     
-        <a href="/2017/07/02/docker django环境/" id="post_nav-older" class="next-content">
+        <a href="/2017/07/05/django+mysql/" id="post_nav-older" class="next-content">
             旧篇
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">

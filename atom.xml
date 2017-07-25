@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://wangyu1997.github.io/"/>
-  <updated>2017-07-21T10:19:36.000Z</updated>
+  <updated>2017-07-25T18:40:52.000Z</updated>
   <id>https://wangyu1997.github.io/</id>
   
   <author>
@@ -16,11 +16,152 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>跟着 Github 学习 Restful HTTP API 设计</title>
+    <link href="https://wangyu1997.github.io/2017/07/26/Restful%20HTTP%20API%20/"/>
+    <id>https://wangyu1997.github.io/2017/07/26/Restful HTTP API /</id>
+    <published>2017-07-26T12:43:11.000Z</published>
+    <updated>2017-07-25T18:40:52.000Z</updated>
+    
+    <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
+<p>近几年提供 <code>HTTP API</code> 服务的公司越来越多，许多公司都把 API 作为产品重要的一部分，作为服务提供出去。而微服务的兴起，也让企业内部开始重视和频繁使用 HTTP API 。好的 <code>HTTP API</code> 设计容易理解、符合 RFC 标准、提供使用者便利的功能，其中经常被拿来作为教科书典范的当属 <a href="https://developer.github.com/v3/" target="_blank" rel="external">Github API</a>。这篇文章就通过 <code>Github API</code> 总结了一些非常好的设计原则，可以作为以后要编写 HTTP API 的参考。 </p>
+<p>注意：这篇文章只讨论设计原则，不是强制要求（API 设计者可以根据实际情况实现部分内容，甚至实现出和某些原则相反的内容），也不会给出实现的思路和细节。 </p>
+<h2 id="1-使用-HTTPS"><a href="#1-使用-HTTPS" class="headerlink" title="1. 使用 HTTPS"></a>1. 使用 HTTPS</h2><p>这个和 Restful API 本身没有很大的关系，但是对于增加网站的安全是非常重要的。特别如果你提供的是公开 API，用户的信息泄露或者被攻击会严重影响网站的信誉。 </p>
+<p>NOTE：不要让非SSL的url访问重定向到SSL的url。 </p>
+<h2 id="2-API-地址和版本"><a href="#2-API-地址和版本" class="headerlink" title="2. API 地址和版本"></a>2. API 地址和版本</h2><p>在 <code>url</code> 中指定 API 的版本是个很好地做法。如果 API 变化比较大，可以把 API 设计为子域名，比如 <code>https://api.github.com/v3</code>；也可以简单地把版本放在路径中，比如 <code>https://example.com/api/v1</code>。 </p>
+<h2 id="3-schema"><a href="#3-schema" class="headerlink" title="3. schema"></a>3. schema</h2><p>对于响应返回的格式，JSON 因为它的可读性、紧凑性以及多种语言支持等优点，成为了 HTTP API 最常用的返回格式。因此，最好采用 JSON 作为返回内容的格式。如果用户需要其他格式，比如 <code>xml</code>，应该在请求头部 <code>Accept</code> 中指定。对于不支持的格式，服务端需要返回正确的 status code，并给出详细的说明。 </p>
+<h2 id="4-以资源为中心的-URL-设计"><a href="#4-以资源为中心的-URL-设计" class="headerlink" title="4. 以资源为中心的 URL 设计"></a>4. 以资源为中心的 URL 设计</h2><p>资源是 <code>Restful API</code> 的核心元素，所有的操作都是针对特定资源进行的。而资源就是 <code>URL</code>（Uniform Resoure Locator）表示的，所以简洁、清晰、结构化的 URL 设计是至关重要的。Github 可以说是这方面的典范，下面我们就拿 <code>repository</code> 来说明。 </p>
+<pre><code>/users/:username/repos
+/users/:org/repos
+/repos/:owner/:repo
+/repos/:owner/:repo/tags
+/repos/:owner/:repo/branches/:branch
+</code></pre><p>我们可以看到几个特性： </p>
+<ul>
+<li>资源分为单个文档和集合，尽量使用复数来表示资源，单个资源通过添加 id 或者 name 等来表示</li>
+<li>一个资源可以有多个不同的 URL</li>
+<li>资源可以嵌套，通过类似目录路径的方式来表示，以体现它们之间的关系</li>
+</ul>
+<p><strong>NOTE</strong>: 根据RFC3986定义，URL是大小写敏感的。所以为了避免歧义，尽量使用小写字母。 </p>
+<h2 id="5-使用正确的-Method"><a href="#5-使用正确的-Method" class="headerlink" title="5. 使用正确的 Method"></a>5. 使用正确的 Method</h2><p>有了资源的 URL 设计，所有针对资源的操作都是使用 HTTP 方法指定的。比较常用的方法有： </p>
+<p>Verb描述</p>
+<p>HEAD<br>只获取某个资源的头部信息。比如只想了解某个文件的大小，某个资源的修改日期等 </p>
+<p>GET<br>获取资源 </p>
+<p>POST<br>创建资源 </p>
+<p>PATCH<br>更新资源的部分属性。因为 PATCH 比较新，而且规范比较复杂，所以真正实现的比较少，一般都是用 POST 替代 </p>
+<p>PUT<br>替换资源，客户端需要提供新建资源的所有属性。如果新内容为空，要设置 <code>Content-Length</code> 为 0，以区别错误信息 </p>
+<p>DELETE<br>删除资源 </p>
+<p>比如： </p>
+<pre><code>GET /repos/:owner/:repo/issues
+GET /repos/:owner/:repo/issues/:number
+POST /repos/:owner/:repo/issues
+PATCH /repos/:owner/:repo/issues/:number
+DELETE /repos/:owner/:repo
+</code></pre><p>NOTE：更新和创建操作应该返回最新的资源，来通知用户资源的情况；删除资源一般不会返回内容。 </p>
+<h3 id="不符合-CRUD-的情况"><a href="#不符合-CRUD-的情况" class="headerlink" title="不符合 CRUD 的情况"></a>不符合 CRUD 的情况</h3><p>在实际资源操作中，总会有一些不符合 <code>CRUD</code>（Create-Read-Update-Delete） 的情况，一般有几种处理方法。 </p>
+<h4 id="使用-POST"><a href="#使用-POST" class="headerlink" title="使用 POST"></a>使用 POST</h4><p>为需要的动作增加一个 endpoint，使用 POST 来执行动作，比如 <code>POST /resend</code> 重新发送邮件。 </p>
+<h4 id="增加控制参数"><a href="#增加控制参数" class="headerlink" title="增加控制参数"></a>增加控制参数</h4><p>添加动作相关的参数，通过修改参数来控制动作。比如一个博客网站，会有把写好的文章“发布”的功能，可以用上面的 <code>POST /articles/{:id}/publish</code> 方法，也可以在文章中增加 <code>published:boolean</code> 字段，发布的时候就是更新该字段 <code>PUT /articles/{:id}?published=true</code></p>
+<h4 id="把动作转换成资源"><a href="#把动作转换成资源" class="headerlink" title="把动作转换成资源"></a>把动作转换成资源</h4><p>把动作转换成可以执行 <code>CRUD</code> 操作的资源， github 就是用了这种方法。 </p>
+<p>比如“喜欢”一个 gist，就增加一个 <code>/gists/:id/star</code> 子资源，然后对其进行操作：“喜欢”使用 <code>PUT /gists/:id/star</code>，“取消喜欢”使用 <code>DELETE /gists/:id/star</code> 。 </p>
+<p>另外一个例子是 <code>Fork</code>，这也是一个动作，但是在 gist 下面增加 <code>forks</code>资源，就能把动作变成 <code>CRUD</code> 兼容的：<code>POST /gists/:id/forks</code> 可以执行用户 fork 的动作。 </p>
+<h2 id="6-Query-让查询更自由"><a href="#6-Query-让查询更自由" class="headerlink" title="6. Query 让查询更自由"></a>6. Query 让查询更自由</h2><p>比如查询某个 repo 下面 issues 的时候，可以通过以下参数来控制返回哪些结果： </p>
+<ul>
+<li>state：issue 的状态，可以是 <code>open</code>，<code>closed</code>，<code>all</code></li>
+<li>since：在指定时间点之后更新过的才会返回</li>
+<li>assignee：被 assign 给某个 user 的 issues</li>
+<li>sort：选择排序的值，可以是 <code>created</code>、<code>updated</code>、<code>comments</code></li>
+<li>direction：排序的方向，升序（asc）还是降序（desc）</li>
+<li>……</li>
+</ul>
+<h2 id="7-分页-Pagination"><a href="#7-分页-Pagination" class="headerlink" title="7. 分页 Pagination"></a>7. 分页 Pagination</h2><p>当返回某个资源的列表时，如果要返回的数目特别多，比如 github 的 <code>/users</code>，就需要使用分页分批次按照需要来返回特定数量的结果。 </p>
+<p>分页的实现会用到上面提到的 url query，通过两个参数来控制要返回的资源结果： </p>
+<ul>
+<li>per_page：每页返回多少资源，如果没提供会使用预设的默认值；这个数量也是有一个最大值，不然用户把它设置成一个非常大的值（比如 <code>99999999</code>）也失去了设计的初衷</li>
+<li>page：要获取哪一页的资源，默认是第一页</li>
+</ul>
+<p>返回的资源列表为 <code>[(page-1)*per_page, page*per_page)</code>。github API 文档中还提到一个很好的点，相关的分页信息还可以存放到 <code>Link</code> 头部，这样客户端可以直接得到诸如<code>下一页</code>、<code>最后一页</code>、<code>上一页</code>等内容的 url 地址，而不是自己手动去计算和拼接。 </p>
+<h2 id="8-选择合适的状态码"><a href="#8-选择合适的状态码" class="headerlink" title="8. 选择合适的状态码"></a>8. 选择合适的状态码</h2><p>HTTP 应答中，需要带一个很重要的字段：<code>status code</code>。它说明了请求的大致情况，是否正常完成、需要进一步处理、出现了什么错误，对于客户端非常重要。状态码都是三位的整数，大概分成了几个区间： </p>
+<ul>
+<li><code>2XX</code>：请求正常处理并返回</li>
+<li><code>3XX</code>：重定向，请求的资源位置发生变化</li>
+<li><code>4XX</code>：客户端发送的请求有错误</li>
+<li><code>5XX</code>：服务器端错误</li>
+</ul>
+<p>在 HTTP API 设计中，经常用到的状态码以及它们的意义如下表： </p>
+<p>状态码Label解释</p>
+<p>200<br>OK<br>请求成功接收并处理，一般响应中都会有 body </p>
+<p>201<br>Created<br>请求已完成，并导致了一个或者多个资源被创建，最常用在 POST 创建资源的时候 </p>
+<p>202<br>Accepted<br>请求已经接收并开始处理，但是处理还没有完成。一般用在异步处理的情况，响应 body 中应该告诉客户端去哪里查看任务的状态 </p>
+<p>204<br>No Content<br>请求已经处理完成，但是没有信息要返回，经常用在 PUT 更新资源的时候（客户端提供资源的所有属性，因此不需要服务端返回）。如果有重要的 metadata，可以放到头部返回 </p>
+<p>301<br>Moved Permanently<br>请求的资源已经永久性地移动到另外一个地方，后续所有的请求都应该直接访问新地址。服务端会把新地址写在 <code>Location</code> 头部字段，方便客户端使用。允许客户端把 POST 请求修改为 GET。 </p>
+<p>304<br>Not Modified<br>请求的资源和之前的版本一样，没有发生改变。用来缓存资源，和条件性请求（conditional request）一起出现 </p>
+<p>307<br>Temporary Redirect<br>目标资源暂时性地移动到新的地址，客户端需要去新地址进行操作，但是<strong>不能</strong>修改请求的方法。 </p>
+<p>308<br>Permanent Redirect<br>和 301 类似，除了客户端<strong>不能</strong>修改原请求的方法 </p>
+<p>400<br>Bad Request<br>客户端发送的请求有错误（请求语法错误，body 数据格式有误，body 缺少必须的字段等），导致服务端无法处理 </p>
+<p>401<br>Unauthorized<br>请求的资源需要认证，客户端没有提供认证信息或者认证信息不正确 </p>
+<p>403<br>Forbidden<br>服务器端接收到并理解客户端的请求，但是客户端的权限不足。比如，普通用户想操作只有管理员才有权限的资源。 </p>
+<p>404<br>Not Found<br>客户端要访问的资源不存在，链接失效或者客户端伪造 URL 的时候回遇到这个情况 </p>
+<p>405<br>Method Not Allowed<br>服务端接收到了请求，而且要访问的资源也存在，但是不支持对应的方法。服务端<strong>必须</strong>返回 <code>Allow</code> 头部，告诉客户端哪些方法是允许的 </p>
+<p>415<br>Unsupported Media Type<br>服务端不支持客户端请求的资源格式，一般是因为客户端在 <code>Content-Type</code> 或者 <code>Content-Encoding</code> 中申明了希望的返回格式，但是服务端没有实现。比如，客户端希望收到 <code>xml</code>返回，但是服务端支持 <code>Json</code></p>
+<p>429<br>Too Many Requests<br>客户端在规定的时间里发送了太多请求，在进行限流的时候会用到 </p>
+<p>500<br>Internal Server Error<br>服务器内部错误，导致无法完成请求的内容 </p>
+<p>503<br>Service Unavailable<br>服务器因为负载过高或者维护，暂时无法提供服务。服务器端应该返回 <code>Retry-After</code> 头部，告诉客户端过一段时间再来重试 </p>
+<p>上面这些状态码覆盖了 API 设计中大部分的情况，如果对某个状态码不清楚或者希望查看更完整的列表，可以参考 <a href="https://httpstatuses.com/" target="_blank" rel="external">HTTP Status Code</a> 这个网站，或者 <a href="https://tools.ietf.org/html/rfc7231#section-6" target="_blank" rel="external">RFC7231 Response Status Codes</a> 的内容。 </p>
+<h2 id="9-错误处理：给出详细的信息"><a href="#9-错误处理：给出详细的信息" class="headerlink" title="9. 错误处理：给出详细的信息"></a>9. 错误处理：给出详细的信息</h2><p>如果出错的话，在 response body 中通过 <code>message</code> 给出明确的信息。 </p>
+<p>比如客户端发送的请求有错误，一般会返回 <code>4XX Bad Request</code> 结果。这个结果很模糊，给出错误 message 的话，能更好地让客户端知道具体哪里有问题，进行快速修改。 </p>
+<ul>
+<li>如果请求的 JSON 数据无法解析，会返回 <code>Problems parsing JSON</code></li>
+<li>如果缺少必要的 filed，会返回 <code>422 Unprocessable Entity</code>，除了 message 之外，还通过 <code>errors</code> 给出了哪些 field 缺少了，能够方便调用方快速排错</li>
+</ul>
+<p>基本的思路就是尽可能提供更准确的错误信息：比如数据不是正确的 json，缺少必要的字段，字段的值不符合规定…… 而不是直接说“请求错误”之类的信息。 </p>
+<h2 id="10-验证和授权"><a href="#10-验证和授权" class="headerlink" title="10. 验证和授权"></a>10. 验证和授权</h2><p>一般来说，让任何人随意访问公开的 API 是不好的做法。验证和授权是两件事情： </p>
+<ul>
+<li>验证（Authentication）是为了确定用户是其申明的身份，比如提供账户的密码。不然的话，任何人伪造成其他身份（比如其他用户或者管理员）是非常危险的</li>
+<li>授权（Authorization）是为了保证用户有对请求资源特定操作的权限。比如用户的私人信息只能自己能访问，其他人无法看到；有些特殊的操作只能管理员可以操作，其他用户有只读的权限等等</li>
+</ul>
+<p>如果没有通过验证（提供的用户名和密码不匹配，token 不正确等），需要返回 <a href="https://httpstatuses.com/401" target="_blank" rel="external"><strong>401 Unauthorized</strong></a>状态码，并在 body 中说明具体的错误信息；而没有被授权访问的资源操作，需要返回 <a href="https://httpstatuses.com/403" target="_blank" rel="external"><strong>403 Forbidden</strong></a> 状态码，还有详细的错误信息。 </p>
+<p><strong>NOTE</strong>：Github API 对某些用户未被授权访问的资源操作返回 <a href="https://httpstatuses.com/404" target="_blank" rel="external"><strong>404 Not Found</strong></a>，目的是为了防止私有资源的泄露（比如黑客可以自动化试探用户的私有资源，返回 403 的话，就等于告诉黑客用户有这些私有的资源）。 </p>
+<h2 id="11-限流-rate-limit"><a href="#11-限流-rate-limit" class="headerlink" title="11. 限流 rate limit"></a>11. 限流 rate limit</h2><p>如果对访问的次数不加控制，很可能会造成 API 被滥用，甚至被 <a href="https://en.wikipedia.org/wiki/Denial-of-service_attack" target="_blank" rel="external">DDos 攻击</a>。根据使用者不同的身份对其进行限流，可以防止这些情况，减少服务器的压力。 </p>
+<p>对用户的请求限流之后，要有方法告诉用户它的请求使用情况，<code>Github API</code> 使用的三个相关的头部： </p>
+<ul>
+<li><code>X-RateLimit-Limit</code>: 用户每个小时允许发送请求的最大值</li>
+<li><code>X-RateLimit-Remaining</code>：当前时间窗口剩下的可用请求数目</li>
+<li><code>X-RateLimit-Rest</code>: 时间窗口重置的时候，到这个时间点可用的请求数量就会变成 <code>X-RateLimit-Limit</code> 的值</li>
+</ul>
+<p>如果允许没有登录的用户使用 API（可以让用户试用），可以把 <code>X-RateLimit-Limit</code> 的值设置得很小，比如 Github 使用的 <code>60</code>。没有登录的用户是按照请求的 IP 来确定的，而登录的用户按照认证后的信息来确定身份。 </p>
+<p>对于超过流量的请求，可以返回 <a href="https://httpstatuses.com/429" target="_blank" rel="external"><strong>429 Too many requests</strong></a> 状态码，并附带错误信息。而 <code>Github API</code> 返回的是 <a href="https://httpstatuses.com/403" target="_blank" rel="external"><strong>403 Forbidden</strong></a>，虽然没有 <code>429</code> 更准确，也是可以理解的。 </p>
+<p>Github 更进一步，提供了不影响当然 <code>RateLimit</code> 的请求查看当前 <code>RateLimit</code> 的接口 <a href="https://developer.github.com/v3/rate_limit/" target="_blank" rel="external"><strong>GET /rate_limit</strong></a>。 </p>
+<h2 id="12-Hypermedia-API"><a href="#12-Hypermedia-API" class="headerlink" title="12. Hypermedia API"></a>12. Hypermedia API</h2><p>Restful API 的设计最好做到 Hypermedia：在返回结果中提供相关资源的链接。这种设计也被称为 <a href="http://en.wikipedia.org/wiki/HATEOAS" target="_blank" rel="external">HATEOAS</a>。这样做的好处是，用户可以根据返回结果就能得到后续操作需要访问的地址。 </p>
+<p>比如访问 <a href="https://api.github.com/" target="_blank" rel="external">api.github.com</a>，就可以看到 Github API 支持的资源操作。 </p>
+<h2 id="13-编写优秀的文档"><a href="#13-编写优秀的文档" class="headerlink" title="13. 编写优秀的文档"></a>13. 编写优秀的文档</h2><p>API 最终是给人使用的，不管是公司内部，还是公开的 API 都是一样。即使我们遵循了上面提到的所有规范，设计的 API 非常优雅，用户还是不知道怎么使用我们的 API。最后一步，但非常重要的一步是：为你的 API 编写优秀的文档。 </p>
+<p>对每个请求以及返回的参数给出说明，最好给出一个详细而完整地示例，提醒用户需要注意的地方……反正目标就是用户可以根据你的文档就能直接使用 API，而不是要发邮件给你，或者跑到你的座位上问你一堆问题。 </p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="https://developer.github.com/v3/" target="_blank" rel="external">Github API v3</a></li>
+<li><a href="http://www.ruanyifeng.com/blog/2014/05/restful_api.html" target="_blank" rel="external">RESTful API 设计指南</a></li>
+<li><a href="http://wangwei.info/about-rest-api/" target="_blank" rel="external">REST接口设计规范</a></li>
+<li><a href="http://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm" target="_blank" rel="external">Restful API 首次被提出的论文：Architectural Styles and the Design of Network-based Software Architectures</a></li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;&gt; &lt;/script&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt; 
+&lt;p&gt;近几年提供 &lt;code&gt;HTTP A
+    
+    </summary>
+    
+      <category term="Python" scheme="https://wangyu1997.github.io/categories/Python/"/>
+    
+    
+      <category term="Restful Framework" scheme="https://wangyu1997.github.io/tags/Restful-Framework/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Kindeditor在Django中使用</title>
     <link href="https://wangyu1997.github.io/2017/07/20/Kindeditor%E5%9C%A8Django%E4%B8%AD%E4%BD%BF%E7%94%A8/"/>
     <id>https://wangyu1997.github.io/2017/07/20/Kindeditor在Django中使用/</id>
     <published>2017-07-20T12:43:11.000Z</published>
-    <updated>2017-07-21T10:19:36.000Z</updated>
+    <updated>2017-07-25T18:40:18.000Z</updated>
     
     <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
 <hr>
@@ -2026,70 +2167,6 @@ uploadManager.put(data, key, ...)
   </entry>
   
   <entry>
-    <title>UIPopoverPresentationController</title>
-    <link href="https://wangyu1997.github.io/2017/06/12/UIPopoverPresentationController/"/>
-    <id>https://wangyu1997.github.io/2017/06/12/UIPopoverPresentationController/</id>
-    <published>2017-06-12T12:43:11.000Z</published>
-    <updated>2017-06-13T01:23:38.000Z</updated>
-    
-    <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a>
-<p>UIPopoverPresentationController 是 iOS8 后新增的，相当于pad端的UIPopOverController，以后我们也可以在iPhone上使用popOver啦。自己写了一个小demo，大概了熟悉了一下用法。后面有开发需求时会详细补充。<br>首先要知道一点是，我们并不需要创建一个UIPopoverPresentationController，他相当于UIViewController的属性，因此我们只需要创建UIViewController即可。<br>举个例子：假设我们要在 ViewController窗体弹窗，弹窗为FirstViewController（kind of UIViewController）我们用两种方式来实现<br>1、在self.view上创建一个button，给button添加弹窗事件；<br>2、在导航栏添加barButtonItem，给其添加弹窗时间。<br>弹窗事件：</p>
-<pre><code class="swift">1、button
-[objc] view plain copy
-- (void)buttonClick  
-{  
-    FirstViewController *firstVC = [[FirstViewController alloc] init];  
-    firstVC.modalPresentationStyle = UIModalPresentationPopover;  
-    firstVC.popoverPresentationController.sourceView = popOverButton;  //rect参数是以view的左上角为坐标原点（0，0）  
-    firstVC.popoverPresentationController.sourceRect = popOverButton.bounds; //指定箭头所指区域的矩形框范围（位置和尺寸），以view的左上角为坐标原点  
-    firstVC.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp; //箭头方向  
-    firstVC.popoverPresentationController.delegate = self;  
-    firstVC.preferredContentSize = CGSizeMake(100, 200);  
-    [self presentViewController:firstVC animated:YES completion:nil];  
-}  
-
-2、barButtonItem
-[objc] view plain copy
-- (void)rightBarButtonItemClick  
-{  
-    FirstViewController *firstVC = [[FirstViewController alloc]init];  
-    firstVC.modalPresentationStyle = UIModalPresentationPopover;  
-    /** 
-     *  由于导航上的控件没有指定frame，无法设置sourceView和sourceRect，用下面的。 
-     */  
-    firstVC.popoverPresentationController.barButtonItem = self.navigationItem.rightBarButtonItem;  
-    firstVC.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp;  
-    firstVC.popoverPresentationController.delegate = self;  
-    firstVC.preferredContentSize = CGSizeMake(100, 200);  
-    [self presentViewController:firstVC animated:YES completion:nil];  
-//    firstVC.popoverPresentationController.passthroughViews = nil;  
-}  
-注意几点：
-1、遵守代理：UIPopoverPresentationControllerDelegate
-2、在phone端必须要适配设备，要设置下面代理方法：
-[objc] view plain copy
-/* For iOS8.0, the only supported adaptive presentation styles are UIModalPresentationFullScreen and UIModalPresentationOverFullScreen. */  
-- (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller;  
--
-</code></pre>
-<p>iPhone下默认是UIModalPresentationFullScreen，需要手动设置为UIModalPresentationNone，否则，是普通的present全屏显示，没有弹窗效果。iPad不需要。<br>3、其他设置根据需求翻相关文档即可。<br>demo：<a href="https://github.com/Lynnll/UIPopOverLearning.git" target="_blank" rel="external">https://github.com/Lynnll/UIPopOverLearning.git</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;&gt; &lt;/script&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
-&lt;p&gt;UIPopoverPresentati
-    
-    </summary>
-    
-      <category term="iOS" scheme="https://wangyu1997.github.io/categories/iOS/"/>
-    
-    
-      <category term="popover" scheme="https://wangyu1997.github.io/tags/popover/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Alamofire 4.0 Migration Guide</title>
     <link href="https://wangyu1997.github.io/2017/06/12/Alamofire/"/>
     <id>https://wangyu1997.github.io/2017/06/12/Alamofire/</id>
@@ -2836,6 +2913,70 @@ Alamofire.upload(fileURL, to: urlString).responseData { response in
     
     
       <category term="Alamofire" scheme="https://wangyu1997.github.io/tags/Alamofire/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>UIPopoverPresentationController</title>
+    <link href="https://wangyu1997.github.io/2017/06/12/UIPopoverPresentationController/"/>
+    <id>https://wangyu1997.github.io/2017/06/12/UIPopoverPresentationController/</id>
+    <published>2017-06-12T12:43:11.000Z</published>
+    <updated>2017-06-13T01:23:38.000Z</updated>
+    
+    <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a>
+<p>UIPopoverPresentationController 是 iOS8 后新增的，相当于pad端的UIPopOverController，以后我们也可以在iPhone上使用popOver啦。自己写了一个小demo，大概了熟悉了一下用法。后面有开发需求时会详细补充。<br>首先要知道一点是，我们并不需要创建一个UIPopoverPresentationController，他相当于UIViewController的属性，因此我们只需要创建UIViewController即可。<br>举个例子：假设我们要在 ViewController窗体弹窗，弹窗为FirstViewController（kind of UIViewController）我们用两种方式来实现<br>1、在self.view上创建一个button，给button添加弹窗事件；<br>2、在导航栏添加barButtonItem，给其添加弹窗时间。<br>弹窗事件：</p>
+<pre><code class="swift">1、button
+[objc] view plain copy
+- (void)buttonClick  
+{  
+    FirstViewController *firstVC = [[FirstViewController alloc] init];  
+    firstVC.modalPresentationStyle = UIModalPresentationPopover;  
+    firstVC.popoverPresentationController.sourceView = popOverButton;  //rect参数是以view的左上角为坐标原点（0，0）  
+    firstVC.popoverPresentationController.sourceRect = popOverButton.bounds; //指定箭头所指区域的矩形框范围（位置和尺寸），以view的左上角为坐标原点  
+    firstVC.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp; //箭头方向  
+    firstVC.popoverPresentationController.delegate = self;  
+    firstVC.preferredContentSize = CGSizeMake(100, 200);  
+    [self presentViewController:firstVC animated:YES completion:nil];  
+}  
+
+2、barButtonItem
+[objc] view plain copy
+- (void)rightBarButtonItemClick  
+{  
+    FirstViewController *firstVC = [[FirstViewController alloc]init];  
+    firstVC.modalPresentationStyle = UIModalPresentationPopover;  
+    /** 
+     *  由于导航上的控件没有指定frame，无法设置sourceView和sourceRect，用下面的。 
+     */  
+    firstVC.popoverPresentationController.barButtonItem = self.navigationItem.rightBarButtonItem;  
+    firstVC.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp;  
+    firstVC.popoverPresentationController.delegate = self;  
+    firstVC.preferredContentSize = CGSizeMake(100, 200);  
+    [self presentViewController:firstVC animated:YES completion:nil];  
+//    firstVC.popoverPresentationController.passthroughViews = nil;  
+}  
+注意几点：
+1、遵守代理：UIPopoverPresentationControllerDelegate
+2、在phone端必须要适配设备，要设置下面代理方法：
+[objc] view plain copy
+/* For iOS8.0, the only supported adaptive presentation styles are UIModalPresentationFullScreen and UIModalPresentationOverFullScreen. */  
+- (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller;  
+-
+</code></pre>
+<p>iPhone下默认是UIModalPresentationFullScreen，需要手动设置为UIModalPresentationNone，否则，是普通的present全屏显示，没有弹窗效果。iPad不需要。<br>3、其他设置根据需求翻相关文档即可。<br>demo：<a href="https://github.com/Lynnll/UIPopOverLearning.git" target="_blank" rel="external">https://github.com/Lynnll/UIPopOverLearning.git</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/assets/js/APlayer.min.js&quot;&gt; &lt;/script&gt;&lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;p&gt;UIPopoverPresentati
+    
+    </summary>
+    
+      <category term="iOS" scheme="https://wangyu1997.github.io/categories/iOS/"/>
+    
+    
+      <category term="popover" scheme="https://wangyu1997.github.io/tags/popover/"/>
     
   </entry>
   

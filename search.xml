@@ -3264,67 +3264,6 @@ Alamofire.upload(fileURL, to: urlString).responseData { response in
     </entry>
     
     <entry>
-      <title><![CDATA[UIPopoverPresentationController]]></title>
-      <url>/2017/06/12/UIPopoverPresentationController/</url>
-      <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a>
-<p>UIPopoverPresentationController 是 iOS8 后新增的，相当于pad端的UIPopOverController，以后我们也可以在iPhone上使用popOver啦。自己写了一个小demo，大概了熟悉了一下用法。后面有开发需求时会详细补充。<br>首先要知道一点是，我们并不需要创建一个UIPopoverPresentationController，他相当于UIViewController的属性，因此我们只需要创建UIViewController即可。<br>举个例子：假设我们要在 ViewController窗体弹窗，弹窗为FirstViewController（kind of UIViewController）我们用两种方式来实现<br>1、在self.view上创建一个button，给button添加弹窗事件；<br>2、在导航栏添加barButtonItem，给其添加弹窗时间。<br>弹窗事件：</p>
-<pre><code class="swift">1、button
-[objc] view plain copy
-- (void)buttonClick  
-{  
-    FirstViewController *firstVC = [[FirstViewController alloc] init];  
-    firstVC.modalPresentationStyle = UIModalPresentationPopover;  
-    firstVC.popoverPresentationController.sourceView = popOverButton;  //rect参数是以view的左上角为坐标原点（0，0）  
-    firstVC.popoverPresentationController.sourceRect = popOverButton.bounds; //指定箭头所指区域的矩形框范围（位置和尺寸），以view的左上角为坐标原点  
-    firstVC.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp; //箭头方向  
-    firstVC.popoverPresentationController.delegate = self;  
-    firstVC.preferredContentSize = CGSizeMake(100, 200);  
-    [self presentViewController:firstVC animated:YES completion:nil];  
-}  
-
-2、barButtonItem
-[objc] view plain copy
-- (void)rightBarButtonItemClick  
-{  
-    FirstViewController *firstVC = [[FirstViewController alloc]init];  
-    firstVC.modalPresentationStyle = UIModalPresentationPopover;  
-    /** 
-     *  由于导航上的控件没有指定frame，无法设置sourceView和sourceRect，用下面的。 
-     */  
-    firstVC.popoverPresentationController.barButtonItem = self.navigationItem.rightBarButtonItem;  
-    firstVC.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp;  
-    firstVC.popoverPresentationController.delegate = self;  
-    firstVC.preferredContentSize = CGSizeMake(100, 200);  
-    [self presentViewController:firstVC animated:YES completion:nil];  
-//    firstVC.popoverPresentationController.passthroughViews = nil;  
-}  
-注意几点：
-1、遵守代理：UIPopoverPresentationControllerDelegate
-2、在phone端必须要适配设备，要设置下面代理方法：
-[objc] view plain copy
-/* For iOS8.0, the only supported adaptive presentation styles are UIModalPresentationFullScreen and UIModalPresentationOverFullScreen. */  
-- (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller;  
--
-</code></pre>
-<p>iPhone下默认是UIModalPresentationFullScreen，需要手动设置为UIModalPresentationNone，否则，是普通的present全屏显示，没有弹窗效果。iPad不需要。<br>3、其他设置根据需求翻相关文档即可。<br>demo：<a href="https://github.com/Lynnll/UIPopOverLearning.git" target="_blank" rel="external">https://github.com/Lynnll/UIPopOverLearning.git</a></p>
-]]></content>
-      
-        <categories>
-            
-            <category> iOS </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> popover </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
       <title><![CDATA[内存管理]]></title>
       <url>/2017/06/12/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/</url>
       <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
@@ -3410,6 +3349,67 @@ Alamofire.upload(fileURL, to: urlString).responseData { response in
         <tags>
             
             <tag> cpu </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[UIPopoverPresentationController]]></title>
+      <url>/2017/06/12/UIPopoverPresentationController/</url>
+      <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a>
+<p>UIPopoverPresentationController 是 iOS8 后新增的，相当于pad端的UIPopOverController，以后我们也可以在iPhone上使用popOver啦。自己写了一个小demo，大概了熟悉了一下用法。后面有开发需求时会详细补充。<br>首先要知道一点是，我们并不需要创建一个UIPopoverPresentationController，他相当于UIViewController的属性，因此我们只需要创建UIViewController即可。<br>举个例子：假设我们要在 ViewController窗体弹窗，弹窗为FirstViewController（kind of UIViewController）我们用两种方式来实现<br>1、在self.view上创建一个button，给button添加弹窗事件；<br>2、在导航栏添加barButtonItem，给其添加弹窗时间。<br>弹窗事件：</p>
+<pre><code class="swift">1、button
+[objc] view plain copy
+- (void)buttonClick  
+{  
+    FirstViewController *firstVC = [[FirstViewController alloc] init];  
+    firstVC.modalPresentationStyle = UIModalPresentationPopover;  
+    firstVC.popoverPresentationController.sourceView = popOverButton;  //rect参数是以view的左上角为坐标原点（0，0）  
+    firstVC.popoverPresentationController.sourceRect = popOverButton.bounds; //指定箭头所指区域的矩形框范围（位置和尺寸），以view的左上角为坐标原点  
+    firstVC.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp; //箭头方向  
+    firstVC.popoverPresentationController.delegate = self;  
+    firstVC.preferredContentSize = CGSizeMake(100, 200);  
+    [self presentViewController:firstVC animated:YES completion:nil];  
+}  
+
+2、barButtonItem
+[objc] view plain copy
+- (void)rightBarButtonItemClick  
+{  
+    FirstViewController *firstVC = [[FirstViewController alloc]init];  
+    firstVC.modalPresentationStyle = UIModalPresentationPopover;  
+    /** 
+     *  由于导航上的控件没有指定frame，无法设置sourceView和sourceRect，用下面的。 
+     */  
+    firstVC.popoverPresentationController.barButtonItem = self.navigationItem.rightBarButtonItem;  
+    firstVC.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp;  
+    firstVC.popoverPresentationController.delegate = self;  
+    firstVC.preferredContentSize = CGSizeMake(100, 200);  
+    [self presentViewController:firstVC animated:YES completion:nil];  
+//    firstVC.popoverPresentationController.passthroughViews = nil;  
+}  
+注意几点：
+1、遵守代理：UIPopoverPresentationControllerDelegate
+2、在phone端必须要适配设备，要设置下面代理方法：
+[objc] view plain copy
+/* For iOS8.0, the only supported adaptive presentation styles are UIModalPresentationFullScreen and UIModalPresentationOverFullScreen. */  
+- (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller;  
+-
+</code></pre>
+<p>iPhone下默认是UIModalPresentationFullScreen，需要手动设置为UIModalPresentationNone，否则，是普通的present全屏显示，没有弹窗效果。iPad不需要。<br>3、其他设置根据需求翻相关文档即可。<br>demo：<a href="https://github.com/Lynnll/UIPopOverLearning.git" target="_blank" rel="external">https://github.com/Lynnll/UIPopOverLearning.git</a></p>
+]]></content>
+      
+        <categories>
+            
+            <category> iOS </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> popover </tag>
             
         </tags>
         

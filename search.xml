@@ -3,6 +3,148 @@
   
     
     <entry>
+      <title><![CDATA[Swift中你应该知道的一些有用的tips]]></title>
+      <url>/2017/08/03/Swift%E4%B8%AD%E6%9C%89%E7%94%A8%E7%9A%84tips/</url>
+      <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a>                           
+<p>本文主要的知识点有： </p>
+<ul>
+<li>@noescape和@autoclosure</li>
+<li>内联lazy属性</li>
+<li>函数柯里化</li>
+<li>可变参数</li>
+<li>dynamic关键字</li>
+<li>一些特殊的字面量</li>
+<li>循环标签</li>
+</ul>
+<h2 id="noescape和-autoclosure"><a href="#noescape和-autoclosure" class="headerlink" title="@noescape和@autoclosure"></a>@noescape和@autoclosure</h2><p>关于这两个关键字的含义，在我此前的文章——<a href="http://www.jianshu.com/p/f9ba4c41d9c7" target="_blank" rel="external">第六章——函数(自动闭包和内存)</a>中已经有详细的解释，这里就简单总结概括一下： </p>
+<ul>
+<li>@noescape：这个关键字告诉编译器，参数闭包只能在函数内部使用。它不能被赋值给临时变量，不能异步调用，也不能作为未标记为@noescape的参数传递给其他函数。总之您可以放心，它无法在这个函数作用域之外使用。 </li>
+</ul>
+<p>除了安全性上的保证，swift还会为标记为@noescape的参数做一些优化，闭包内访问类的成员时您还可以省去<code>self.</code>的语法。 </p>
+<ul>
+<li>@autoclosure：这个关键字将表达式封装成闭包，优点在于延迟了表达式的执行，缺点是如果滥用会导致代码可读性降低。 </li>
+</ul>
+<h2 id="内联lazy属性"><a href="#内联lazy属性" class="headerlink" title="内联lazy属性"></a>内联lazy属性</h2><p>标记为lazy的属性在对象初始化时不会被创建，它直到第一次被访问时才会创建，通常情况下它是这样实现的： </p>
+<pre><code>class PersonOld {
+    lazy var expensiveObject: ExpensiveObject = {
+        return self.createExpensiveObject()    // 传统实现方式
+    }()
+
+    private func createExpensiveObject() -&gt; ExpensiveObject {
+        return ExpensiveObject()
+    }
+}
+</code></pre><p>lazy属性本质上是一个闭包，闭包中的表达式只会调用一次。需要强调的是，虽然这个闭包中捕获了<code>self</code>，但是这样做并不会导致循环引用，猜测是Swift自动把<code>self</code>标记为unowned了。 </p>
+<p>这样的写法其实可以进行简化，简化后的实现如下： </p>
+<pre><code>class Person {
+    lazy var expensiveObject: ExpensiveObject = self.createExpensiveObject()
+
+    private func createExpensiveObject() -&gt; ExpensiveObject {
+        return ExpensiveObject()
+    }
+}
+</code></pre><h2 id="函数柯里化"><a href="#函数柯里化" class="headerlink" title="函数柯里化"></a>函数柯里化</h2><p>函数柯里化也是一个老生常谈的问题了，我的这篇文章——<a href="http://www.jianshu.com/p/b2d21b85a387" target="_blank" rel="external">第六章——函数（函数的便捷性）</a>对其有比较详细的解释。 </p>
+<p>简单来说，柯里化函数处理一个参数，然后返回一个函数处理剩下来的所有参数。直观上来看，它避免了很多括号的嵌套，提高了代码的简洁性和可读性，比如这个函数： </p>
+<pre><code>func fourChainedFunctions(a: Int) -&gt; (Int -&gt; (Int -&gt; (Int -&gt; Int))) {
+    return { b in
+        return { c in
+            return { d in
+                return a + b + c + d
+            }
+        }
+    }
+}
+fourChainedFunctions(1)(2)(3)(4)
+</code></pre><p>对比一下它的柯里化版本： </p>
+<pre><code>func fourChainedFunctions(a: Int)(b: Int)(c: Int)(d: Int) -&gt; Int {
+    return a + b + c + d
+}
+</code></pre><p>不过在 Swift 3.0 中，这种柯里化语法会被移除，你需要使用之前完整的函数声明。感谢 <a href="http://www.jianshu.com/users/88a056103c02/latest_articles" target="_blank" rel="external">@没故事的卓同学</a> 指出。 </p>
+<p>您可以在<a href="https://github.com/apple/swift-evolution" target="_blank" rel="external">Swift Programming Language Evolution</a>中查看更多细节： </p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1171077-9bca1d7f34b2916d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="">  </p>
+<p>或者您也可以点击这篇文章查看更多细节——<a href="https://github.com/apple/swift-evolution/blob/master/proposals/0002-remove-currying.md" target="_blank" rel="external">Removing currying func declaration syntax</a></p>
+<h2 id="可变参数"><a href="#可变参数" class="headerlink" title="可变参数"></a>可变参数</h2><p>如果在参数类型后面加上三个”.”，表示参数的数量是可变的，如果您有过Java编程的经验，对此应该会比较熟悉： </p>
+<pre><code>func printEverythingWithAKrakenEmojiInBetween(objectsToPrint: Any...) {
+    for object in objectsToPrint {
+        print(&quot;\(object)🐙&quot;)
+    }
+}
+printEverythingWithAKrakenEmojiInBetween(&quot;Hey&quot;, &quot;Look&quot;, &quot;At&quot;, &quot;Me&quot;, &quot;!&quot;)
+</code></pre><p>此时，参数可以当做<code>SequenceType</code>类型来使用，也就是说可以使用<code>for in</code>语法遍历其中的每一个参数。 </p>
+<p>可变参数并不是什么罕见的语法，比如<code>print</code>函数就是用了可变参数，更多详细的分析请移步：<a href="http://www.jianshu.com/p/abb55919c453" target="_blank" rel="external">你其实真的不懂print(“Hello,world”)</a></p>
+<h2 id="dynamic关键字"><a href="#dynamic关键字" class="headerlink" title="dynamic关键字"></a>dynamic关键字</h2><p>如果您有过OC的开发经验，那一定会对OC中@dynamic关键字比较熟悉，它告诉编译器不要为属性合成getter和setter方法。 </p>
+<p>Swift中也有dynamic关键字，它可以用于修饰变量或函数，它的意思也与OC完全不同。它告诉编译器使用动态分发而不是静态分发。OC区别于其他语言的一个特点在于它的动态性，任何方法调用实际上都是消息分发，而Swift则尽可能做到静态分发。 </p>
+<p>因此，标记为dynamic的变量/函数会隐式的加上@objc关键字，它会使用OC的runtime机制。 </p>
+<p>虽然静态分发在效率上可能更好，不过一些app分析统计的库需要依赖动态分发的特性，动态的添加一些统计代码，这一点在Swift的静态分发机制下很难完成。这种情况下，虽然使用dynamic关键字会牺牲因为使用静态分发而获得的一些性能优化，但也依然是值得的。 </p>
+<pre><code>class Kraken {
+    dynamic var imADynamicallyDispatchedString: String
+
+    dynamic func imADynamicallyDispatchedFunction() {
+        //Hooray for dynamic dispatch!
+    }
+}
+</code></pre><p>使用动态分发，您可以更好的与OC中runtime的一些特性（如CoreData，KVC/KVO）进行交互，不过如果您不能确定变量或函数会被动态的修改、添加或使用了Method-Swizzle，那么就不应该使用dynamic关键字，否则有可能程序崩溃。 </p>
+<h2 id="特殊的字面量"><a href="#特殊的字面量" class="headerlink" title="特殊的字面量"></a>特殊的字面量</h2><p>在开发或调试过程中如果能用好下面这四个字面量，将会起到事半功倍的效果： </p>
+<ul>
+<li><strong>FILE</strong>：当前代码在那个文件中</li>
+<li><strong>FUNCTION</strong>：当前代码在该文件的那个函数中</li>
+<li><strong>LINE</strong>：当前代码在该文件的第多少行</li>
+<li><strong>COLUMN</strong>：当前代码在改行的多少列</li>
+</ul>
+<p>举个实际例子，您可以在demo中运行体验一番： </p>
+<pre><code>func specialLitertalExpression() {
+    print(__FILE__)
+    print(__FUNCTION__)
+    print(__LINE__)
+    print(__COLUMN__)   // 输出结果为11，因为有4个空格，print是五个字符，还有一个左括号。
+}
+</code></pre><p>一般情况下最常用的字面量是<code>__FUNCTION__</code>，它可以很容易让程序员明白自己调用的方法的方法名。 </p>
+<h2 id="循环标签"><a href="#循环标签" class="headerlink" title="循环标签"></a>循环标签</h2><p>通常意义上的循环标签主要是<code>continue</code>和<code>break</code>，不过swift在此基础上做了一些拓展，比如下面这段代码： </p>
+<pre><code>let firstNames = [&quot;Neil&quot;,&quot;Kt&quot;,&quot;Bob&quot;]
+let lastNames = [&quot;Zhou&quot;,&quot;Zhang&quot;,&quot;Wang&quot;,&quot;Li&quot;]
+for firstName in firstNames {
+    var isFound = false
+    for lastName in lastNames {
+        if firstName == &quot;Kt&quot; &amp;&amp; lastName == &quot;Zhang&quot; {
+            isFound = true
+            break
+        }
+        print(firstName + &quot; &quot; + lastName)
+    }
+
+    if isFound {
+        break
+    }
+}
+</code></pre><p>目的是希望找到分别在两个数组中找到字符串”Kt”和”Zhang”，在此之前会打印所有遍历到的字符。 </p>
+<p>在结束内层循环后，我希望外层循环也随之立刻停止，为了实现这个功能，我不得不引入了<code>isFound</code>参数。然而实际上我需要的只是可以指定停止哪个循环而已： </p>
+<pre><code>outsideloop: for firstName in firstNames {
+    innerloop: for lastName in lastNames {
+        if firstName == &quot;Kt&quot; &amp;&amp; lastName == &quot;Zhang&quot; {
+            break outsideloop    //人为指定break外层循环
+        }
+        print(firstName + &quot; &quot; + lastName)
+    }
+}
+</code></pre><p>以上两段代码等价，可以看到使用了循环标签后，代码明显简洁了很多。 </p>
+]]></content>
+      
+        <categories>
+            
+            <category> iOS </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> swift tips </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[利用 Django REST framework 编写 RESTful API]]></title>
       <url>/2017/07/26/%20Django%20REST%20framework/</url>
       <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a>                           
@@ -900,6 +1042,146 @@ No such image: mysite_web:latest (tag: latest)
     </entry>
     
     <entry>
+      <title><![CDATA[MarkDown 语法入门]]></title>
+      <url>/2017/07/01/MarkDown%20%E8%AF%AD%E6%B3%95%E5%85%A5%E9%97%A8/</url>
+      <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
+<h4 id="导语："><a href="#导语：" class="headerlink" title="导语："></a>导语：</h4><blockquote>
+<p><a href="http://zh.wikipedia.org/wiki/Markdown" target="_blank" rel="external">Markdown</a> 是一种轻量级的<strong>「标记语言」</strong>，它的优点很多，目前也被越来越多的写作爱好者，撰稿者广泛使用。看到这里请不要被<strong>「标记」</strong>、<strong>「语言」</strong>所迷惑，Markdown 的语法十分简单。常用的标记符号也不超过十个，这种相对于更为复杂的 HTML 标记语言来说，Markdown 可谓是十分轻量的，学习成本也不需要太多，且一旦熟悉这种语法规则，会有一劳永逸的效果。 </p>
+</blockquote>
+<p><img src="http://ww3.sinaimg.cn/large/6aee7dbbjw1eqft66xcg3j21kw12mdub.jpg" alt="Ulysses for Mac">  </p>
+<p><a href="http://www.ulyssesapp.com" target="_blank" rel="external">Ulysses for Mac</a></p>
+<h2 id="一，认识-Markdown"><a href="#一，认识-Markdown" class="headerlink" title="一，认识 Markdown"></a>一，认识 Markdown</h2><p>在刚才的导语里提到，Markdown 是一种用来写作的轻量级<strong>「标记语言」</strong>，它用简洁的语法代替排版，而不像一般我们用的字处理软件 _Word_ 或 _Pages_ 有大量的排版、字体设置。它使我们专心于码字，用「标记」语法，来代替常见的排版格式。例如此文从内容到格式，甚至插图，键盘就可以通通搞定了。目前来看，支持 Markdown 语法的编辑器有很多，包括很多网站（例如<a href="http://jianshu.io" target="_blank" rel="external">简书</a>）也支持了 Markdown 的文字录入。Markdown 从写作到完成，导出格式随心所欲，你可以导出 HTML 格式的文件用来网站发布，也可以十分方便的导出 PDF 格式，这种格式写出的简历更能得到 HR 的好感。甚至可以利用 <a href="http://www.getcloudapp.com" target="_blank" rel="external">CloudApp</a> 这种云服务工具直接上传至网页用来分享你的文章，全球最大的轻博客平台 <a href="http://te1ee.tumblr.com" target="_blank" rel="external">Tumblr</a>，也支持 Mou 这类 Markdown 工具的直接上传。 </p>
+<h3 id="Markdown-官方文档"><a href="#Markdown-官方文档" class="headerlink" title="Markdown 官方文档"></a>Markdown 官方文档</h3><blockquote>
+<p>这里可以看到官方的 Markdown 语法规则文档，当然，<strong>后文我也会用自己的方式阐述这些语法的具体用法</strong>。 </p>
+<ul>
+<li><a href="http://daringfireball.net/projects/markdown/syntax" target="_blank" rel="external">_创始人 John Gruber 的 Markdown 语法说明_</a></li>
+<li><a href="http://wowubuntu.com/markdown/#list" target="_blank" rel="external">_Markdown 中文版语法说明_</a></li>
+</ul>
+</blockquote>
+<h3 id="使用-Markdown-的优点"><a href="#使用-Markdown-的优点" class="headerlink" title="使用 Markdown 的优点"></a>使用 Markdown 的优点</h3><ul>
+<li>专注你的文字内容而不是排版样式，安心写作。</li>
+<li>轻松的导出 HTML、PDF 和本身的 .md 文件。</li>
+<li>纯文本内容，兼容所有的文本编辑器与字处理软件。</li>
+<li>随时修改你的文章版本，不必像字处理软件生成若干文件版本导致混乱。</li>
+<li>可读、直观、学习成本低。</li>
+</ul>
+<h3 id="使用-Markdown-的误区"><a href="#使用-Markdown-的误区" class="headerlink" title="使用 Markdown 的误区"></a>使用 Markdown 的误区</h3><blockquote>
+<p>_We believe that writing is about content, about what you want to say – not about fancy formatting._<br>我们坚信写作写的是内容，所思所想，而不是花样格式。<br>— _Ulysses for Mac_</p>
+</blockquote>
+<ul>
+<li>Markdown 旨在简洁、高效，也由于 Markdown 的易读易写，人们用不同的编程语言实现了多个版本的解析器和生成器，这就导致了目前不同的 Markdown 工具集成了不同的功能（基础功能大致相同），例如流程图与时序图，复杂表格与复杂公式的呈现，虽然功能的丰富并没有什么本质的缺点，但终归有些背离初衷，何况在编写的过程中很费神，不如使用专业的工具撰写来的更有效率，所以如果你需实现复杂功能，专业的图形界面工具会更加方便。<strong>当然，如果你对折腾这些不同客户端对 Markdown 的定制所带来高阶功能感到愉悦的话，那也是无可厚非的。</strong></li>
+</ul>
+<p><img src="http://ww2.sinaimg.cn/large/6aee7dbbgw1eq320claw3j21kw0kjdpc.jpg" alt="flowchart.js on Github（使用 Markdown 绘制流程图）">  </p>
+<p><a href="https://github.com/adrai/flowchart.js" target="_blank" rel="external">flowchart.js on Github（使用 Markdown 绘制流程图）</a></p>
+<h3 id="我该用什么工具？"><a href="#我该用什么工具？" class="headerlink" title="我该用什么工具？"></a>我该用什么工具？</h3><p><img src="http://mouapp.com/Mou_128.png" alt="Mou for Mac">  </p>
+<p>Mou for Mac </p>
+<ul>
+<li>在 Mac OS X 上，我强烈建议你用 <a href="http://mouapp.com" target="_blank" rel="external">Mou</a> 这款免费且十分好用的 Markdown 编辑器，它支持<strong>实时预览</strong>，既左边是你编辑 Markdown 语言，右边会实时的生成预览效果。不仅如此，Mou 还有一些有趣的偏好设置（_Preference_），例如主题（_Themes_）与样式（_CSS_），它们可以配置出定制化的文本编辑效果与导出效果，如果你对自带的主题与样式不满意还可以到 <a href="https://github.com/search?utf8=%E2%9C%93&amp;q=Mou" target="_blank" rel="external">GitHub</a> 上搜索其它爱好者为 Mou 编写的更多主题样式，导入的方式可以在偏好设置的 Themes 或 CSS 选项中 选择 reload。</li>
+</ul>
+<p><img src="http://ww1.sinaimg.cn/large/6aee7dbbgw1effcq2gx92j210j0ustj7.jpg" alt="Mou 的编写与预览窗口">  </p>
+<p>Mou 的编写与预览窗口 </p>
+<p>如果你从事文字工作，我强烈建议你购买 _<a href="http://www.ulyssesapp.com" target="_blank" rel="external">Ulysses for Mac</a>_，这款软件入围了苹果 Mac App Store 的 _The Best of 2013_。它支持更多的写作格式、多文档的支持。Mou，iA writer 这些软件都是基于单文档的管理方式，而 Ulysses 支持 Folder、Filter 的管理，一个 Folder 里面可以创建多个 Sheet，Sheet 之间也可以进行 Combine 处理。 </p>
+<p><img src="http://ww1.sinaimg.cn/large/6aee7dbbjw1eqgrj7suqoj217a0aiq4u.jpg" alt="Mac 上一些 Markdown 编辑器">  </p>
+<p>Mac 上一些 Markdown 编辑器 </p>
+<ul>
+<li>由于笔者很少接触 Windows，Windows 下的 Markdown 没有过多涉猎，经朋友介绍，有两款还算不错，一款叫做 <a href="http://www.markdownpad.com" target="_blank" rel="external">MarkdownPad</a> ，另一款叫做 <a href="http://code52.org/DownmarkerWPF/" target="_blank" rel="external">MarkPad</a>。 </li>
+</ul>
+<ul>
+<li><p>iOS 端很多 app 早已经支持了 Markdown 录入，例如 Drafts，Day One，iA writer 等，另外 Ulysses for iPad 现在已经上架，可以说是 iOS 平台最好的编辑器了。 </p>
+</li>
+<li><p>在 Web端，我强烈推荐<a href="http://jianshu.io" target="_blank" rel="external">简书</a>这款产品，上面有无数热爱文字的人在不停的创造，分享。在 Web 端使用 Markdown 没有比简书更舒服的地方了，同样支持左右两栏的实时预览，字体优雅，简洁。 </p>
+</li>
+</ul>
+<p><img src="http://ww2.sinaimg.cn/large/6aee7dbbgw1effdkfijo1j21220nigth.jpg" alt="简书的编辑预览模式">  </p>
+<p>简书的编辑预览模式 </p>
+<h2 id="二，Markdown-语法的简要规则"><a href="#二，Markdown-语法的简要规则" class="headerlink" title="二，Markdown 语法的简要规则"></a>二，Markdown 语法的简要规则</h2><h3 id="标题"><a href="#标题" class="headerlink" title="标题"></a>标题</h3><p><img src="http://ww1.sinaimg.cn/large/6aee7dbbgw1effeaclhiyj20eh09cwez.jpg" alt="标题">  </p>
+<p>标题 </p>
+<p>标题是每篇文章都需要也是最常用的格式，在 Markdown 中，如果一段文字被定义为标题，只要在这段文字前加 <code>#</code> 号即可。 </p>
+<p><code># 一级标题</code></p>
+<p><code>## 二级标题</code></p>
+<p><code>### 三级标题</code></p>
+<p>以此类推，总共六级标题，建议在井号后加一个空格，这是最标准的 Markdown 语法。 </p>
+<h3 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h3><p>熟悉 HTML 的同学肯定知道有序列表与无序列表的区别，在 Markdown 下，列表的显示只需要在文字前加上 <code>-</code> 或 <code>*</code> 即可变为无序列表，有序列表则直接在文字前加<code>1.</code> <code>2.</code> <code>3.</code> 符号要和文字之间加上一个字符的空格。 </p>
+<p><img src="http://ww4.sinaimg.cn/large/6aee7dbbgw1effew5aftij20d80bz3yw.jpg" alt="无序列表与有序列表">  </p>
+<p>无序列表与有序列表 </p>
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><p>如果你需要引用一小段别处的句子，那么就要用引用的格式。 </p>
+<blockquote>
+<p>例如这样 </p>
+</blockquote>
+<p>只需要在文本前加入 <code>&gt;</code> 这种尖括号（大于号）即可 </p>
+<p><img src="http://ww3.sinaimg.cn/large/6aee7dbbgw1effezhonxlj20e009c3yu.jpg" alt="引用">  </p>
+<p>引用 </p>
+<h3 id="图片与链接"><a href="#图片与链接" class="headerlink" title="图片与链接"></a>图片与链接</h3><p>插入链接与插入图片的语法很像，区别在一个 <code>!</code>号 </p>
+<p>图片为：<code>![](){ImgCap}{/ImgCap}</code></p>
+<p>链接为：<code>[]()</code></p>
+<p>插入图片的地址需要图床，这里推荐<a href="http://weibotuchuang.sinaapp.com" target="_blank" rel="external">围脖图床修复计划</a> 与 <a href="http://www.getcloudapp.com" target="_blank" rel="external">CloudApp</a> 的服务，生成URL地址即可。 </p>
+<p><img src="http://ww2.sinaimg.cn/large/6aee7dbbgw1efffa67voyj20ix0ctq3n.jpg" alt="URL 与图片">  </p>
+<p>URL 与图片 </p>
+<h3 id="粗体与斜体"><a href="#粗体与斜体" class="headerlink" title="粗体与斜体"></a>粗体与斜体</h3><p>Markdown 的粗体和斜体也非常简单，用两个 <code>*</code> 包含一段文本就是粗体的语法，用一个 <code>*</code> 包含一段文本就是斜体的语法。 </p>
+<p>例如：<strong>这里是粗体</strong> _这里是斜体_</p>
+<h3 id="表格"><a href="#表格" class="headerlink" title="表格"></a>表格</h3><p>表格是我觉得 Markdown 比较累人的地方，例子如下： </p>
+<pre><code>| Tables        | Are           | Cool  |
+| ------------- |:-------------:| -----:|
+| col 3 is      | right-aligned | $1600 |
+| col 2 is      | centered      |   $12 |
+| zebra stripes | are neat      |    $1 |
+</code></pre><p>这种语法生成的表格如下： </p>
+<p>TablesAreCool</p>
+<p>col 3 is<br>right-aligned<br>$1600 </p>
+<p>col 2 is<br>centered<br>$12 </p>
+<p>zebra stripes<br>are neat<br>$1 </p>
+<h3 id="代码框"><a href="#代码框" class="headerlink" title="代码框"></a>代码框</h3><p>如果你是个程序猿，需要在文章里优雅的引用代码框，在 Markdown下实现也非常简单，只需要用两个 ` 把中间的代码包裹起来。图例： </p>
+<p><img src="http://ww3.sinaimg.cn/large/6aee7dbbgw1effg1lsa97j20lt0a8dgs.jpg" alt="">  </p>
+<p>使用 <code>tab</code> 键即可缩进。 </p>
+<h3 id="分割线"><a href="#分割线" class="headerlink" title="分割线"></a>分割线</h3><p>分割线的语法只需要三个 <code>*</code> 号，例如： </p>
+<hr>
+<blockquote>
+<p>到这里，Markdown 的基本语法在日常的使用中基本就没什么大问题了，只要多加练习，配合好用的工具，写起东西来肯定会行云流水。更多的语法规则，其实 Mou 的 Help 文档栗子很好，当你第一次使用 Mou 时，就会显示该文档。可以用来对用的查找和学习。 </p>
+</blockquote>
+<p><img src="http://ww3.sinaimg.cn/large/6aee7dbbgw1effgmnpgqlj210j0us44j.jpg" alt="">  </p>
+<h2 id="三，相关推荐"><a href="#三，相关推荐" class="headerlink" title="三，相关推荐:"></a><strong>三，相关推荐</strong>:</h2><h3 id="工具"><a href="#工具" class="headerlink" title="工具"></a><strong>工具</strong></h3><p>_图床工具用来上传图片获取 URL 地址_</p>
+<ul>
+<li><a href="http://droplr.com" target="_blank" rel="external">Droplr</a></li>
+<li><a href="http://www.getcloudapp.com" target="_blank" rel="external">Cloudapp</a></li>
+<li><a href="https://itunes.apple.com/cn/app/yi-xiang/id672522335?mt=12&amp;uo=4" target="_blank" rel="external">ezShare for Mac</a></li>
+<li><a href="http://weibotuchuang.sinaapp.com" target="_blank" rel="external">围脖图床修复计划</a></li>
+</ul>
+<p>_在线好用的Markdown工具，为印象笔记而生_</p>
+<ul>
+<li><a href="http://maxiang.info" target="_blank" rel="external">马克飞象，专为印象笔记打造的Markdown编辑器，非常推荐</a></li>
+</ul>
+<h3 id="相关文章阅读："><a href="#相关文章阅读：" class="headerlink" title="相关文章阅读："></a><strong>相关文章阅读</strong>：</h3><ul>
+<li><a href="http://jianshu.io/p/qqgjln" target="_blank" rel="external">为什么作家应该用 Markdown 保存自己的文稿</a></li>
+</ul>
+<ul>
+<li><a href="http://www.yangzhiping.com/tech/r-markdown-knitr.html" target="_blank" rel="external">Markdown写作浅谈</a></li>
+</ul>
+<ul>
+<li><a href="http://www.appinn.com/markdown-tools/" target="_blank" rel="external">Markdown 工具补完</a></li>
+<li><a href="http://jianshu.io/p/63HYZ6" target="_blank" rel="external">Drafts + Scriptogr.am + Dropbox 打造移动端 Markdown 风格博客</a></li>
+<li><a href="http://www.ituring.com.cn/article/23" target="_blank" rel="external">图灵社区，怎样使用Markdown</a></li>
+<li><a href="http://news.cnblogs.com/n/139649/" target="_blank" rel="external">为什么我们要学习Markdown的三个理由</a></li>
+<li><a href="http://ibuick.me/?p=4093" target="_blank" rel="external">Markdown 语法写作入门指南 by ibuick</a></li>
+</ul>
+<hr>
+]]></content>
+      
+        <categories>
+            
+            <category> 杂记 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> markdown </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[使用Vultr搭建ShadowSocks教程]]></title>
       <url>/2017/07/01/vultr%E6%90%AD%E5%BB%BAss/</url>
       <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
@@ -1069,146 +1351,6 @@ $ firewall-cmd --reload
         <tags>
             
             <tag> shadowsocks </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[MarkDown 语法入门]]></title>
-      <url>/2017/07/01/MarkDown%20%E8%AF%AD%E6%B3%95%E5%85%A5%E9%97%A8/</url>
-      <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
-<h4 id="导语："><a href="#导语：" class="headerlink" title="导语："></a>导语：</h4><blockquote>
-<p><a href="http://zh.wikipedia.org/wiki/Markdown" target="_blank" rel="external">Markdown</a> 是一种轻量级的<strong>「标记语言」</strong>，它的优点很多，目前也被越来越多的写作爱好者，撰稿者广泛使用。看到这里请不要被<strong>「标记」</strong>、<strong>「语言」</strong>所迷惑，Markdown 的语法十分简单。常用的标记符号也不超过十个，这种相对于更为复杂的 HTML 标记语言来说，Markdown 可谓是十分轻量的，学习成本也不需要太多，且一旦熟悉这种语法规则，会有一劳永逸的效果。 </p>
-</blockquote>
-<p><img src="http://ww3.sinaimg.cn/large/6aee7dbbjw1eqft66xcg3j21kw12mdub.jpg" alt="Ulysses for Mac">  </p>
-<p><a href="http://www.ulyssesapp.com" target="_blank" rel="external">Ulysses for Mac</a></p>
-<h2 id="一，认识-Markdown"><a href="#一，认识-Markdown" class="headerlink" title="一，认识 Markdown"></a>一，认识 Markdown</h2><p>在刚才的导语里提到，Markdown 是一种用来写作的轻量级<strong>「标记语言」</strong>，它用简洁的语法代替排版，而不像一般我们用的字处理软件 _Word_ 或 _Pages_ 有大量的排版、字体设置。它使我们专心于码字，用「标记」语法，来代替常见的排版格式。例如此文从内容到格式，甚至插图，键盘就可以通通搞定了。目前来看，支持 Markdown 语法的编辑器有很多，包括很多网站（例如<a href="http://jianshu.io" target="_blank" rel="external">简书</a>）也支持了 Markdown 的文字录入。Markdown 从写作到完成，导出格式随心所欲，你可以导出 HTML 格式的文件用来网站发布，也可以十分方便的导出 PDF 格式，这种格式写出的简历更能得到 HR 的好感。甚至可以利用 <a href="http://www.getcloudapp.com" target="_blank" rel="external">CloudApp</a> 这种云服务工具直接上传至网页用来分享你的文章，全球最大的轻博客平台 <a href="http://te1ee.tumblr.com" target="_blank" rel="external">Tumblr</a>，也支持 Mou 这类 Markdown 工具的直接上传。 </p>
-<h3 id="Markdown-官方文档"><a href="#Markdown-官方文档" class="headerlink" title="Markdown 官方文档"></a>Markdown 官方文档</h3><blockquote>
-<p>这里可以看到官方的 Markdown 语法规则文档，当然，<strong>后文我也会用自己的方式阐述这些语法的具体用法</strong>。 </p>
-<ul>
-<li><a href="http://daringfireball.net/projects/markdown/syntax" target="_blank" rel="external">_创始人 John Gruber 的 Markdown 语法说明_</a></li>
-<li><a href="http://wowubuntu.com/markdown/#list" target="_blank" rel="external">_Markdown 中文版语法说明_</a></li>
-</ul>
-</blockquote>
-<h3 id="使用-Markdown-的优点"><a href="#使用-Markdown-的优点" class="headerlink" title="使用 Markdown 的优点"></a>使用 Markdown 的优点</h3><ul>
-<li>专注你的文字内容而不是排版样式，安心写作。</li>
-<li>轻松的导出 HTML、PDF 和本身的 .md 文件。</li>
-<li>纯文本内容，兼容所有的文本编辑器与字处理软件。</li>
-<li>随时修改你的文章版本，不必像字处理软件生成若干文件版本导致混乱。</li>
-<li>可读、直观、学习成本低。</li>
-</ul>
-<h3 id="使用-Markdown-的误区"><a href="#使用-Markdown-的误区" class="headerlink" title="使用 Markdown 的误区"></a>使用 Markdown 的误区</h3><blockquote>
-<p>_We believe that writing is about content, about what you want to say – not about fancy formatting._<br>我们坚信写作写的是内容，所思所想，而不是花样格式。<br>— _Ulysses for Mac_</p>
-</blockquote>
-<ul>
-<li>Markdown 旨在简洁、高效，也由于 Markdown 的易读易写，人们用不同的编程语言实现了多个版本的解析器和生成器，这就导致了目前不同的 Markdown 工具集成了不同的功能（基础功能大致相同），例如流程图与时序图，复杂表格与复杂公式的呈现，虽然功能的丰富并没有什么本质的缺点，但终归有些背离初衷，何况在编写的过程中很费神，不如使用专业的工具撰写来的更有效率，所以如果你需实现复杂功能，专业的图形界面工具会更加方便。<strong>当然，如果你对折腾这些不同客户端对 Markdown 的定制所带来高阶功能感到愉悦的话，那也是无可厚非的。</strong></li>
-</ul>
-<p><img src="http://ww2.sinaimg.cn/large/6aee7dbbgw1eq320claw3j21kw0kjdpc.jpg" alt="flowchart.js on Github（使用 Markdown 绘制流程图）">  </p>
-<p><a href="https://github.com/adrai/flowchart.js" target="_blank" rel="external">flowchart.js on Github（使用 Markdown 绘制流程图）</a></p>
-<h3 id="我该用什么工具？"><a href="#我该用什么工具？" class="headerlink" title="我该用什么工具？"></a>我该用什么工具？</h3><p><img src="http://mouapp.com/Mou_128.png" alt="Mou for Mac">  </p>
-<p>Mou for Mac </p>
-<ul>
-<li>在 Mac OS X 上，我强烈建议你用 <a href="http://mouapp.com" target="_blank" rel="external">Mou</a> 这款免费且十分好用的 Markdown 编辑器，它支持<strong>实时预览</strong>，既左边是你编辑 Markdown 语言，右边会实时的生成预览效果。不仅如此，Mou 还有一些有趣的偏好设置（_Preference_），例如主题（_Themes_）与样式（_CSS_），它们可以配置出定制化的文本编辑效果与导出效果，如果你对自带的主题与样式不满意还可以到 <a href="https://github.com/search?utf8=%E2%9C%93&amp;q=Mou" target="_blank" rel="external">GitHub</a> 上搜索其它爱好者为 Mou 编写的更多主题样式，导入的方式可以在偏好设置的 Themes 或 CSS 选项中 选择 reload。</li>
-</ul>
-<p><img src="http://ww1.sinaimg.cn/large/6aee7dbbgw1effcq2gx92j210j0ustj7.jpg" alt="Mou 的编写与预览窗口">  </p>
-<p>Mou 的编写与预览窗口 </p>
-<p>如果你从事文字工作，我强烈建议你购买 _<a href="http://www.ulyssesapp.com" target="_blank" rel="external">Ulysses for Mac</a>_，这款软件入围了苹果 Mac App Store 的 _The Best of 2013_。它支持更多的写作格式、多文档的支持。Mou，iA writer 这些软件都是基于单文档的管理方式，而 Ulysses 支持 Folder、Filter 的管理，一个 Folder 里面可以创建多个 Sheet，Sheet 之间也可以进行 Combine 处理。 </p>
-<p><img src="http://ww1.sinaimg.cn/large/6aee7dbbjw1eqgrj7suqoj217a0aiq4u.jpg" alt="Mac 上一些 Markdown 编辑器">  </p>
-<p>Mac 上一些 Markdown 编辑器 </p>
-<ul>
-<li>由于笔者很少接触 Windows，Windows 下的 Markdown 没有过多涉猎，经朋友介绍，有两款还算不错，一款叫做 <a href="http://www.markdownpad.com" target="_blank" rel="external">MarkdownPad</a> ，另一款叫做 <a href="http://code52.org/DownmarkerWPF/" target="_blank" rel="external">MarkPad</a>。 </li>
-</ul>
-<ul>
-<li><p>iOS 端很多 app 早已经支持了 Markdown 录入，例如 Drafts，Day One，iA writer 等，另外 Ulysses for iPad 现在已经上架，可以说是 iOS 平台最好的编辑器了。 </p>
-</li>
-<li><p>在 Web端，我强烈推荐<a href="http://jianshu.io" target="_blank" rel="external">简书</a>这款产品，上面有无数热爱文字的人在不停的创造，分享。在 Web 端使用 Markdown 没有比简书更舒服的地方了，同样支持左右两栏的实时预览，字体优雅，简洁。 </p>
-</li>
-</ul>
-<p><img src="http://ww2.sinaimg.cn/large/6aee7dbbgw1effdkfijo1j21220nigth.jpg" alt="简书的编辑预览模式">  </p>
-<p>简书的编辑预览模式 </p>
-<h2 id="二，Markdown-语法的简要规则"><a href="#二，Markdown-语法的简要规则" class="headerlink" title="二，Markdown 语法的简要规则"></a>二，Markdown 语法的简要规则</h2><h3 id="标题"><a href="#标题" class="headerlink" title="标题"></a>标题</h3><p><img src="http://ww1.sinaimg.cn/large/6aee7dbbgw1effeaclhiyj20eh09cwez.jpg" alt="标题">  </p>
-<p>标题 </p>
-<p>标题是每篇文章都需要也是最常用的格式，在 Markdown 中，如果一段文字被定义为标题，只要在这段文字前加 <code>#</code> 号即可。 </p>
-<p><code># 一级标题</code></p>
-<p><code>## 二级标题</code></p>
-<p><code>### 三级标题</code></p>
-<p>以此类推，总共六级标题，建议在井号后加一个空格，这是最标准的 Markdown 语法。 </p>
-<h3 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h3><p>熟悉 HTML 的同学肯定知道有序列表与无序列表的区别，在 Markdown 下，列表的显示只需要在文字前加上 <code>-</code> 或 <code>*</code> 即可变为无序列表，有序列表则直接在文字前加<code>1.</code> <code>2.</code> <code>3.</code> 符号要和文字之间加上一个字符的空格。 </p>
-<p><img src="http://ww4.sinaimg.cn/large/6aee7dbbgw1effew5aftij20d80bz3yw.jpg" alt="无序列表与有序列表">  </p>
-<p>无序列表与有序列表 </p>
-<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><p>如果你需要引用一小段别处的句子，那么就要用引用的格式。 </p>
-<blockquote>
-<p>例如这样 </p>
-</blockquote>
-<p>只需要在文本前加入 <code>&gt;</code> 这种尖括号（大于号）即可 </p>
-<p><img src="http://ww3.sinaimg.cn/large/6aee7dbbgw1effezhonxlj20e009c3yu.jpg" alt="引用">  </p>
-<p>引用 </p>
-<h3 id="图片与链接"><a href="#图片与链接" class="headerlink" title="图片与链接"></a>图片与链接</h3><p>插入链接与插入图片的语法很像，区别在一个 <code>!</code>号 </p>
-<p>图片为：<code>![](){ImgCap}{/ImgCap}</code></p>
-<p>链接为：<code>[]()</code></p>
-<p>插入图片的地址需要图床，这里推荐<a href="http://weibotuchuang.sinaapp.com" target="_blank" rel="external">围脖图床修复计划</a> 与 <a href="http://www.getcloudapp.com" target="_blank" rel="external">CloudApp</a> 的服务，生成URL地址即可。 </p>
-<p><img src="http://ww2.sinaimg.cn/large/6aee7dbbgw1efffa67voyj20ix0ctq3n.jpg" alt="URL 与图片">  </p>
-<p>URL 与图片 </p>
-<h3 id="粗体与斜体"><a href="#粗体与斜体" class="headerlink" title="粗体与斜体"></a>粗体与斜体</h3><p>Markdown 的粗体和斜体也非常简单，用两个 <code>*</code> 包含一段文本就是粗体的语法，用一个 <code>*</code> 包含一段文本就是斜体的语法。 </p>
-<p>例如：<strong>这里是粗体</strong> _这里是斜体_</p>
-<h3 id="表格"><a href="#表格" class="headerlink" title="表格"></a>表格</h3><p>表格是我觉得 Markdown 比较累人的地方，例子如下： </p>
-<pre><code>| Tables        | Are           | Cool  |
-| ------------- |:-------------:| -----:|
-| col 3 is      | right-aligned | $1600 |
-| col 2 is      | centered      |   $12 |
-| zebra stripes | are neat      |    $1 |
-</code></pre><p>这种语法生成的表格如下： </p>
-<p>TablesAreCool</p>
-<p>col 3 is<br>right-aligned<br>$1600 </p>
-<p>col 2 is<br>centered<br>$12 </p>
-<p>zebra stripes<br>are neat<br>$1 </p>
-<h3 id="代码框"><a href="#代码框" class="headerlink" title="代码框"></a>代码框</h3><p>如果你是个程序猿，需要在文章里优雅的引用代码框，在 Markdown下实现也非常简单，只需要用两个 ` 把中间的代码包裹起来。图例： </p>
-<p><img src="http://ww3.sinaimg.cn/large/6aee7dbbgw1effg1lsa97j20lt0a8dgs.jpg" alt="">  </p>
-<p>使用 <code>tab</code> 键即可缩进。 </p>
-<h3 id="分割线"><a href="#分割线" class="headerlink" title="分割线"></a>分割线</h3><p>分割线的语法只需要三个 <code>*</code> 号，例如： </p>
-<hr>
-<blockquote>
-<p>到这里，Markdown 的基本语法在日常的使用中基本就没什么大问题了，只要多加练习，配合好用的工具，写起东西来肯定会行云流水。更多的语法规则，其实 Mou 的 Help 文档栗子很好，当你第一次使用 Mou 时，就会显示该文档。可以用来对用的查找和学习。 </p>
-</blockquote>
-<p><img src="http://ww3.sinaimg.cn/large/6aee7dbbgw1effgmnpgqlj210j0us44j.jpg" alt="">  </p>
-<h2 id="三，相关推荐"><a href="#三，相关推荐" class="headerlink" title="三，相关推荐:"></a><strong>三，相关推荐</strong>:</h2><h3 id="工具"><a href="#工具" class="headerlink" title="工具"></a><strong>工具</strong></h3><p>_图床工具用来上传图片获取 URL 地址_</p>
-<ul>
-<li><a href="http://droplr.com" target="_blank" rel="external">Droplr</a></li>
-<li><a href="http://www.getcloudapp.com" target="_blank" rel="external">Cloudapp</a></li>
-<li><a href="https://itunes.apple.com/cn/app/yi-xiang/id672522335?mt=12&amp;uo=4" target="_blank" rel="external">ezShare for Mac</a></li>
-<li><a href="http://weibotuchuang.sinaapp.com" target="_blank" rel="external">围脖图床修复计划</a></li>
-</ul>
-<p>_在线好用的Markdown工具，为印象笔记而生_</p>
-<ul>
-<li><a href="http://maxiang.info" target="_blank" rel="external">马克飞象，专为印象笔记打造的Markdown编辑器，非常推荐</a></li>
-</ul>
-<h3 id="相关文章阅读："><a href="#相关文章阅读：" class="headerlink" title="相关文章阅读："></a><strong>相关文章阅读</strong>：</h3><ul>
-<li><a href="http://jianshu.io/p/qqgjln" target="_blank" rel="external">为什么作家应该用 Markdown 保存自己的文稿</a></li>
-</ul>
-<ul>
-<li><a href="http://www.yangzhiping.com/tech/r-markdown-knitr.html" target="_blank" rel="external">Markdown写作浅谈</a></li>
-</ul>
-<ul>
-<li><a href="http://www.appinn.com/markdown-tools/" target="_blank" rel="external">Markdown 工具补完</a></li>
-<li><a href="http://jianshu.io/p/63HYZ6" target="_blank" rel="external">Drafts + Scriptogr.am + Dropbox 打造移动端 Markdown 风格博客</a></li>
-<li><a href="http://www.ituring.com.cn/article/23" target="_blank" rel="external">图灵社区，怎样使用Markdown</a></li>
-<li><a href="http://news.cnblogs.com/n/139649/" target="_blank" rel="external">为什么我们要学习Markdown的三个理由</a></li>
-<li><a href="http://ibuick.me/?p=4093" target="_blank" rel="external">Markdown 语法写作入门指南 by ibuick</a></li>
-</ul>
-<hr>
-]]></content>
-      
-        <categories>
-            
-            <category> 杂记 </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> markdown </tag>
             
         </tags>
         
@@ -1634,6 +1776,153 @@ http {
         <tags>
             
             <tag> lnmp </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[七牛云储存]]></title>
+      <url>/2017/06/14/%E4%B8%83%E7%89%9B%E4%BA%91%E5%82%A8%E5%AD%98/</url>
+      <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
+<ul>
+<li><p>初始化<br>一般情况下直接使用默认设置，不用单独配置。 可以配置超时时长、分片上传阀值等。</p>
+<p>Configuration config = new Configuration.Builder()</p>
+<pre><code>                .chunkSize(256 * 1024)  //分片上传时，每片的大小。 默认 256K
+                .putThreshhold(512 * 1024)  // 启用分片上传阀值。默认 512K
+                .connectTimeout(10) // 链接超时。默认 10秒
+                .responseTimeout(60) // 服务器响应超时。默认 60秒
+                .recorder(recorder)  // recorder 分片上传时，已上传片记录器。默认 null
+                .recorder(recorder, keyGen)  // keyGen 分片上传时，生成标识符，用于片记录器区分是那个文件的上传记录
+                .zone(Zone.zone0) // 设置区域，指定不同区域的上传域名、备用域名、备用IP。默认 Zone.zone0
+                .build()
+</code></pre><p>// 重用 uploadManager。一般地，只需要创建一个 uploadManager 对象<br>UploadManager uploadManager = new UploadManager(config)</p>
+</li>
+<li><p>上传文件<br>七牛上传文件主要用到两个方法：<br>一、 UploadManager.put(data, key, token, handler, options);</p>
+<p> /**</p>
+<ul>
+<li><p>UploadManager.put参数说明：<br><em>
+</em>@data                  byte[]/String/File    数据，可以是byte数组，文件路径，文件。<br><em>@key                   String                保存在服务器上的资源唯一标识。请参考键值对。
+</em>@token                 String                服务器分配的token。<br><em>@completionHandler     UpCompletionHandler   上传回调函数，必填。
+</em>@options               UploadOptions         如果需要进度通知、crc校验、中途取消、指定mimeType则需要填写相应字段，详见UploadOptions参数说明。</p>
+<pre><code> */
+</code></pre><p>二、 UploadOptions(params, mimeType, checkCrc, progressHandler, cancellationSignal);</p>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code>    /**
+     * UploadOptions参数说明：
+     * 
+     *参数                   类型                   说明
+     *params               Map&lt;String, String&gt;  自定义变量，key必须以 x: 开始。
+     *mimeType             String               指定文件的mimeType。
+     *checkCrc             boolean              是否验证上传文件。
+     *progressHandler      UpProgressHandler    上传进度回调。
+     *cancellationSignal   UpCancellationSignal 取消上传，当isCancelled()返回true时，不再执行更多上传。
+     */
+</code></pre><h4 id="现在就比较清楚了"><a href="#现在就比较清楚了" class="headerlink" title="现在就比较清楚了"></a>现在就比较清楚了</h4><p>下面主要是各种上传姿势了  </p>
+<ul>
+<li>简单上传 </li>
+</ul>
+<pre><code>UploadManager uploadManager = new UploadManager();
+data = &lt;File对象、或 文件路径、或 字节数组&gt;
+String key = &lt;指定七牛服务上的文件名，或 null&gt;;
+String token = &lt;从服务端SDK获取&gt;;
+uploadManager.put(data, key, token,
+ /**
+  * UpCompletionHandler参数说明
+  * 
+  *@key        即uploadManager.put(file, key, ...)方法指定的key。
+  *@info       http请求的状态信息等，可记入日志。isOK()返回 true表示上传成功。
+  *@response   七牛反馈的信息。可从中解析保存在七牛服务的key等信息，具体字段取决于上传策略的设置。
+  */
+new UpCompletionHandler() {
+    @Override
+    public void complete(String key, ResponseInfo info, JSONObject res) {
+
+        Log.i(&quot;qiniu&quot;, key + &quot;,\r\n &quot; + info + &quot;,\r\n &quot; + res);
+    }
+}, null);
+</code></pre><ul>
+<li>记录上传进度</li>
+</ul>
+<pre><code>    private void uploadProgress() {
+
+        uploadManager.put(data, key, token, handler,
+                new UploadOptions(null, null, false,
+                        new UpProgressHandler() {
+                            /**
+                             * @param key      即uploadManager.put(file, key, ...)方法指定的key
+                             * @param percent  进度
+                             */
+                            public void progress(String key, double percent) {
+                                Log.i(&quot;qiniu&quot;, key + &quot;: &quot; + percent);
+                            }
+                        }, null));
+
+    }
+</code></pre><ul>
+<li>取消上传<br>内部代码会检测UpCancellationSignal##isCancelled()的返回值，当其返回true时，将停止上传。 可外部维护一个变量isCancelled，当点击取消按钮时，设置isCancelled = true;。如：</li>
+</ul>
+<pre><code>private volatile boolean isCancelled = false;
+
+uploadManager.put(data, key, token,handler,
+    new UploadOptions(null, null, false, progressHandler,
+        new UpCancellationSignal(){
+            public boolean isCancelled(){
+                return isCancelled;
+            }
+        }));
+
+
+
+private void cancell() {
+    isCancelled = true;
+}
+</code></pre><ul>
+<li>记录断点</li>
+</ul>
+<p>分片上传中，可将各个已上传的块记录下来，再次上传时，已上传的部分不用再次上传。 断点记录类需实现 com.qiniu.android.storage.Recorder 接口。已提供保存到文件的 FileRecorder 实现。 </p>
+<pre><code>String dirPath = &lt;断点记录文件保存的文件夹位置&gt;
+Recorder recorder = new FileRecorder(dirPath);
+
+
+
+
+KeyGenerator keyGen = new KeyGenerator(){
+    public String gen(String key, File file){
+
+
+        return key + &quot;_._&quot; + new StringBuffer(file.getAbsolutePath()).reverse();
+    }
+};
+
+
+
+
+
+Configuration config = new Configuration.Builder()
+
+
+                    .recorder(recorder, keyGen)  
+                    .build();
+
+UploadManager uploadManager = new UploadManager(config);
+
+uploadManager.put(data, key, ...)
+</code></pre><h3 id="初始化设置和上传文件的基本用法就记录到这啦！"><a href="#初始化设置和上传文件的基本用法就记录到这啦！" class="headerlink" title="初始化设置和上传文件的基本用法就记录到这啦！"></a>初始化设置和上传文件的基本用法就记录到这啦！</h3>]]></content>
+      
+        <categories>
+            
+            <category> Android </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> qiniu </tag>
             
         </tags>
         
@@ -2364,305 +2653,6 @@ Alamofire.upload(fileURL, to: urlString).responseData { response in
         <tags>
             
             <tag> Alamofire </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[七牛云储存]]></title>
-      <url>/2017/06/14/%E4%B8%83%E7%89%9B%E4%BA%91%E5%82%A8%E5%AD%98/</url>
-      <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
-<ul>
-<li><p>初始化<br>一般情况下直接使用默认设置，不用单独配置。 可以配置超时时长、分片上传阀值等。</p>
-<p>Configuration config = new Configuration.Builder()</p>
-<pre><code>                .chunkSize(256 * 1024)  //分片上传时，每片的大小。 默认 256K
-                .putThreshhold(512 * 1024)  // 启用分片上传阀值。默认 512K
-                .connectTimeout(10) // 链接超时。默认 10秒
-                .responseTimeout(60) // 服务器响应超时。默认 60秒
-                .recorder(recorder)  // recorder 分片上传时，已上传片记录器。默认 null
-                .recorder(recorder, keyGen)  // keyGen 分片上传时，生成标识符，用于片记录器区分是那个文件的上传记录
-                .zone(Zone.zone0) // 设置区域，指定不同区域的上传域名、备用域名、备用IP。默认 Zone.zone0
-                .build()
-</code></pre><p>// 重用 uploadManager。一般地，只需要创建一个 uploadManager 对象<br>UploadManager uploadManager = new UploadManager(config)</p>
-</li>
-<li><p>上传文件<br>七牛上传文件主要用到两个方法：<br>一、 UploadManager.put(data, key, token, handler, options);</p>
-<p> /**</p>
-<ul>
-<li><p>UploadManager.put参数说明：<br><em>
-</em>@data                  byte[]/String/File    数据，可以是byte数组，文件路径，文件。<br><em>@key                   String                保存在服务器上的资源唯一标识。请参考键值对。
-</em>@token                 String                服务器分配的token。<br><em>@completionHandler     UpCompletionHandler   上传回调函数，必填。
-</em>@options               UploadOptions         如果需要进度通知、crc校验、中途取消、指定mimeType则需要填写相应字段，详见UploadOptions参数说明。</p>
-<pre><code> */
-</code></pre><p>二、 UploadOptions(params, mimeType, checkCrc, progressHandler, cancellationSignal);</p>
-</li>
-</ul>
-</li>
-</ul>
-<pre><code>    /**
-     * UploadOptions参数说明：
-     * 
-     *参数                   类型                   说明
-     *params               Map&lt;String, String&gt;  自定义变量，key必须以 x: 开始。
-     *mimeType             String               指定文件的mimeType。
-     *checkCrc             boolean              是否验证上传文件。
-     *progressHandler      UpProgressHandler    上传进度回调。
-     *cancellationSignal   UpCancellationSignal 取消上传，当isCancelled()返回true时，不再执行更多上传。
-     */
-</code></pre><h4 id="现在就比较清楚了"><a href="#现在就比较清楚了" class="headerlink" title="现在就比较清楚了"></a>现在就比较清楚了</h4><p>下面主要是各种上传姿势了  </p>
-<ul>
-<li>简单上传 </li>
-</ul>
-<pre><code>UploadManager uploadManager = new UploadManager();
-data = &lt;File对象、或 文件路径、或 字节数组&gt;
-String key = &lt;指定七牛服务上的文件名，或 null&gt;;
-String token = &lt;从服务端SDK获取&gt;;
-uploadManager.put(data, key, token,
- /**
-  * UpCompletionHandler参数说明
-  * 
-  *@key        即uploadManager.put(file, key, ...)方法指定的key。
-  *@info       http请求的状态信息等，可记入日志。isOK()返回 true表示上传成功。
-  *@response   七牛反馈的信息。可从中解析保存在七牛服务的key等信息，具体字段取决于上传策略的设置。
-  */
-new UpCompletionHandler() {
-    @Override
-    public void complete(String key, ResponseInfo info, JSONObject res) {
-
-        Log.i(&quot;qiniu&quot;, key + &quot;,\r\n &quot; + info + &quot;,\r\n &quot; + res);
-    }
-}, null);
-</code></pre><ul>
-<li>记录上传进度</li>
-</ul>
-<pre><code>    private void uploadProgress() {
-
-        uploadManager.put(data, key, token, handler,
-                new UploadOptions(null, null, false,
-                        new UpProgressHandler() {
-                            /**
-                             * @param key      即uploadManager.put(file, key, ...)方法指定的key
-                             * @param percent  进度
-                             */
-                            public void progress(String key, double percent) {
-                                Log.i(&quot;qiniu&quot;, key + &quot;: &quot; + percent);
-                            }
-                        }, null));
-
-    }
-</code></pre><ul>
-<li>取消上传<br>内部代码会检测UpCancellationSignal##isCancelled()的返回值，当其返回true时，将停止上传。 可外部维护一个变量isCancelled，当点击取消按钮时，设置isCancelled = true;。如：</li>
-</ul>
-<pre><code>private volatile boolean isCancelled = false;
-
-uploadManager.put(data, key, token,handler,
-    new UploadOptions(null, null, false, progressHandler,
-        new UpCancellationSignal(){
-            public boolean isCancelled(){
-                return isCancelled;
-            }
-        }));
-
-
-
-private void cancell() {
-    isCancelled = true;
-}
-</code></pre><ul>
-<li>记录断点</li>
-</ul>
-<p>分片上传中，可将各个已上传的块记录下来，再次上传时，已上传的部分不用再次上传。 断点记录类需实现 com.qiniu.android.storage.Recorder 接口。已提供保存到文件的 FileRecorder 实现。 </p>
-<pre><code>String dirPath = &lt;断点记录文件保存的文件夹位置&gt;
-Recorder recorder = new FileRecorder(dirPath);
-
-
-
-
-KeyGenerator keyGen = new KeyGenerator(){
-    public String gen(String key, File file){
-
-
-        return key + &quot;_._&quot; + new StringBuffer(file.getAbsolutePath()).reverse();
-    }
-};
-
-
-
-
-
-Configuration config = new Configuration.Builder()
-
-
-                    .recorder(recorder, keyGen)  
-                    .build();
-
-UploadManager uploadManager = new UploadManager(config);
-
-uploadManager.put(data, key, ...)
-</code></pre><h3 id="初始化设置和上传文件的基本用法就记录到这啦！"><a href="#初始化设置和上传文件的基本用法就记录到这啦！" class="headerlink" title="初始化设置和上传文件的基本用法就记录到这啦！"></a>初始化设置和上传文件的基本用法就记录到这啦！</h3>]]></content>
-      
-        <categories>
-            
-            <category> Android </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> qiniu </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[UIPopoverPresentationController]]></title>
-      <url>/2017/06/12/UIPopoverPresentationController/</url>
-      <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a>
-<p>UIPopoverPresentationController 是 iOS8 后新增的，相当于pad端的UIPopOverController，以后我们也可以在iPhone上使用popOver啦。自己写了一个小demo，大概了熟悉了一下用法。后面有开发需求时会详细补充。<br>首先要知道一点是，我们并不需要创建一个UIPopoverPresentationController，他相当于UIViewController的属性，因此我们只需要创建UIViewController即可。<br>举个例子：假设我们要在 ViewController窗体弹窗，弹窗为FirstViewController（kind of UIViewController）我们用两种方式来实现<br>1、在self.view上创建一个button，给button添加弹窗事件；<br>2、在导航栏添加barButtonItem，给其添加弹窗时间。<br>弹窗事件：</p>
-<pre><code class="swift">1、button
-[objc] view plain copy
-- (void)buttonClick  
-{  
-    FirstViewController *firstVC = [[FirstViewController alloc] init];  
-    firstVC.modalPresentationStyle = UIModalPresentationPopover;  
-    firstVC.popoverPresentationController.sourceView = popOverButton;  //rect参数是以view的左上角为坐标原点（0，0）  
-    firstVC.popoverPresentationController.sourceRect = popOverButton.bounds; //指定箭头所指区域的矩形框范围（位置和尺寸），以view的左上角为坐标原点  
-    firstVC.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp; //箭头方向  
-    firstVC.popoverPresentationController.delegate = self;  
-    firstVC.preferredContentSize = CGSizeMake(100, 200);  
-    [self presentViewController:firstVC animated:YES completion:nil];  
-}  
-
-2、barButtonItem
-[objc] view plain copy
-- (void)rightBarButtonItemClick  
-{  
-    FirstViewController *firstVC = [[FirstViewController alloc]init];  
-    firstVC.modalPresentationStyle = UIModalPresentationPopover;  
-    /** 
-     *  由于导航上的控件没有指定frame，无法设置sourceView和sourceRect，用下面的。 
-     */  
-    firstVC.popoverPresentationController.barButtonItem = self.navigationItem.rightBarButtonItem;  
-    firstVC.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp;  
-    firstVC.popoverPresentationController.delegate = self;  
-    firstVC.preferredContentSize = CGSizeMake(100, 200);  
-    [self presentViewController:firstVC animated:YES completion:nil];  
-//    firstVC.popoverPresentationController.passthroughViews = nil;  
-}  
-注意几点：
-1、遵守代理：UIPopoverPresentationControllerDelegate
-2、在phone端必须要适配设备，要设置下面代理方法：
-[objc] view plain copy
-/* For iOS8.0, the only supported adaptive presentation styles are UIModalPresentationFullScreen and UIModalPresentationOverFullScreen. */  
-- (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller;  
--
-</code></pre>
-<p>iPhone下默认是UIModalPresentationFullScreen，需要手动设置为UIModalPresentationNone，否则，是普通的present全屏显示，没有弹窗效果。iPad不需要。<br>3、其他设置根据需求翻相关文档即可。<br>demo：<a href="https://github.com/Lynnll/UIPopOverLearning.git" target="_blank" rel="external">https://github.com/Lynnll/UIPopOverLearning.git</a></p>
-]]></content>
-      
-        <categories>
-            
-            <category> iOS </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> popover </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[内存管理]]></title>
-      <url>/2017/06/12/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/</url>
-      <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
-<p><strong>1. 物理地址和逻辑地址</strong></p>
-<p><strong>物理地址</strong>：加载到内存地址寄存器中的地址，内存单元的真正地址。在前端总线上传输的内存地址都是物理内存地址，编号从0开始一直到可用物理内存的最高端。这些数字被北桥(Nortbridge chip)映射到实际的内存条上。物理地址是明确的、最终用在总线上的编号，不必转换，不必分页，也没有特权级检查(no translation, no paging, no privilege checks)。 </p>
-<p><strong>逻辑地址</strong>：CPU所生成的地址。逻辑地址是内部和编程使用的、并不唯一。例如，你在进行C语言指针编程中，可以读取指针变量本身值(&amp;操作)，实际上这个值就是逻辑地址，它是相对于你当前进程数据段的地址（偏移地址），不和绝对物理地址相干。 </p>
-<p>为什么会有这两种地址？ </p>
-<p>个人觉的原因在于逻辑地址分配更加灵活，可以允许不唯一，看起来也较为直观，例如，一段代码中分配数组，逻辑地址上是连续的，然而在物理地址上，这个数组所占用的页可能分散开来，物理地址上就是不连续的，这样对程序的可理解性上有影响。另外，有了逻辑地址这个概念，才能使用虚拟内存技术。 </p>
-<p><strong>2. </strong>Paging，分页内存管理方案 </p>
-<p>(1) 分页的最大作用就在于：使得进程的物理地址空间可以是非连续的。 </p>
-<p>物理内存被划分为一小块一小块，每块被称为帧(Frame)。分配内存时，帧是分配时的最小单位，最少也要给一帧。在逻辑内存中，与帧对应的概念就是页(Page)。 </p>
-<p>逻辑地址的表示方式是：前部分是页码后部分是页偏移。 </p>
-<p>例如，已知逻辑空间地址为2^m个字节（也就是说逻辑地址的长度是m位），已知页大小是2^n字节。那么一共可以有2^(m-n)个页。因此页码部分会占m-n位，之后的n位，用来存储页偏移。 </p>
-<p>举个例子， 页大小为4B，而逻辑内存为32B（8页），逻辑地址0的页号为0，页号0对应帧5，因此逻辑地址映射为物理地址5<em>4+0=20。逻辑地址3映射物理地址5</em>4+3=23。逻辑地址13(4*3+1，页号为3，偏移为1，因此帧号为2)，映射到物理地址9。 </p>
-<p><img src="http://images.cnitblog.com/blog/48332/201311/12230204-439af747b09c4d9b9fc18cf69f531141.png" alt=""></p>
-<p>采用分页技术不会产生外部碎片(内存都被划分为帧)，但可能产生内部碎片(帧已经是最小单元，因此帧内部可能有空间没有用到)。 </p>
-<p>按概率计算下来，每个进程平均可有半个帧大小的内部碎片。 </p>
-<p>(2) 页表的硬件实现 </p>
-<p>上一小节中写到页表是逻辑地址转化到物理地址的关键所在。那么页表如何存储？ </p>
-<p>每个操作系统都有自己的方法来保存页表。绝大多数都会为每个进程分配一个页表。现在由于页表都比较大，所以放在内存中(以往是放在一组专用寄存器里)，其指针存在进程控制块(PCB)里，当进程被调度程序选中投入运行时，系统将其页表指针从进程控制块中取出并送入用户寄存器中。随后可以根据此首地址访问页表。 </p>
-<p>页表的存储方式是<strong>TLB(Translation look-aside buffer, 翻译后备缓冲器)</strong>+内存。TLB实际上是一组硬件缓冲所关联的快速内存。若没有TBL，操作系统需要两次内存访问来完成逻辑地址到物理地址的转换，访问页表算一次，在页表中查找算一次。TLB中存储页表中的一小部分条目，条目以键值对方式存储。 </p>
-<p><img src="http://images.cnitblog.com/blog/48332/201311/13090353-a81e30238dea4811b9b5382d3eeb0427.png" alt=""></p>
-<p>(3) 页表的数据结构 </p>
-<p>a. </p>
-<p>现有的笔记本电脑，内存地址空间一般为2^32字节以上。对于具有32位逻辑地址空间的计算机系统，如果系统的页大小为4KB(2^12B)，那么页表可以拥有2^(32-12)个，也就是一百多万个条目，假设每个条目占有4B，那每个进程都需要4MB的物理地址空间来存放页表本身。而且，页表本身需要分配在连续内存中。 </p>
-<p>为此，<strong>Hierarchical Paging(层次化分页)</strong>被提出，实际上就是将页号分为两部分，第一部分作为索引，第二部分作为页号的偏移。 </p>
-<p>以一个4kb页大小的32位系统为例。一个逻辑地址被分为20位的页码和12位的页偏移。因为要对页表进行再分页，所以该页号可分为10位的页码和10位的页偏移。这样一个逻辑地址就表示如下形式： </p>
-<p><img src="http://images.cnitblog.com/blog/48332/201311/13090739-306c82d13f914d7197a114eeae246ab5.png" alt=""></p>
-<p>地址转换过程如下： </p>
-<p><img src="http://images.cnitblog.com/blog/48332/201311/13091011-3f2922b4ed65405b8ccc65b9737fa014.png" alt=""></p>
-<p>地址由外向内转换，因此此方法也被称为<strong>forward-mapped page table(向前映射表)</strong>。 </p>
-<p>b. Hashed Page Tables 哈希页表 </p>
-<p>处理超过32位地址空间的常用方法是使用<strong>hashed page table(哈希页表)</strong>，并以虚拟页码作为哈希值。哈希页表的每一条目都包括一个链表的元素，这些元素哈希成同一位置。每个元素有三个域：虚拟页码，所映射的帧号，指向链表中下一个元素的指针。 </p>
-<p>个人看来，哈希页表的地址转换方式，实际上是<strong>Chaining(链接)</strong>方式，也就是一种哈希函数的溢出处理方式(另一种溢出处理方式叫做Open Addressing，开放寻址)，具体过程如下： </p>
-<p>逻辑地址需要大于32bit的地址空间来表示，但是操作系统仍只有32bit来表示地址。此时人们便想到虚拟页地址，虚拟地址可以在32bit表示范围之内，然后利用哈希函数完成逻辑地址到虚拟地址的映射，由于虚拟地址更少，哈希函数会出现溢出，这里使用Chaining来解决溢出。 </p>
-<p>逻辑地址中的页号(下图中的p)经过哈希函数的计算，算出虚拟地址中的页号，根据虚拟页号可以在哈希表中以O(1)方式寻址，用p与链表中的每一个元素的第一个域相比较。如果匹配，那么相应的帧号就用来形成物理地址。如果不匹配，就对链表中的下一个节点进行比较，以寻找一个匹配的页号。 </p>
-<p><img src="http://images.cnitblog.com/blog/48332/201311/13104212-e3957ec532234cbab06e42ac4d1b5311.png" alt=""></p>
-<p>c. Inverted page table 反向页表 </p>
-<p>时间关系，这段暂时略过。 </p>
-<p><strong>3. Segmentation，分段内存管理方案</strong></p>
-<p>采用分页内存管理有一个不可避免的问题：用户视角的内存和实际内存的分离。设想一段main函数代码，里面包含Sqrt函数的调用。按照编写者的理解，这段代码运行时，操作系统应该分配内存给：符号表(编译时使用)，栈(存放局部变量与函数参数值)，Sqrt代码段，主函数代码段等。这样，编写者就可以方便地指出：”函数sqrt内存模块的第五条指令”，来定位一个元素。而实际上，由于采用Paging的管理方式，所有的一切都只是散落在物理内存中的各个帧上，并不是以编写者的理解来划分模块。 </p>
-<p><img src="http://images.cnitblog.com/blog/48332/201311/13105648-d82857a6bb2a46e38469058978e92f8b.png" alt=""></p>
-<p>Segmentation的内存管理方式可以支持这种思路。逻辑地址空间由一组段组成。每个段都有名字和长度。地址指定了段名称和段内偏移。因此用户通过两个量来指定地址：段名称和偏移。段是编号的，通过段号而非段名称来引用。因此逻辑地址由有序对构成： </p>
-<p> <segment-number,offset>(&lt;段号s, 段内偏移d&gt;) </segment-number,offset></p>
-<p>段偏移d因该在0和段界限之间，如果合法，那么就与基地址相加而得到所需字节在物理内存中的地址。因此段表是一组基地址和界限寄存器对。 </p>
-<p><img src="http://images.cnitblog.com/blog/48332/201311/13112137-0cac9e80dbfc4bc7b9e8aa9ae664087c.png" alt=""></p>
-<p>例如下图，有5个段，编号0~4，例如段2为400B开始于位置4300，对段2第53字节的引用映射成位置4300+53=4353。而段0字节1222的引用则会触发地址错误，因为该段的仅为1000B长(界限为1000)。 </p>
-<p><img src="http://images.cnitblog.com/blog/48332/201311/13112441-167f767f7e1546a5ab123abbd4fad1e2.png" alt=""></p>
-<p><strong>4. 合并分段和分页的管理方案</strong></p>
-<p>在现有的Intel兼容计算机(x86)上，采用的内存管理方案是分段和分页合并的管理方案。 </p>
-<p>在这个方案中，逻辑地址，如前一节中所说，是由一个段标识符加上一个指定段内相对地址的偏移量，表示为 [段标识符：段内偏移量]。 </p>
-<p>这样的逻辑地址转换的过程是怎样呢？如下图所示： </p>
-<p><img src="http://images.cnitblog.com/blog/48332/201311/15110509-3e98d0a333644e01952e7675ee2dbb71.png" alt=""></p>
-<p>当CPU要执行一条引用了内存地址的指令时，转换过程就开始了。第一步是把逻辑地址转换成<strong>线性地址</strong>。但是，为什么不跳过这一步，而让软件直接使用线性地址（或物理地址呢？）原因主要是因为：</p>
-<p>(1) Intel的更新是渐进式而非革命式，新的处理器需要兼容和保留过往的设置。具体的原因，博文Memory Translation and Segmentation (<a href="http://blog.csdn.net/drshenlei/article/details/4261909" target="_blank" rel="external">http://blog.csdn.net/drshenlei/article/details/4261909</a>) 中讲的较为清楚。</p>
-<p>(2) 如上节所说，采用段内存管理，可以跟方便地进行地址保护(同一类型的地址逻辑地址在一起)。 </p>
-<p>下面讲逻辑地址到线性地址的部分。 </p>
-<p>在IBM OS/2 32位版本的操作系统，和Intel 386的环境下。操作系统采用的内存分配方式就是分段和分页合并的方式。 </p>
-<p>逻辑地址的实际上是一对&lt;选择符，偏移&gt;。 </p>
-<p>选择符的内容如下： </p>
-<p><img src="http://images.cnitblog.com/blog/48332/201311/15225957-67836817299c459db5405bbc75f15be0.jpg" alt=""></p>
-<p>从左开始，13位是索引(或者称为段号)，通过这个索引，可以定位到<strong>段描述符(segment descriptor)</strong>，而段描述符是可以真正记载了有关一个段的位置和大小信息， 以及访问控制的状态信息。段描述符一般由8个字节组成。由于8B较大，而Intel为了保持向后兼容，将段寄存器仍然规定为16-bit(尽管每个段寄存器事实上有一个64-bit长的不可见部分，但对于程序员来说，段寄存器就是16-bit的)，那么很明显，我们无法通过16-bit长度的段寄存器来直接引用64-bit的段描述符。因此在逻辑地址中，只用13bit记录其索引。而真正的段描述符，被放于数组之中。 </p>
-<p>这个内存中的数组就叫做<strong>GDT(Global Descriptor Table，全局描述表)</strong>，Intel的设计者门提供了一个寄存器GDTR用来存放GDT的入口地址。程序员将GDT设定在内存中某个位置之后，可以通过LGDT指令将GDT的入口地址装入此寄存器，从此以后，CPU就根据此寄存器中的内容作为GDT的入口来访问GDT了。 </p>
-<p>除了GDT之外，还有<strong>LDT(Local Descriptor **</strong>Table，本地描述表)**，但与GDT不同的是，LDT在系统中可以存在多个，每个进程可以拥有自己的LDT。LDT的内存地址在LDTR寄存器中。 </p>
-<p>在之前图中的TI位，就是用来表示此索引所指向的段描述符是存于全局描述表中，还是本地描述表中。=0，表示用GDT，=1表示用LDT。 </p>
-<p>RPL位，占2bit，是保护信息位，还没有仔细了解过这一块，暂时先不写。 </p>
-<p>找到，段描述符后，加上偏移量，便是线性地址。转换过程如下： </p>
-<p><img src="http://images.cnitblog.com/blog/48332/201311/15232144-4db8ba86c9564fcab7bab1c90bd9bf10.jpg" alt=""></p>
-<p>在Intel 386的环境下，线性地址转换为物理地址的过程，和第二节分页式内存管理中，层次分页中，逻辑地址转换为物理地址的方法类似。如下图。 </p>
-<p><img src="http://images.cnitblog.com/blog/48332/201311/15232858-b7f7f3c854a84da2b409e1a6bbe2211d.jpg" alt=""></p>
-<p>Intel 80386的地址转换全过程如下图： </p>
-<p><img src="http://images.cnitblog.com/blog/48332/201311/15224432-4c36b374c6db48898a6922b98c577313.png" alt=""></p>
-<p>内存管理部分是操作系统的核心功能之一，这次将理论部分整理出来，一是为了复习，二也是为了提纲挈领地为深入学习操作系统做准备。 </p>
-]]></content>
-      
-        <categories>
-            
-            <category> 操作系统 </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> cpu </tag>
             
         </tags>
         
@@ -3410,6 +3400,158 @@ Alamofire.upload(fileURL, to: urlString).responseData { response in
         <tags>
             
             <tag> Alamofire </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[UIPopoverPresentationController]]></title>
+      <url>/2017/06/12/UIPopoverPresentationController/</url>
+      <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a>
+<p>UIPopoverPresentationController 是 iOS8 后新增的，相当于pad端的UIPopOverController，以后我们也可以在iPhone上使用popOver啦。自己写了一个小demo，大概了熟悉了一下用法。后面有开发需求时会详细补充。<br>首先要知道一点是，我们并不需要创建一个UIPopoverPresentationController，他相当于UIViewController的属性，因此我们只需要创建UIViewController即可。<br>举个例子：假设我们要在 ViewController窗体弹窗，弹窗为FirstViewController（kind of UIViewController）我们用两种方式来实现<br>1、在self.view上创建一个button，给button添加弹窗事件；<br>2、在导航栏添加barButtonItem，给其添加弹窗时间。<br>弹窗事件：</p>
+<pre><code class="swift">1、button
+[objc] view plain copy
+- (void)buttonClick  
+{  
+    FirstViewController *firstVC = [[FirstViewController alloc] init];  
+    firstVC.modalPresentationStyle = UIModalPresentationPopover;  
+    firstVC.popoverPresentationController.sourceView = popOverButton;  //rect参数是以view的左上角为坐标原点（0，0）  
+    firstVC.popoverPresentationController.sourceRect = popOverButton.bounds; //指定箭头所指区域的矩形框范围（位置和尺寸），以view的左上角为坐标原点  
+    firstVC.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp; //箭头方向  
+    firstVC.popoverPresentationController.delegate = self;  
+    firstVC.preferredContentSize = CGSizeMake(100, 200);  
+    [self presentViewController:firstVC animated:YES completion:nil];  
+}  
+
+2、barButtonItem
+[objc] view plain copy
+- (void)rightBarButtonItemClick  
+{  
+    FirstViewController *firstVC = [[FirstViewController alloc]init];  
+    firstVC.modalPresentationStyle = UIModalPresentationPopover;  
+    /** 
+     *  由于导航上的控件没有指定frame，无法设置sourceView和sourceRect，用下面的。 
+     */  
+    firstVC.popoverPresentationController.barButtonItem = self.navigationItem.rightBarButtonItem;  
+    firstVC.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp;  
+    firstVC.popoverPresentationController.delegate = self;  
+    firstVC.preferredContentSize = CGSizeMake(100, 200);  
+    [self presentViewController:firstVC animated:YES completion:nil];  
+//    firstVC.popoverPresentationController.passthroughViews = nil;  
+}  
+注意几点：
+1、遵守代理：UIPopoverPresentationControllerDelegate
+2、在phone端必须要适配设备，要设置下面代理方法：
+[objc] view plain copy
+/* For iOS8.0, the only supported adaptive presentation styles are UIModalPresentationFullScreen and UIModalPresentationOverFullScreen. */  
+- (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller;  
+-
+</code></pre>
+<p>iPhone下默认是UIModalPresentationFullScreen，需要手动设置为UIModalPresentationNone，否则，是普通的present全屏显示，没有弹窗效果。iPad不需要。<br>3、其他设置根据需求翻相关文档即可。<br>demo：<a href="https://github.com/Lynnll/UIPopOverLearning.git" target="_blank" rel="external">https://github.com/Lynnll/UIPopOverLearning.git</a></p>
+]]></content>
+      
+        <categories>
+            
+            <category> iOS </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> popover </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[内存管理]]></title>
+      <url>/2017/06/12/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/</url>
+      <content type="html"><![CDATA[<script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
+<p><strong>1. 物理地址和逻辑地址</strong></p>
+<p><strong>物理地址</strong>：加载到内存地址寄存器中的地址，内存单元的真正地址。在前端总线上传输的内存地址都是物理内存地址，编号从0开始一直到可用物理内存的最高端。这些数字被北桥(Nortbridge chip)映射到实际的内存条上。物理地址是明确的、最终用在总线上的编号，不必转换，不必分页，也没有特权级检查(no translation, no paging, no privilege checks)。 </p>
+<p><strong>逻辑地址</strong>：CPU所生成的地址。逻辑地址是内部和编程使用的、并不唯一。例如，你在进行C语言指针编程中，可以读取指针变量本身值(&amp;操作)，实际上这个值就是逻辑地址，它是相对于你当前进程数据段的地址（偏移地址），不和绝对物理地址相干。 </p>
+<p>为什么会有这两种地址？ </p>
+<p>个人觉的原因在于逻辑地址分配更加灵活，可以允许不唯一，看起来也较为直观，例如，一段代码中分配数组，逻辑地址上是连续的，然而在物理地址上，这个数组所占用的页可能分散开来，物理地址上就是不连续的，这样对程序的可理解性上有影响。另外，有了逻辑地址这个概念，才能使用虚拟内存技术。 </p>
+<p><strong>2. </strong>Paging，分页内存管理方案 </p>
+<p>(1) 分页的最大作用就在于：使得进程的物理地址空间可以是非连续的。 </p>
+<p>物理内存被划分为一小块一小块，每块被称为帧(Frame)。分配内存时，帧是分配时的最小单位，最少也要给一帧。在逻辑内存中，与帧对应的概念就是页(Page)。 </p>
+<p>逻辑地址的表示方式是：前部分是页码后部分是页偏移。 </p>
+<p>例如，已知逻辑空间地址为2^m个字节（也就是说逻辑地址的长度是m位），已知页大小是2^n字节。那么一共可以有2^(m-n)个页。因此页码部分会占m-n位，之后的n位，用来存储页偏移。 </p>
+<p>举个例子， 页大小为4B，而逻辑内存为32B（8页），逻辑地址0的页号为0，页号0对应帧5，因此逻辑地址映射为物理地址5<em>4+0=20。逻辑地址3映射物理地址5</em>4+3=23。逻辑地址13(4*3+1，页号为3，偏移为1，因此帧号为2)，映射到物理地址9。 </p>
+<p><img src="http://images.cnitblog.com/blog/48332/201311/12230204-439af747b09c4d9b9fc18cf69f531141.png" alt=""></p>
+<p>采用分页技术不会产生外部碎片(内存都被划分为帧)，但可能产生内部碎片(帧已经是最小单元，因此帧内部可能有空间没有用到)。 </p>
+<p>按概率计算下来，每个进程平均可有半个帧大小的内部碎片。 </p>
+<p>(2) 页表的硬件实现 </p>
+<p>上一小节中写到页表是逻辑地址转化到物理地址的关键所在。那么页表如何存储？ </p>
+<p>每个操作系统都有自己的方法来保存页表。绝大多数都会为每个进程分配一个页表。现在由于页表都比较大，所以放在内存中(以往是放在一组专用寄存器里)，其指针存在进程控制块(PCB)里，当进程被调度程序选中投入运行时，系统将其页表指针从进程控制块中取出并送入用户寄存器中。随后可以根据此首地址访问页表。 </p>
+<p>页表的存储方式是<strong>TLB(Translation look-aside buffer, 翻译后备缓冲器)</strong>+内存。TLB实际上是一组硬件缓冲所关联的快速内存。若没有TBL，操作系统需要两次内存访问来完成逻辑地址到物理地址的转换，访问页表算一次，在页表中查找算一次。TLB中存储页表中的一小部分条目，条目以键值对方式存储。 </p>
+<p><img src="http://images.cnitblog.com/blog/48332/201311/13090353-a81e30238dea4811b9b5382d3eeb0427.png" alt=""></p>
+<p>(3) 页表的数据结构 </p>
+<p>a. </p>
+<p>现有的笔记本电脑，内存地址空间一般为2^32字节以上。对于具有32位逻辑地址空间的计算机系统，如果系统的页大小为4KB(2^12B)，那么页表可以拥有2^(32-12)个，也就是一百多万个条目，假设每个条目占有4B，那每个进程都需要4MB的物理地址空间来存放页表本身。而且，页表本身需要分配在连续内存中。 </p>
+<p>为此，<strong>Hierarchical Paging(层次化分页)</strong>被提出，实际上就是将页号分为两部分，第一部分作为索引，第二部分作为页号的偏移。 </p>
+<p>以一个4kb页大小的32位系统为例。一个逻辑地址被分为20位的页码和12位的页偏移。因为要对页表进行再分页，所以该页号可分为10位的页码和10位的页偏移。这样一个逻辑地址就表示如下形式： </p>
+<p><img src="http://images.cnitblog.com/blog/48332/201311/13090739-306c82d13f914d7197a114eeae246ab5.png" alt=""></p>
+<p>地址转换过程如下： </p>
+<p><img src="http://images.cnitblog.com/blog/48332/201311/13091011-3f2922b4ed65405b8ccc65b9737fa014.png" alt=""></p>
+<p>地址由外向内转换，因此此方法也被称为<strong>forward-mapped page table(向前映射表)</strong>。 </p>
+<p>b. Hashed Page Tables 哈希页表 </p>
+<p>处理超过32位地址空间的常用方法是使用<strong>hashed page table(哈希页表)</strong>，并以虚拟页码作为哈希值。哈希页表的每一条目都包括一个链表的元素，这些元素哈希成同一位置。每个元素有三个域：虚拟页码，所映射的帧号，指向链表中下一个元素的指针。 </p>
+<p>个人看来，哈希页表的地址转换方式，实际上是<strong>Chaining(链接)</strong>方式，也就是一种哈希函数的溢出处理方式(另一种溢出处理方式叫做Open Addressing，开放寻址)，具体过程如下： </p>
+<p>逻辑地址需要大于32bit的地址空间来表示，但是操作系统仍只有32bit来表示地址。此时人们便想到虚拟页地址，虚拟地址可以在32bit表示范围之内，然后利用哈希函数完成逻辑地址到虚拟地址的映射，由于虚拟地址更少，哈希函数会出现溢出，这里使用Chaining来解决溢出。 </p>
+<p>逻辑地址中的页号(下图中的p)经过哈希函数的计算，算出虚拟地址中的页号，根据虚拟页号可以在哈希表中以O(1)方式寻址，用p与链表中的每一个元素的第一个域相比较。如果匹配，那么相应的帧号就用来形成物理地址。如果不匹配，就对链表中的下一个节点进行比较，以寻找一个匹配的页号。 </p>
+<p><img src="http://images.cnitblog.com/blog/48332/201311/13104212-e3957ec532234cbab06e42ac4d1b5311.png" alt=""></p>
+<p>c. Inverted page table 反向页表 </p>
+<p>时间关系，这段暂时略过。 </p>
+<p><strong>3. Segmentation，分段内存管理方案</strong></p>
+<p>采用分页内存管理有一个不可避免的问题：用户视角的内存和实际内存的分离。设想一段main函数代码，里面包含Sqrt函数的调用。按照编写者的理解，这段代码运行时，操作系统应该分配内存给：符号表(编译时使用)，栈(存放局部变量与函数参数值)，Sqrt代码段，主函数代码段等。这样，编写者就可以方便地指出：”函数sqrt内存模块的第五条指令”，来定位一个元素。而实际上，由于采用Paging的管理方式，所有的一切都只是散落在物理内存中的各个帧上，并不是以编写者的理解来划分模块。 </p>
+<p><img src="http://images.cnitblog.com/blog/48332/201311/13105648-d82857a6bb2a46e38469058978e92f8b.png" alt=""></p>
+<p>Segmentation的内存管理方式可以支持这种思路。逻辑地址空间由一组段组成。每个段都有名字和长度。地址指定了段名称和段内偏移。因此用户通过两个量来指定地址：段名称和偏移。段是编号的，通过段号而非段名称来引用。因此逻辑地址由有序对构成： </p>
+<p> <segment-number,offset>(&lt;段号s, 段内偏移d&gt;) </segment-number,offset></p>
+<p>段偏移d因该在0和段界限之间，如果合法，那么就与基地址相加而得到所需字节在物理内存中的地址。因此段表是一组基地址和界限寄存器对。 </p>
+<p><img src="http://images.cnitblog.com/blog/48332/201311/13112137-0cac9e80dbfc4bc7b9e8aa9ae664087c.png" alt=""></p>
+<p>例如下图，有5个段，编号0~4，例如段2为400B开始于位置4300，对段2第53字节的引用映射成位置4300+53=4353。而段0字节1222的引用则会触发地址错误，因为该段的仅为1000B长(界限为1000)。 </p>
+<p><img src="http://images.cnitblog.com/blog/48332/201311/13112441-167f767f7e1546a5ab123abbd4fad1e2.png" alt=""></p>
+<p><strong>4. 合并分段和分页的管理方案</strong></p>
+<p>在现有的Intel兼容计算机(x86)上，采用的内存管理方案是分段和分页合并的管理方案。 </p>
+<p>在这个方案中，逻辑地址，如前一节中所说，是由一个段标识符加上一个指定段内相对地址的偏移量，表示为 [段标识符：段内偏移量]。 </p>
+<p>这样的逻辑地址转换的过程是怎样呢？如下图所示： </p>
+<p><img src="http://images.cnitblog.com/blog/48332/201311/15110509-3e98d0a333644e01952e7675ee2dbb71.png" alt=""></p>
+<p>当CPU要执行一条引用了内存地址的指令时，转换过程就开始了。第一步是把逻辑地址转换成<strong>线性地址</strong>。但是，为什么不跳过这一步，而让软件直接使用线性地址（或物理地址呢？）原因主要是因为：</p>
+<p>(1) Intel的更新是渐进式而非革命式，新的处理器需要兼容和保留过往的设置。具体的原因，博文Memory Translation and Segmentation (<a href="http://blog.csdn.net/drshenlei/article/details/4261909" target="_blank" rel="external">http://blog.csdn.net/drshenlei/article/details/4261909</a>) 中讲的较为清楚。</p>
+<p>(2) 如上节所说，采用段内存管理，可以跟方便地进行地址保护(同一类型的地址逻辑地址在一起)。 </p>
+<p>下面讲逻辑地址到线性地址的部分。 </p>
+<p>在IBM OS/2 32位版本的操作系统，和Intel 386的环境下。操作系统采用的内存分配方式就是分段和分页合并的方式。 </p>
+<p>逻辑地址的实际上是一对&lt;选择符，偏移&gt;。 </p>
+<p>选择符的内容如下： </p>
+<p><img src="http://images.cnitblog.com/blog/48332/201311/15225957-67836817299c459db5405bbc75f15be0.jpg" alt=""></p>
+<p>从左开始，13位是索引(或者称为段号)，通过这个索引，可以定位到<strong>段描述符(segment descriptor)</strong>，而段描述符是可以真正记载了有关一个段的位置和大小信息， 以及访问控制的状态信息。段描述符一般由8个字节组成。由于8B较大，而Intel为了保持向后兼容，将段寄存器仍然规定为16-bit(尽管每个段寄存器事实上有一个64-bit长的不可见部分，但对于程序员来说，段寄存器就是16-bit的)，那么很明显，我们无法通过16-bit长度的段寄存器来直接引用64-bit的段描述符。因此在逻辑地址中，只用13bit记录其索引。而真正的段描述符，被放于数组之中。 </p>
+<p>这个内存中的数组就叫做<strong>GDT(Global Descriptor Table，全局描述表)</strong>，Intel的设计者门提供了一个寄存器GDTR用来存放GDT的入口地址。程序员将GDT设定在内存中某个位置之后，可以通过LGDT指令将GDT的入口地址装入此寄存器，从此以后，CPU就根据此寄存器中的内容作为GDT的入口来访问GDT了。 </p>
+<p>除了GDT之外，还有<strong>LDT(Local Descriptor **</strong>Table，本地描述表)**，但与GDT不同的是，LDT在系统中可以存在多个，每个进程可以拥有自己的LDT。LDT的内存地址在LDTR寄存器中。 </p>
+<p>在之前图中的TI位，就是用来表示此索引所指向的段描述符是存于全局描述表中，还是本地描述表中。=0，表示用GDT，=1表示用LDT。 </p>
+<p>RPL位，占2bit，是保护信息位，还没有仔细了解过这一块，暂时先不写。 </p>
+<p>找到，段描述符后，加上偏移量，便是线性地址。转换过程如下： </p>
+<p><img src="http://images.cnitblog.com/blog/48332/201311/15232144-4db8ba86c9564fcab7bab1c90bd9bf10.jpg" alt=""></p>
+<p>在Intel 386的环境下，线性地址转换为物理地址的过程，和第二节分页式内存管理中，层次分页中，逻辑地址转换为物理地址的方法类似。如下图。 </p>
+<p><img src="http://images.cnitblog.com/blog/48332/201311/15232858-b7f7f3c854a84da2b409e1a6bbe2211d.jpg" alt=""></p>
+<p>Intel 80386的地址转换全过程如下图： </p>
+<p><img src="http://images.cnitblog.com/blog/48332/201311/15224432-4c36b374c6db48898a6922b98c577313.png" alt=""></p>
+<p>内存管理部分是操作系统的核心功能之一，这次将理论部分整理出来，一是为了复习，二也是为了提纲挈领地为深入学习操作系统做准备。 </p>
+]]></content>
+      
+        <categories>
+            
+            <category> 操作系统 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> cpu </tag>
             
         </tags>
         

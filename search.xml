@@ -3,6 +3,65 @@
   
     
     <entry>
+      <title><![CDATA[Ubuntu 14.04 配置iptables防火墙]]></title>
+      <url>/2017/08/22/Ubuntu%E9%85%8D%E7%BD%AE%E9%98%B2%E7%81%AB%E5%A2%99/</url>
+      <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
+<blockquote>
+<p>Ubuntu默认安装是没有开启任何防火墙的，为了服务器的安全，建议大家安装启用防火墙设置，这里推荐使用iptables防火墙.如果mysql启本地使用,可以不用打开3306端口. </p>
+</blockquote>
+<p><code># whereis iptables</code> #查看系统是否安装防火墙可以看到: </p>
+<pre><code>iptables: /sbin/iptables /usr/share/iptables /usr/share/man/man8/iptables.8.gz #表示已经安装iptables
+apt-get install iptables #如果默认没有安装，请运行此命令安装防火墙
+</code></pre><p><code># iptables -L</code> #查看防火墙配置信息，显示如下: </p>
+<pre><code>Chain INPUT (policy ACCEPT)
+target prot opt source destination
+Chain FORWARD (policy ACCEPT)
+target prot opt source destination
+Chain OUTPUT (policy ACCEPT)
+target prot opt source destination
+</code></pre><p><code># vi /etc/iptables.rules</code></p>
+<p>添加以下内容(备注:80是指web服务器端口,3306是指MySQL数据库链接端口,22是指SSH远程管理端口.) </p>
+<pre><code>*filter
+:INPUT DROP [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+:syn-flood - [0:0]
+-A INPUT -i lo -j ACCEPT
+-A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+-A INPUT -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT
+-A INPUT -p tcp -m state --state NEW -m tcp --dport 80 -j ACCEPT
+-A INPUT -p tcp -m state --state NEW -m tcp --dport 443 -j ACCEPT
+-A INPUT -p icmp -m limit --limit 100/sec --limit-burst 100 -j ACCEPT
+-A INPUT -p icmp -m limit --limit 1/s --limit-burst 10 -j ACCEPT
+-A INPUT -p tcp -m tcp --tcp-flags FIN,SYN,RST,ACK SYN -j syn-flood
+-A INPUT -j REJECT --reject-with icmp-host-prohibited
+-A syn-flood -p tcp -m limit --limit 3/sec --limit-burst 6 -j RETURN
+-A syn-flood -j REJECT --reject-with icmp-port-unreachable
+COMMIT
+</code></pre><p><code># iptables-restore &lt; /etc/iptables.rules</code> #使防火墙规则生效 </p>
+<p><code># vi /etc/network/if-pre-up.d/iptables</code> #创建文件，添加以下内容，使防火墙开机启动 </p>
+<pre><code>#!/bin/bash
+iptables-restore &lt; /etc/iptables.rules
+</code></pre><p><code># chmod +x /etc/network/if-pre-up.d/iptables</code> #添加执行权限 </p>
+<p><code># iptables -L -n</code>查看规则是否生效. </p>
+]]></content>
+      
+        <categories>
+            
+            <category> 那些年倒腾过的服务器 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> iptables </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[Swift中你应该知道的一些有用的tips]]></title>
       <url>/2017/08/03/Swift%E4%B8%AD%E6%9C%89%E7%94%A8%E7%9A%84tips/</url>
       <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a>                           
@@ -2750,6 +2809,67 @@ Alamofire.upload(fileURL, to: urlString).responseData { response in
     </entry>
     
     <entry>
+      <title><![CDATA[UIPopoverPresentationController]]></title>
+      <url>/2017/06/12/UIPopoverPresentationController/</url>
+      <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a>
+<p>UIPopoverPresentationController 是 iOS8 后新增的，相当于pad端的UIPopOverController，以后我们也可以在iPhone上使用popOver啦。自己写了一个小demo，大概了熟悉了一下用法。后面有开发需求时会详细补充。<br>首先要知道一点是，我们并不需要创建一个UIPopoverPresentationController，他相当于UIViewController的属性，因此我们只需要创建UIViewController即可。<br>举个例子：假设我们要在 ViewController窗体弹窗，弹窗为FirstViewController（kind of UIViewController）我们用两种方式来实现<br>1、在self.view上创建一个button，给button添加弹窗事件；<br>2、在导航栏添加barButtonItem，给其添加弹窗时间。<br>弹窗事件：</p>
+<pre class=" language-swift"><code class="language-swift"><span class="token number">1</span>、button
+<span class="token punctuation">[</span>objc<span class="token punctuation">]</span> view plain copy
+<span class="token operator">-</span> <span class="token punctuation">(</span>void<span class="token punctuation">)</span>buttonClick  
+<span class="token punctuation">{</span>  
+    <span class="token builtin">FirstViewController</span> <span class="token operator">*</span>firstVC <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token builtin">FirstViewController</span> alloc<span class="token punctuation">]</span> <span class="token keyword">init</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  
+    firstVC<span class="token punctuation">.</span>modalPresentationStyle <span class="token operator">=</span> <span class="token builtin">UIModalPresentationPopover</span><span class="token punctuation">;</span>  
+    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>sourceView <span class="token operator">=</span> popOverButton<span class="token punctuation">;</span>  <span class="token comment" spellcheck="true">//rect参数是以view的左上角为坐标原点（0，0）  </span>
+    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>sourceRect <span class="token operator">=</span> popOverButton<span class="token punctuation">.</span>bounds<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//指定箭头所指区域的矩形框范围（位置和尺寸），以view的左上角为坐标原点  </span>
+    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>permittedArrowDirections <span class="token operator">=</span> <span class="token builtin">UIPopoverArrowDirectionUp</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//箭头方向  </span>
+    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>delegate <span class="token operator">=</span> <span class="token keyword">self</span><span class="token punctuation">;</span>  
+    firstVC<span class="token punctuation">.</span>preferredContentSize <span class="token operator">=</span> <span class="token function">CGSizeMake</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">,</span> <span class="token number">200</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
+    <span class="token punctuation">[</span><span class="token keyword">self</span> presentViewController<span class="token punctuation">:</span>firstVC animated<span class="token punctuation">:</span><span class="token constant">YES</span> completion<span class="token punctuation">:</span><span class="token constant">nil</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  
+<span class="token punctuation">}</span>  
+
+<span class="token number">2</span>、barButtonItem
+<span class="token punctuation">[</span>objc<span class="token punctuation">]</span> view plain copy
+<span class="token operator">-</span> <span class="token punctuation">(</span>void<span class="token punctuation">)</span>rightBarButtonItemClick  
+<span class="token punctuation">{</span>  
+    <span class="token builtin">FirstViewController</span> <span class="token operator">*</span>firstVC <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token builtin">FirstViewController</span> alloc<span class="token punctuation">]</span><span class="token keyword">init</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  
+    firstVC<span class="token punctuation">.</span>modalPresentationStyle <span class="token operator">=</span> <span class="token builtin">UIModalPresentationPopover</span><span class="token punctuation">;</span>  
+    <span class="token comment" spellcheck="true">/** 
+     *  由于导航上的控件没有指定frame，无法设置sourceView和sourceRect，用下面的。 
+     */</span>  
+    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>barButtonItem <span class="token operator">=</span> <span class="token keyword">self</span><span class="token punctuation">.</span>navigationItem<span class="token punctuation">.</span>rightBarButtonItem<span class="token punctuation">;</span>  
+    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>permittedArrowDirections <span class="token operator">=</span> <span class="token builtin">UIPopoverArrowDirectionUp</span><span class="token punctuation">;</span>  
+    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>delegate <span class="token operator">=</span> <span class="token keyword">self</span><span class="token punctuation">;</span>  
+    firstVC<span class="token punctuation">.</span>preferredContentSize <span class="token operator">=</span> <span class="token function">CGSizeMake</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">,</span> <span class="token number">200</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
+    <span class="token punctuation">[</span><span class="token keyword">self</span> presentViewController<span class="token punctuation">:</span>firstVC animated<span class="token punctuation">:</span><span class="token constant">YES</span> completion<span class="token punctuation">:</span><span class="token constant">nil</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  
+<span class="token comment" spellcheck="true">//    firstVC.popoverPresentationController.passthroughViews = nil;  </span>
+<span class="token punctuation">}</span>  
+注意几点：
+<span class="token number">1</span>、遵守代理：<span class="token builtin">UIPopoverPresentationControllerDelegate</span>
+<span class="token number">2</span>、在phone端必须要适配设备，要设置下面代理方法：
+<span class="token punctuation">[</span>objc<span class="token punctuation">]</span> view plain copy
+<span class="token comment" spellcheck="true">/* For iOS8.0, the only supported adaptive presentation styles are UIModalPresentationFullScreen and UIModalPresentationOverFullScreen. */</span>  
+<span class="token operator">-</span> <span class="token punctuation">(</span><span class="token builtin">UIModalPresentationStyle</span><span class="token punctuation">)</span>adaptivePresentationStyleForPresentationController<span class="token punctuation">:</span><span class="token punctuation">(</span><span class="token builtin">UIPresentationController</span> <span class="token operator">*</span><span class="token punctuation">)</span>controller<span class="token punctuation">;</span>  
+<span class="token operator">-</span>
+</code></pre>
+<p>iPhone下默认是UIModalPresentationFullScreen，需要手动设置为UIModalPresentationNone，否则，是普通的present全屏显示，没有弹窗效果。iPad不需要。<br>3、其他设置根据需求翻相关文档即可。<br>demo：<a href="https://github.com/Lynnll/UIPopOverLearning.git" target="_blank" rel="external">https://github.com/Lynnll/UIPopOverLearning.git</a></p>
+]]></content>
+      
+        <categories>
+            
+            <category> iOS </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> popover </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[Alamofire 4.0 Migration Guide]]></title>
       <url>/2017/06/12/Alamofire/</url>
       <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
@@ -2810,189 +2930,189 @@ Alamofire.upload(fileURL, to: urlString).responseData { response in
 </ul>
 <p>We’ve also reorganized the file structure and organization patterns significantly to make it easier to follow the code. We hope that this will encourage more users to get to know the internal structure and implementation of Alamofire. Knowledge is power.</p>
 <h3 id="Making-Requests"><a href="#Making-Requests" class="headerlink" title="Making Requests"></a>Making Requests</h3><p>Since making requests is certainly the most common operation in Alamofire, here are some examples of Alamofire 3.x requests compared to their new equivalents in Alamofire 4.</p>
-<h4 id="Data-Request-Simple-with-URL-string"><a href="#Data-Request-Simple-with-URL-string" class="headerlink" title="Data Request - Simple with URL string"></a>Data Request - Simple with URL string</h4><pre><code class="swift">// Alamofire 3
-Alamofire.request(.GET, urlString).response { request, response, data, error in
-    print(request)
-    print(response)
-    print(data)
-    print(error)
-}
+<h4 id="Data-Request-Simple-with-URL-string"><a href="#Data-Request-Simple-with-URL-string" class="headerlink" title="Data Request - Simple with URL string"></a>Data Request - Simple with URL string</h4><pre class=" language-swift"><code class="language-swift"><span class="token comment" spellcheck="true">// Alamofire 3</span>
+<span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">request</span><span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token constant">GET</span><span class="token punctuation">,</span> urlString<span class="token punctuation">)</span><span class="token punctuation">.</span>response <span class="token punctuation">{</span> request<span class="token punctuation">,</span> response<span class="token punctuation">,</span> data<span class="token punctuation">,</span> error <span class="token keyword">in</span>
+    <span class="token function">print</span><span class="token punctuation">(</span>request<span class="token punctuation">)</span>
+    <span class="token function">print</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span>
+    <span class="token function">print</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span>
+    <span class="token function">print</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
 
-// Alamofire 4
-Alamofire.request(urlString).response { response in // method defaults to `.get`
-    debugPrint(response)
-}
+<span class="token comment" spellcheck="true">// Alamofire 4</span>
+<span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">request</span><span class="token punctuation">(</span>urlString<span class="token punctuation">)</span><span class="token punctuation">.</span>response <span class="token punctuation">{</span> response <span class="token keyword">in</span> <span class="token comment" spellcheck="true">// method defaults to `.get`</span>
+    <span class="token function">debugPrint</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
 </code></pre>
-<h4 id="Data-Request-Complex-with-URL-string"><a href="#Data-Request-Complex-with-URL-string" class="headerlink" title="Data Request - Complex with URL string"></a>Data Request - Complex with URL string</h4><pre><code class="swift">// Alamofire 3
-let parameters: [String: AnyObject] = [&quot;foo&quot;: &quot;bar&quot;]
+<h4 id="Data-Request-Complex-with-URL-string"><a href="#Data-Request-Complex-with-URL-string" class="headerlink" title="Data Request - Complex with URL string"></a>Data Request - Complex with URL string</h4><pre class=" language-swift"><code class="language-swift"><span class="token comment" spellcheck="true">// Alamofire 3</span>
+<span class="token keyword">let</span> parameters<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token builtin">String</span><span class="token punctuation">:</span> <span class="token builtin">AnyObject</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"foo"</span><span class="token punctuation">:</span> <span class="token string">"bar"</span><span class="token punctuation">]</span>
 
-Alamofire.request(.GET, urlString, parameters: parameters, encoding: .JSON)
-    .progress { bytesRead, totalBytesRead, totalBytesExpectedToRead in
-        print(&quot;Bytes: \(bytesRead), Total Bytes: \(totalBytesRead), Total Bytes Expected: \(totalBytesExpectedToRead)&quot;)
-    }
-    .validate { request, response in
-        // Custom evaluation closure (no access to server data)
-        return .success
-    }
-    .responseJSON { response in
-        debugPrint(response)
-    }
+<span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">request</span><span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token constant">GET</span><span class="token punctuation">,</span> urlString<span class="token punctuation">,</span> parameters<span class="token punctuation">:</span> parameters<span class="token punctuation">,</span> encoding<span class="token punctuation">:</span> <span class="token punctuation">.</span><span class="token constant">JSON</span><span class="token punctuation">)</span>
+    <span class="token punctuation">.</span>progress <span class="token punctuation">{</span> bytesRead<span class="token punctuation">,</span> totalBytesRead<span class="token punctuation">,</span> totalBytesExpectedToRead <span class="token keyword">in</span>
+        <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"Bytes: <span class="token interpolation"><span class="token delimiter variable">\(</span>bytesRead<span class="token delimiter variable">)</span></span>, Total Bytes: <span class="token interpolation"><span class="token delimiter variable">\(</span>totalBytesRead<span class="token delimiter variable">)</span></span>, Total Bytes Expected: <span class="token interpolation"><span class="token delimiter variable">\(</span>totalBytesExpectedToRead<span class="token delimiter variable">)</span></span>"</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    <span class="token punctuation">.</span>validate <span class="token punctuation">{</span> request<span class="token punctuation">,</span> response <span class="token keyword">in</span>
+        <span class="token comment" spellcheck="true">// Custom evaluation closure (no access to server data)</span>
+        <span class="token keyword">return</span> <span class="token punctuation">.</span>success
+    <span class="token punctuation">}</span>
+    <span class="token punctuation">.</span>responseJSON <span class="token punctuation">{</span> response <span class="token keyword">in</span>
+        <span class="token function">debugPrint</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
 
-// Alamofire 4
-let parameters: Parameters = [&quot;foo&quot;: &quot;bar&quot;]
+<span class="token comment" spellcheck="true">// Alamofire 4</span>
+<span class="token keyword">let</span> parameters<span class="token punctuation">:</span> <span class="token builtin">Parameters</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"foo"</span><span class="token punctuation">:</span> <span class="token string">"bar"</span><span class="token punctuation">]</span>
 
-Alamofire.request(urlString, method: .get, parameters: parameters, encoding: JSONEncoding.default)
-    .downloadProgress(queue: DispatchQueue.global(qos: .utility)) { progress in
-        print(&quot;Progress: \(progress.fractionCompleted)&quot;)
-    }
-    .validate { request, response, data in
-        // Custom evaluation closure now includes data (allows you to parse data to dig out error messages if necessary)
-        return .success
-    }
-    .responseJSON { response in
-        debugPrint(response)
-    }
+<span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">request</span><span class="token punctuation">(</span>urlString<span class="token punctuation">,</span> method<span class="token punctuation">:</span> <span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">,</span> parameters<span class="token punctuation">:</span> parameters<span class="token punctuation">,</span> encoding<span class="token punctuation">:</span> <span class="token builtin">JSONEncoding</span><span class="token punctuation">.</span><span class="token keyword">default</span><span class="token punctuation">)</span>
+    <span class="token punctuation">.</span><span class="token function">downloadProgress</span><span class="token punctuation">(</span>queue<span class="token punctuation">:</span> <span class="token builtin">DispatchQueue</span><span class="token punctuation">.</span><span class="token function">global</span><span class="token punctuation">(</span>qos<span class="token punctuation">:</span> <span class="token punctuation">.</span>utility<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> progress <span class="token keyword">in</span>
+        <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"Progress: <span class="token interpolation"><span class="token delimiter variable">\(</span>progress<span class="token punctuation">.</span>fractionCompleted<span class="token delimiter variable">)</span></span>"</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    <span class="token punctuation">.</span>validate <span class="token punctuation">{</span> request<span class="token punctuation">,</span> response<span class="token punctuation">,</span> data <span class="token keyword">in</span>
+        <span class="token comment" spellcheck="true">// Custom evaluation closure now includes data (allows you to parse data to dig out error messages if necessary)</span>
+        <span class="token keyword">return</span> <span class="token punctuation">.</span>success
+    <span class="token punctuation">}</span>
+    <span class="token punctuation">.</span>responseJSON <span class="token punctuation">{</span> response <span class="token keyword">in</span>
+        <span class="token function">debugPrint</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
 </code></pre>
-<h4 id="Download-Request-Simple-with-URL-string"><a href="#Download-Request-Simple-with-URL-string" class="headerlink" title="Download Request - Simple with URL string"></a>Download Request - Simple with URL string</h4><pre><code class="swift">// Alamofire 3
-let destination = DownloadRequest.suggestedDownloadDestination()
+<h4 id="Download-Request-Simple-with-URL-string"><a href="#Download-Request-Simple-with-URL-string" class="headerlink" title="Download Request - Simple with URL string"></a>Download Request - Simple with URL string</h4><pre class=" language-swift"><code class="language-swift"><span class="token comment" spellcheck="true">// Alamofire 3</span>
+<span class="token keyword">let</span> destination <span class="token operator">=</span> <span class="token builtin">DownloadRequest</span><span class="token punctuation">.</span><span class="token function">suggestedDownloadDestination</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 
-Alamofire.download(.GET, urlString, destination: destination).response { request, response, data, error in
-    // What is fileURL...not easy to get
-    print(request)
-    print(response)
-    print(data)
-    print(error)
-}
+<span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">download</span><span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token constant">GET</span><span class="token punctuation">,</span> urlString<span class="token punctuation">,</span> destination<span class="token punctuation">:</span> destination<span class="token punctuation">)</span><span class="token punctuation">.</span>response <span class="token punctuation">{</span> request<span class="token punctuation">,</span> response<span class="token punctuation">,</span> data<span class="token punctuation">,</span> error <span class="token keyword">in</span>
+    <span class="token comment" spellcheck="true">// What is fileURL...not easy to get</span>
+    <span class="token function">print</span><span class="token punctuation">(</span>request<span class="token punctuation">)</span>
+    <span class="token function">print</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span>
+    <span class="token function">print</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span>
+    <span class="token function">print</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
 
-// Alamofire 4
-let destination = DownloadRequest.suggestedDownloadDestination()
+<span class="token comment" spellcheck="true">// Alamofire 4</span>
+<span class="token keyword">let</span> destination <span class="token operator">=</span> <span class="token builtin">DownloadRequest</span><span class="token punctuation">.</span><span class="token function">suggestedDownloadDestination</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 
-Alamofire.download(urlString, to: destination).response { response in // method defaults to `.get`
-    print(response.request)
-    print(response.response)
-    print(response.temporaryURL)
-    print(response.destinationURL)
-    print(response.error)
-}
+<span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">download</span><span class="token punctuation">(</span>urlString<span class="token punctuation">,</span> to<span class="token punctuation">:</span> destination<span class="token punctuation">)</span><span class="token punctuation">.</span>response <span class="token punctuation">{</span> response <span class="token keyword">in</span> <span class="token comment" spellcheck="true">// method defaults to `.get`</span>
+    <span class="token function">print</span><span class="token punctuation">(</span>response<span class="token punctuation">.</span>request<span class="token punctuation">)</span>
+    <span class="token function">print</span><span class="token punctuation">(</span>response<span class="token punctuation">.</span>response<span class="token punctuation">)</span>
+    <span class="token function">print</span><span class="token punctuation">(</span>response<span class="token punctuation">.</span>temporaryURL<span class="token punctuation">)</span>
+    <span class="token function">print</span><span class="token punctuation">(</span>response<span class="token punctuation">.</span>destinationURL<span class="token punctuation">)</span>
+    <span class="token function">print</span><span class="token punctuation">(</span>response<span class="token punctuation">.</span>error<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
 </code></pre>
-<h4 id="Download-Request-Simple-with-URL-request"><a href="#Download-Request-Simple-with-URL-request" class="headerlink" title="Download Request - Simple with URL request"></a>Download Request - Simple with URL request</h4><pre><code class="swift">// Alamofire 3
-let destination = DownloadRequest.suggestedDownloadDestination()
+<h4 id="Download-Request-Simple-with-URL-request"><a href="#Download-Request-Simple-with-URL-request" class="headerlink" title="Download Request - Simple with URL request"></a>Download Request - Simple with URL request</h4><pre class=" language-swift"><code class="language-swift"><span class="token comment" spellcheck="true">// Alamofire 3</span>
+<span class="token keyword">let</span> destination <span class="token operator">=</span> <span class="token builtin">DownloadRequest</span><span class="token punctuation">.</span><span class="token function">suggestedDownloadDestination</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 
-Alamofire.download(urlRequest, destination: destination).validate().responseData { response in
-    // What is fileURL...not easy to get
-    debugPrint(response)
-}
+<span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">download</span><span class="token punctuation">(</span>urlRequest<span class="token punctuation">,</span> destination<span class="token punctuation">:</span> destination<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">validate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>responseData <span class="token punctuation">{</span> response <span class="token keyword">in</span>
+    <span class="token comment" spellcheck="true">// What is fileURL...not easy to get</span>
+    <span class="token function">debugPrint</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
 
-// Alamofire 4
-Alamofire.download(urlRequest, to: destination).validate().responseData { response in
-    debugPrint(response)
-    print(response.temporaryURL)
-    print(response.destinationURL)
-}
+<span class="token comment" spellcheck="true">// Alamofire 4</span>
+<span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">download</span><span class="token punctuation">(</span>urlRequest<span class="token punctuation">,</span> to<span class="token punctuation">:</span> destination<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">validate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>responseData <span class="token punctuation">{</span> response <span class="token keyword">in</span>
+    <span class="token function">debugPrint</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span>
+    <span class="token function">print</span><span class="token punctuation">(</span>response<span class="token punctuation">.</span>temporaryURL<span class="token punctuation">)</span>
+    <span class="token function">print</span><span class="token punctuation">(</span>response<span class="token punctuation">.</span>destinationURL<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
 </code></pre>
-<h4 id="Download-Request-Complex-with-URL-string"><a href="#Download-Request-Complex-with-URL-string" class="headerlink" title="Download Request - Complex with URL string"></a>Download Request - Complex with URL string</h4><pre><code class="swift">// Alamofire 3
-let fileURL: NSURL
-let destination: Request.DownloadFileDestination = { _, _ in fileURL }
-let parameters: [String: AnyObject] = [&quot;foo&quot;: &quot;bar&quot;]
+<h4 id="Download-Request-Complex-with-URL-string"><a href="#Download-Request-Complex-with-URL-string" class="headerlink" title="Download Request - Complex with URL string"></a>Download Request - Complex with URL string</h4><pre class=" language-swift"><code class="language-swift"><span class="token comment" spellcheck="true">// Alamofire 3</span>
+<span class="token keyword">let</span> fileURL<span class="token punctuation">:</span> <span class="token constant">NSURL</span>
+<span class="token keyword">let</span> destination<span class="token punctuation">:</span> <span class="token builtin">Request</span><span class="token punctuation">.</span><span class="token builtin">DownloadFileDestination</span> <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token number">_</span><span class="token punctuation">,</span> <span class="token number">_</span> <span class="token keyword">in</span> fileURL <span class="token punctuation">}</span>
+<span class="token keyword">let</span> parameters<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token builtin">String</span><span class="token punctuation">:</span> <span class="token builtin">AnyObject</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"foo"</span><span class="token punctuation">:</span> <span class="token string">"bar"</span><span class="token punctuation">]</span>
 
-Alamofire.download(.GET, urlString, parameters: parameters, encoding: .JSON, to: destination)
-    .progress { bytesRead, totalBytesRead, totalBytesExpectedToRead in
-        print(&quot;Bytes: \(bytesRead), Total Bytes: \(totalBytesRead), Total Bytes Expected: \(totalBytesExpectedToRead)&quot;)
-    }
-    .validate { request, response in
-        // Custom evaluation implementation (no access to temporary or destination URLs)
-        return .success
-    }
-    .responseJSON { response in
-        print(fileURL) // Only accessible if captured in closure scope, not ideal
-        debugPrint(response)
-    }
+<span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">download</span><span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token constant">GET</span><span class="token punctuation">,</span> urlString<span class="token punctuation">,</span> parameters<span class="token punctuation">:</span> parameters<span class="token punctuation">,</span> encoding<span class="token punctuation">:</span> <span class="token punctuation">.</span><span class="token constant">JSON</span><span class="token punctuation">,</span> to<span class="token punctuation">:</span> destination<span class="token punctuation">)</span>
+    <span class="token punctuation">.</span>progress <span class="token punctuation">{</span> bytesRead<span class="token punctuation">,</span> totalBytesRead<span class="token punctuation">,</span> totalBytesExpectedToRead <span class="token keyword">in</span>
+        <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"Bytes: <span class="token interpolation"><span class="token delimiter variable">\(</span>bytesRead<span class="token delimiter variable">)</span></span>, Total Bytes: <span class="token interpolation"><span class="token delimiter variable">\(</span>totalBytesRead<span class="token delimiter variable">)</span></span>, Total Bytes Expected: <span class="token interpolation"><span class="token delimiter variable">\(</span>totalBytesExpectedToRead<span class="token delimiter variable">)</span></span>"</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    <span class="token punctuation">.</span>validate <span class="token punctuation">{</span> request<span class="token punctuation">,</span> response <span class="token keyword">in</span>
+        <span class="token comment" spellcheck="true">// Custom evaluation implementation (no access to temporary or destination URLs)</span>
+        <span class="token keyword">return</span> <span class="token punctuation">.</span>success
+    <span class="token punctuation">}</span>
+    <span class="token punctuation">.</span>responseJSON <span class="token punctuation">{</span> response <span class="token keyword">in</span>
+        <span class="token function">print</span><span class="token punctuation">(</span>fileURL<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// Only accessible if captured in closure scope, not ideal</span>
+        <span class="token function">debugPrint</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
 
-// Alamofire 4
-let fileURL: URL
-let destination: DownloadRequest.DownloadFileDestination = { _, _ in 
-    return (fileURL, [.createIntermediateDirectories, .removePreviousFile]) 
-}
-let parameters: Parameters = [&quot;foo&quot;: &quot;bar&quot;]
+<span class="token comment" spellcheck="true">// Alamofire 4</span>
+<span class="token keyword">let</span> fileURL<span class="token punctuation">:</span> <span class="token constant">URL</span>
+<span class="token keyword">let</span> destination<span class="token punctuation">:</span> <span class="token builtin">DownloadRequest</span><span class="token punctuation">.</span><span class="token builtin">DownloadFileDestination</span> <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token number">_</span><span class="token punctuation">,</span> <span class="token number">_</span> <span class="token keyword">in</span> 
+    <span class="token keyword">return</span> <span class="token punctuation">(</span>fileURL<span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token punctuation">.</span>createIntermediateDirectories<span class="token punctuation">,</span> <span class="token punctuation">.</span>removePreviousFile<span class="token punctuation">]</span><span class="token punctuation">)</span> 
+<span class="token punctuation">}</span>
+<span class="token keyword">let</span> parameters<span class="token punctuation">:</span> <span class="token builtin">Parameters</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"foo"</span><span class="token punctuation">:</span> <span class="token string">"bar"</span><span class="token punctuation">]</span>
 
-Alamofire.download(urlString, method: .get, parameters: parameters, encoding: JSONEncoding.default, to: destination)
-    .downloadProgress(queue: DispatchQueue.global(qos: .utility)) { progress in
-        print(&quot;Progress: \(progress.fractionCompleted)&quot;)
-    }
-    .validate { request, response, temporaryURL, destinationURL in
-        // Custom evaluation closure now includes file URLs (allows you to parse out error messages if necessary)
-        return .success
-    }
-    .responseJSON { response in
-        debugPrint(response)
-        print(response.temporaryURL)
-        print(response.destinationURL)
-    }
+<span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">download</span><span class="token punctuation">(</span>urlString<span class="token punctuation">,</span> method<span class="token punctuation">:</span> <span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">,</span> parameters<span class="token punctuation">:</span> parameters<span class="token punctuation">,</span> encoding<span class="token punctuation">:</span> <span class="token builtin">JSONEncoding</span><span class="token punctuation">.</span><span class="token keyword">default</span><span class="token punctuation">,</span> to<span class="token punctuation">:</span> destination<span class="token punctuation">)</span>
+    <span class="token punctuation">.</span><span class="token function">downloadProgress</span><span class="token punctuation">(</span>queue<span class="token punctuation">:</span> <span class="token builtin">DispatchQueue</span><span class="token punctuation">.</span><span class="token function">global</span><span class="token punctuation">(</span>qos<span class="token punctuation">:</span> <span class="token punctuation">.</span>utility<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> progress <span class="token keyword">in</span>
+        <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"Progress: <span class="token interpolation"><span class="token delimiter variable">\(</span>progress<span class="token punctuation">.</span>fractionCompleted<span class="token delimiter variable">)</span></span>"</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    <span class="token punctuation">.</span>validate <span class="token punctuation">{</span> request<span class="token punctuation">,</span> response<span class="token punctuation">,</span> temporaryURL<span class="token punctuation">,</span> destinationURL <span class="token keyword">in</span>
+        <span class="token comment" spellcheck="true">// Custom evaluation closure now includes file URLs (allows you to parse out error messages if necessary)</span>
+        <span class="token keyword">return</span> <span class="token punctuation">.</span>success
+    <span class="token punctuation">}</span>
+    <span class="token punctuation">.</span>responseJSON <span class="token punctuation">{</span> response <span class="token keyword">in</span>
+        <span class="token function">debugPrint</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span>
+        <span class="token function">print</span><span class="token punctuation">(</span>response<span class="token punctuation">.</span>temporaryURL<span class="token punctuation">)</span>
+        <span class="token function">print</span><span class="token punctuation">(</span>response<span class="token punctuation">.</span>destinationURL<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
 </code></pre>
-<h4 id="Upload-Request-Simple-with-URL-string"><a href="#Upload-Request-Simple-with-URL-string" class="headerlink" title="Upload Request - Simple with URL string"></a>Upload Request - Simple with URL string</h4><pre><code class="swift">// Alamofire 3
-Alamofire.upload(.POST, urlString, data: data).response { request, response, data, error in
-    print(request)
-    print(response)
-    print(data)
-    print(error)
-}
+<h4 id="Upload-Request-Simple-with-URL-string"><a href="#Upload-Request-Simple-with-URL-string" class="headerlink" title="Upload Request - Simple with URL string"></a>Upload Request - Simple with URL string</h4><pre class=" language-swift"><code class="language-swift"><span class="token comment" spellcheck="true">// Alamofire 3</span>
+<span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">upload</span><span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token constant">POST</span><span class="token punctuation">,</span> urlString<span class="token punctuation">,</span> data<span class="token punctuation">:</span> data<span class="token punctuation">)</span><span class="token punctuation">.</span>response <span class="token punctuation">{</span> request<span class="token punctuation">,</span> response<span class="token punctuation">,</span> data<span class="token punctuation">,</span> error <span class="token keyword">in</span>
+    <span class="token function">print</span><span class="token punctuation">(</span>request<span class="token punctuation">)</span>
+    <span class="token function">print</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span>
+    <span class="token function">print</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span>
+    <span class="token function">print</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
 
-// Alamofire 4
-Alamofire.upload(data, to: urlString).response { response in // method defaults to `.post`
-    debugPrint(response)
-}
+<span class="token comment" spellcheck="true">// Alamofire 4</span>
+<span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">upload</span><span class="token punctuation">(</span>data<span class="token punctuation">,</span> to<span class="token punctuation">:</span> urlString<span class="token punctuation">)</span><span class="token punctuation">.</span>response <span class="token punctuation">{</span> response <span class="token keyword">in</span> <span class="token comment" spellcheck="true">// method defaults to `.post`</span>
+    <span class="token function">debugPrint</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
 </code></pre>
-<h4 id="Upload-Request-Simple-with-URL-request"><a href="#Upload-Request-Simple-with-URL-request" class="headerlink" title="Upload Request - Simple with URL request"></a>Upload Request - Simple with URL request</h4><pre><code class="swift">// Alamofire 3
-Alamofire.upload(urlRequest, file: fileURL).validate().responseData { response in
-    debugPrint(response)
-}
+<h4 id="Upload-Request-Simple-with-URL-request"><a href="#Upload-Request-Simple-with-URL-request" class="headerlink" title="Upload Request - Simple with URL request"></a>Upload Request - Simple with URL request</h4><pre class=" language-swift"><code class="language-swift"><span class="token comment" spellcheck="true">// Alamofire 3</span>
+<span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">upload</span><span class="token punctuation">(</span>urlRequest<span class="token punctuation">,</span> file<span class="token punctuation">:</span> fileURL<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">validate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>responseData <span class="token punctuation">{</span> response <span class="token keyword">in</span>
+    <span class="token function">debugPrint</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
 
-// Alamofire 4
-Alamofire.upload(fileURL, with: urlRequest).validate().responseData { response in
-    debugPrint(response)
-}
+<span class="token comment" spellcheck="true">// Alamofire 4</span>
+<span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">upload</span><span class="token punctuation">(</span>fileURL<span class="token punctuation">,</span> with<span class="token punctuation">:</span> urlRequest<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">validate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>responseData <span class="token punctuation">{</span> response <span class="token keyword">in</span>
+    <span class="token function">debugPrint</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
 </code></pre>
-<h4 id="Upload-Request-Complex-with-URL-string"><a href="#Upload-Request-Complex-with-URL-string" class="headerlink" title="Upload Request - Complex with URL string"></a>Upload Request - Complex with URL string</h4><pre><code class="swift">// Alamofire 3
-Alamofire.upload(.PUT, urlString, file: fileURL)
-    .progress { bytes, totalBytes, totalBytesExpected in
-        // Are these for upload or for downloading the response?
-        print(&quot;Bytes: \(bytesRead), Total Bytes: \(totalBytesRead), Total Bytes Expected: \(totalBytesExpectedToRead)&quot;)
-    }
-    .validate { request, response in
-        // Custom evaluation implementation (no access to server data)
-        return .success
-    }
-    .responseJSON { response in
-        debugPrint(response)
-    }
+<h4 id="Upload-Request-Complex-with-URL-string"><a href="#Upload-Request-Complex-with-URL-string" class="headerlink" title="Upload Request - Complex with URL string"></a>Upload Request - Complex with URL string</h4><pre class=" language-swift"><code class="language-swift"><span class="token comment" spellcheck="true">// Alamofire 3</span>
+<span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">upload</span><span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token constant">PUT</span><span class="token punctuation">,</span> urlString<span class="token punctuation">,</span> file<span class="token punctuation">:</span> fileURL<span class="token punctuation">)</span>
+    <span class="token punctuation">.</span>progress <span class="token punctuation">{</span> bytes<span class="token punctuation">,</span> totalBytes<span class="token punctuation">,</span> totalBytesExpected <span class="token keyword">in</span>
+        <span class="token comment" spellcheck="true">// Are these for upload or for downloading the response?</span>
+        <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"Bytes: <span class="token interpolation"><span class="token delimiter variable">\(</span>bytesRead<span class="token delimiter variable">)</span></span>, Total Bytes: <span class="token interpolation"><span class="token delimiter variable">\(</span>totalBytesRead<span class="token delimiter variable">)</span></span>, Total Bytes Expected: <span class="token interpolation"><span class="token delimiter variable">\(</span>totalBytesExpectedToRead<span class="token delimiter variable">)</span></span>"</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    <span class="token punctuation">.</span>validate <span class="token punctuation">{</span> request<span class="token punctuation">,</span> response <span class="token keyword">in</span>
+        <span class="token comment" spellcheck="true">// Custom evaluation implementation (no access to server data)</span>
+        <span class="token keyword">return</span> <span class="token punctuation">.</span>success
+    <span class="token punctuation">}</span>
+    <span class="token punctuation">.</span>responseJSON <span class="token punctuation">{</span> response <span class="token keyword">in</span>
+        <span class="token function">debugPrint</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
 
-// Alamofire 4
-Alamofire.upload(fileURL, to: urlString, method: .put)
-    .uploadProgress(queue: DispatchQueue.global(qos: .utility)) { progress in
-        print(&quot;Upload Progress: \(progress.fractionCompleted)&quot;)
-    }
-    .downloadProgress { progress in // called on main queue by default
-        print(&quot;Download Progress: \(progress.fractionCompleted)&quot;)
-    }
-    .validate { request, response, data in
-        // Custom evaluation closure now includes data (allows you to parse data to dig out error messages if necessary)
-        return .success
-    }
-    .responseJSON { response in
-        debugPrint(response)
-    }
+<span class="token comment" spellcheck="true">// Alamofire 4</span>
+<span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">upload</span><span class="token punctuation">(</span>fileURL<span class="token punctuation">,</span> to<span class="token punctuation">:</span> urlString<span class="token punctuation">,</span> method<span class="token punctuation">:</span> <span class="token punctuation">.</span>put<span class="token punctuation">)</span>
+    <span class="token punctuation">.</span><span class="token function">uploadProgress</span><span class="token punctuation">(</span>queue<span class="token punctuation">:</span> <span class="token builtin">DispatchQueue</span><span class="token punctuation">.</span><span class="token function">global</span><span class="token punctuation">(</span>qos<span class="token punctuation">:</span> <span class="token punctuation">.</span>utility<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> progress <span class="token keyword">in</span>
+        <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"Upload Progress: <span class="token interpolation"><span class="token delimiter variable">\(</span>progress<span class="token punctuation">.</span>fractionCompleted<span class="token delimiter variable">)</span></span>"</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    <span class="token punctuation">.</span>downloadProgress <span class="token punctuation">{</span> progress <span class="token keyword">in</span> <span class="token comment" spellcheck="true">// called on main queue by default</span>
+        <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"Download Progress: <span class="token interpolation"><span class="token delimiter variable">\(</span>progress<span class="token punctuation">.</span>fractionCompleted<span class="token delimiter variable">)</span></span>"</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    <span class="token punctuation">.</span>validate <span class="token punctuation">{</span> request<span class="token punctuation">,</span> response<span class="token punctuation">,</span> data <span class="token keyword">in</span>
+        <span class="token comment" spellcheck="true">// Custom evaluation closure now includes data (allows you to parse data to dig out error messages if necessary)</span>
+        <span class="token keyword">return</span> <span class="token punctuation">.</span>success
+    <span class="token punctuation">}</span>
+    <span class="token punctuation">.</span>responseJSON <span class="token punctuation">{</span> response <span class="token keyword">in</span>
+        <span class="token function">debugPrint</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
 </code></pre>
 <p>As you can see, there are many breaking API changes, but the common APIs still adhere to the original design goals of being able to make complex requests through a single line of code in a concise, well defined manner.</p>
 <h3 id="URLStringConvertible"><a href="#URLStringConvertible" class="headerlink" title="URLStringConvertible"></a>URLStringConvertible</h3><p>There are two changes to the <code>URLStringConvertible</code> protocol that are worth noting.</p>
 <h4 id="URLConvertible"><a href="#URLConvertible" class="headerlink" title="URLConvertible"></a>URLConvertible</h4><p>The first MAJOR change worth noting on the <code>URLStringConvertible</code> is that it has been renamed to <code>URLConvertible</code>. In Alamofire 3.x, the <code>URLStringConvertible</code> was defined as:</p>
-<pre><code class="swift">public protocol URLStringConvertible {
-    var URLString: String { get }
-}
+<pre class=" language-swift"><code class="language-swift"><span class="token keyword">public</span> protocol <span class="token builtin">URLStringConvertible</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> <span class="token builtin">URLString</span><span class="token punctuation">:</span> <span class="token builtin">String</span> <span class="token punctuation">{</span> <span class="token keyword">get</span> <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
 </code></pre>
 <p>Now in Alamofire 4, the <code>URLConvertible</code> protocol is defined as:</p>
-<pre><code class="swift">public protocol URLConvertible {
-    func asURL() throws -&gt; URL
-}
+<pre class=" language-swift"><code class="language-swift"><span class="token keyword">public</span> protocol <span class="token builtin">URLConvertible</span> <span class="token punctuation">{</span>
+    <span class="token keyword">func</span> <span class="token function">asURL</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token constant">URL</span>
+<span class="token punctuation">}</span>
 </code></pre>
 <p>As you can see, the <code>URLString</code> property is completely gone and replaced by a new <code>asURL</code> method that throws. To explain, let’s first backup.</p>
 <p>A VERY common problem in Alamofire is that users forget to percent escape their URL strings and Alamofire will crash. Up until now, we (the Alamofire team) have taken the stance that this is how Alamofire is designed and your URLs need to conform to <a href="https://tools.ietf.org/html/rfc2396" target="_blank" rel="external">RFC 2396</a>. This is certainly not ideal for the community because we all would rather have Alamofire tell us that our URL was invalid rather than having it crash.</p>
@@ -3000,25 +3120,25 @@ Alamofire.upload(fileURL, to: urlString, method: .put)
 <p>This change (along with many others) allows Alamofire to safely handle invalid URLs and report the error back in the response handlers.</p>
 <h4 id="URLRequest-Conformance"><a href="#URLRequest-Conformance" class="headerlink" title="URLRequest Conformance"></a>URLRequest Conformance</h4><p>The <code>URLRequest</code> no longer conforms to the <code>URLStringConvertible</code>, now <code>URLConvertible</code> protocol. This was always a bit of a stretch in the previous versions of Alamofire and wasn’t really necessary. It also had a high potential to introduce ambiguity into many Alamofire APIs. Because of these reasons, <code>URLRequest</code> no longer conforms to <code>URLStringConvertible</code> (now <code>URLConvertible</code>).</p>
 <p>What this means in code is that you can no longer do the following:</p>
-<pre><code class="swift">let urlRequest = URLRequest(url: URL(string: &quot;https://httpbin.org/get&quot;)!)
-let urlString = urlRequest.urlString
+<pre class=" language-swift"><code class="language-swift"><span class="token keyword">let</span> urlRequest <span class="token operator">=</span> <span class="token function">URLRequest</span><span class="token punctuation">(</span>url<span class="token punctuation">:</span> <span class="token function">URL</span><span class="token punctuation">(</span>string<span class="token punctuation">:</span> <span class="token string">"https://httpbin.org/get"</span><span class="token punctuation">)</span><span class="token operator">!</span><span class="token punctuation">)</span>
+<span class="token keyword">let</span> urlString <span class="token operator">=</span> urlRequest<span class="token punctuation">.</span>urlString
 </code></pre>
 <p>Instead, in Alamofire 4, you now have to do the following:</p>
-<pre><code class="swift">let urlRequest = URLRequest(url: URL(string: &quot;https://httpbin.org/get&quot;)!)
-let urlString = urlRequest.url?.absoluteString
+<pre class=" language-swift"><code class="language-swift"><span class="token keyword">let</span> urlRequest <span class="token operator">=</span> <span class="token function">URLRequest</span><span class="token punctuation">(</span>url<span class="token punctuation">:</span> <span class="token function">URL</span><span class="token punctuation">(</span>string<span class="token punctuation">:</span> <span class="token string">"https://httpbin.org/get"</span><span class="token punctuation">)</span><span class="token operator">!</span><span class="token punctuation">)</span>
+<span class="token keyword">let</span> urlString <span class="token operator">=</span> urlRequest<span class="token punctuation">.</span>url<span class="token operator">?</span><span class="token punctuation">.</span>absoluteString
 </code></pre>
 <blockquote>
 <p>See <a href="https://github.com/Alamofire/Alamofire/pull/1505" target="_blank" rel="external">PR-1505</a> for more info.</p>
 </blockquote>
 <h3 id="URLRequestConvertible"><a href="#URLRequestConvertible" class="headerlink" title="URLRequestConvertible"></a>URLRequestConvertible</h3><p>The <code>URLRequestConvertible</code> was susceptible to the same safety issues concerns as the <code>URLStringConvertible</code> in Alamofire 3.x. In Alamofire 3, the <code>URLRequestConvertible</code> was:</p>
-<pre><code class="swift">public protocol URLRequestConvertible {
-    var URLRequest: URLRequest { get }
-}
+<pre class=" language-swift"><code class="language-swift"><span class="token keyword">public</span> protocol <span class="token builtin">URLRequestConvertible</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> <span class="token builtin">URLRequest</span><span class="token punctuation">:</span> <span class="token builtin">URLRequest</span> <span class="token punctuation">{</span> <span class="token keyword">get</span> <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
 </code></pre>
 <p>Now, in Alamofire 4, it is:</p>
-<pre><code class="swift">public protocol URLRequestConvertible {
-    func asURLRequest() throws -&gt; URLRequest
-}
+<pre class=" language-swift"><code class="language-swift"><span class="token keyword">public</span> protocol <span class="token builtin">URLRequestConvertible</span> <span class="token punctuation">{</span>
+    <span class="token keyword">func</span> <span class="token function">asURLRequest</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">URLRequest</span>
+<span class="token punctuation">}</span>
 </code></pre>
 <p>As you can see, the <code>URLRequest</code> property has been replaced by an <code>asURLRequest</code> method that throws when encountering an error generating the <code>URLRequest</code>.</p>
 <p>The most likely place this will affect your code is in the <code>Router</code> design pattern. If you have a <code>Router</code>, it’s going to have to change, but for the better! You will now implement the <code>asURLRequest</code> method instead of the property which gives you the ability to throw an error if necessary. You no longer have to force unwrap unsafe data or parameters or wrap <code>ParameterEncoding</code> in a do-catch. Any error encountered in a <code>Router</code> can now be automatically handled by Alamofire.</p>
@@ -3027,78 +3147,78 @@ let urlString = urlRequest.url?.absoluteString
 </blockquote>
 <hr>
 <h2 id="New-Features"><a href="#New-Features" class="headerlink" title="New Features"></a>New Features</h2><h3 id="Request-Adapter"><a href="#Request-Adapter" class="headerlink" title="Request Adapter"></a>Request Adapter</h3><p>The <code>RequestAdapter</code> protocol is a completely new feature in Alamofire 4. </p>
-<pre><code class="swift">public protocol RequestAdapter {
-    func adapt(_ urlRequest: URLRequest) throws -&gt; URLRequest
-}
+<pre class=" language-swift"><code class="language-swift"><span class="token keyword">public</span> protocol <span class="token builtin">RequestAdapter</span> <span class="token punctuation">{</span>
+    <span class="token keyword">func</span> <span class="token function">adapt</span><span class="token punctuation">(</span><span class="token number">_</span> urlRequest<span class="token punctuation">:</span> <span class="token builtin">URLRequest</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">URLRequest</span>
+<span class="token punctuation">}</span>
 </code></pre>
 <p>It allows each <code>Request</code> made on a <code>SessionManager</code> to be inspected and adapted before being created. One very specific way to use an adapter is to append an <code>Authorization</code> header to requests behind a certain type of authentication.</p>
-<pre><code class="swift">class AccessTokenAdapter: RequestAdapter {
-    private let accessToken: String
+<pre class=" language-swift"><code class="language-swift"><span class="token keyword">class</span> <span class="token class-name">AccessTokenAdapter</span><span class="token punctuation">:</span> <span class="token builtin">RequestAdapter</span> <span class="token punctuation">{</span>
+    <span class="token keyword">private</span> <span class="token keyword">let</span> accessToken<span class="token punctuation">:</span> <span class="token builtin">String</span>
 
-    init(accessToken: String) {
-        self.accessToken = accessToken
-    }
+    <span class="token keyword">init</span><span class="token punctuation">(</span>accessToken<span class="token punctuation">:</span> <span class="token builtin">String</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">self</span><span class="token punctuation">.</span>accessToken <span class="token operator">=</span> accessToken
+    <span class="token punctuation">}</span>
 
-    func adapt(_ urlRequest: URLRequest) throws -&gt; URLRequest {
-        var urlRequest = urlRequest
+    <span class="token keyword">func</span> <span class="token function">adapt</span><span class="token punctuation">(</span><span class="token number">_</span> urlRequest<span class="token punctuation">:</span> <span class="token builtin">URLRequest</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">URLRequest</span> <span class="token punctuation">{</span>
+        <span class="token keyword">var</span> urlRequest <span class="token operator">=</span> urlRequest
 
-        if urlRequest.urlString.hasPrefix(&quot;https://httpbin.org&quot;) {
-            urlRequest.setValue(&quot;Bearer &quot; + accessToken, forHTTPHeaderField: &quot;Authorization&quot;)
-        }
+        <span class="token keyword">if</span> urlRequest<span class="token punctuation">.</span>urlString<span class="token punctuation">.</span><span class="token function">hasPrefix</span><span class="token punctuation">(</span><span class="token string">"https://httpbin.org"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            urlRequest<span class="token punctuation">.</span><span class="token function">setValue</span><span class="token punctuation">(</span><span class="token string">"Bearer "</span> <span class="token operator">+</span> accessToken<span class="token punctuation">,</span> forHTTPHeaderField<span class="token punctuation">:</span> <span class="token string">"Authorization"</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span>
 
-        return urlRequest
-    }
-}
+        <span class="token keyword">return</span> urlRequest
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
 
-let sessionManager = SessionManager()
-sessionManager.adapter = AccessTokenAdapter(accessToken: &quot;1234&quot;)
+<span class="token keyword">let</span> sessionManager <span class="token operator">=</span> <span class="token function">SessionManager</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+sessionManager<span class="token punctuation">.</span>adapter <span class="token operator">=</span> <span class="token function">AccessTokenAdapter</span><span class="token punctuation">(</span>accessToken<span class="token punctuation">:</span> <span class="token string">"1234"</span><span class="token punctuation">)</span>
 
-sessionManager.request(&quot;https://httpbin.org/get&quot;)
+sessionManager<span class="token punctuation">.</span><span class="token function">request</span><span class="token punctuation">(</span><span class="token string">"https://httpbin.org/get"</span><span class="token punctuation">)</span>
 </code></pre>
 <p>If an <code>Error</code> occurs during the adaptation process, it should be thrown and will be delivered in the response handler of the <code>Request</code>.</p>
 <blockquote>
 <p>See <a href="https://github.com/Alamofire/Alamofire/pull/1450" target="_blank" rel="external">PR-1450</a> for more info.</p>
 </blockquote>
 <h3 id="Request-Retrier"><a href="#Request-Retrier" class="headerlink" title="Request Retrier"></a>Request Retrier</h3><p>The <code>RequestRetrier</code> is another brand new Alamofire 4 protocol. </p>
-<pre><code class="swift">public typealias RequestRetryCompletion = (_ shouldRetry: Bool, _ timeDelay: TimeInterval) -&gt; Void
+<pre class=" language-swift"><code class="language-swift"><span class="token keyword">public</span> <span class="token keyword">typealias</span> <span class="token builtin">RequestRetryCompletion</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">_</span> shouldRetry<span class="token punctuation">:</span> <span class="token builtin">Bool</span><span class="token punctuation">,</span> <span class="token number">_</span> timeDelay<span class="token punctuation">:</span> <span class="token builtin">TimeInterval</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">Void</span>
 
-public protocol RequestRetrier {
-    func should(_ manager: SessionManager, retry request: Request, with error: Error, completion: @escaping RequestRetryCompletion)
-}
+<span class="token keyword">public</span> protocol <span class="token builtin">RequestRetrier</span> <span class="token punctuation">{</span>
+    <span class="token keyword">func</span> <span class="token function">should</span><span class="token punctuation">(</span><span class="token number">_</span> manager<span class="token punctuation">:</span> <span class="token builtin">SessionManager</span><span class="token punctuation">,</span> retry request<span class="token punctuation">:</span> <span class="token builtin">Request</span><span class="token punctuation">,</span> with error<span class="token punctuation">:</span> <span class="token builtin">Error</span><span class="token punctuation">,</span> completion<span class="token punctuation">:</span> @escaping <span class="token builtin">RequestRetryCompletion</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
 </code></pre>
 <p>It allows a <code>Request</code> that encountered an <code>Error</code> while being executed to be retried with an optional delay if specified.</p>
-<pre><code class="swift">class OAuth2Handler: RequestAdapter, RequestRetrier {
-    public func should(_ manager: SessionManager, retry request: Request, with error: Error, completion: RequestRetryCompletion) {
-        if let response = request.task.response as? HTTPURLResponse, response.statusCode == 401 {
-            completion(true, 1.0) // retry after 1 second
-        } else {
-            completion(false, 0.0) // don&#39;t retry
-        }
-    }
-}
+<pre class=" language-swift"><code class="language-swift"><span class="token keyword">class</span> <span class="token class-name">OAuth2Handler</span><span class="token punctuation">:</span> <span class="token builtin">RequestAdapter</span><span class="token punctuation">,</span> <span class="token builtin">RequestRetrier</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">func</span> <span class="token function">should</span><span class="token punctuation">(</span><span class="token number">_</span> manager<span class="token punctuation">:</span> <span class="token builtin">SessionManager</span><span class="token punctuation">,</span> retry request<span class="token punctuation">:</span> <span class="token builtin">Request</span><span class="token punctuation">,</span> with error<span class="token punctuation">:</span> <span class="token builtin">Error</span><span class="token punctuation">,</span> completion<span class="token punctuation">:</span> <span class="token builtin">RequestRetryCompletion</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token keyword">let</span> response <span class="token operator">=</span> request<span class="token punctuation">.</span>task<span class="token punctuation">.</span>response <span class="token keyword">as</span><span class="token operator">?</span> <span class="token builtin">HTTPURLResponse</span><span class="token punctuation">,</span> response<span class="token punctuation">.</span>statusCode <span class="token operator">==</span> <span class="token number">401</span> <span class="token punctuation">{</span>
+            <span class="token function">completion</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">,</span> <span class="token number">1.0</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// retry after 1 second</span>
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+            <span class="token function">completion</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">,</span> <span class="token number">0.0</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// don't retry</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
 
-let sessionManager = SessionManager()
-sessionManager.retrier = OAuth2Handler()
+<span class="token keyword">let</span> sessionManager <span class="token operator">=</span> <span class="token function">SessionManager</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+sessionManager<span class="token punctuation">.</span>retrier <span class="token operator">=</span> <span class="token function">OAuth2Handler</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 
-sessionManager.request(urlString).responseJSON { response in
-    debugPrint(response)
-}
+sessionManager<span class="token punctuation">.</span><span class="token function">request</span><span class="token punctuation">(</span>urlString<span class="token punctuation">)</span><span class="token punctuation">.</span>responseJSON <span class="token punctuation">{</span> response <span class="token keyword">in</span>
+    <span class="token function">debugPrint</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
 </code></pre>
 <p>The retrier allows you to inspect the <code>Request</code> after it has completed and run all <code>Validation</code> closures to determine whether it should be retried. When using both the <code>RequestAdapter</code> and <code>RequestRetrier</code> protocols together, you can create credential refresh systems for OAuth1, OAuth2, Basic Auth and even exponential backoff retry policies. The possibilities are endless. For more information and examples on this topic, please refer to the README.</p>
 <blockquote>
 <p>See <a href="https://github.com/Alamofire/Alamofire/pull/1391" target="_blank" rel="external">PR-1391</a> and <a href="https://github.com/Alamofire/Alamofire/pull/1450" target="_blank" rel="external">PR-1450</a> for more info.</p>
 </blockquote>
 <h3 id="Task-Metrics"><a href="#Task-Metrics" class="headerlink" title="Task Metrics"></a>Task Metrics</h3><p>In iOS and tvOS 10 and macOS 10.12, Apple introduced the new <a href="https://developer.apple.com/reference/foundation/urlsessiontaskmetrics" target="_blank" rel="external">URLSessionTaskMetrics</a> APIs. The task metrics encapsulate some fantastic statistical information about the request and response execution. The API is very similar to Alamofire’s <code>Timeline</code>, but provide many more statistics that Alamofire was unable to compute. We’re really excited about these APIs and have exposed them on each <code>Response</code> type meaning they couldn’t be easier to use.</p>
-<pre><code class="swift">Alamofire.request(urlString).response { response in
-    debugPrint(response.metrics)
-}
+<pre class=" language-swift"><code class="language-swift"><span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">request</span><span class="token punctuation">(</span>urlString<span class="token punctuation">)</span><span class="token punctuation">.</span>response <span class="token punctuation">{</span> response <span class="token keyword">in</span>
+    <span class="token function">debugPrint</span><span class="token punctuation">(</span>response<span class="token punctuation">.</span>metrics<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
 </code></pre>
 <p>It’s important to note that these APIs are only available on iOS and tvOS 10+ and macOS 10.12+. Therefore, depending on your deployment target, you may need to use these inside availability checks:</p>
-<pre><code class="swift">Alamofire.request(urlString).response { response in
-    if #available(iOS 10.0, *) {
-        debugPrint(response.metrics)
-    }
-}
+<pre class=" language-swift"><code class="language-swift"><span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">request</span><span class="token punctuation">(</span>urlString<span class="token punctuation">)</span><span class="token punctuation">.</span>response <span class="token punctuation">{</span> response <span class="token keyword">in</span>
+    <span class="token keyword">if</span> #<span class="token function">available</span><span class="token punctuation">(</span>iOS <span class="token number">10.0</span><span class="token punctuation">,</span> <span class="token operator">*</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">debugPrint</span><span class="token punctuation">(</span>response<span class="token punctuation">.</span>metrics<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
 </code></pre>
 <blockquote>
 <p>See <a href="https://github.com/Alamofire/Alamofire/pull/1492" target="_blank" rel="external">PR-1492</a> for more info.</p>
@@ -3114,45 +3234,45 @@ sessionManager.request(urlString).responseJSON { response in
 <li><code>.responseSerializationFailed(reason: ResponseSerializationFailureReason)</code> - Returned when a response serializer encounters an error in the serialization process.</li>
 </ul>
 <p>Each case contains a specific failure reason which is another nested enumeration with multiple cases that contain additional information about the exact type of error that occurred. What this ultimately means is that is is much easier in Alamofire to identify where an error came from and what to do about it.</p>
-<pre><code class="swift">Alamofire.request(urlString).responseJSON { response in
-    guard case let .failure(error) = response.result else { return }
+<pre class=" language-swift"><code class="language-swift"><span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">request</span><span class="token punctuation">(</span>urlString<span class="token punctuation">)</span><span class="token punctuation">.</span>responseJSON <span class="token punctuation">{</span> response <span class="token keyword">in</span>
+    <span class="token keyword">guard</span> <span class="token keyword">case</span> <span class="token keyword">let</span> <span class="token punctuation">.</span><span class="token function">failure</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span> <span class="token operator">=</span> response<span class="token punctuation">.</span>result <span class="token keyword">else</span> <span class="token punctuation">{</span> <span class="token keyword">return</span> <span class="token punctuation">}</span>
 
-    if let error = error as? AFError {
-        switch error {
-        case .invalidURL(let url):
-            print(&quot;Invalid URL: \(url) - \(error.localizedDescription)&quot;)
-        case .parameterEncodingFailed(let reason):
-            print(&quot;Parameter encoding failed: \(error.localizedDescription)&quot;)
-            print(&quot;Failure Reason: \(reason)&quot;)
-        case .multipartEncodingFailed(let reason):
-            print(&quot;Multipart encoding failed: \(error.localizedDescription)&quot;)
-            print(&quot;Failure Reason: \(reason)&quot;)
-        case .responseValidationFailed(let reason):
-            print(&quot;Response validation failed: \(error.localizedDescription)&quot;)
-            print(&quot;Failure Reason: \(reason)&quot;)
+    <span class="token keyword">if</span> <span class="token keyword">let</span> error <span class="token operator">=</span> error <span class="token keyword">as</span><span class="token operator">?</span> <span class="token builtin">AFError</span> <span class="token punctuation">{</span>
+        <span class="token keyword">switch</span> error <span class="token punctuation">{</span>
+        <span class="token keyword">case</span> <span class="token punctuation">.</span><span class="token function">invalidURL</span><span class="token punctuation">(</span><span class="token keyword">let</span> url<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"Invalid URL: <span class="token interpolation"><span class="token delimiter variable">\(</span>url<span class="token delimiter variable">)</span></span> - <span class="token interpolation"><span class="token delimiter variable">\(</span>error<span class="token punctuation">.</span>localizedDescription<span class="token delimiter variable">)</span></span>"</span><span class="token punctuation">)</span>
+        <span class="token keyword">case</span> <span class="token punctuation">.</span><span class="token function">parameterEncodingFailed</span><span class="token punctuation">(</span><span class="token keyword">let</span> reason<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"Parameter encoding failed: <span class="token interpolation"><span class="token delimiter variable">\(</span>error<span class="token punctuation">.</span>localizedDescription<span class="token delimiter variable">)</span></span>"</span><span class="token punctuation">)</span>
+            <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"Failure Reason: <span class="token interpolation"><span class="token delimiter variable">\(</span>reason<span class="token delimiter variable">)</span></span>"</span><span class="token punctuation">)</span>
+        <span class="token keyword">case</span> <span class="token punctuation">.</span><span class="token function">multipartEncodingFailed</span><span class="token punctuation">(</span><span class="token keyword">let</span> reason<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"Multipart encoding failed: <span class="token interpolation"><span class="token delimiter variable">\(</span>error<span class="token punctuation">.</span>localizedDescription<span class="token delimiter variable">)</span></span>"</span><span class="token punctuation">)</span>
+            <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"Failure Reason: <span class="token interpolation"><span class="token delimiter variable">\(</span>reason<span class="token delimiter variable">)</span></span>"</span><span class="token punctuation">)</span>
+        <span class="token keyword">case</span> <span class="token punctuation">.</span><span class="token function">responseValidationFailed</span><span class="token punctuation">(</span><span class="token keyword">let</span> reason<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"Response validation failed: <span class="token interpolation"><span class="token delimiter variable">\(</span>error<span class="token punctuation">.</span>localizedDescription<span class="token delimiter variable">)</span></span>"</span><span class="token punctuation">)</span>
+            <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"Failure Reason: <span class="token interpolation"><span class="token delimiter variable">\(</span>reason<span class="token delimiter variable">)</span></span>"</span><span class="token punctuation">)</span>
 
-            switch reason {
-            case .dataFileNil, .dataFileReadFailed:
-                print(&quot;Downloaded file could not be read&quot;)
-            case .missingContentType(let acceptableContentTypes):
-                print(&quot;Content Type Missing: \(acceptableContentTypes)&quot;)
-            case .unacceptableContentType(let acceptableContentTypes, let responseContentType):
-                print(&quot;Response content type: \(responseContentType) was unacceptable: \(acceptableContentTypes)&quot;)
-            case .unacceptableStatusCode(let code):
-                print(&quot;Response status code was unacceptable: \(code)&quot;)
-            }
-        case .responseSerializationFailed(let reason):
-            print(&quot;Response serialization failed: \(error.localizedDescription)&quot;)
-            print(&quot;Failure Reason: \(reason)&quot;)
-        }
+            <span class="token keyword">switch</span> reason <span class="token punctuation">{</span>
+            <span class="token keyword">case</span> <span class="token punctuation">.</span>dataFileNil<span class="token punctuation">,</span> <span class="token punctuation">.</span>dataFileReadFailed<span class="token punctuation">:</span>
+                <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"Downloaded file could not be read"</span><span class="token punctuation">)</span>
+            <span class="token keyword">case</span> <span class="token punctuation">.</span><span class="token function">missingContentType</span><span class="token punctuation">(</span><span class="token keyword">let</span> acceptableContentTypes<span class="token punctuation">)</span><span class="token punctuation">:</span>
+                <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"Content Type Missing: <span class="token interpolation"><span class="token delimiter variable">\(</span>acceptableContentTypes<span class="token delimiter variable">)</span></span>"</span><span class="token punctuation">)</span>
+            <span class="token keyword">case</span> <span class="token punctuation">.</span><span class="token function">unacceptableContentType</span><span class="token punctuation">(</span><span class="token keyword">let</span> acceptableContentTypes<span class="token punctuation">,</span> <span class="token keyword">let</span> responseContentType<span class="token punctuation">)</span><span class="token punctuation">:</span>
+                <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"Response content type: <span class="token interpolation"><span class="token delimiter variable">\(</span>responseContentType<span class="token delimiter variable">)</span></span> was unacceptable: <span class="token interpolation"><span class="token delimiter variable">\(</span>acceptableContentTypes<span class="token delimiter variable">)</span></span>"</span><span class="token punctuation">)</span>
+            <span class="token keyword">case</span> <span class="token punctuation">.</span><span class="token function">unacceptableStatusCode</span><span class="token punctuation">(</span><span class="token keyword">let</span> code<span class="token punctuation">)</span><span class="token punctuation">:</span>
+                <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"Response status code was unacceptable: <span class="token interpolation"><span class="token delimiter variable">\(</span>code<span class="token delimiter variable">)</span></span>"</span><span class="token punctuation">)</span>
+            <span class="token punctuation">}</span>
+        <span class="token keyword">case</span> <span class="token punctuation">.</span><span class="token function">responseSerializationFailed</span><span class="token punctuation">(</span><span class="token keyword">let</span> reason<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"Response serialization failed: <span class="token interpolation"><span class="token delimiter variable">\(</span>error<span class="token punctuation">.</span>localizedDescription<span class="token delimiter variable">)</span></span>"</span><span class="token punctuation">)</span>
+            <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"Failure Reason: <span class="token interpolation"><span class="token delimiter variable">\(</span>reason<span class="token delimiter variable">)</span></span>"</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span>
 
-        print(&quot;Underlying error: \(error.underlyingError)&quot;)
-    } else if let error = error as? URLError {
-        print(&quot;URLError occurred: \(error)&quot;)
-    } else {
-        print(&quot;Unknown error: \(error)&quot;)
-    }
-}
+        <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"Underlying error: <span class="token interpolation"><span class="token delimiter variable">\(</span>error<span class="token punctuation">.</span>underlyingError<span class="token delimiter variable">)</span></span>"</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token keyword">let</span> error <span class="token operator">=</span> error <span class="token keyword">as</span><span class="token operator">?</span> <span class="token builtin">URLError</span> <span class="token punctuation">{</span>
+        <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"URLError occurred: <span class="token interpolation"><span class="token delimiter variable">\(</span>error<span class="token delimiter variable">)</span></span>"</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"Unknown error: <span class="token interpolation"><span class="token delimiter variable">\(</span>error<span class="token delimiter variable">)</span></span>"</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
 </code></pre>
 <p>This new design allows you to drill down into errors as deep as you may need to in order to figure out the best way to proceed. It also frees developers from the burden of having to deal with <code>NSError</code> types everywhere. By switching to our own custom <code>Error</code> type in Alamofire, we’ve been able to simplify the <code>Result</code> and <code>Response</code> generic types to only require a single generic parameter. This simplifies the response serialization logic.</p>
 <blockquote>
@@ -3166,11 +3286,11 @@ sessionManager.request(urlString).responseJSON { response in
 <li>The <code>.Custom</code> encoding was a bit difficult for users to get the hang of.</li>
 </ul>
 <p>Because of these reasons, we decided to eliminate the enumeration altogether in Alamofire 4! Now, <code>ParameterEncoding</code> is a protocol backed by three concrete <code>URLEncoding</code>, <code>JSONEncoding</code> and <code>PropertyList</code> encoding structs with a new <code>Parameters</code> typealias for creating your parameter dictionaries.</p>
-<pre><code class="swift">public typealias Parameters = [String: Any]
+<pre class=" language-swift"><code class="language-swift"><span class="token keyword">public</span> <span class="token keyword">typealias</span> <span class="token builtin">Parameters</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token builtin">String</span><span class="token punctuation">:</span> <span class="token builtin">Any</span><span class="token punctuation">]</span>
 
-public protocol ParameterEncoding {
-    func encode(_ urlRequest: URLRequestConvertible, with parameters: Parameters?) throws -&gt; URLRequest
-}
+<span class="token keyword">public</span> protocol <span class="token builtin">ParameterEncoding</span> <span class="token punctuation">{</span>
+    <span class="token keyword">func</span> <span class="token function">encode</span><span class="token punctuation">(</span><span class="token number">_</span> urlRequest<span class="token punctuation">:</span> <span class="token builtin">URLRequestConvertible</span><span class="token punctuation">,</span> with parameters<span class="token punctuation">:</span> <span class="token builtin">Parameters</span><span class="token operator">?</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">URLRequest</span>
+<span class="token punctuation">}</span>
 </code></pre>
 <h4 id="URL-Encoding"><a href="#URL-Encoding" class="headerlink" title="URL Encoding"></a>URL Encoding</h4><p>The new <code>URLEncoding</code> struct contains a <code>Destination</code> enumeration supporting three types of destinations:</p>
 <ul>
@@ -3179,36 +3299,36 @@ public protocol ParameterEncoding {
 <li><code>.httpBody</code> - Sets encoded query string result as the HTTP body of the URL request.</li>
 </ul>
 <p>These destinations make it much easier to control where the parameters are encoded onto the <code>URLRequest</code>. Creating requests still uses the same signature as before in regards to parameter encoding and also has the same default behavior.</p>
-<pre><code class="swift">let parameters: Parameters = [&quot;foo&quot;: &quot;bar&quot;]
+<pre class=" language-swift"><code class="language-swift"><span class="token keyword">let</span> parameters<span class="token punctuation">:</span> <span class="token builtin">Parameters</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"foo"</span><span class="token punctuation">:</span> <span class="token string">"bar"</span><span class="token punctuation">]</span>
 
-Alamofire.request(urlString, parameters: parameters) // Encoding =&gt; URLEncoding(destination: .methodDependent)
-Alamofire.request(urlString, parameters: parameters, encoding: URLEncoding(destination: .queryString))
-Alamofire.request(urlString, parameters: parameters, encoding: URLEncoding(destination: .httpBody))
+<span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">request</span><span class="token punctuation">(</span>urlString<span class="token punctuation">,</span> parameters<span class="token punctuation">:</span> parameters<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// Encoding => URLEncoding(destination: .methodDependent)</span>
+<span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">request</span><span class="token punctuation">(</span>urlString<span class="token punctuation">,</span> parameters<span class="token punctuation">:</span> parameters<span class="token punctuation">,</span> encoding<span class="token punctuation">:</span> <span class="token function">URLEncoding</span><span class="token punctuation">(</span>destination<span class="token punctuation">:</span> <span class="token punctuation">.</span>queryString<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">request</span><span class="token punctuation">(</span>urlString<span class="token punctuation">,</span> parameters<span class="token punctuation">:</span> parameters<span class="token punctuation">,</span> encoding<span class="token punctuation">:</span> <span class="token function">URLEncoding</span><span class="token punctuation">(</span>destination<span class="token punctuation">:</span> <span class="token punctuation">.</span>httpBody<span class="token punctuation">)</span><span class="token punctuation">)</span>
 
-// Static convenience properties (we&#39;d like to encourage everyone to use this more concise form)
-Alamofire.request(urlString, parameters: parameters, encoding: URLEncoding.default)
-Alamofire.request(urlString, parameters: parameters, encoding: URLEncoding.queryString)
-Alamofire.request(urlString, parameters: parameters, encoding: URLEncoding.httpBody)
+<span class="token comment" spellcheck="true">// Static convenience properties (we'd like to encourage everyone to use this more concise form)</span>
+<span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">request</span><span class="token punctuation">(</span>urlString<span class="token punctuation">,</span> parameters<span class="token punctuation">:</span> parameters<span class="token punctuation">,</span> encoding<span class="token punctuation">:</span> <span class="token builtin">URLEncoding</span><span class="token punctuation">.</span><span class="token keyword">default</span><span class="token punctuation">)</span>
+<span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">request</span><span class="token punctuation">(</span>urlString<span class="token punctuation">,</span> parameters<span class="token punctuation">:</span> parameters<span class="token punctuation">,</span> encoding<span class="token punctuation">:</span> <span class="token builtin">URLEncoding</span><span class="token punctuation">.</span>queryString<span class="token punctuation">)</span>
+<span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">request</span><span class="token punctuation">(</span>urlString<span class="token punctuation">,</span> parameters<span class="token punctuation">:</span> parameters<span class="token punctuation">,</span> encoding<span class="token punctuation">:</span> <span class="token builtin">URLEncoding</span><span class="token punctuation">.</span>httpBody<span class="token punctuation">)</span>
 </code></pre>
 <h4 id="JSON-Encoding"><a href="#JSON-Encoding" class="headerlink" title="JSON Encoding"></a>JSON Encoding</h4><p>The new <code>JSONEncoding</code> struct exposes the ability to customize the JSON writing options.</p>
-<pre><code class="swift">let parameters: Parameters = [&quot;foo&quot;: &quot;bar&quot;]
+<pre class=" language-swift"><code class="language-swift"><span class="token keyword">let</span> parameters<span class="token punctuation">:</span> <span class="token builtin">Parameters</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"foo"</span><span class="token punctuation">:</span> <span class="token string">"bar"</span><span class="token punctuation">]</span>
 
-Alamofire.request(urlString, parameters: parameters, encoding: JSONEncoding(options: []))
-Alamofire.request(urlString, parameters: parameters, encoding: JSONEncoding(options: .prettyPrinted))
+<span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">request</span><span class="token punctuation">(</span>urlString<span class="token punctuation">,</span> parameters<span class="token punctuation">:</span> parameters<span class="token punctuation">,</span> encoding<span class="token punctuation">:</span> <span class="token function">JSONEncoding</span><span class="token punctuation">(</span>options<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">request</span><span class="token punctuation">(</span>urlString<span class="token punctuation">,</span> parameters<span class="token punctuation">:</span> parameters<span class="token punctuation">,</span> encoding<span class="token punctuation">:</span> <span class="token function">JSONEncoding</span><span class="token punctuation">(</span>options<span class="token punctuation">:</span> <span class="token punctuation">.</span>prettyPrinted<span class="token punctuation">)</span><span class="token punctuation">)</span>
 
-// Static convenience properties (we&#39;d like to encourage everyone to use this more concise form)
-Alamofire.request(urlString, parameters: parameters, encoding: JSONEncoding.default)
-Alamofire.request(urlString, parameters: parameters, encoding: JSONEncoding.prettyPrinted)
+<span class="token comment" spellcheck="true">// Static convenience properties (we'd like to encourage everyone to use this more concise form)</span>
+<span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">request</span><span class="token punctuation">(</span>urlString<span class="token punctuation">,</span> parameters<span class="token punctuation">:</span> parameters<span class="token punctuation">,</span> encoding<span class="token punctuation">:</span> <span class="token builtin">JSONEncoding</span><span class="token punctuation">.</span><span class="token keyword">default</span><span class="token punctuation">)</span>
+<span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">request</span><span class="token punctuation">(</span>urlString<span class="token punctuation">,</span> parameters<span class="token punctuation">:</span> parameters<span class="token punctuation">,</span> encoding<span class="token punctuation">:</span> <span class="token builtin">JSONEncoding</span><span class="token punctuation">.</span>prettyPrinted<span class="token punctuation">)</span>
 </code></pre>
 <h4 id="Property-List-Encoding"><a href="#Property-List-Encoding" class="headerlink" title="Property List Encoding"></a>Property List Encoding</h4><p>The new <code>PropertyListEncoding</code> struct allows customizing the plist format and write options.</p>
-<pre><code class="swift">let parameters: Parameters = [&quot;foo&quot;: &quot;bar&quot;]
+<pre class=" language-swift"><code class="language-swift"><span class="token keyword">let</span> parameters<span class="token punctuation">:</span> <span class="token builtin">Parameters</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">"foo"</span><span class="token punctuation">:</span> <span class="token string">"bar"</span><span class="token punctuation">]</span>
 
-Alamofire.request(urlString, parameters: parameters, encoding: PropertyListEncoding(format: .xml, options: 0))
-Alamofire.request(urlString, parameters: parameters, encoding: PropertyListEncoding(format: .binary, options: 0))
+<span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">request</span><span class="token punctuation">(</span>urlString<span class="token punctuation">,</span> parameters<span class="token punctuation">:</span> parameters<span class="token punctuation">,</span> encoding<span class="token punctuation">:</span> <span class="token function">PropertyListEncoding</span><span class="token punctuation">(</span>format<span class="token punctuation">:</span> <span class="token punctuation">.</span>xml<span class="token punctuation">,</span> options<span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">request</span><span class="token punctuation">(</span>urlString<span class="token punctuation">,</span> parameters<span class="token punctuation">:</span> parameters<span class="token punctuation">,</span> encoding<span class="token punctuation">:</span> <span class="token function">PropertyListEncoding</span><span class="token punctuation">(</span>format<span class="token punctuation">:</span> <span class="token punctuation">.</span>binary<span class="token punctuation">,</span> options<span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
 
-// Static convenience properties (we&#39;d like to encourage everyone to use this more concise form)
-Alamofire.request(urlString, parameters: parameters, encoding: PropertyListEncoding.xml)
-Alamofire.request(urlString, parameters: parameters, encoding: PropertyListEncoding.binary)
+<span class="token comment" spellcheck="true">// Static convenience properties (we'd like to encourage everyone to use this more concise form)</span>
+<span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">request</span><span class="token punctuation">(</span>urlString<span class="token punctuation">,</span> parameters<span class="token punctuation">:</span> parameters<span class="token punctuation">,</span> encoding<span class="token punctuation">:</span> <span class="token builtin">PropertyListEncoding</span><span class="token punctuation">.</span>xml<span class="token punctuation">)</span>
+<span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">request</span><span class="token punctuation">(</span>urlString<span class="token punctuation">,</span> parameters<span class="token punctuation">:</span> parameters<span class="token punctuation">,</span> encoding<span class="token punctuation">:</span> <span class="token builtin">PropertyListEncoding</span><span class="token punctuation">.</span>binary<span class="token punctuation">)</span>
 </code></pre>
 <h4 id="Custom-Encoding"><a href="#Custom-Encoding" class="headerlink" title="Custom Encoding"></a>Custom Encoding</h4><p>Creating a custom custom <code>ParameterEncoding</code> is now as simple as implementing the protocol. For more examples on how to do this, please refer to the README.</p>
 <blockquote>
@@ -3228,26 +3348,26 @@ Alamofire.request(urlString, parameters: parameters, encoding: PropertyListEncod
 </li>
 </ul>
 <p>At a high level, Alamofire 4 now has four <code>Request</code> subclasses that each support their own custom chained APIs. This allows each subclass to create extensions tailored to that specific type of request.</p>
-<pre><code class="swift">open class Request {
-    // Contains common properties, authentication and state methods as well as
-    // CustomStringConvertible and CustomDebugStringConvertible conformance
-}
+<pre class=" language-swift"><code class="language-swift">open <span class="token keyword">class</span> <span class="token class-name">Request</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// Contains common properties, authentication and state methods as well as</span>
+    <span class="token comment" spellcheck="true">// CustomStringConvertible and CustomDebugStringConvertible conformance</span>
+<span class="token punctuation">}</span>
 
-open class DataRequest: Request {
-    // Contains stream (not to be confused with StreamRequest) and download progress methods.
-}
+open <span class="token keyword">class</span> <span class="token class-name">DataRequest</span><span class="token punctuation">:</span> <span class="token builtin">Request</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// Contains stream (not to be confused with StreamRequest) and download progress methods.</span>
+<span class="token punctuation">}</span>
 
-open class DownloadRequest: Request {
-    // Contains download destination and options, resume data and download progress methods.
-}
+open <span class="token keyword">class</span> <span class="token class-name">DownloadRequest</span><span class="token punctuation">:</span> <span class="token builtin">Request</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// Contains download destination and options, resume data and download progress methods.</span>
+<span class="token punctuation">}</span>
 
-open class UploadRequest: DataRequest {
-    // Inherits all DataRequest APIs and also contains upload progress methods.
-}
+open <span class="token keyword">class</span> <span class="token class-name">UploadRequest</span><span class="token punctuation">:</span> <span class="token builtin">DataRequest</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// Inherits all DataRequest APIs and also contains upload progress methods.</span>
+<span class="token punctuation">}</span>
 
-open class StreamRequest: Request {
-    // Only inherits Request APIs, there are no other custom APIs at this time.
-}
+open <span class="token keyword">class</span> <span class="token class-name">StreamRequest</span><span class="token punctuation">:</span> <span class="token builtin">Request</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// Only inherits Request APIs, there are no other custom APIs at this time.</span>
+<span class="token punctuation">}</span>
 </code></pre>
 <p>By making this split, Alamofire 4 was able to create customized chaining APIs for each type of <code>Request</code>. This opened up all sorts of possibilities, but let’s take a moment to focus on what this change means in terms of progress reporting and download destinations.</p>
 <blockquote>
@@ -3255,38 +3375,38 @@ open class StreamRequest: Request {
 </blockquote>
 <h4 id="Download-and-Upload-Progress"><a href="#Download-and-Upload-Progress" class="headerlink" title="Download and Upload Progress"></a>Download and Upload Progress</h4><p>The progress reporting system for data, download and upload requests has been completely redesigned. Each request type contains progress APIs for executing a closure during each progress update by returning the underlying <code>Progress</code> instance. The closure will be called on the specified queue that defaults to main.</p>
 <p><strong>Data Request Progress</strong></p>
-<pre><code class="swift">Alamofire.request(urlString)
-    .downloadProgress { progress in
-        // Called on main dispatch queue by default
-        print(&quot;Download progress: \(progress.fractionCompleted)&quot;)
-    }
-    .responseJSON { response in
-        debugPrint(response)
-    }
+<pre class=" language-swift"><code class="language-swift"><span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">request</span><span class="token punctuation">(</span>urlString<span class="token punctuation">)</span>
+    <span class="token punctuation">.</span>downloadProgress <span class="token punctuation">{</span> progress <span class="token keyword">in</span>
+        <span class="token comment" spellcheck="true">// Called on main dispatch queue by default</span>
+        <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"Download progress: <span class="token interpolation"><span class="token delimiter variable">\(</span>progress<span class="token punctuation">.</span>fractionCompleted<span class="token delimiter variable">)</span></span>"</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    <span class="token punctuation">.</span>responseJSON <span class="token punctuation">{</span> response <span class="token keyword">in</span>
+        <span class="token function">debugPrint</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
 </code></pre>
 <p><strong>Download Request Progress</strong></p>
-<pre><code class="swift">Alamofire.download(urlString, to: destination)
-    .downloadProgress(queue: DispatchQueue.global(qos: .utility)) { progress in
-        // Called on utility dispatch queue
-        print(&quot;Download progress: \(progress.fractionCompleted)&quot;)
-    }
-    .responseJSON { response in
-        debugPrint(response)
-    }
+<pre class=" language-swift"><code class="language-swift"><span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">download</span><span class="token punctuation">(</span>urlString<span class="token punctuation">,</span> to<span class="token punctuation">:</span> destination<span class="token punctuation">)</span>
+    <span class="token punctuation">.</span><span class="token function">downloadProgress</span><span class="token punctuation">(</span>queue<span class="token punctuation">:</span> <span class="token builtin">DispatchQueue</span><span class="token punctuation">.</span><span class="token function">global</span><span class="token punctuation">(</span>qos<span class="token punctuation">:</span> <span class="token punctuation">.</span>utility<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> progress <span class="token keyword">in</span>
+        <span class="token comment" spellcheck="true">// Called on utility dispatch queue</span>
+        <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"Download progress: <span class="token interpolation"><span class="token delimiter variable">\(</span>progress<span class="token punctuation">.</span>fractionCompleted<span class="token delimiter variable">)</span></span>"</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    <span class="token punctuation">.</span>responseJSON <span class="token punctuation">{</span> response <span class="token keyword">in</span>
+        <span class="token function">debugPrint</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
 </code></pre>
 <p><strong>Upload Request Progress</strong></p>
-<pre><code class="swift">Alamofire.upload(data, to: urlString, withMethod: .post)
-    .uploadProgress { progress in
-        // Called on main dispatch queue by default
-        print(&quot;Upload progress: \(progress.fractionCompleted)&quot;)
-    }
-    .downloadProgress { progress in
-        // Called on main dispatch queue by default
-        print(&quot;Download progress: \(progress.fractionCompleted)&quot;)
-    }
-    .responseData { response in
-        debugPrint(response)
-    }
+<pre class=" language-swift"><code class="language-swift"><span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">upload</span><span class="token punctuation">(</span>data<span class="token punctuation">,</span> to<span class="token punctuation">:</span> urlString<span class="token punctuation">,</span> withMethod<span class="token punctuation">:</span> <span class="token punctuation">.</span>post<span class="token punctuation">)</span>
+    <span class="token punctuation">.</span>uploadProgress <span class="token punctuation">{</span> progress <span class="token keyword">in</span>
+        <span class="token comment" spellcheck="true">// Called on main dispatch queue by default</span>
+        <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"Upload progress: <span class="token interpolation"><span class="token delimiter variable">\(</span>progress<span class="token punctuation">.</span>fractionCompleted<span class="token delimiter variable">)</span></span>"</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    <span class="token punctuation">.</span>downloadProgress <span class="token punctuation">{</span> progress <span class="token keyword">in</span>
+        <span class="token comment" spellcheck="true">// Called on main dispatch queue by default</span>
+        <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"Download progress: <span class="token interpolation"><span class="token delimiter variable">\(</span>progress<span class="token punctuation">.</span>fractionCompleted<span class="token delimiter variable">)</span></span>"</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    <span class="token punctuation">.</span>responseData <span class="token punctuation">{</span> response <span class="token keyword">in</span>
+        <span class="token function">debugPrint</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
 </code></pre>
 <p>It’s now easy to differentiate between upload and download progress for upload requests.</p>
 <blockquote>
@@ -3302,18 +3422,18 @@ open class StreamRequest: Request {
 </li>
 </ul>
 <p>These limitations led to several enhancements in Alamofire 4. The first of which is the optionality of the destination closure. Now, by default, the <code>destination</code> closure is <code>nil</code> which means the file is not moved anywhere on the file system and the temporary URL is returned.</p>
-<pre><code class="swift">Alamofire.download(urlString).responseData { response in
-    print(&quot;Temporary URL: \(response.temporaryURL)&quot;)
-}
+<pre class=" language-swift"><code class="language-swift"><span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">download</span><span class="token punctuation">(</span>urlString<span class="token punctuation">)</span><span class="token punctuation">.</span>responseData <span class="token punctuation">{</span> response <span class="token keyword">in</span>
+    <span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"Temporary URL: <span class="token interpolation"><span class="token delimiter variable">\(</span>response<span class="token punctuation">.</span>temporaryURL<span class="token delimiter variable">)</span></span>"</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
 </code></pre>
 <blockquote>
 <p>We’ll cover the <code>DownloadResponse</code> type in more detail in the <a href="#response-serializers">Response Serializers</a> section.</p>
 </blockquote>
 <h4 id="Download-Options"><a href="#Download-Options" class="headerlink" title="Download Options"></a>Download Options</h4><p>The other major change made was to add download options to the destination closure allowing more file system control over the move operation. To accomplish this, the <code>DownloadOptions</code> type was created and added to the <code>DownloadFileDestination</code> closure.</p>
-<pre><code class="swift">public typealias DownloadFileDestination = (
-    _ temporaryURL: URL,
-    _ response: HTTPURLResponse)
-    -&gt; (destinationURL: URL, options: DownloadOptions)
+<pre class=" language-swift"><code class="language-swift"><span class="token keyword">public</span> <span class="token keyword">typealias</span> <span class="token builtin">DownloadFileDestination</span> <span class="token operator">=</span> <span class="token punctuation">(</span>
+    <span class="token number">_</span> temporaryURL<span class="token punctuation">:</span> <span class="token constant">URL</span><span class="token punctuation">,</span>
+    <span class="token number">_</span> response<span class="token punctuation">:</span> <span class="token builtin">HTTPURLResponse</span><span class="token punctuation">)</span>
+    <span class="token operator">-</span><span class="token operator">></span> <span class="token punctuation">(</span>destinationURL<span class="token punctuation">:</span> <span class="token constant">URL</span><span class="token punctuation">,</span> options<span class="token punctuation">:</span> <span class="token builtin">DownloadOptions</span><span class="token punctuation">)</span>
 </code></pre>
 <p>The two currently supported <code>DownloadOptions</code> are:</p>
 <ul>
@@ -3321,13 +3441,13 @@ open class StreamRequest: Request {
 <li><code>.removePreviousFile</code> - Removes a previous file from the destination URL if specified.</li>
 </ul>
 <p>They can then be used as follows:</p>
-<pre><code class="swift">let destination: DownloadRequest.DownloadFileDestination = { _, _ in 
-    return (fileURL, [.removePreviousFile, .createIntermediateDirectories]) 
-}
+<pre class=" language-swift"><code class="language-swift"><span class="token keyword">let</span> destination<span class="token punctuation">:</span> <span class="token builtin">DownloadRequest</span><span class="token punctuation">.</span><span class="token builtin">DownloadFileDestination</span> <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token number">_</span><span class="token punctuation">,</span> <span class="token number">_</span> <span class="token keyword">in</span> 
+    <span class="token keyword">return</span> <span class="token punctuation">(</span>fileURL<span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token punctuation">.</span>removePreviousFile<span class="token punctuation">,</span> <span class="token punctuation">.</span>createIntermediateDirectories<span class="token punctuation">]</span><span class="token punctuation">)</span> 
+<span class="token punctuation">}</span>
 
-Alamofire.download(urlString, to: destination).response { response in
-    debugPrint(response)
-}
+<span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">download</span><span class="token punctuation">(</span>urlString<span class="token punctuation">,</span> to<span class="token punctuation">:</span> destination<span class="token punctuation">)</span><span class="token punctuation">.</span>response <span class="token punctuation">{</span> response <span class="token keyword">in</span>
+    <span class="token function">debugPrint</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
 </code></pre>
 <p>If an error occurs during the file system operations, the <code>error</code> on the <code>DownloadResponse</code> will be of type <code>URLError</code>.</p>
 <blockquote>
@@ -3340,50 +3460,50 @@ Alamofire.download(urlString, to: destination).response { response in
 </ul>
 <p>By creating <code>Request</code> subclasses, the validation closure typealias and request APIs were able to be tailored to each request type.</p>
 <h4 id="Data-Request"><a href="#Data-Request" class="headerlink" title="Data Request"></a>Data Request</h4><p>The <code>Validation</code> closure exposed on the <code>DataRequest</code> (inherited by <code>UploadRequest</code>) is now as follows:</p>
-<pre><code class="swift">extension DataRequest {
-    public typealias Validation = (URLRequest?, HTTPURLResponse, Data?) -&gt; ValidationResult
-}
+<pre class=" language-swift"><code class="language-swift"><span class="token keyword">extension</span> <span class="token builtin">DataRequest</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">typealias</span> <span class="token builtin">Validation</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token builtin">URLRequest</span><span class="token operator">?</span><span class="token punctuation">,</span> <span class="token builtin">HTTPURLResponse</span><span class="token punctuation">,</span> <span class="token builtin">Data</span><span class="token operator">?</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">ValidationResult</span>
+<span class="token punctuation">}</span>
 </code></pre>
 <p>By exposing the <code>Data?</code> property directly in the closure, you no longer have to write an extension on <code>Request</code> to access it. Now you can do something like this:</p>
-<pre><code class="swift">Alamofire.request(urlString)
-    .validate { request, response, data in
-        guard let data = data else { return .failure(customError) }
+<pre class=" language-swift"><code class="language-swift"><span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">request</span><span class="token punctuation">(</span>urlString<span class="token punctuation">)</span>
+    <span class="token punctuation">.</span>validate <span class="token punctuation">{</span> request<span class="token punctuation">,</span> response<span class="token punctuation">,</span> data <span class="token keyword">in</span>
+        <span class="token keyword">guard</span> <span class="token keyword">let</span> data <span class="token operator">=</span> data <span class="token keyword">else</span> <span class="token punctuation">{</span> <span class="token keyword">return</span> <span class="token punctuation">.</span><span class="token function">failure</span><span class="token punctuation">(</span>customError<span class="token punctuation">)</span> <span class="token punctuation">}</span>
 
-        // 1) Validate the response to make sure everything looks good
-        // 2) If validation fails, you can now parse the error message out of the
-        //    data if necessary and add that to your custom error if you wish.
+        <span class="token comment" spellcheck="true">// 1) Validate the response to make sure everything looks good</span>
+        <span class="token comment" spellcheck="true">// 2) If validation fails, you can now parse the error message out of the</span>
+        <span class="token comment" spellcheck="true">//    data if necessary and add that to your custom error if you wish.</span>
 
-        return .success
-    }
-    .response { response in
-        debugPrint(response)
-    }
+        <span class="token keyword">return</span> <span class="token punctuation">.</span>success
+    <span class="token punctuation">}</span>
+    <span class="token punctuation">.</span>response <span class="token punctuation">{</span> response <span class="token keyword">in</span>
+        <span class="token function">debugPrint</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
 </code></pre>
 <h4 id="Download-Request"><a href="#Download-Request" class="headerlink" title="Download Request"></a>Download Request</h4><p>The <code>Validation</code> closure on the <code>DownloadRequest</code> is very similar to the <code>DataRequest</code> API, but tailored more to downloads.</p>
-<pre><code class="swift">extension DownloadRequest {
-    public typealias Validation = (
-        _ request: URLRequest?, 
-        _ response: HTTPURLResponse, 
-        _ temporaryURL: URL?, 
-        _ destinationURL: URL?) 
-        -&gt; ValidationResult
-}
+<pre class=" language-swift"><code class="language-swift"><span class="token keyword">extension</span> <span class="token builtin">DownloadRequest</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">typealias</span> <span class="token builtin">Validation</span> <span class="token operator">=</span> <span class="token punctuation">(</span>
+        <span class="token number">_</span> request<span class="token punctuation">:</span> <span class="token builtin">URLRequest</span><span class="token operator">?</span><span class="token punctuation">,</span> 
+        <span class="token number">_</span> response<span class="token punctuation">:</span> <span class="token builtin">HTTPURLResponse</span><span class="token punctuation">,</span> 
+        <span class="token number">_</span> temporaryURL<span class="token punctuation">:</span> <span class="token constant">URL</span><span class="token operator">?</span><span class="token punctuation">,</span> 
+        <span class="token number">_</span> destinationURL<span class="token punctuation">:</span> <span class="token constant">URL</span><span class="token operator">?</span><span class="token punctuation">)</span> 
+        <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">ValidationResult</span>
+<span class="token punctuation">}</span>
 </code></pre>
 <p>The <code>temporaryURL</code> and <code>destinationURL</code> parameters now allow you access the data returned by the server directly in an inline closure. This allows you to inspect the data inside the file if you’ve determined you need to in order to create a custom error.</p>
-<pre><code class="swift">Alamofire.download(urlString)
-    .validate { request, response, temporaryURL, destinationURL in
-        guard let fileURL = temporaryURL else { return .failure(customError) }
+<pre class=" language-swift"><code class="language-swift"><span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">download</span><span class="token punctuation">(</span>urlString<span class="token punctuation">)</span>
+    <span class="token punctuation">.</span>validate <span class="token punctuation">{</span> request<span class="token punctuation">,</span> response<span class="token punctuation">,</span> temporaryURL<span class="token punctuation">,</span> destinationURL <span class="token keyword">in</span>
+        <span class="token keyword">guard</span> <span class="token keyword">let</span> fileURL <span class="token operator">=</span> temporaryURL <span class="token keyword">else</span> <span class="token punctuation">{</span> <span class="token keyword">return</span> <span class="token punctuation">.</span><span class="token function">failure</span><span class="token punctuation">(</span>customError<span class="token punctuation">)</span> <span class="token punctuation">}</span>
 
-        do {
-            let _ = try Data(contentsOf: fileURL)
-            return .success
-        } catch {
-            return .failure(customError)
-        }
-    }
-    .response { response in
-        debugPrint(response)
-    }
+        <span class="token keyword">do</span> <span class="token punctuation">{</span>
+            <span class="token keyword">let</span> <span class="token number">_</span> <span class="token operator">=</span> <span class="token keyword">try</span> <span class="token function">Data</span><span class="token punctuation">(</span>contentsOf<span class="token punctuation">:</span> fileURL<span class="token punctuation">)</span>
+            <span class="token keyword">return</span> <span class="token punctuation">.</span>success
+        <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">{</span>
+            <span class="token keyword">return</span> <span class="token punctuation">.</span><span class="token function">failure</span><span class="token punctuation">(</span>customError<span class="token punctuation">)</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    <span class="token punctuation">.</span>response <span class="token punctuation">{</span> response <span class="token keyword">in</span>
+        <span class="token function">debugPrint</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
 </code></pre>
 <p>By exposing the underlying server data directly to the inline closures, error messages embedded in those responses can be parsed out inside the <code>Validation</code> closure to create a custom error including the server error message. If the payload is the same schema as used in a response serializer closure, the response serializer could be called to parse out the error message rather than duplicating the logic. For an example of how to do this, please refer to the README.</p>
 <blockquote>
@@ -3404,75 +3524,75 @@ Alamofire.download(urlString, to: destination).response { response in
 </ul>
 <p>As you can see, there were some very strong limitations to this system in Alamofire 3.x. Therefore, in Alamofire 4, the <code>Request</code> type was first broken down into subclasses, which opened up the opportunity to create customized response serializers and APIs for specific types of requests. Before getting to far into response serializers, we should first walk through the new <code>Response</code> types.</p>
 <h4 id="Default-Data-Response"><a href="#Default-Data-Response" class="headerlink" title="Default Data Response"></a>Default Data Response</h4><p>The <code>DefaultDataResponse</code> represents an unserialized server response. There’s no Alamofire processing that happens, it just collects all the response information from the <code>SessionDelegate</code> APIs and returns it in a simple struct.</p>
-<pre><code class="swift">public struct DefaultDataResponse {
-    public let request: URLRequest?
-    public let response: HTTPURLResponse?
-    public let data: Data?
-    public let error: Error?
-    public var metrics: URLSessionTaskMetrics? { return _metrics as? URLSessionTaskMetrics }
-}
+<pre class=" language-swift"><code class="language-swift"><span class="token keyword">public</span> <span class="token keyword">struct</span> <span class="token builtin">DefaultDataResponse</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">let</span> request<span class="token punctuation">:</span> <span class="token builtin">URLRequest</span><span class="token operator">?</span>
+    <span class="token keyword">public</span> <span class="token keyword">let</span> response<span class="token punctuation">:</span> <span class="token builtin">HTTPURLResponse</span><span class="token operator">?</span>
+    <span class="token keyword">public</span> <span class="token keyword">let</span> data<span class="token punctuation">:</span> <span class="token builtin">Data</span><span class="token operator">?</span>
+    <span class="token keyword">public</span> <span class="token keyword">let</span> error<span class="token punctuation">:</span> <span class="token builtin">Error</span><span class="token operator">?</span>
+    <span class="token keyword">public</span> <span class="token keyword">var</span> metrics<span class="token punctuation">:</span> <span class="token builtin">URLSessionTaskMetrics</span><span class="token operator">?</span> <span class="token punctuation">{</span> <span class="token keyword">return</span> _metrics <span class="token keyword">as</span><span class="token operator">?</span> <span class="token builtin">URLSessionTaskMetrics</span> <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
 </code></pre>
 <p>This is the type of response you will get back from the <code>DataRequest.response</code> API.</p>
-<pre><code class="swift">Alamofire.request(urlString).response { response in
-    debugPrint(response)
-}
+<pre class=" language-swift"><code class="language-swift"><span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">request</span><span class="token punctuation">(</span>urlString<span class="token punctuation">)</span><span class="token punctuation">.</span>response <span class="token punctuation">{</span> response <span class="token keyword">in</span>
+    <span class="token function">debugPrint</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
 
-Alamofire.upload(file, to: urlString).response { response in
-    debugPrint(response)
-}
+<span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">upload</span><span class="token punctuation">(</span>file<span class="token punctuation">,</span> to<span class="token punctuation">:</span> urlString<span class="token punctuation">)</span><span class="token punctuation">.</span>response <span class="token punctuation">{</span> response <span class="token keyword">in</span>
+    <span class="token function">debugPrint</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
 </code></pre>
 <h4 id="Data-Response"><a href="#Data-Response" class="headerlink" title="Data Response"></a>Data Response</h4><p>The generic <code>DataResponse</code> type is the same as the generic <code>Response</code> in Alamofire 3.x, but refactored and contains the new <code>metrics</code> property.</p>
-<pre><code class="swift">public struct DataResponse&lt;Value&gt; {
-    public let request: URLRequest?
-    public let response: HTTPURLResponse?
-    public let data: Data?
-    public let result: Result&lt;Value&gt;
-    public let timeline: Timeline
-    public var metrics: URLSessionTaskMetrics? { return _metrics as? URLSessionTaskMetrics }
-}
+<pre class=" language-swift"><code class="language-swift"><span class="token keyword">public</span> <span class="token keyword">struct</span> <span class="token builtin">DataResponse</span><span class="token operator">&lt;</span><span class="token builtin">Value</span><span class="token operator">></span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">let</span> request<span class="token punctuation">:</span> <span class="token builtin">URLRequest</span><span class="token operator">?</span>
+    <span class="token keyword">public</span> <span class="token keyword">let</span> response<span class="token punctuation">:</span> <span class="token builtin">HTTPURLResponse</span><span class="token operator">?</span>
+    <span class="token keyword">public</span> <span class="token keyword">let</span> data<span class="token punctuation">:</span> <span class="token builtin">Data</span><span class="token operator">?</span>
+    <span class="token keyword">public</span> <span class="token keyword">let</span> result<span class="token punctuation">:</span> <span class="token builtin">Result</span><span class="token operator">&lt;</span><span class="token builtin">Value</span><span class="token operator">></span>
+    <span class="token keyword">public</span> <span class="token keyword">let</span> timeline<span class="token punctuation">:</span> <span class="token builtin">Timeline</span>
+    <span class="token keyword">public</span> <span class="token keyword">var</span> metrics<span class="token punctuation">:</span> <span class="token builtin">URLSessionTaskMetrics</span><span class="token operator">?</span> <span class="token punctuation">{</span> <span class="token keyword">return</span> _metrics <span class="token keyword">as</span><span class="token operator">?</span> <span class="token builtin">URLSessionTaskMetrics</span> <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
 </code></pre>
 <p>You still have access to the same response serialization APIs as before on the <code>DataRequest</code> and <code>UploadRequest</code> types.</p>
-<pre><code class="swift">Alamofire.request(urlString).responseJSON { response in
-    debugPrint(response)
-    print(response.result.isSuccess)
-}
+<pre class=" language-swift"><code class="language-swift"><span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">request</span><span class="token punctuation">(</span>urlString<span class="token punctuation">)</span><span class="token punctuation">.</span>responseJSON <span class="token punctuation">{</span> response <span class="token keyword">in</span>
+    <span class="token function">debugPrint</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span>
+    <span class="token function">print</span><span class="token punctuation">(</span>response<span class="token punctuation">.</span>result<span class="token punctuation">.</span>isSuccess<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
 
-Alamofire.upload(fileURL, to: urlString).responseData { response in
-    debugPrint(response)
-    print(response.result.isSuccess)
-}
+<span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">upload</span><span class="token punctuation">(</span>fileURL<span class="token punctuation">,</span> to<span class="token punctuation">:</span> urlString<span class="token punctuation">)</span><span class="token punctuation">.</span>responseData <span class="token punctuation">{</span> response <span class="token keyword">in</span>
+    <span class="token function">debugPrint</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span>
+    <span class="token function">print</span><span class="token punctuation">(</span>response<span class="token punctuation">.</span>result<span class="token punctuation">.</span>isSuccess<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
 </code></pre>
 <h4 id="Default-Download-Response"><a href="#Default-Download-Response" class="headerlink" title="Default Download Response"></a>Default Download Response</h4><p>Since downloads work differently than data and upload requests, Alamofire 4 contains custom download <code>Response</code> types tailored to their behavior. The <code>DefaultDownloadResponse</code> type represents an unserialized server response for a <code>DownloadRequest</code> that collects all the <code>SessionDelegate</code> information into a simple struct.</p>
-<pre><code class="swift">public struct DefaultDownloadResponse {
-    public let request: URLRequest?
-    public let response: HTTPURLResponse?
-    public let temporaryURL: URL?
-    public let destinationURL: URL?
-    public let resumeData: Data?
-    public let error: Error?
-    public var metrics: URLSessionTaskMetrics? { return _metrics as? URLSessionTaskMetrics }
-}
+<pre class=" language-swift"><code class="language-swift"><span class="token keyword">public</span> <span class="token keyword">struct</span> <span class="token builtin">DefaultDownloadResponse</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">let</span> request<span class="token punctuation">:</span> <span class="token builtin">URLRequest</span><span class="token operator">?</span>
+    <span class="token keyword">public</span> <span class="token keyword">let</span> response<span class="token punctuation">:</span> <span class="token builtin">HTTPURLResponse</span><span class="token operator">?</span>
+    <span class="token keyword">public</span> <span class="token keyword">let</span> temporaryURL<span class="token punctuation">:</span> <span class="token constant">URL</span><span class="token operator">?</span>
+    <span class="token keyword">public</span> <span class="token keyword">let</span> destinationURL<span class="token punctuation">:</span> <span class="token constant">URL</span><span class="token operator">?</span>
+    <span class="token keyword">public</span> <span class="token keyword">let</span> resumeData<span class="token punctuation">:</span> <span class="token builtin">Data</span><span class="token operator">?</span>
+    <span class="token keyword">public</span> <span class="token keyword">let</span> error<span class="token punctuation">:</span> <span class="token builtin">Error</span><span class="token operator">?</span>
+    <span class="token keyword">public</span> <span class="token keyword">var</span> metrics<span class="token punctuation">:</span> <span class="token builtin">URLSessionTaskMetrics</span><span class="token operator">?</span> <span class="token punctuation">{</span> <span class="token keyword">return</span> _metrics <span class="token keyword">as</span><span class="token operator">?</span> <span class="token builtin">URLSessionTaskMetrics</span> <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
 </code></pre>
 <p>The <code>DefaultDownloadResponse</code> type is returned when using the new <code>DownloadRequest.response</code> API.</p>
-<pre><code class="swift">Alamofire.download(urlString).response { response in
-    debugPrint(response)
-    print(response.temporaryURL)
-}
+<pre class=" language-swift"><code class="language-swift"><span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">download</span><span class="token punctuation">(</span>urlString<span class="token punctuation">)</span><span class="token punctuation">.</span>response <span class="token punctuation">{</span> response <span class="token keyword">in</span>
+    <span class="token function">debugPrint</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span>
+    <span class="token function">print</span><span class="token punctuation">(</span>response<span class="token punctuation">.</span>temporaryURL<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
 </code></pre>
 <h4 id="Download-Response"><a href="#Download-Response" class="headerlink" title="Download Response"></a>Download Response</h4><p>The new generic <code>DownloadResponse</code> type is similar to the generic <code>DataResponse</code> type, but contains information tailored to download requests. The <code>DownloadResponse</code> type is returned when one of four new APIs exposed on the <code>DownloadRequest</code> type. These new APIs match the <code>DataRequest</code> ones, and provide the same functionality by loading the data from the underlying temporary or destination URL.</p>
-<pre><code class="swift">Alamofire.download(urlString, to: destination)
-    .responseData { response in
-        debugPrint(response)
-    }
-    .responseString { response in
-        debugPrint(response)
-    }
-    .responseJSON { response in
-        debugPrint(response)
-    }
-    .responsePropertyList { response in
-        debugPrint(response)
-    }
+<pre class=" language-swift"><code class="language-swift"><span class="token builtin">Alamofire</span><span class="token punctuation">.</span><span class="token function">download</span><span class="token punctuation">(</span>urlString<span class="token punctuation">,</span> to<span class="token punctuation">:</span> destination<span class="token punctuation">)</span>
+    <span class="token punctuation">.</span>responseData <span class="token punctuation">{</span> response <span class="token keyword">in</span>
+        <span class="token function">debugPrint</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    <span class="token punctuation">.</span>responseString <span class="token punctuation">{</span> response <span class="token keyword">in</span>
+        <span class="token function">debugPrint</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    <span class="token punctuation">.</span>responseJSON <span class="token punctuation">{</span> response <span class="token keyword">in</span>
+        <span class="token function">debugPrint</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    <span class="token punctuation">.</span>responsePropertyList <span class="token punctuation">{</span> response <span class="token keyword">in</span>
+        <span class="token function">debugPrint</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
 </code></pre>
 <p>These new response serialization APIs make it MUCH easier to download a request to a file and serialize the response all in a single call.</p>
 <h4 id="Custom-Response-Serializers"><a href="#Custom-Response-Serializers" class="headerlink" title="Custom Response Serializers"></a>Custom Response Serializers</h4><p>If you have created your own custom response serializers, you may want to extend support across both data and download requests similar to what we’ve done with the Alamofire response serializers. If you do decide to do this, take a close look at how Alamofire shares the response serializer implementation between both request types by moving the implementation to the <code>Request</code>. This allowed us to DRY up our logic to avoid duplication between types.</p>
@@ -3491,67 +3611,6 @@ Alamofire.upload(fileURL, to: urlString).responseData { response in
         <tags>
             
             <tag> Alamofire </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[UIPopoverPresentationController]]></title>
-      <url>/2017/06/12/UIPopoverPresentationController/</url>
-      <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a>
-<p>UIPopoverPresentationController 是 iOS8 后新增的，相当于pad端的UIPopOverController，以后我们也可以在iPhone上使用popOver啦。自己写了一个小demo，大概了熟悉了一下用法。后面有开发需求时会详细补充。<br>首先要知道一点是，我们并不需要创建一个UIPopoverPresentationController，他相当于UIViewController的属性，因此我们只需要创建UIViewController即可。<br>举个例子：假设我们要在 ViewController窗体弹窗，弹窗为FirstViewController（kind of UIViewController）我们用两种方式来实现<br>1、在self.view上创建一个button，给button添加弹窗事件；<br>2、在导航栏添加barButtonItem，给其添加弹窗时间。<br>弹窗事件：</p>
-<pre><code class="swift">1、button
-[objc] view plain copy
-- (void)buttonClick  
-{  
-    FirstViewController *firstVC = [[FirstViewController alloc] init];  
-    firstVC.modalPresentationStyle = UIModalPresentationPopover;  
-    firstVC.popoverPresentationController.sourceView = popOverButton;  //rect参数是以view的左上角为坐标原点（0，0）  
-    firstVC.popoverPresentationController.sourceRect = popOverButton.bounds; //指定箭头所指区域的矩形框范围（位置和尺寸），以view的左上角为坐标原点  
-    firstVC.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp; //箭头方向  
-    firstVC.popoverPresentationController.delegate = self;  
-    firstVC.preferredContentSize = CGSizeMake(100, 200);  
-    [self presentViewController:firstVC animated:YES completion:nil];  
-}  
-
-2、barButtonItem
-[objc] view plain copy
-- (void)rightBarButtonItemClick  
-{  
-    FirstViewController *firstVC = [[FirstViewController alloc]init];  
-    firstVC.modalPresentationStyle = UIModalPresentationPopover;  
-    /** 
-     *  由于导航上的控件没有指定frame，无法设置sourceView和sourceRect，用下面的。 
-     */  
-    firstVC.popoverPresentationController.barButtonItem = self.navigationItem.rightBarButtonItem;  
-    firstVC.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp;  
-    firstVC.popoverPresentationController.delegate = self;  
-    firstVC.preferredContentSize = CGSizeMake(100, 200);  
-    [self presentViewController:firstVC animated:YES completion:nil];  
-//    firstVC.popoverPresentationController.passthroughViews = nil;  
-}  
-注意几点：
-1、遵守代理：UIPopoverPresentationControllerDelegate
-2、在phone端必须要适配设备，要设置下面代理方法：
-[objc] view plain copy
-/* For iOS8.0, the only supported adaptive presentation styles are UIModalPresentationFullScreen and UIModalPresentationOverFullScreen. */  
-- (UIModalPresentationStyle)adaptivePresentationStyleForPresentationController:(UIPresentationController *)controller;  
--
-</code></pre>
-<p>iPhone下默认是UIModalPresentationFullScreen，需要手动设置为UIModalPresentationNone，否则，是普通的present全屏显示，没有弹窗效果。iPad不需要。<br>3、其他设置根据需求翻相关文档即可。<br>demo：<a href="https://github.com/Lynnll/UIPopOverLearning.git" target="_blank" rel="external">https://github.com/Lynnll/UIPopOverLearning.git</a></p>
-]]></content>
-      
-        <categories>
-            
-            <category> iOS </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> popover </tag>
             
         </tags>
         
@@ -3731,7 +3790,7 @@ UIViewAnimationOptionTransitionFlipFromBottom  //转场从下翻转
       <title><![CDATA[iOS UICollectionView自定义cell]]></title>
       <url>/2017/05/19/uicell/</url>
       <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>自定义的UITableCell<br><a id="more"></a></p>
-<pre><code class="mm">//
+<pre class=" language-mm"><code class="language-mm">//
 //  jokeCell.m
 //  MyLaugh
 //
@@ -3739,7 +3798,7 @@ UIViewAnimationOptionTransitionFlipFromBottom  //转场从下翻转
 //  Copyright © 2017 wangyu. All rights reserved.
 //
 
-#import &quot;jokeCell.h&quot;
+#import "jokeCell.h"
 #define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
 
 @implementation jokeCell

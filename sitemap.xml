@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://wangyu1997.github.io/2017/08/22/Ubuntu%E9%85%8D%E7%BD%AE%E9%98%B2%E7%81%AB%E5%A2%99/</loc>
+    
+    <lastmod>2017-09-19T17:28:54.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://wangyu1997.github.io/2017/08/03/Swift%E4%B8%AD%E6%9C%89%E7%94%A8%E7%9A%84tips/</loc>
     
     <lastmod>2017-08-22T10:37:21.000Z</lastmod>
@@ -212,6 +219,13 @@
   </url>
   
   <url>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-basic.js</loc>
+    
+    <lastmod>2017-01-13T03:58:20.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://wangyu1997.github.io/assets/prettify/lang-cbm.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
@@ -345,14 +359,14 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-ls.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-aea.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-aea.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-lsp.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
@@ -604,13 +618,6 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-basic.js</loc>
-    
-    <lastmod>2017-01-13T03:58:20.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://wangyu1997.github.io/assets/prettify/skins/desert.css</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
@@ -639,7 +646,7 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-lsp.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-ls.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     

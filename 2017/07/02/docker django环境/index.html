@@ -433,7 +433,7 @@
                 <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
    
     
-            <link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
+            <script src="/assets/js/APlayer.min.js"> </script><link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><a id="more"></a> 
 <p>本文主要是作为官方<a href="https://docs.docker.com/compose/django/" target="_blank" rel="external">Quickstart: Compose and Django</a>的导读，如果你当下还没了解过Docker，但想知道如何利用Docker来管理自己本地的开发环境，并统一开发和测试的环境,那你可以参考以下内容。 </p>
 <h3 id="需求："><a href="#需求：" class="headerlink" title="需求："></a>需求：</h3><p>使用Docker搭建Django开发环境，即本地只需要有python代码即可。 </p>
 <h3 id="预备知识"><a href="#预备知识" class="headerlink" title="预备知识:"></a>预备知识:</h3><p>Docker作为容器，和传统虚拟机是不一样的，如下图所示，它是基于Docker Engine的一个容器，且在这一层次上是相互隔离的，而传统虚拟化则是要虚拟化整个系统，因此理论上Docker容器可以更有效的利用资源，你可以很容易在本地环境搭建多服务的复杂系统环境。本篇以一台web服务器及一台数据库服务器为例，当然也可以搭建更复杂的，比如加入一台redis机器等等。  </p>

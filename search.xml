@@ -3,9 +3,88 @@
   
     
     <entry>
+      <title><![CDATA[Hibernate annotation主键生成策略]]></title>
+      <url>/2017/09/20/2017-09-20/</url>
+      <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
+<p>Hibernate 默认总共支持 13 种生成策略 :  </p>
+<ol>
+<li><p>increment        2.  identity        3. sequence </p>
+</li>
+<li><p>hilo                  5. seqhilo         6. uuid </p>
+</li>
+<li><p>uuid.hex          8. guid             9. native </p>
+</li>
+<li><p>assigned       11. select         12. foreign        13. sequence-identity </p>
+</li>
+</ol>
+<p>下面介绍几个较为常用的策略 :  </p>
+<p>① identity [ 自然递增 ] </p>
+<p> 支持 DB2，MySQL，SQL Server，Sybase 和HypersonicSQL 数据库， 用于为 long 或 short 或 int 类型生成唯一标识。它依赖于底层不同的数据库，与 Hibernate 和 程序员无关。 </p>
+<p>注解示例 :  </p>
+<p>@Id </p>
+<p>@GenericGenerator(name = “idGenerator”, strategy = “identity”) </p>
+<p>@GeneratedValue(generator = “idGenerator”) </p>
+<p>② sequence [ 序列 ] </p>
+<p>支持 Oracle，DB2，PostgreSql，SAPDb 等数据库，用于为 long 或 short 或 int 类型生成唯一标识。它需要底层数据库的支持， 并由数据库来维护这个 sequence 序列。 </p>
+<p>注解示例 :  </p>
+<p>@Id </p>
+<p>@GenericGenerator(name = “idGenerator”, strategy = “sequence”, parameters = {@Parameter(name = “sequence”,value=”seq_name”)}) </p>
+<p>@GeneratedValue(generator = “idGenerator”) </p>
+<p>注意 : 该策略要求设定序列名，否则 hibernate 将无法找到，这将引致抛出异常 : </p>
+<p>org.hibernate.exception.SQLGrammarException: could not get next sequence value </p>
+<p>③ native </p>
+<p>需底层数据库的支持，对于 MySQL，SQL Server 采用 identity 的生成策略，对于 Oracle，则采用 sequence 策略。 </p>
+<p>注解示例 : </p>
+<p>@Id </p>
+<p>@GenericGenerator(name = “idGenerator”, strategy = “native”) </p>
+<p>@GeneratedValue(generator = “idGenerator”) </p>
+<p>④ increment [ 自然递增 ] </p>
+<p>与 identity 策略不同的是，该策略不依赖于底层数据库，而依赖于 hibernate 本身，用于为 long 或 short 或 int 类型生成唯一标识。 </p>
+<p>主键计数器是由 hibernate 的一个实例来维护，每次自增量为 1，但在集群下不能使用该策略，否则将引起主键冲突的情况，该策略适用于所有关系型数据库使用。 </p>
+<p>注解示例 : </p>
+<p>@Id </p>
+<p>@GenericGenerator(name = “idGenerator”, strategy = “increment”) </p>
+<p>@GeneratedValue(generator = “idGenerator”) </p>
+<p>⑤ uuid [ 32位16进制数的字符串 ] </p>
+<p>采用128位UUID算法生成主键，能够保证网络环境下的主键唯一性，也就能够保证在不同数据库及不同服务器下主键的唯一性。 </p>
+<p>uuid 最终被编码成一个32位16进制数的字符串，占用的存储空间较大。用于为 String 类型生成唯一标识，适用于所有关系型数据库。 </p>
+<p>注解示例 : </p>
+<p>@Id </p>
+<p>@GenericGenerator(name = “idGenerator”, strategy = “uuid”) </p>
+<p>@GeneratedValue(generator = “idGenerator”) </p>
+<p>⑤ assigned [ 手工分配主键ID值 ] </p>
+<p>该策略要求程序员必须自己维护和管理主键，当有数据需要存储时，程序员必须自己为该数据分配指定一个主键ID值，如果该数据没有被分配主键ID值或分配的值存在重复，则该数据都将无法被持久化且会引起异常的抛出。 </p>
+<p>注解示例 : </p>
+<p>@Id </p>
+<p>@GenericGenerator(name = “idGenerator”, strategy = “assigned”) </p>
+<p>@GeneratedValue(generator = “idGenerator”) </p>
+]]></content>
+      
+        <categories>
+            
+            <category> JavaWeb </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> javaweb </tag>
+            
+            <tag> hibernate </tag>
+            
+            <tag> annotation </tag>
+            
+            <tag> primary key </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[Ubuntu 14.04 配置iptables防火墙]]></title>
       <url>/2017/08/22/Ubuntu%E9%85%8D%E7%BD%AE%E9%98%B2%E7%81%AB%E5%A2%99/</url>
-      <content type="html"><![CDATA[<script src="/assets/js/APlayer.min.js"> </script><link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><a id="more"></a> 
+      <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
 <blockquote>
 <p>Ubuntu默认安装是没有开启任何防火墙的，为了服务器的安全，建议大家安装启用防火墙设置，这里推荐使用iptables防火墙.如果mysql启本地使用,可以不用打开3306端口. </p>
 </blockquote>
@@ -64,7 +143,7 @@ iptables-restore &lt; /etc/iptables.rules
     <entry>
       <title><![CDATA[Swift中你应该知道的一些有用的tips]]></title>
       <url>/2017/08/03/Swift%E4%B8%AD%E6%9C%89%E7%94%A8%E7%9A%84tips/</url>
-      <content type="html"><![CDATA[<script src="/assets/js/APlayer.min.js"> </script><link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><a id="more"></a>                           
+      <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a>                           
 <p>本文主要的知识点有： </p>
 <ul>
 <li>@noescape和@autoclosure</li>
@@ -208,7 +287,7 @@ for firstName in firstNames {
     <entry>
       <title><![CDATA[利用 Django REST framework 编写 RESTful API]]></title>
       <url>/2017/07/26/%20Django%20REST%20framework/</url>
-      <content type="html"><![CDATA[<script src="/assets/js/APlayer.min.js"> </script><link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><a id="more"></a>                           
+      <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a>                           
 <p>最近在玩 Django，不得不说 rest_framework 真乃一大神器，可以轻易的甚至自动化的搞定很多事情，比如：</p>
 <ul>
 <li>自动生成符合 RESTful 规范的 API<ul>
@@ -601,7 +680,7 @@ urlpatterns = patterns(
     <entry>
       <title><![CDATA[跟着 Github 学习 Restful HTTP API 设计]]></title>
       <url>/2017/07/26/Restful%20HTTP%20API%20/</url>
-      <content type="html"><![CDATA[<script src="/assets/js/APlayer.min.js"> </script><link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><a id="more"></a> 
+      <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
 <p>近几年提供 <code>HTTP API</code> 服务的公司越来越多，许多公司都把 API 作为产品重要的一部分，作为服务提供出去。而微服务的兴起，也让企业内部开始重视和频繁使用 HTTP API 。好的 <code>HTTP API</code> 设计容易理解、符合 RFC 标准、提供使用者便利的功能，其中经常被拿来作为教科书典范的当属 <a href="https://developer.github.com/v3/" target="_blank" rel="external">Github API</a>。这篇文章就通过 <code>Github API</code> 总结了一些非常好的设计原则，可以作为以后要编写 HTTP API 的参考。 </p>
 <p>注意：这篇文章只讨论设计原则，不是强制要求（API 设计者可以根据实际情况实现部分内容，甚至实现出和某些原则相反的内容），也不会给出实现的思路和细节。 </p>
 <h2 id="1-使用-HTTPS"><a href="#1-使用-HTTPS" class="headerlink" title="1. 使用 HTTPS"></a>1. 使用 HTTPS</h2><p>这个和 Restful API 本身没有很大的关系，但是对于增加网站的安全是非常重要的。特别如果你提供的是公开 API，用户的信息泄露或者被攻击会严重影响网站的信誉。 </p>
@@ -739,7 +818,7 @@ DELETE /repos/:owner/:repo
     <entry>
       <title><![CDATA[Kindeditor在Django中使用]]></title>
       <url>/2017/07/20/Kindeditor%E5%9C%A8Django%E4%B8%AD%E4%BD%BF%E7%94%A8/</url>
-      <content type="html"><![CDATA[<script src="/assets/js/APlayer.min.js"> </script><link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><a id="more"></a> 
+      <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
 <hr>
 <p>一路走来，DJango也用了挺久了，自己也做了一些基于Django的小项目，具体可看github，但是Django默认的admin后台编辑文本框实在是太丑了，而且单一，其实在很久之前就想写这篇文章了，但是由于种种原因拖延到了现在，终于下定了决心来写，现在时间是00:17。 </p>
 <hr>
@@ -840,7 +919,7 @@ def image_upload(files, dir_name):
     <entry>
       <title><![CDATA[docker django+mysql开发环境]]></title>
       <url>/2017/07/05/django+mysql/</url>
-      <content type="html"><![CDATA[<script src="/assets/js/APlayer.min.js"> </script><link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><a id="more"></a> 
+      <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
 <p>使用docker来搭建开发环境不仅能够跟我们主机的已有的各种软件配置隔离，而且也能够很方便地分发给别人，从而使团队能够在统一的开发环境下快速开始开发、测试和部署。本文采用Docker的docker-compose来搭建python2.7+django1.7.5+mysql的web开发环境，希望可以给需要的同学参考。 </p>
 <h2 id="1、项目目录"><a href="#1、项目目录" class="headerlink" title="1、项目目录"></a>1、项目目录</h2><p>创建工程目录mysite </p>
 <pre><code>yhc@yhc-E540:~/workspaces/docker$ mkdir mysite &amp;&amp; cd mysite
@@ -1020,7 +1099,7 @@ No such image: mysite_web:latest (tag: latest)
     <entry>
       <title><![CDATA[基于docker的django开发环境搭建]]></title>
       <url>/2017/07/02/docker%20django%E7%8E%AF%E5%A2%83/</url>
-      <content type="html"><![CDATA[<script src="/assets/js/APlayer.min.js"> </script><link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><a id="more"></a> 
+      <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
 <p>本文主要是作为官方<a href="https://docs.docker.com/compose/django/" target="_blank" rel="external">Quickstart: Compose and Django</a>的导读，如果你当下还没了解过Docker，但想知道如何利用Docker来管理自己本地的开发环境，并统一开发和测试的环境,那你可以参考以下内容。 </p>
 <h3 id="需求："><a href="#需求：" class="headerlink" title="需求："></a>需求：</h3><p>使用Docker搭建Django开发环境，即本地只需要有python代码即可。 </p>
 <h3 id="预备知识"><a href="#预备知识" class="headerlink" title="预备知识:"></a>预备知识:</h3><p>Docker作为容器，和传统虚拟机是不一样的，如下图所示，它是基于Docker Engine的一个容器，且在这一层次上是相互隔离的，而传统虚拟化则是要虚拟化整个系统，因此理论上Docker容器可以更有效的利用资源，你可以很容易在本地环境搭建多服务的复杂系统环境。本篇以一台web服务器及一台数据库服务器为例，当然也可以搭建更复杂的，比如加入一台redis机器等等。  </p>
@@ -1105,7 +1184,7 @@ No such image: mysite_web:latest (tag: latest)
     <entry>
       <title><![CDATA[MarkDown 语法入门]]></title>
       <url>/2017/07/01/MarkDown%20%E8%AF%AD%E6%B3%95%E5%85%A5%E9%97%A8/</url>
-      <content type="html"><![CDATA[<script src="/assets/js/APlayer.min.js"> </script><link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><a id="more"></a> 
+      <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
 <h4 id="导语："><a href="#导语：" class="headerlink" title="导语："></a>导语：</h4><blockquote>
 <p><a href="http://zh.wikipedia.org/wiki/Markdown" target="_blank" rel="external">Markdown</a> 是一种轻量级的<strong>「标记语言」</strong>，它的优点很多，目前也被越来越多的写作爱好者，撰稿者广泛使用。看到这里请不要被<strong>「标记」</strong>、<strong>「语言」</strong>所迷惑，Markdown 的语法十分简单。常用的标记符号也不超过十个，这种相对于更为复杂的 HTML 标记语言来说，Markdown 可谓是十分轻量的，学习成本也不需要太多，且一旦熟悉这种语法规则，会有一劳永逸的效果。 </p>
 </blockquote>
@@ -1245,7 +1324,7 @@ No such image: mysite_web:latest (tag: latest)
     <entry>
       <title><![CDATA[使用Vultr搭建ShadowSocks教程]]></title>
       <url>/2017/07/01/vultr%E6%90%AD%E5%BB%BAss/</url>
-      <content type="html"><![CDATA[<script src="/assets/js/APlayer.min.js"> </script><link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><a id="more"></a> 
+      <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
 <h2 id="使用Vultr搭建ShadowSocks教程"><a href="#使用Vultr搭建ShadowSocks教程" class="headerlink" title="使用Vultr搭建ShadowSocks教程"></a>使用Vultr搭建ShadowSocks教程</h2><h2 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h2><p>本地发起连接请求，由远程服务器响应后然后将我们需要的数据返回到本地。 </p>
 <p>最低消费 </p>
 <p>  2.5美元/月 </p>
@@ -1420,7 +1499,7 @@ $ firewall-cmd --reload
     <entry>
       <title><![CDATA[Centos搭建LNMP环境]]></title>
       <url>/2017/06/21/Centos%20LNMP/</url>
-      <content type="html"><![CDATA[<script src="/assets/js/APlayer.min.js"> </script><link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><a id="more"></a> 
+      <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
 <p><strong>1. 安装关联库</strong></p>
 <pre><code># mkdir -p /data/tgz
 # cd /data/tgz
@@ -1845,7 +1924,7 @@ http {
     <entry>
       <title><![CDATA[七牛云储存]]></title>
       <url>/2017/06/14/%E4%B8%83%E7%89%9B%E4%BA%91%E5%82%A8%E5%AD%98/</url>
-      <content type="html"><![CDATA[<script src="/assets/js/APlayer.min.js"> </script><link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><a id="more"></a> 
+      <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
 <ul>
 <li><p>初始化<br>一般情况下直接使用默认设置，不用单独配置。 可以配置超时时长、分片上传阀值等。</p>
 <p>Configuration config = new Configuration.Builder()</p>
@@ -1992,7 +2071,7 @@ uploadManager.put(data, key, ...)
     <entry>
       <title><![CDATA[Alamofire 中文使用指南]]></title>
       <url>/2017/06/14/Alamofire%20%E4%B8%AD%E6%96%87%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/</url>
-      <content type="html"><![CDATA[<script src="/assets/js/APlayer.min.js"> </script><link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><hr>
+      <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><hr>
 <p>Alamofire 4.0 是 Alamofire 最新的一个大版本更新, 一个基于 Swift 的 iOS, tvOS, macOS, watchOS 的 HTTP 网络库. 作为一个大版本更新, 就像语义上那样, 4.0 的 API 引入了一些破坏性修改. </p>
 <p>这篇导引旨在帮助大家从 Alamofire 3.x 平滑过渡到最新版本, 同时也解释一下新的设计和结构, 以及功能上的更新.<br><a id="more"></a> </p>
 <h2 id="要求"><a href="#要求" class="headerlink" title="要求"></a>要求</h2><ul>
@@ -2720,70 +2799,9 @@ Alamofire.upload(fileURL, to: urlString).responseData { response in
     </entry>
     
     <entry>
-      <title><![CDATA[UIPopoverPresentationController]]></title>
-      <url>/2017/06/12/UIPopoverPresentationController/</url>
-      <content type="html"><![CDATA[<script src="/assets/js/APlayer.min.js"> </script><link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><a id="more"></a>
-<p>UIPopoverPresentationController 是 iOS8 后新增的，相当于pad端的UIPopOverController，以后我们也可以在iPhone上使用popOver啦。自己写了一个小demo，大概了熟悉了一下用法。后面有开发需求时会详细补充。<br>首先要知道一点是，我们并不需要创建一个UIPopoverPresentationController，他相当于UIViewController的属性，因此我们只需要创建UIViewController即可。<br>举个例子：假设我们要在 ViewController窗体弹窗，弹窗为FirstViewController（kind of UIViewController）我们用两种方式来实现<br>1、在self.view上创建一个button，给button添加弹窗事件；<br>2、在导航栏添加barButtonItem，给其添加弹窗时间。<br>弹窗事件：</p>
-<pre class=" language-swift"><code class="language-swift"><span class="token number">1</span>、button
-<span class="token punctuation">[</span>objc<span class="token punctuation">]</span> view plain copy
-<span class="token operator">-</span> <span class="token punctuation">(</span>void<span class="token punctuation">)</span>buttonClick  
-<span class="token punctuation">{</span>  
-    <span class="token builtin">FirstViewController</span> <span class="token operator">*</span>firstVC <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token builtin">FirstViewController</span> alloc<span class="token punctuation">]</span> <span class="token keyword">init</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  
-    firstVC<span class="token punctuation">.</span>modalPresentationStyle <span class="token operator">=</span> <span class="token builtin">UIModalPresentationPopover</span><span class="token punctuation">;</span>  
-    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>sourceView <span class="token operator">=</span> popOverButton<span class="token punctuation">;</span>  <span class="token comment" spellcheck="true">//rect参数是以view的左上角为坐标原点（0，0）  </span>
-    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>sourceRect <span class="token operator">=</span> popOverButton<span class="token punctuation">.</span>bounds<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//指定箭头所指区域的矩形框范围（位置和尺寸），以view的左上角为坐标原点  </span>
-    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>permittedArrowDirections <span class="token operator">=</span> <span class="token builtin">UIPopoverArrowDirectionUp</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//箭头方向  </span>
-    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>delegate <span class="token operator">=</span> <span class="token keyword">self</span><span class="token punctuation">;</span>  
-    firstVC<span class="token punctuation">.</span>preferredContentSize <span class="token operator">=</span> <span class="token function">CGSizeMake</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">,</span> <span class="token number">200</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
-    <span class="token punctuation">[</span><span class="token keyword">self</span> presentViewController<span class="token punctuation">:</span>firstVC animated<span class="token punctuation">:</span><span class="token constant">YES</span> completion<span class="token punctuation">:</span><span class="token constant">nil</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  
-<span class="token punctuation">}</span>  
-
-<span class="token number">2</span>、barButtonItem
-<span class="token punctuation">[</span>objc<span class="token punctuation">]</span> view plain copy
-<span class="token operator">-</span> <span class="token punctuation">(</span>void<span class="token punctuation">)</span>rightBarButtonItemClick  
-<span class="token punctuation">{</span>  
-    <span class="token builtin">FirstViewController</span> <span class="token operator">*</span>firstVC <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token builtin">FirstViewController</span> alloc<span class="token punctuation">]</span><span class="token keyword">init</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  
-    firstVC<span class="token punctuation">.</span>modalPresentationStyle <span class="token operator">=</span> <span class="token builtin">UIModalPresentationPopover</span><span class="token punctuation">;</span>  
-    <span class="token comment" spellcheck="true">/** 
-     *  由于导航上的控件没有指定frame，无法设置sourceView和sourceRect，用下面的。 
-     */</span>  
-    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>barButtonItem <span class="token operator">=</span> <span class="token keyword">self</span><span class="token punctuation">.</span>navigationItem<span class="token punctuation">.</span>rightBarButtonItem<span class="token punctuation">;</span>  
-    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>permittedArrowDirections <span class="token operator">=</span> <span class="token builtin">UIPopoverArrowDirectionUp</span><span class="token punctuation">;</span>  
-    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>delegate <span class="token operator">=</span> <span class="token keyword">self</span><span class="token punctuation">;</span>  
-    firstVC<span class="token punctuation">.</span>preferredContentSize <span class="token operator">=</span> <span class="token function">CGSizeMake</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">,</span> <span class="token number">200</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
-    <span class="token punctuation">[</span><span class="token keyword">self</span> presentViewController<span class="token punctuation">:</span>firstVC animated<span class="token punctuation">:</span><span class="token constant">YES</span> completion<span class="token punctuation">:</span><span class="token constant">nil</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  
-<span class="token comment" spellcheck="true">//    firstVC.popoverPresentationController.passthroughViews = nil;  </span>
-<span class="token punctuation">}</span>  
-注意几点：
-<span class="token number">1</span>、遵守代理：<span class="token builtin">UIPopoverPresentationControllerDelegate</span>
-<span class="token number">2</span>、在phone端必须要适配设备，要设置下面代理方法：
-<span class="token punctuation">[</span>objc<span class="token punctuation">]</span> view plain copy
-<span class="token comment" spellcheck="true">/* For iOS8.0, the only supported adaptive presentation styles are UIModalPresentationFullScreen and UIModalPresentationOverFullScreen. */</span>  
-<span class="token operator">-</span> <span class="token punctuation">(</span><span class="token builtin">UIModalPresentationStyle</span><span class="token punctuation">)</span>adaptivePresentationStyleForPresentationController<span class="token punctuation">:</span><span class="token punctuation">(</span><span class="token builtin">UIPresentationController</span> <span class="token operator">*</span><span class="token punctuation">)</span>controller<span class="token punctuation">;</span>  
-<span class="token operator">-</span>
-</code></pre>
-<p>iPhone下默认是UIModalPresentationFullScreen，需要手动设置为UIModalPresentationNone，否则，是普通的present全屏显示，没有弹窗效果。iPad不需要。<br>3、其他设置根据需求翻相关文档即可。<br>demo：<a href="https://github.com/Lynnll/UIPopOverLearning.git" target="_blank" rel="external">https://github.com/Lynnll/UIPopOverLearning.git</a></p>
-]]></content>
-      
-        <categories>
-            
-            <category> iOS </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> popover </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
       <title><![CDATA[Alamofire 4.0 Migration Guide]]></title>
       <url>/2017/06/12/Alamofire/</url>
-      <content type="html"><![CDATA[<script src="/assets/js/APlayer.min.js"> </script><link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><a id="more"></a> 
+      <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
 <h1 id="Alamofire-4-0-Migration-Guide"><a href="#Alamofire-4-0-Migration-Guide" class="headerlink" title="Alamofire 4.0 Migration Guide"></a>Alamofire 4.0 Migration Guide</h1><p>Alamofire 4.0 is the latest major release of Alamofire, an HTTP networking library for iOS, tvOS, macOS and watchOS written in Swift. As a major release, following Semantic Versioning conventions, 4.0 introduces API-breaking changes.</p>
 <p>This guide is provided in order to ease the transition of existing applications using Alamofire 3.x to the latest APIs, as well as explain the design and structure of new and updated functionality.</p>
 <ul>
@@ -3528,9 +3546,70 @@ open <span class="token keyword">class</span> <span class="token class-name">Str
     </entry>
     
     <entry>
+      <title><![CDATA[UIPopoverPresentationController]]></title>
+      <url>/2017/06/12/UIPopoverPresentationController/</url>
+      <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a>
+<p>UIPopoverPresentationController 是 iOS8 后新增的，相当于pad端的UIPopOverController，以后我们也可以在iPhone上使用popOver啦。自己写了一个小demo，大概了熟悉了一下用法。后面有开发需求时会详细补充。<br>首先要知道一点是，我们并不需要创建一个UIPopoverPresentationController，他相当于UIViewController的属性，因此我们只需要创建UIViewController即可。<br>举个例子：假设我们要在 ViewController窗体弹窗，弹窗为FirstViewController（kind of UIViewController）我们用两种方式来实现<br>1、在self.view上创建一个button，给button添加弹窗事件；<br>2、在导航栏添加barButtonItem，给其添加弹窗时间。<br>弹窗事件：</p>
+<pre class=" language-swift"><code class="language-swift"><span class="token number">1</span>、button
+<span class="token punctuation">[</span>objc<span class="token punctuation">]</span> view plain copy
+<span class="token operator">-</span> <span class="token punctuation">(</span>void<span class="token punctuation">)</span>buttonClick  
+<span class="token punctuation">{</span>  
+    <span class="token builtin">FirstViewController</span> <span class="token operator">*</span>firstVC <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token builtin">FirstViewController</span> alloc<span class="token punctuation">]</span> <span class="token keyword">init</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  
+    firstVC<span class="token punctuation">.</span>modalPresentationStyle <span class="token operator">=</span> <span class="token builtin">UIModalPresentationPopover</span><span class="token punctuation">;</span>  
+    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>sourceView <span class="token operator">=</span> popOverButton<span class="token punctuation">;</span>  <span class="token comment" spellcheck="true">//rect参数是以view的左上角为坐标原点（0，0）  </span>
+    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>sourceRect <span class="token operator">=</span> popOverButton<span class="token punctuation">.</span>bounds<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//指定箭头所指区域的矩形框范围（位置和尺寸），以view的左上角为坐标原点  </span>
+    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>permittedArrowDirections <span class="token operator">=</span> <span class="token builtin">UIPopoverArrowDirectionUp</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//箭头方向  </span>
+    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>delegate <span class="token operator">=</span> <span class="token keyword">self</span><span class="token punctuation">;</span>  
+    firstVC<span class="token punctuation">.</span>preferredContentSize <span class="token operator">=</span> <span class="token function">CGSizeMake</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">,</span> <span class="token number">200</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
+    <span class="token punctuation">[</span><span class="token keyword">self</span> presentViewController<span class="token punctuation">:</span>firstVC animated<span class="token punctuation">:</span><span class="token constant">YES</span> completion<span class="token punctuation">:</span><span class="token constant">nil</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  
+<span class="token punctuation">}</span>  
+
+<span class="token number">2</span>、barButtonItem
+<span class="token punctuation">[</span>objc<span class="token punctuation">]</span> view plain copy
+<span class="token operator">-</span> <span class="token punctuation">(</span>void<span class="token punctuation">)</span>rightBarButtonItemClick  
+<span class="token punctuation">{</span>  
+    <span class="token builtin">FirstViewController</span> <span class="token operator">*</span>firstVC <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token builtin">FirstViewController</span> alloc<span class="token punctuation">]</span><span class="token keyword">init</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  
+    firstVC<span class="token punctuation">.</span>modalPresentationStyle <span class="token operator">=</span> <span class="token builtin">UIModalPresentationPopover</span><span class="token punctuation">;</span>  
+    <span class="token comment" spellcheck="true">/** 
+     *  由于导航上的控件没有指定frame，无法设置sourceView和sourceRect，用下面的。 
+     */</span>  
+    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>barButtonItem <span class="token operator">=</span> <span class="token keyword">self</span><span class="token punctuation">.</span>navigationItem<span class="token punctuation">.</span>rightBarButtonItem<span class="token punctuation">;</span>  
+    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>permittedArrowDirections <span class="token operator">=</span> <span class="token builtin">UIPopoverArrowDirectionUp</span><span class="token punctuation">;</span>  
+    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>delegate <span class="token operator">=</span> <span class="token keyword">self</span><span class="token punctuation">;</span>  
+    firstVC<span class="token punctuation">.</span>preferredContentSize <span class="token operator">=</span> <span class="token function">CGSizeMake</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">,</span> <span class="token number">200</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
+    <span class="token punctuation">[</span><span class="token keyword">self</span> presentViewController<span class="token punctuation">:</span>firstVC animated<span class="token punctuation">:</span><span class="token constant">YES</span> completion<span class="token punctuation">:</span><span class="token constant">nil</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  
+<span class="token comment" spellcheck="true">//    firstVC.popoverPresentationController.passthroughViews = nil;  </span>
+<span class="token punctuation">}</span>  
+注意几点：
+<span class="token number">1</span>、遵守代理：<span class="token builtin">UIPopoverPresentationControllerDelegate</span>
+<span class="token number">2</span>、在phone端必须要适配设备，要设置下面代理方法：
+<span class="token punctuation">[</span>objc<span class="token punctuation">]</span> view plain copy
+<span class="token comment" spellcheck="true">/* For iOS8.0, the only supported adaptive presentation styles are UIModalPresentationFullScreen and UIModalPresentationOverFullScreen. */</span>  
+<span class="token operator">-</span> <span class="token punctuation">(</span><span class="token builtin">UIModalPresentationStyle</span><span class="token punctuation">)</span>adaptivePresentationStyleForPresentationController<span class="token punctuation">:</span><span class="token punctuation">(</span><span class="token builtin">UIPresentationController</span> <span class="token operator">*</span><span class="token punctuation">)</span>controller<span class="token punctuation">;</span>  
+<span class="token operator">-</span>
+</code></pre>
+<p>iPhone下默认是UIModalPresentationFullScreen，需要手动设置为UIModalPresentationNone，否则，是普通的present全屏显示，没有弹窗效果。iPad不需要。<br>3、其他设置根据需求翻相关文档即可。<br>demo：<a href="https://github.com/Lynnll/UIPopOverLearning.git" target="_blank" rel="external">https://github.com/Lynnll/UIPopOverLearning.git</a></p>
+]]></content>
+      
+        <categories>
+            
+            <category> iOS </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> popover </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[内存管理]]></title>
       <url>/2017/06/12/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/</url>
-      <content type="html"><![CDATA[<script src="/assets/js/APlayer.min.js"> </script><link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><a id="more"></a> 
+      <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
 <p><strong>1. 物理地址和逻辑地址</strong></p>
 <p><strong>物理地址</strong>：加载到内存地址寄存器中的地址，内存单元的真正地址。在前端总线上传输的内存地址都是物理内存地址，编号从0开始一直到可用物理内存的最高端。这些数字被北桥(Nortbridge chip)映射到实际的内存条上。物理地址是明确的、最终用在总线上的编号，不必转换，不必分页，也没有特权级检查(no translation, no paging, no privilege checks)。 </p>
 <p><strong>逻辑地址</strong>：CPU所生成的地址。逻辑地址是内部和编程使用的、并不唯一。例如，你在进行C语言指针编程中，可以读取指针变量本身值(&amp;操作)，实际上这个值就是逻辑地址，它是相对于你当前进程数据段的地址（偏移地址），不和绝对物理地址相干。 </p>
@@ -3621,7 +3700,7 @@ open <span class="token keyword">class</span> <span class="token class-name">Str
     <entry>
       <title><![CDATA[iOS动画中的枚举UIViewAnimationOptions]]></title>
       <url>/2017/06/11/UIViewAnimationOptions/</url>
-      <content type="html"><![CDATA[<script src="/assets/js/APlayer.min.js"> </script><link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><a id="more"></a>
+      <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a>
 <p>首先这个枚举属于UIViewAnimation。我们经常使用的函数是 <code>[UIView animateWithDuration: animations:^{} completion:^(BOOL finished) {}];</code><br>和<code>[UIView animateWithDuration: animations:^{}];</code>如果动画稍微复杂点，例如需要组合等等就可能用到这个函数：<code>[UIView animateWithDuration: delay: options: animations: completion:^(BOOL finished) {}];</code>刚开始接触的朋友看到一堆枚举可能就觉得烦，尤其是苹果那混乱的动画框架东一坨，西一坨。又是Quartz2D，又是核心动画跟臭袜子一样……没关系，捡回来接着穿。</p>
 <p>　　以上方法中的options一项需要传入一个枚举，这个枚举大概控制的是这几个要素：当前动画嵌套中的动画执行随时间的快慢种类（先快后慢等..）。动画要一直重复吗。如果我使用转场动画那么我用哪种转场效果。还有子动画嵌套在父动画中时我们如何对待父动画中的相同选项等等..</p>
 <p>　正文：</p>
@@ -3692,7 +3771,7 @@ UIViewAnimationOptionTransitionFlipFromBottom  //转场从下翻转
     <entry>
       <title><![CDATA[LDA Algorithm]]></title>
       <url>/2017/05/26/LDA/</url>
-      <content type="html"><![CDATA[<script src="/assets/js/APlayer.min.js"> </script><link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><h3 id="线性判别分析LDA原理总结"><a href="#线性判别分析LDA原理总结" class="headerlink" title="线性判别分析LDA原理总结"></a><center>线性判别分析LDA原理总结</center></h3><p>　　　　线性判别分析（Linear Discriminant Analysis, 以下简称LDA）,一种经典的降维方法。LDA在模式识别领域（比如人脸识别，舰艇识别等图形图像识别领域）中有非常广泛的应用，因此我们有必要了解下它的算法原理。</p>
+      <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><h3 id="线性判别分析LDA原理总结"><a href="#线性判别分析LDA原理总结" class="headerlink" title="线性判别分析LDA原理总结"></a><center>线性判别分析LDA原理总结</center></h3><p>　　　　线性判别分析（Linear Discriminant Analysis, 以下简称LDA）,一种经典的降维方法。LDA在模式识别领域（比如人脸识别，舰艇识别等图形图像识别领域）中有非常广泛的应用，因此我们有必要了解下它的算法原理。</p>
 <p>　　　　在学习LDA之前，有必要将其自然语言处理领域的LDA区别开来，在自然语言处理领域， LDA是隐含狄利克雷分布（Latent Dirichlet Allocation，简称LDA），他是一种处理文档的主题模型。我们本文只讨论线性判别分析，因此后面所有的LDA均指线性判别分析。</p>
 <ol>
 <li>LDA的思想</li>
@@ -3791,7 +3870,7 @@ UIViewAnimationOptionTransitionFlipFromBottom  //转场从下翻转
     <entry>
       <title><![CDATA[iOS UICollectionView自定义cell]]></title>
       <url>/2017/05/19/uicell/</url>
-      <content type="html"><![CDATA[<script src="/assets/js/APlayer.min.js"> </script><link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><p>自定义的UITableCell<br><a id="more"></a></p>
+      <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>自定义的UITableCell<br><a id="more"></a></p>
 <pre class=" language-mm"><code class="language-mm">//
 //  jokeCell.m
 //  MyLaugh
@@ -3902,7 +3981,7 @@ UIViewAnimationOptionTransitionFlipFromBottom  //转场从下翻转
     <entry>
       <title><![CDATA[MathJax]]></title>
       <url>/2017/05/18/math/</url>
-      <content type="html"><![CDATA[<script src="/assets/js/APlayer.min.js"> </script><link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><p>对LaTex基本用法的学习<br><a id="more"></a><br>$$T = \{(\vec{x_1},y_1),((\vec{x_2},y_2),\cdots,(\vec{x_N},y_N)\},\vec{x_i} $$</p>
+      <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>对LaTex基本用法的学习<br><a id="more"></a><br>$$T = \{(\vec{x_1},y_1),((\vec{x_2},y_2),\cdots,(\vec{x_N},y_N)\},\vec{x_i} $$</p>
 <h2 id="常用数学符号的-LaTeX-表示方法"><a href="#常用数学符号的-LaTeX-表示方法" class="headerlink" title="常用数学符号的 LaTeX 表示方法"></a>常用数学符号的 LaTeX 表示方法</h2><p>１、指数和下标可以用 ^ 和 _ 后加相应字符来实现。比如：</p>
 <p><img src="http://oq5d32gij.bkt.clouddn.com/foot.gif" alt="foot"></p>
 <p>2、平方根（square root）的输入命令为：\sqrt，n 次方根相应地为: \sqrt[n]。方根符号的大小由LATEX自动加以调整。也可用\surd 仅给出<br>符号。比如：</p>

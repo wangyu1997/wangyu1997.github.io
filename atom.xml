@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://wangyu1997.github.io/"/>
-  <updated>2017-09-28T09:53:45.000Z</updated>
+  <updated>2017-09-28T10:22:26.000Z</updated>
   <id>https://wangyu1997.github.io/</id>
   
   <author>
@@ -16,251 +16,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>axios使用教程</title>
-    <link href="https://wangyu1997.github.io/2017/09/28/axios%E6%95%99%E7%A8%8B/"/>
-    <id>https://wangyu1997.github.io/2017/09/28/axios教程/</id>
-    <published>2017-09-27T17:43:11.000Z</published>
-    <updated>2017-09-28T09:53:45.000Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
-<h2 id="一、安装"><a href="#一、安装" class="headerlink" title="一、安装"></a>一、安装</h2><p>1、 利用npm安装<code>npm install axios --save</code><br>2、 利用bower安装<code>bower install axios --save</code><br>3、 直接利用cdn引入<code>&lt;script src=&quot;https://unpkg.com/axios/dist/axios.min.js&quot;&gt;&lt;/script&gt;</code></p>
-<h2 id="二、例子"><a href="#二、例子" class="headerlink" title="二、例子"></a>二、例子</h2><p>1、 发送一个<code>GET</code>请求 </p>
-<pre><code>//通过给定的ID来发送请求
-axios.get(&#39;/user?ID=12345&#39;)
-  .then(function(response){
-    console.log(response);
-  })
-  .catch(function(err){
-    console.log(err);
-  });
-//以上请求也可以通过这种方式来发送
-axios.get(&#39;/user&#39;,{
-  params:{
-    ID:12345
-  }
-})
-.then(function(response){
-  console.log(response);
-})
-.catch(function(err){
-  console.log(err);
-});
-</code></pre><p>2、 发送一个<code>POST</code>请求 </p>
-<pre><code>axios.post(&#39;/user&#39;,{
-  firstName:&#39;Fred&#39;,
-  lastName:&#39;Flintstone&#39;
-})
-.then(function(res){
-  console.log(res);
-})
-.catch(function(err){
-  console.log(err);
-});
-</code></pre><p>3、 一次性并发多个请求 </p>
-<pre><code>function getUserAccount(){
-  return axios.get(&#39;/user/12345&#39;);
-}
-function getUserPermissions(){
-  return axios.get(&#39;/user/12345/permissions&#39;);
-}
-axios.all([getUserAccount(),getUserPermissions()])
-  .then(axios.spread(function(acct,perms){
-    //当这两个请求都完成的时候会触发这个函数，两个参数分别代表返回的结果
-  }))
-</code></pre><h2 id="三、axios的API"><a href="#三、axios的API" class="headerlink" title="三、axios的API"></a>三、axios的API</h2><h4 id="（一）-axios可以通过配置（config）来发送请求"><a href="#（一）-axios可以通过配置（config）来发送请求" class="headerlink" title="（一） axios可以通过配置（config）来发送请求"></a>（一） axios可以通过配置（<code>config</code>）来发送请求</h4><p>1、 <code>axios(config)</code></p>
-<pre><code>//发送一个`POST`请求
-axios({
-    method:&quot;POST&quot;,
-    url:&#39;/user/12345&#39;,
-    data:{
-        firstName:&quot;Fred&quot;,
-        lastName:&quot;Flintstone&quot;
-    }
-});
-</code></pre><p>2、 <code>axios(url[,config])</code></p>
-<pre><code>//发送一个`GET`请求（默认的请求方式）
-axios(&#39;/user/12345&#39;);
-</code></pre><h4 id="（二）、-请求方式的别名，这里对所有已经支持的请求方式都提供了方便的别名"><a href="#（二）、-请求方式的别名，这里对所有已经支持的请求方式都提供了方便的别名" class="headerlink" title="（二）、 请求方式的别名，这里对所有已经支持的请求方式都提供了方便的别名"></a>（二）、 请求方式的别名，这里对所有已经支持的请求方式都提供了方便的别名</h4><pre><code>axios.request(config);
-
-axios.get(url[,config]);
-
-axios.delete(url[,config]);
-
-axios.head(url[,config]);
-
-axios.post(url[,data[,config]]);
-
-axios.put(url[,data[,config]])
-
-axios.patch(url[,data[,config]])
-</code></pre><ul>
-<li>注意：当我们在使用别名方法的时候，<code>url,method,data</code>这几个参数不需要在配置中声明</li>
-</ul>
-<h4 id="（三）、-并发请求（concurrency）-即是帮助处理并发请求的辅助函数"><a href="#（三）、-并发请求（concurrency）-即是帮助处理并发请求的辅助函数" class="headerlink" title="（三）、 并发请求（concurrency）,即是帮助处理并发请求的辅助函数"></a>（三）、 并发请求（concurrency）,即是帮助处理并发请求的辅助函数</h4><pre><code>//iterable是一个可以迭代的参数如数组等
-axios.all(iterable)
-//callback要等到所有请求都完成才会执行
-axios.spread(callback)
-</code></pre><h4 id="（四）、创建一个axios实例，并且可以自定义其配置"><a href="#（四）、创建一个axios实例，并且可以自定义其配置" class="headerlink" title="（四）、创建一个axios实例，并且可以自定义其配置"></a>（四）、创建一个<code>axios</code>实例，并且可以自定义其配置</h4><p>1、 <code>axios.create([config])</code></p>
-<pre><code>var instance = axios.create({
-  baseURL:&quot;https://some-domain.com/api/&quot;,
-  timeout:1000,
-  headers: {&#39;X-Custom-Header&#39;:&#39;foobar&#39;}
-});
-</code></pre><p>2、 实例的方法 </p>
-<ul>
-<li><p>一下是实例方法，注意已经定义的配置将和利用create创建的实例的配置合并</p>
-<p>axios#request(config)</p>
-<p>axios#get(url[,config])</p>
-<p>axios#delete(url[,config])</p>
-<p>axios#head(url[,config])</p>
-<p>axios#post(url[,data[,config]])</p>
-<p>axios#put(url[,data[,config]])</p>
-<p>axios#patch(url[,data[,config]])</p>
-</li>
-</ul>
-<h2 id="四、请求的配置（request-config）"><a href="#四、请求的配置（request-config）" class="headerlink" title="四、请求的配置（request config）"></a>四、请求的配置（request config）</h2><ul>
-<li><p>以下就是请求的配置选项，只有<code>url</code>选项是必须的，如果<code>method</code>选项未定义，那么它默认是以<code>GET</code>的方式发出请求</p>
-<p>{<br>  //<code>url</code>是请求的服务器地址<br>  url:’/user’,<br>  //<code>method</code>是请求资源的方式<br>  method:’get’//default<br>  //如果<code>url</code>不是绝对地址，那么<code>baseURL</code>将会加到<code>url</code>的前面<br>  //当<code>url</code>是相对地址的时候，设置<code>baseURL</code>会非常的方便<br>  baseURL:’<a href="https://some-domain.com/api/" target="_blank" rel="external">https://some-domain.com/api/</a>‘,<br>  //<code>transformRequest</code>选项允许我们在请求发送到服务器之前对请求的数据做出一些改动<br>  //该选项只适用于以下请求方式：<code>put/post/patch</code><br>  //数组里面的最后一个函数必须返回一个字符串、-一个<code>ArrayBuffer</code>或者<code>Stream</code><br>  transformRequest:[function(data){</p>
-<pre><code>//在这里根据自己的需求改变数据
-return data;
-</code></pre><p>  }],<br>  //<code>transformResponse</code>选项允许我们在数据传送到<code>then/catch</code>方法之前对数据进行改动<br>  transformResponse:[function(data){</p>
-<pre><code>//在这里根据自己的需求改变数据
-return data;
-</code></pre><p>  }],<br>  //<code>headers</code>选项是需要被发送的自定义请求头信息<br>  headers: {‘X-Requested-With’:’XMLHttpRequest’},<br>  //<code>params</code>选项是要随请求一起发送的请求参数—-一般链接在URL后面<br>  //他的类型必须是一个纯对象或者是URLSearchParams对象<br>  params: {</p>
-<pre><code>ID:12345
-</code></pre><p>  },<br>  //<code>paramsSerializer</code>是一个可选的函数，起作用是让参数（params）序列化<br>  //例如(<a href="https://www.npmjs.com/package/qs,http://api.jquery.com/jquery.param" target="_blank" rel="external">https://www.npmjs.com/package/qs,http://api.jquery.com/jquery.param</a>)<br>  paramsSerializer: function(params){</p>
-<pre><code>return Qs.stringify(params,{arrayFormat:&#39;brackets&#39;})
-</code></pre><p>  },<br>  //<code>data</code>选项是作为一个请求体而需要被发送的数据<br>  //该选项只适用于方法：<code>put/post/patch</code><br>  //当没有设置<code>transformRequest</code>选项时dada必须是以下几种类型之一<br>  //string/plain/object/ArrayBuffer/ArrayBufferView/URLSearchParams<br>  //仅仅浏览器：FormData/File/Bold<br>  //仅node:Stream<br>  data {</p>
-<pre><code>firstName:&quot;Fred&quot;
-</code></pre><p>  },<br>  //<code>timeout</code>选项定义了请求发出的延迟毫秒数<br>  //如果请求花费的时间超过延迟的时间，那么请求会被终止</p>
-<p>  timeout:1000,<br>  //<code>withCredentails</code>选项表明了是否是跨域请求</p>
-<p>  withCredentials:false,//default<br>  //<code>adapter</code>适配器选项允许自定义处理请求，这会使得测试变得方便<br>  //返回一个promise,并提供验证返回<br>  adapter: function(config){</p>
-<pre><code>/*..........*/
-</code></pre><p>  },<br>  //<code>auth</code>表明HTTP基础的认证应该被使用，并提供证书<br>  //这会设置一个authorization头（header）,并覆盖你在header设置的Authorization头信息<br>  auth: {</p>
-<pre><code>username:&quot;zhangsan&quot;,
-password: &quot;s00sdkf&quot;
-</code></pre><p>  },<br>  //返回数据的格式<br>  //其可选项是arraybuffer,blob,document,json,text,stream<br>  responseType:’json’,//default<br>  //<br>  xsrfCookieName: ‘XSRF-TOKEN’,//default<br>  xsrfHeaderName:’X-XSRF-TOKEN’,//default<br>  //<code>onUploadProgress</code>上传进度事件<br>  onUploadProgress:function(progressEvent){</p>
-<pre><code>//下载进度的事件
-</code></pre><p>onDownloadProgress:function(progressEvent){<br>}<br>  },<br>  //相应内容的最大值<br>  maxContentLength:2000,<br>  //<code>validateStatus</code>定义了是否根据http相应状态码，来resolve或者reject promise<br>  //如果<code>validateStatus</code>返回true(或者设置为<code>null</code>或者<code>undefined</code>),那么promise的状态将会是resolved,否则其状态就是rejected<br>  validateStatus:function(status){</p>
-<pre><code>return status &gt;= 200 &amp;&amp; status &lt;300;//default
-</code></pre><p>  },<br>  //<code>maxRedirects</code>定义了在nodejs中重定向的最大数量<br>  maxRedirects: 5,//default<br>  //<code>httpAgent/httpsAgent</code>定义了当发送http/https请求要用到的自定义代理<br>  //keeyAlive在选项中没有被默认激活<br>  httpAgent: new http.Agent({keeyAlive:true}),<br>  httpsAgent: new https.Agent({keeyAlive:true}),<br>  //proxy定义了主机名字和端口号，<br>  //<code>auth</code>表明http基本认证应该与proxy代理链接，并提供证书<br>  //这将会设置一个<code>Proxy-Authorization</code> header,并且会覆盖掉已经存在的<code>Proxy-Authorization</code>  header<br>  proxy: {</p>
-<pre><code>host:&#39;127.0.0.1&#39;,
-port: 9000,
-auth: {
-  username:&#39;skda&#39;,
-  password:&#39;radsd&#39;
-}
-</code></pre><p>  },<br>  //<code>cancelToken</code>定义了一个用于取消请求的cancel token<br>  //详见cancelation部分<br>  cancelToken: new cancelToken(function(cancel){</p>
-<p>  })<br>}</p>
-</li>
-</ul>
-<h2 id="五、请求返回的内容"><a href="#五、请求返回的内容" class="headerlink" title="五、请求返回的内容"></a>五、请求返回的内容</h2><pre><code>{
-
-  data:{},
-  status:200,
-  //从服务器返回的http状态文本
-  statusText:&#39;OK&#39;,
-  //响应头信息
-  headers: {},
-  //`config`是在请求的时候的一些配置信息
-  config: {}
-}
-</code></pre><ul>
-<li><p>你可以这样来获取响应信息</p>
-<p>axios.get(‘/user/12345’)<br>  .then(function(res){</p>
-<pre><code>console.log(res.data);
-console.log(res.status);
-console.log(res.statusText);
-console.log(res.headers);
-console.log(res.config);
-</code></pre><p>  })</p>
-</li>
-</ul>
-<h2 id="六、默认配置"><a href="#六、默认配置" class="headerlink" title="六、默认配置"></a>六、默认配置</h2><ul>
-<li>你可以设置默认配置，对所有请求都有效</li>
-</ul>
-<p>1、 全局默认配置 </p>
-<pre><code>axios.defaults.baseURL = &#39;http://api.exmple.com&#39;;
-axios.defaults.headers.common[&#39;Authorization&#39;] = AUTH_TOKEN;
-axios.defaults.headers.post[&#39;content-Type&#39;] = &#39;appliction/x-www-form-urlencoded&#39;;
-</code></pre><p>2、 自定义的实例默认设置 </p>
-<pre><code>//当创建实例的时候配置默认配置
-var instance = axios.create({
-    baseURL: &#39;https://api.example.com&#39;
-});
-
-//当实例创建时候修改配置
-instance.defaults.headers.common[&quot;Authorization&quot;] = AUTH_TOKEN;
-</code></pre><p>3、 配置中的有优先级 </p>
-<ul>
-<li><p>config配置将会以优先级别来合并，顺序是lib/defauts.js中的默认配置，然后是实例中的默认配置，最后是请求中的config参数的配置，越往后等级越高，后面的会覆盖前面的例子。</p>
-<p>//创建一个实例的时候会使用libray目录中的默认配置<br>//在这里timeout配置的值为0，来自于libray的默认值<br>var instance = axios.create();<br>//回覆盖掉library的默认值<br>//现在所有的请求都要等2.5S之后才会发出<br>instance.defaults.timeout = 2500;<br>//这里的timeout回覆盖之前的2.5S变成5s<br>instance.get(‘/longRequest’,{<br>  timeout: 5000<br>});</p>
-</li>
-</ul>
-<h2 id="七、拦截器"><a href="#七、拦截器" class="headerlink" title="七、拦截器"></a>七、拦截器</h2><ul>
-<li><p>你可以在请求、响应在到达<code>then/catch</code>之前拦截他们</p>
-<p>//添加一个请求拦截器<br>axios.interceptors.request.use(function(config){<br>  //在请求发出之前进行一些操作<br>  return config;<br>},function(err){<br>  //Do something with request error<br>  return Promise.reject(error);<br>});<br>//添加一个响应拦截器<br>axios.interceptors.response.use(function(res){<br>  //在这里对返回的数据进行处理<br>  return res;<br>},function(err){<br>  //Do something with response error<br>  return Promise.reject(error);<br>})</p>
-</li>
-</ul>
-<p>2、取消拦截器 </p>
-<pre><code>var myInterceptor = axios.interceptor.request.use(function(){/*....*/});
-axios.interceptors.request.eject(myInterceptor);
-</code></pre><p>3、 给自定义的axios实例添加拦截器 </p>
-<pre><code>var instance = axios.create();
-instance.interceptors.request.use(function(){})
-</code></pre><h2 id="八、错误处理"><a href="#八、错误处理" class="headerlink" title="八、错误处理"></a>八、错误处理</h2><pre><code>axios.get(&#39;/user/12345&#39;)
-  .catch(function(error){
-    if(error.response){
-      //请求已经发出，但是服务器响应返回的状态吗不在2xx的范围内
-      console.log(error.response.data);
-      console.log(error.response.status);
-      console.log(error.response.header);
-    }else {
-      //一些错误是在设置请求的时候触发
-      console.log(&#39;Error&#39;,error.message);
-    }
-    console.log(error.config);
-  });
-</code></pre><h2 id="九、取消"><a href="#九、取消" class="headerlink" title="九、取消"></a>九、取消</h2><ul>
-<li>你可以通过一个<code>cancel token</code>来取消一个请求</li>
-</ul>
-<ol>
-<li><p>你可以通过<code>CancelToken.source</code>工厂函数来创建一个<code>cancel token</code></p>
-<p>var CancelToken = axios.CancelToken;<br>var source = CancelToken.source();</p>
-<p>axios.get(‘/user/12345’,{<br> cancelToken: source.token<br>}).catch(function(thrown){<br> if(axios.isCancel(thrown)){<br>   console.log(‘Request canceled’,thrown.message);<br> }else {<br>   //handle error<br> }<br>});</p>
-<p>//取消请求（信息的参数可以设置的）<br>source.cance(“操作被用户取消”);</p>
-</li>
-</ol>
-<ol>
-<li><p>你可以给cancelToken构造函数传递一个executor function来创建一个cancel token:</p>
-<p>var cancelToken = axios.CancelToken;<br>var cance;<br>axios.get(‘/user/12345’,{<br> cancelToken: new CancelToken(function(c){<br>   //这个executor函数接受一个cancel function作为参数<br>   cancel = c;<br> })<br>})<br>//取消请求<br>cancel();</p>
-</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
-    
-    </summary>
-    
-      <category term="VueJs" scheme="https://wangyu1997.github.io/categories/VueJs/"/>
-    
-    
-      <category term="axios" scheme="https://wangyu1997.github.io/tags/axios/"/>
-    
-      <category term="fronted" scheme="https://wangyu1997.github.io/tags/fronted/"/>
-    
-      <category term="vuejs" scheme="https://wangyu1997.github.io/tags/vuejs/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Hibernate annotation主键生成策略</title>
     <link href="https://wangyu1997.github.io/2017/09/20/Hibernate%E6%B3%A8%E8%A7%A3%E4%B8%BB%E9%94%AE%E7%AD%96%E7%95%A5/"/>
     <id>https://wangyu1997.github.io/2017/09/20/Hibernate注解主键策略/</id>
     <published>2017-09-19T17:43:11.000Z</published>
-    <updated>2017-09-19T17:56:40.000Z</updated>
+    <updated>2017-09-28T10:22:26.000Z</updated>
     
     <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
 <p>Hibernate 默认总共支持 13 种生成策略 :  </p>
@@ -1584,6 +1344,148 @@ No such image: mysite_web:latest (tag: latest)
   </entry>
   
   <entry>
+    <title>MarkDown 语法入门</title>
+    <link href="https://wangyu1997.github.io/2017/07/01/MarkDown%20%E8%AF%AD%E6%B3%95%E5%85%A5%E9%97%A8/"/>
+    <id>https://wangyu1997.github.io/2017/07/01/MarkDown 语法入门/</id>
+    <published>2017-07-01T12:43:11.000Z</published>
+    <updated>2017-07-01T16:26:32.000Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
+<h4 id="导语："><a href="#导语：" class="headerlink" title="导语："></a>导语：</h4><blockquote>
+<p><a href="http://zh.wikipedia.org/wiki/Markdown" target="_blank" rel="external">Markdown</a> 是一种轻量级的<strong>「标记语言」</strong>，它的优点很多，目前也被越来越多的写作爱好者，撰稿者广泛使用。看到这里请不要被<strong>「标记」</strong>、<strong>「语言」</strong>所迷惑，Markdown 的语法十分简单。常用的标记符号也不超过十个，这种相对于更为复杂的 HTML 标记语言来说，Markdown 可谓是十分轻量的，学习成本也不需要太多，且一旦熟悉这种语法规则，会有一劳永逸的效果。 </p>
+</blockquote>
+<p><img src="http://ww3.sinaimg.cn/large/6aee7dbbjw1eqft66xcg3j21kw12mdub.jpg" alt="Ulysses for Mac">  </p>
+<p><a href="http://www.ulyssesapp.com" target="_blank" rel="external">Ulysses for Mac</a></p>
+<h2 id="一，认识-Markdown"><a href="#一，认识-Markdown" class="headerlink" title="一，认识 Markdown"></a>一，认识 Markdown</h2><p>在刚才的导语里提到，Markdown 是一种用来写作的轻量级<strong>「标记语言」</strong>，它用简洁的语法代替排版，而不像一般我们用的字处理软件 _Word_ 或 _Pages_ 有大量的排版、字体设置。它使我们专心于码字，用「标记」语法，来代替常见的排版格式。例如此文从内容到格式，甚至插图，键盘就可以通通搞定了。目前来看，支持 Markdown 语法的编辑器有很多，包括很多网站（例如<a href="http://jianshu.io" target="_blank" rel="external">简书</a>）也支持了 Markdown 的文字录入。Markdown 从写作到完成，导出格式随心所欲，你可以导出 HTML 格式的文件用来网站发布，也可以十分方便的导出 PDF 格式，这种格式写出的简历更能得到 HR 的好感。甚至可以利用 <a href="http://www.getcloudapp.com" target="_blank" rel="external">CloudApp</a> 这种云服务工具直接上传至网页用来分享你的文章，全球最大的轻博客平台 <a href="http://te1ee.tumblr.com" target="_blank" rel="external">Tumblr</a>，也支持 Mou 这类 Markdown 工具的直接上传。 </p>
+<h3 id="Markdown-官方文档"><a href="#Markdown-官方文档" class="headerlink" title="Markdown 官方文档"></a>Markdown 官方文档</h3><blockquote>
+<p>这里可以看到官方的 Markdown 语法规则文档，当然，<strong>后文我也会用自己的方式阐述这些语法的具体用法</strong>。 </p>
+<ul>
+<li><a href="http://daringfireball.net/projects/markdown/syntax" target="_blank" rel="external">_创始人 John Gruber 的 Markdown 语法说明_</a></li>
+<li><a href="http://wowubuntu.com/markdown/#list" target="_blank" rel="external">_Markdown 中文版语法说明_</a></li>
+</ul>
+</blockquote>
+<h3 id="使用-Markdown-的优点"><a href="#使用-Markdown-的优点" class="headerlink" title="使用 Markdown 的优点"></a>使用 Markdown 的优点</h3><ul>
+<li>专注你的文字内容而不是排版样式，安心写作。</li>
+<li>轻松的导出 HTML、PDF 和本身的 .md 文件。</li>
+<li>纯文本内容，兼容所有的文本编辑器与字处理软件。</li>
+<li>随时修改你的文章版本，不必像字处理软件生成若干文件版本导致混乱。</li>
+<li>可读、直观、学习成本低。</li>
+</ul>
+<h3 id="使用-Markdown-的误区"><a href="#使用-Markdown-的误区" class="headerlink" title="使用 Markdown 的误区"></a>使用 Markdown 的误区</h3><blockquote>
+<p>_We believe that writing is about content, about what you want to say – not about fancy formatting._<br>我们坚信写作写的是内容，所思所想，而不是花样格式。<br>— _Ulysses for Mac_</p>
+</blockquote>
+<ul>
+<li>Markdown 旨在简洁、高效，也由于 Markdown 的易读易写，人们用不同的编程语言实现了多个版本的解析器和生成器，这就导致了目前不同的 Markdown 工具集成了不同的功能（基础功能大致相同），例如流程图与时序图，复杂表格与复杂公式的呈现，虽然功能的丰富并没有什么本质的缺点，但终归有些背离初衷，何况在编写的过程中很费神，不如使用专业的工具撰写来的更有效率，所以如果你需实现复杂功能，专业的图形界面工具会更加方便。<strong>当然，如果你对折腾这些不同客户端对 Markdown 的定制所带来高阶功能感到愉悦的话，那也是无可厚非的。</strong></li>
+</ul>
+<p><img src="http://ww2.sinaimg.cn/large/6aee7dbbgw1eq320claw3j21kw0kjdpc.jpg" alt="flowchart.js on Github（使用 Markdown 绘制流程图）">  </p>
+<p><a href="https://github.com/adrai/flowchart.js" target="_blank" rel="external">flowchart.js on Github（使用 Markdown 绘制流程图）</a></p>
+<h3 id="我该用什么工具？"><a href="#我该用什么工具？" class="headerlink" title="我该用什么工具？"></a>我该用什么工具？</h3><p><img src="http://mouapp.com/Mou_128.png" alt="Mou for Mac">  </p>
+<p>Mou for Mac </p>
+<ul>
+<li>在 Mac OS X 上，我强烈建议你用 <a href="http://mouapp.com" target="_blank" rel="external">Mou</a> 这款免费且十分好用的 Markdown 编辑器，它支持<strong>实时预览</strong>，既左边是你编辑 Markdown 语言，右边会实时的生成预览效果。不仅如此，Mou 还有一些有趣的偏好设置（_Preference_），例如主题（_Themes_）与样式（_CSS_），它们可以配置出定制化的文本编辑效果与导出效果，如果你对自带的主题与样式不满意还可以到 <a href="https://github.com/search?utf8=%E2%9C%93&amp;q=Mou" target="_blank" rel="external">GitHub</a> 上搜索其它爱好者为 Mou 编写的更多主题样式，导入的方式可以在偏好设置的 Themes 或 CSS 选项中 选择 reload。</li>
+</ul>
+<p><img src="http://ww1.sinaimg.cn/large/6aee7dbbgw1effcq2gx92j210j0ustj7.jpg" alt="Mou 的编写与预览窗口">  </p>
+<p>Mou 的编写与预览窗口 </p>
+<p>如果你从事文字工作，我强烈建议你购买 _<a href="http://www.ulyssesapp.com" target="_blank" rel="external">Ulysses for Mac</a>_，这款软件入围了苹果 Mac App Store 的 _The Best of 2013_。它支持更多的写作格式、多文档的支持。Mou，iA writer 这些软件都是基于单文档的管理方式，而 Ulysses 支持 Folder、Filter 的管理，一个 Folder 里面可以创建多个 Sheet，Sheet 之间也可以进行 Combine 处理。 </p>
+<p><img src="http://ww1.sinaimg.cn/large/6aee7dbbjw1eqgrj7suqoj217a0aiq4u.jpg" alt="Mac 上一些 Markdown 编辑器">  </p>
+<p>Mac 上一些 Markdown 编辑器 </p>
+<ul>
+<li>由于笔者很少接触 Windows，Windows 下的 Markdown 没有过多涉猎，经朋友介绍，有两款还算不错，一款叫做 <a href="http://www.markdownpad.com" target="_blank" rel="external">MarkdownPad</a> ，另一款叫做 <a href="http://code52.org/DownmarkerWPF/" target="_blank" rel="external">MarkPad</a>。 </li>
+</ul>
+<ul>
+<li><p>iOS 端很多 app 早已经支持了 Markdown 录入，例如 Drafts，Day One，iA writer 等，另外 Ulysses for iPad 现在已经上架，可以说是 iOS 平台最好的编辑器了。 </p>
+</li>
+<li><p>在 Web端，我强烈推荐<a href="http://jianshu.io" target="_blank" rel="external">简书</a>这款产品，上面有无数热爱文字的人在不停的创造，分享。在 Web 端使用 Markdown 没有比简书更舒服的地方了，同样支持左右两栏的实时预览，字体优雅，简洁。 </p>
+</li>
+</ul>
+<p><img src="http://ww2.sinaimg.cn/large/6aee7dbbgw1effdkfijo1j21220nigth.jpg" alt="简书的编辑预览模式">  </p>
+<p>简书的编辑预览模式 </p>
+<h2 id="二，Markdown-语法的简要规则"><a href="#二，Markdown-语法的简要规则" class="headerlink" title="二，Markdown 语法的简要规则"></a>二，Markdown 语法的简要规则</h2><h3 id="标题"><a href="#标题" class="headerlink" title="标题"></a>标题</h3><p><img src="http://ww1.sinaimg.cn/large/6aee7dbbgw1effeaclhiyj20eh09cwez.jpg" alt="标题">  </p>
+<p>标题 </p>
+<p>标题是每篇文章都需要也是最常用的格式，在 Markdown 中，如果一段文字被定义为标题，只要在这段文字前加 <code>#</code> 号即可。 </p>
+<p><code># 一级标题</code></p>
+<p><code>## 二级标题</code></p>
+<p><code>### 三级标题</code></p>
+<p>以此类推，总共六级标题，建议在井号后加一个空格，这是最标准的 Markdown 语法。 </p>
+<h3 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h3><p>熟悉 HTML 的同学肯定知道有序列表与无序列表的区别，在 Markdown 下，列表的显示只需要在文字前加上 <code>-</code> 或 <code>*</code> 即可变为无序列表，有序列表则直接在文字前加<code>1.</code> <code>2.</code> <code>3.</code> 符号要和文字之间加上一个字符的空格。 </p>
+<p><img src="http://ww4.sinaimg.cn/large/6aee7dbbgw1effew5aftij20d80bz3yw.jpg" alt="无序列表与有序列表">  </p>
+<p>无序列表与有序列表 </p>
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><p>如果你需要引用一小段别处的句子，那么就要用引用的格式。 </p>
+<blockquote>
+<p>例如这样 </p>
+</blockquote>
+<p>只需要在文本前加入 <code>&gt;</code> 这种尖括号（大于号）即可 </p>
+<p><img src="http://ww3.sinaimg.cn/large/6aee7dbbgw1effezhonxlj20e009c3yu.jpg" alt="引用">  </p>
+<p>引用 </p>
+<h3 id="图片与链接"><a href="#图片与链接" class="headerlink" title="图片与链接"></a>图片与链接</h3><p>插入链接与插入图片的语法很像，区别在一个 <code>!</code>号 </p>
+<p>图片为：<code>![](){ImgCap}{/ImgCap}</code></p>
+<p>链接为：<code>[]()</code></p>
+<p>插入图片的地址需要图床，这里推荐<a href="http://weibotuchuang.sinaapp.com" target="_blank" rel="external">围脖图床修复计划</a> 与 <a href="http://www.getcloudapp.com" target="_blank" rel="external">CloudApp</a> 的服务，生成URL地址即可。 </p>
+<p><img src="http://ww2.sinaimg.cn/large/6aee7dbbgw1efffa67voyj20ix0ctq3n.jpg" alt="URL 与图片">  </p>
+<p>URL 与图片 </p>
+<h3 id="粗体与斜体"><a href="#粗体与斜体" class="headerlink" title="粗体与斜体"></a>粗体与斜体</h3><p>Markdown 的粗体和斜体也非常简单，用两个 <code>*</code> 包含一段文本就是粗体的语法，用一个 <code>*</code> 包含一段文本就是斜体的语法。 </p>
+<p>例如：<strong>这里是粗体</strong> _这里是斜体_</p>
+<h3 id="表格"><a href="#表格" class="headerlink" title="表格"></a>表格</h3><p>表格是我觉得 Markdown 比较累人的地方，例子如下： </p>
+<pre><code>| Tables        | Are           | Cool  |
+| ------------- |:-------------:| -----:|
+| col 3 is      | right-aligned | $1600 |
+| col 2 is      | centered      |   $12 |
+| zebra stripes | are neat      |    $1 |
+</code></pre><p>这种语法生成的表格如下： </p>
+<p>TablesAreCool</p>
+<p>col 3 is<br>right-aligned<br>$1600 </p>
+<p>col 2 is<br>centered<br>$12 </p>
+<p>zebra stripes<br>are neat<br>$1 </p>
+<h3 id="代码框"><a href="#代码框" class="headerlink" title="代码框"></a>代码框</h3><p>如果你是个程序猿，需要在文章里优雅的引用代码框，在 Markdown下实现也非常简单，只需要用两个 ` 把中间的代码包裹起来。图例： </p>
+<p><img src="http://ww3.sinaimg.cn/large/6aee7dbbgw1effg1lsa97j20lt0a8dgs.jpg" alt="">  </p>
+<p>使用 <code>tab</code> 键即可缩进。 </p>
+<h3 id="分割线"><a href="#分割线" class="headerlink" title="分割线"></a>分割线</h3><p>分割线的语法只需要三个 <code>*</code> 号，例如： </p>
+<hr>
+<blockquote>
+<p>到这里，Markdown 的基本语法在日常的使用中基本就没什么大问题了，只要多加练习，配合好用的工具，写起东西来肯定会行云流水。更多的语法规则，其实 Mou 的 Help 文档栗子很好，当你第一次使用 Mou 时，就会显示该文档。可以用来对用的查找和学习。 </p>
+</blockquote>
+<p><img src="http://ww3.sinaimg.cn/large/6aee7dbbgw1effgmnpgqlj210j0us44j.jpg" alt="">  </p>
+<h2 id="三，相关推荐"><a href="#三，相关推荐" class="headerlink" title="三，相关推荐:"></a><strong>三，相关推荐</strong>:</h2><h3 id="工具"><a href="#工具" class="headerlink" title="工具"></a><strong>工具</strong></h3><p>_图床工具用来上传图片获取 URL 地址_</p>
+<ul>
+<li><a href="http://droplr.com" target="_blank" rel="external">Droplr</a></li>
+<li><a href="http://www.getcloudapp.com" target="_blank" rel="external">Cloudapp</a></li>
+<li><a href="https://itunes.apple.com/cn/app/yi-xiang/id672522335?mt=12&amp;uo=4" target="_blank" rel="external">ezShare for Mac</a></li>
+<li><a href="http://weibotuchuang.sinaapp.com" target="_blank" rel="external">围脖图床修复计划</a></li>
+</ul>
+<p>_在线好用的Markdown工具，为印象笔记而生_</p>
+<ul>
+<li><a href="http://maxiang.info" target="_blank" rel="external">马克飞象，专为印象笔记打造的Markdown编辑器，非常推荐</a></li>
+</ul>
+<h3 id="相关文章阅读："><a href="#相关文章阅读：" class="headerlink" title="相关文章阅读："></a><strong>相关文章阅读</strong>：</h3><ul>
+<li><a href="http://jianshu.io/p/qqgjln" target="_blank" rel="external">为什么作家应该用 Markdown 保存自己的文稿</a></li>
+</ul>
+<ul>
+<li><a href="http://www.yangzhiping.com/tech/r-markdown-knitr.html" target="_blank" rel="external">Markdown写作浅谈</a></li>
+</ul>
+<ul>
+<li><a href="http://www.appinn.com/markdown-tools/" target="_blank" rel="external">Markdown 工具补完</a></li>
+<li><a href="http://jianshu.io/p/63HYZ6" target="_blank" rel="external">Drafts + Scriptogr.am + Dropbox 打造移动端 Markdown 风格博客</a></li>
+<li><a href="http://www.ituring.com.cn/article/23" target="_blank" rel="external">图灵社区，怎样使用Markdown</a></li>
+<li><a href="http://news.cnblogs.com/n/139649/" target="_blank" rel="external">为什么我们要学习Markdown的三个理由</a></li>
+<li><a href="http://ibuick.me/?p=4093" target="_blank" rel="external">Markdown 语法写作入门指南 by ibuick</a></li>
+</ul>
+<hr>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
+    
+    </summary>
+    
+      <category term="杂记" scheme="https://wangyu1997.github.io/categories/%E6%9D%82%E8%AE%B0/"/>
+    
+    
+      <category term="markdown" scheme="https://wangyu1997.github.io/tags/markdown/"/>
+    
+  </entry>
+  
+  <entry>
     <title>使用Vultr搭建ShadowSocks教程</title>
     <link href="https://wangyu1997.github.io/2017/07/01/vultr%E6%90%AD%E5%BB%BAss/"/>
     <id>https://wangyu1997.github.io/2017/07/01/vultr搭建ss/</id>
@@ -1757,148 +1659,6 @@ $ firewall-cmd --reload
     
     
       <category term="shadowsocks" scheme="https://wangyu1997.github.io/tags/shadowsocks/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>MarkDown 语法入门</title>
-    <link href="https://wangyu1997.github.io/2017/07/01/MarkDown%20%E8%AF%AD%E6%B3%95%E5%85%A5%E9%97%A8/"/>
-    <id>https://wangyu1997.github.io/2017/07/01/MarkDown 语法入门/</id>
-    <published>2017-07-01T12:43:11.000Z</published>
-    <updated>2017-07-01T16:26:32.000Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
-<h4 id="导语："><a href="#导语：" class="headerlink" title="导语："></a>导语：</h4><blockquote>
-<p><a href="http://zh.wikipedia.org/wiki/Markdown" target="_blank" rel="external">Markdown</a> 是一种轻量级的<strong>「标记语言」</strong>，它的优点很多，目前也被越来越多的写作爱好者，撰稿者广泛使用。看到这里请不要被<strong>「标记」</strong>、<strong>「语言」</strong>所迷惑，Markdown 的语法十分简单。常用的标记符号也不超过十个，这种相对于更为复杂的 HTML 标记语言来说，Markdown 可谓是十分轻量的，学习成本也不需要太多，且一旦熟悉这种语法规则，会有一劳永逸的效果。 </p>
-</blockquote>
-<p><img src="http://ww3.sinaimg.cn/large/6aee7dbbjw1eqft66xcg3j21kw12mdub.jpg" alt="Ulysses for Mac">  </p>
-<p><a href="http://www.ulyssesapp.com" target="_blank" rel="external">Ulysses for Mac</a></p>
-<h2 id="一，认识-Markdown"><a href="#一，认识-Markdown" class="headerlink" title="一，认识 Markdown"></a>一，认识 Markdown</h2><p>在刚才的导语里提到，Markdown 是一种用来写作的轻量级<strong>「标记语言」</strong>，它用简洁的语法代替排版，而不像一般我们用的字处理软件 _Word_ 或 _Pages_ 有大量的排版、字体设置。它使我们专心于码字，用「标记」语法，来代替常见的排版格式。例如此文从内容到格式，甚至插图，键盘就可以通通搞定了。目前来看，支持 Markdown 语法的编辑器有很多，包括很多网站（例如<a href="http://jianshu.io" target="_blank" rel="external">简书</a>）也支持了 Markdown 的文字录入。Markdown 从写作到完成，导出格式随心所欲，你可以导出 HTML 格式的文件用来网站发布，也可以十分方便的导出 PDF 格式，这种格式写出的简历更能得到 HR 的好感。甚至可以利用 <a href="http://www.getcloudapp.com" target="_blank" rel="external">CloudApp</a> 这种云服务工具直接上传至网页用来分享你的文章，全球最大的轻博客平台 <a href="http://te1ee.tumblr.com" target="_blank" rel="external">Tumblr</a>，也支持 Mou 这类 Markdown 工具的直接上传。 </p>
-<h3 id="Markdown-官方文档"><a href="#Markdown-官方文档" class="headerlink" title="Markdown 官方文档"></a>Markdown 官方文档</h3><blockquote>
-<p>这里可以看到官方的 Markdown 语法规则文档，当然，<strong>后文我也会用自己的方式阐述这些语法的具体用法</strong>。 </p>
-<ul>
-<li><a href="http://daringfireball.net/projects/markdown/syntax" target="_blank" rel="external">_创始人 John Gruber 的 Markdown 语法说明_</a></li>
-<li><a href="http://wowubuntu.com/markdown/#list" target="_blank" rel="external">_Markdown 中文版语法说明_</a></li>
-</ul>
-</blockquote>
-<h3 id="使用-Markdown-的优点"><a href="#使用-Markdown-的优点" class="headerlink" title="使用 Markdown 的优点"></a>使用 Markdown 的优点</h3><ul>
-<li>专注你的文字内容而不是排版样式，安心写作。</li>
-<li>轻松的导出 HTML、PDF 和本身的 .md 文件。</li>
-<li>纯文本内容，兼容所有的文本编辑器与字处理软件。</li>
-<li>随时修改你的文章版本，不必像字处理软件生成若干文件版本导致混乱。</li>
-<li>可读、直观、学习成本低。</li>
-</ul>
-<h3 id="使用-Markdown-的误区"><a href="#使用-Markdown-的误区" class="headerlink" title="使用 Markdown 的误区"></a>使用 Markdown 的误区</h3><blockquote>
-<p>_We believe that writing is about content, about what you want to say – not about fancy formatting._<br>我们坚信写作写的是内容，所思所想，而不是花样格式。<br>— _Ulysses for Mac_</p>
-</blockquote>
-<ul>
-<li>Markdown 旨在简洁、高效，也由于 Markdown 的易读易写，人们用不同的编程语言实现了多个版本的解析器和生成器，这就导致了目前不同的 Markdown 工具集成了不同的功能（基础功能大致相同），例如流程图与时序图，复杂表格与复杂公式的呈现，虽然功能的丰富并没有什么本质的缺点，但终归有些背离初衷，何况在编写的过程中很费神，不如使用专业的工具撰写来的更有效率，所以如果你需实现复杂功能，专业的图形界面工具会更加方便。<strong>当然，如果你对折腾这些不同客户端对 Markdown 的定制所带来高阶功能感到愉悦的话，那也是无可厚非的。</strong></li>
-</ul>
-<p><img src="http://ww2.sinaimg.cn/large/6aee7dbbgw1eq320claw3j21kw0kjdpc.jpg" alt="flowchart.js on Github（使用 Markdown 绘制流程图）">  </p>
-<p><a href="https://github.com/adrai/flowchart.js" target="_blank" rel="external">flowchart.js on Github（使用 Markdown 绘制流程图）</a></p>
-<h3 id="我该用什么工具？"><a href="#我该用什么工具？" class="headerlink" title="我该用什么工具？"></a>我该用什么工具？</h3><p><img src="http://mouapp.com/Mou_128.png" alt="Mou for Mac">  </p>
-<p>Mou for Mac </p>
-<ul>
-<li>在 Mac OS X 上，我强烈建议你用 <a href="http://mouapp.com" target="_blank" rel="external">Mou</a> 这款免费且十分好用的 Markdown 编辑器，它支持<strong>实时预览</strong>，既左边是你编辑 Markdown 语言，右边会实时的生成预览效果。不仅如此，Mou 还有一些有趣的偏好设置（_Preference_），例如主题（_Themes_）与样式（_CSS_），它们可以配置出定制化的文本编辑效果与导出效果，如果你对自带的主题与样式不满意还可以到 <a href="https://github.com/search?utf8=%E2%9C%93&amp;q=Mou" target="_blank" rel="external">GitHub</a> 上搜索其它爱好者为 Mou 编写的更多主题样式，导入的方式可以在偏好设置的 Themes 或 CSS 选项中 选择 reload。</li>
-</ul>
-<p><img src="http://ww1.sinaimg.cn/large/6aee7dbbgw1effcq2gx92j210j0ustj7.jpg" alt="Mou 的编写与预览窗口">  </p>
-<p>Mou 的编写与预览窗口 </p>
-<p>如果你从事文字工作，我强烈建议你购买 _<a href="http://www.ulyssesapp.com" target="_blank" rel="external">Ulysses for Mac</a>_，这款软件入围了苹果 Mac App Store 的 _The Best of 2013_。它支持更多的写作格式、多文档的支持。Mou，iA writer 这些软件都是基于单文档的管理方式，而 Ulysses 支持 Folder、Filter 的管理，一个 Folder 里面可以创建多个 Sheet，Sheet 之间也可以进行 Combine 处理。 </p>
-<p><img src="http://ww1.sinaimg.cn/large/6aee7dbbjw1eqgrj7suqoj217a0aiq4u.jpg" alt="Mac 上一些 Markdown 编辑器">  </p>
-<p>Mac 上一些 Markdown 编辑器 </p>
-<ul>
-<li>由于笔者很少接触 Windows，Windows 下的 Markdown 没有过多涉猎，经朋友介绍，有两款还算不错，一款叫做 <a href="http://www.markdownpad.com" target="_blank" rel="external">MarkdownPad</a> ，另一款叫做 <a href="http://code52.org/DownmarkerWPF/" target="_blank" rel="external">MarkPad</a>。 </li>
-</ul>
-<ul>
-<li><p>iOS 端很多 app 早已经支持了 Markdown 录入，例如 Drafts，Day One，iA writer 等，另外 Ulysses for iPad 现在已经上架，可以说是 iOS 平台最好的编辑器了。 </p>
-</li>
-<li><p>在 Web端，我强烈推荐<a href="http://jianshu.io" target="_blank" rel="external">简书</a>这款产品，上面有无数热爱文字的人在不停的创造，分享。在 Web 端使用 Markdown 没有比简书更舒服的地方了，同样支持左右两栏的实时预览，字体优雅，简洁。 </p>
-</li>
-</ul>
-<p><img src="http://ww2.sinaimg.cn/large/6aee7dbbgw1effdkfijo1j21220nigth.jpg" alt="简书的编辑预览模式">  </p>
-<p>简书的编辑预览模式 </p>
-<h2 id="二，Markdown-语法的简要规则"><a href="#二，Markdown-语法的简要规则" class="headerlink" title="二，Markdown 语法的简要规则"></a>二，Markdown 语法的简要规则</h2><h3 id="标题"><a href="#标题" class="headerlink" title="标题"></a>标题</h3><p><img src="http://ww1.sinaimg.cn/large/6aee7dbbgw1effeaclhiyj20eh09cwez.jpg" alt="标题">  </p>
-<p>标题 </p>
-<p>标题是每篇文章都需要也是最常用的格式，在 Markdown 中，如果一段文字被定义为标题，只要在这段文字前加 <code>#</code> 号即可。 </p>
-<p><code># 一级标题</code></p>
-<p><code>## 二级标题</code></p>
-<p><code>### 三级标题</code></p>
-<p>以此类推，总共六级标题，建议在井号后加一个空格，这是最标准的 Markdown 语法。 </p>
-<h3 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h3><p>熟悉 HTML 的同学肯定知道有序列表与无序列表的区别，在 Markdown 下，列表的显示只需要在文字前加上 <code>-</code> 或 <code>*</code> 即可变为无序列表，有序列表则直接在文字前加<code>1.</code> <code>2.</code> <code>3.</code> 符号要和文字之间加上一个字符的空格。 </p>
-<p><img src="http://ww4.sinaimg.cn/large/6aee7dbbgw1effew5aftij20d80bz3yw.jpg" alt="无序列表与有序列表">  </p>
-<p>无序列表与有序列表 </p>
-<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h3><p>如果你需要引用一小段别处的句子，那么就要用引用的格式。 </p>
-<blockquote>
-<p>例如这样 </p>
-</blockquote>
-<p>只需要在文本前加入 <code>&gt;</code> 这种尖括号（大于号）即可 </p>
-<p><img src="http://ww3.sinaimg.cn/large/6aee7dbbgw1effezhonxlj20e009c3yu.jpg" alt="引用">  </p>
-<p>引用 </p>
-<h3 id="图片与链接"><a href="#图片与链接" class="headerlink" title="图片与链接"></a>图片与链接</h3><p>插入链接与插入图片的语法很像，区别在一个 <code>!</code>号 </p>
-<p>图片为：<code>![](){ImgCap}{/ImgCap}</code></p>
-<p>链接为：<code>[]()</code></p>
-<p>插入图片的地址需要图床，这里推荐<a href="http://weibotuchuang.sinaapp.com" target="_blank" rel="external">围脖图床修复计划</a> 与 <a href="http://www.getcloudapp.com" target="_blank" rel="external">CloudApp</a> 的服务，生成URL地址即可。 </p>
-<p><img src="http://ww2.sinaimg.cn/large/6aee7dbbgw1efffa67voyj20ix0ctq3n.jpg" alt="URL 与图片">  </p>
-<p>URL 与图片 </p>
-<h3 id="粗体与斜体"><a href="#粗体与斜体" class="headerlink" title="粗体与斜体"></a>粗体与斜体</h3><p>Markdown 的粗体和斜体也非常简单，用两个 <code>*</code> 包含一段文本就是粗体的语法，用一个 <code>*</code> 包含一段文本就是斜体的语法。 </p>
-<p>例如：<strong>这里是粗体</strong> _这里是斜体_</p>
-<h3 id="表格"><a href="#表格" class="headerlink" title="表格"></a>表格</h3><p>表格是我觉得 Markdown 比较累人的地方，例子如下： </p>
-<pre><code>| Tables        | Are           | Cool  |
-| ------------- |:-------------:| -----:|
-| col 3 is      | right-aligned | $1600 |
-| col 2 is      | centered      |   $12 |
-| zebra stripes | are neat      |    $1 |
-</code></pre><p>这种语法生成的表格如下： </p>
-<p>TablesAreCool</p>
-<p>col 3 is<br>right-aligned<br>$1600 </p>
-<p>col 2 is<br>centered<br>$12 </p>
-<p>zebra stripes<br>are neat<br>$1 </p>
-<h3 id="代码框"><a href="#代码框" class="headerlink" title="代码框"></a>代码框</h3><p>如果你是个程序猿，需要在文章里优雅的引用代码框，在 Markdown下实现也非常简单，只需要用两个 ` 把中间的代码包裹起来。图例： </p>
-<p><img src="http://ww3.sinaimg.cn/large/6aee7dbbgw1effg1lsa97j20lt0a8dgs.jpg" alt="">  </p>
-<p>使用 <code>tab</code> 键即可缩进。 </p>
-<h3 id="分割线"><a href="#分割线" class="headerlink" title="分割线"></a>分割线</h3><p>分割线的语法只需要三个 <code>*</code> 号，例如： </p>
-<hr>
-<blockquote>
-<p>到这里，Markdown 的基本语法在日常的使用中基本就没什么大问题了，只要多加练习，配合好用的工具，写起东西来肯定会行云流水。更多的语法规则，其实 Mou 的 Help 文档栗子很好，当你第一次使用 Mou 时，就会显示该文档。可以用来对用的查找和学习。 </p>
-</blockquote>
-<p><img src="http://ww3.sinaimg.cn/large/6aee7dbbgw1effgmnpgqlj210j0us44j.jpg" alt="">  </p>
-<h2 id="三，相关推荐"><a href="#三，相关推荐" class="headerlink" title="三，相关推荐:"></a><strong>三，相关推荐</strong>:</h2><h3 id="工具"><a href="#工具" class="headerlink" title="工具"></a><strong>工具</strong></h3><p>_图床工具用来上传图片获取 URL 地址_</p>
-<ul>
-<li><a href="http://droplr.com" target="_blank" rel="external">Droplr</a></li>
-<li><a href="http://www.getcloudapp.com" target="_blank" rel="external">Cloudapp</a></li>
-<li><a href="https://itunes.apple.com/cn/app/yi-xiang/id672522335?mt=12&amp;uo=4" target="_blank" rel="external">ezShare for Mac</a></li>
-<li><a href="http://weibotuchuang.sinaapp.com" target="_blank" rel="external">围脖图床修复计划</a></li>
-</ul>
-<p>_在线好用的Markdown工具，为印象笔记而生_</p>
-<ul>
-<li><a href="http://maxiang.info" target="_blank" rel="external">马克飞象，专为印象笔记打造的Markdown编辑器，非常推荐</a></li>
-</ul>
-<h3 id="相关文章阅读："><a href="#相关文章阅读：" class="headerlink" title="相关文章阅读："></a><strong>相关文章阅读</strong>：</h3><ul>
-<li><a href="http://jianshu.io/p/qqgjln" target="_blank" rel="external">为什么作家应该用 Markdown 保存自己的文稿</a></li>
-</ul>
-<ul>
-<li><a href="http://www.yangzhiping.com/tech/r-markdown-knitr.html" target="_blank" rel="external">Markdown写作浅谈</a></li>
-</ul>
-<ul>
-<li><a href="http://www.appinn.com/markdown-tools/" target="_blank" rel="external">Markdown 工具补完</a></li>
-<li><a href="http://jianshu.io/p/63HYZ6" target="_blank" rel="external">Drafts + Scriptogr.am + Dropbox 打造移动端 Markdown 风格博客</a></li>
-<li><a href="http://www.ituring.com.cn/article/23" target="_blank" rel="external">图灵社区，怎样使用Markdown</a></li>
-<li><a href="http://news.cnblogs.com/n/139649/" target="_blank" rel="external">为什么我们要学习Markdown的三个理由</a></li>
-<li><a href="http://ibuick.me/?p=4093" target="_blank" rel="external">Markdown 语法写作入门指南 by ibuick</a></li>
-</ul>
-<hr>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
-    
-    </summary>
-    
-      <category term="杂记" scheme="https://wangyu1997.github.io/categories/%E6%9D%82%E8%AE%B0/"/>
-    
-    
-      <category term="markdown" scheme="https://wangyu1997.github.io/tags/markdown/"/>
     
   </entry>
   
@@ -2326,6 +2086,155 @@ http {
     
     
       <category term="lnmp" scheme="https://wangyu1997.github.io/tags/lnmp/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>七牛云储存</title>
+    <link href="https://wangyu1997.github.io/2017/06/14/%E4%B8%83%E7%89%9B%E4%BA%91%E5%82%A8%E5%AD%98/"/>
+    <id>https://wangyu1997.github.io/2017/06/14/七牛云储存/</id>
+    <published>2017-06-14T12:43:11.000Z</published>
+    <updated>2017-07-01T16:26:35.000Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
+<ul>
+<li><p>初始化<br>一般情况下直接使用默认设置，不用单独配置。 可以配置超时时长、分片上传阀值等。</p>
+<p>Configuration config = new Configuration.Builder()</p>
+<pre><code>                .chunkSize(256 * 1024)  //分片上传时，每片的大小。 默认 256K
+                .putThreshhold(512 * 1024)  // 启用分片上传阀值。默认 512K
+                .connectTimeout(10) // 链接超时。默认 10秒
+                .responseTimeout(60) // 服务器响应超时。默认 60秒
+                .recorder(recorder)  // recorder 分片上传时，已上传片记录器。默认 null
+                .recorder(recorder, keyGen)  // keyGen 分片上传时，生成标识符，用于片记录器区分是那个文件的上传记录
+                .zone(Zone.zone0) // 设置区域，指定不同区域的上传域名、备用域名、备用IP。默认 Zone.zone0
+                .build()
+</code></pre><p>// 重用 uploadManager。一般地，只需要创建一个 uploadManager 对象<br>UploadManager uploadManager = new UploadManager(config)</p>
+</li>
+<li><p>上传文件<br>七牛上传文件主要用到两个方法：<br>一、 UploadManager.put(data, key, token, handler, options);</p>
+<p> /**</p>
+<ul>
+<li><p>UploadManager.put参数说明：<br><em>
+</em>@data                  byte[]/String/File    数据，可以是byte数组，文件路径，文件。<br><em>@key                   String                保存在服务器上的资源唯一标识。请参考键值对。
+</em>@token                 String                服务器分配的token。<br><em>@completionHandler     UpCompletionHandler   上传回调函数，必填。
+</em>@options               UploadOptions         如果需要进度通知、crc校验、中途取消、指定mimeType则需要填写相应字段，详见UploadOptions参数说明。</p>
+<pre><code> */
+</code></pre><p>二、 UploadOptions(params, mimeType, checkCrc, progressHandler, cancellationSignal);</p>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code>    /**
+     * UploadOptions参数说明：
+     * 
+     *参数                   类型                   说明
+     *params               Map&lt;String, String&gt;  自定义变量，key必须以 x: 开始。
+     *mimeType             String               指定文件的mimeType。
+     *checkCrc             boolean              是否验证上传文件。
+     *progressHandler      UpProgressHandler    上传进度回调。
+     *cancellationSignal   UpCancellationSignal 取消上传，当isCancelled()返回true时，不再执行更多上传。
+     */
+</code></pre><h4 id="现在就比较清楚了"><a href="#现在就比较清楚了" class="headerlink" title="现在就比较清楚了"></a>现在就比较清楚了</h4><p>下面主要是各种上传姿势了  </p>
+<ul>
+<li>简单上传 </li>
+</ul>
+<pre><code>UploadManager uploadManager = new UploadManager();
+data = &lt;File对象、或 文件路径、或 字节数组&gt;
+String key = &lt;指定七牛服务上的文件名，或 null&gt;;
+String token = &lt;从服务端SDK获取&gt;;
+uploadManager.put(data, key, token,
+ /**
+  * UpCompletionHandler参数说明
+  * 
+  *@key        即uploadManager.put(file, key, ...)方法指定的key。
+  *@info       http请求的状态信息等，可记入日志。isOK()返回 true表示上传成功。
+  *@response   七牛反馈的信息。可从中解析保存在七牛服务的key等信息，具体字段取决于上传策略的设置。
+  */
+new UpCompletionHandler() {
+    @Override
+    public void complete(String key, ResponseInfo info, JSONObject res) {
+
+        Log.i(&quot;qiniu&quot;, key + &quot;,\r\n &quot; + info + &quot;,\r\n &quot; + res);
+    }
+}, null);
+</code></pre><ul>
+<li>记录上传进度</li>
+</ul>
+<pre><code>    private void uploadProgress() {
+
+        uploadManager.put(data, key, token, handler,
+                new UploadOptions(null, null, false,
+                        new UpProgressHandler() {
+                            /**
+                             * @param key      即uploadManager.put(file, key, ...)方法指定的key
+                             * @param percent  进度
+                             */
+                            public void progress(String key, double percent) {
+                                Log.i(&quot;qiniu&quot;, key + &quot;: &quot; + percent);
+                            }
+                        }, null));
+
+    }
+</code></pre><ul>
+<li>取消上传<br>内部代码会检测UpCancellationSignal##isCancelled()的返回值，当其返回true时，将停止上传。 可外部维护一个变量isCancelled，当点击取消按钮时，设置isCancelled = true;。如：</li>
+</ul>
+<pre><code>private volatile boolean isCancelled = false;
+
+uploadManager.put(data, key, token,handler,
+    new UploadOptions(null, null, false, progressHandler,
+        new UpCancellationSignal(){
+            public boolean isCancelled(){
+                return isCancelled;
+            }
+        }));
+
+
+
+private void cancell() {
+    isCancelled = true;
+}
+</code></pre><ul>
+<li>记录断点</li>
+</ul>
+<p>分片上传中，可将各个已上传的块记录下来，再次上传时，已上传的部分不用再次上传。 断点记录类需实现 com.qiniu.android.storage.Recorder 接口。已提供保存到文件的 FileRecorder 实现。 </p>
+<pre><code>String dirPath = &lt;断点记录文件保存的文件夹位置&gt;
+Recorder recorder = new FileRecorder(dirPath);
+
+
+
+
+KeyGenerator keyGen = new KeyGenerator(){
+    public String gen(String key, File file){
+
+
+        return key + &quot;_._&quot; + new StringBuffer(file.getAbsolutePath()).reverse();
+    }
+};
+
+
+
+
+
+Configuration config = new Configuration.Builder()
+
+
+                    .recorder(recorder, keyGen)  
+                    .build();
+
+UploadManager uploadManager = new UploadManager(config);
+
+uploadManager.put(data, key, ...)
+</code></pre><h3 id="初始化设置和上传文件的基本用法就记录到这啦！"><a href="#初始化设置和上传文件的基本用法就记录到这啦！" class="headerlink" title="初始化设置和上传文件的基本用法就记录到这啦！"></a>初始化设置和上传文件的基本用法就记录到这啦！</h3>]]></content>
+    
+    <summary type="html">
+    
+      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
+    
+    </summary>
+    
+      <category term="Android" scheme="https://wangyu1997.github.io/categories/Android/"/>
+    
+    
+      <category term="qiniu" scheme="https://wangyu1997.github.io/tags/qiniu/"/>
     
   </entry>
   
@@ -3064,140 +2973,54 @@ Alamofire.upload(fileURL, to: urlString).responseData { response in
   </entry>
   
   <entry>
-    <title>七牛云储存</title>
-    <link href="https://wangyu1997.github.io/2017/06/14/%E4%B8%83%E7%89%9B%E4%BA%91%E5%82%A8%E5%AD%98/"/>
-    <id>https://wangyu1997.github.io/2017/06/14/七牛云储存/</id>
-    <published>2017-06-14T12:43:11.000Z</published>
-    <updated>2017-07-01T16:26:35.000Z</updated>
+    <title>UIPopoverPresentationController</title>
+    <link href="https://wangyu1997.github.io/2017/06/12/UIPopoverPresentationController/"/>
+    <id>https://wangyu1997.github.io/2017/06/12/UIPopoverPresentationController/</id>
+    <published>2017-06-12T12:43:11.000Z</published>
+    <updated>2017-06-13T01:23:38.000Z</updated>
     
-    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
-<ul>
-<li><p>初始化<br>一般情况下直接使用默认设置，不用单独配置。 可以配置超时时长、分片上传阀值等。</p>
-<p>Configuration config = new Configuration.Builder()</p>
-<pre><code>                .chunkSize(256 * 1024)  //分片上传时，每片的大小。 默认 256K
-                .putThreshhold(512 * 1024)  // 启用分片上传阀值。默认 512K
-                .connectTimeout(10) // 链接超时。默认 10秒
-                .responseTimeout(60) // 服务器响应超时。默认 60秒
-                .recorder(recorder)  // recorder 分片上传时，已上传片记录器。默认 null
-                .recorder(recorder, keyGen)  // keyGen 分片上传时，生成标识符，用于片记录器区分是那个文件的上传记录
-                .zone(Zone.zone0) // 设置区域，指定不同区域的上传域名、备用域名、备用IP。默认 Zone.zone0
-                .build()
-</code></pre><p>// 重用 uploadManager。一般地，只需要创建一个 uploadManager 对象<br>UploadManager uploadManager = new UploadManager(config)</p>
-</li>
-<li><p>上传文件<br>七牛上传文件主要用到两个方法：<br>一、 UploadManager.put(data, key, token, handler, options);</p>
-<p> /**</p>
-<ul>
-<li><p>UploadManager.put参数说明：<br><em>
-</em>@data                  byte[]/String/File    数据，可以是byte数组，文件路径，文件。<br><em>@key                   String                保存在服务器上的资源唯一标识。请参考键值对。
-</em>@token                 String                服务器分配的token。<br><em>@completionHandler     UpCompletionHandler   上传回调函数，必填。
-</em>@options               UploadOptions         如果需要进度通知、crc校验、中途取消、指定mimeType则需要填写相应字段，详见UploadOptions参数说明。</p>
-<pre><code> */
-</code></pre><p>二、 UploadOptions(params, mimeType, checkCrc, progressHandler, cancellationSignal);</p>
-</li>
-</ul>
-</li>
-</ul>
-<pre><code>    /**
-     * UploadOptions参数说明：
-     * 
-     *参数                   类型                   说明
-     *params               Map&lt;String, String&gt;  自定义变量，key必须以 x: 开始。
-     *mimeType             String               指定文件的mimeType。
-     *checkCrc             boolean              是否验证上传文件。
-     *progressHandler      UpProgressHandler    上传进度回调。
-     *cancellationSignal   UpCancellationSignal 取消上传，当isCancelled()返回true时，不再执行更多上传。
-     */
-</code></pre><h4 id="现在就比较清楚了"><a href="#现在就比较清楚了" class="headerlink" title="现在就比较清楚了"></a>现在就比较清楚了</h4><p>下面主要是各种上传姿势了  </p>
-<ul>
-<li>简单上传 </li>
-</ul>
-<pre><code>UploadManager uploadManager = new UploadManager();
-data = &lt;File对象、或 文件路径、或 字节数组&gt;
-String key = &lt;指定七牛服务上的文件名，或 null&gt;;
-String token = &lt;从服务端SDK获取&gt;;
-uploadManager.put(data, key, token,
- /**
-  * UpCompletionHandler参数说明
-  * 
-  *@key        即uploadManager.put(file, key, ...)方法指定的key。
-  *@info       http请求的状态信息等，可记入日志。isOK()返回 true表示上传成功。
-  *@response   七牛反馈的信息。可从中解析保存在七牛服务的key等信息，具体字段取决于上传策略的设置。
-  */
-new UpCompletionHandler() {
-    @Override
-    public void complete(String key, ResponseInfo info, JSONObject res) {
+    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a>
+<p>UIPopoverPresentationController 是 iOS8 后新增的，相当于pad端的UIPopOverController，以后我们也可以在iPhone上使用popOver啦。自己写了一个小demo，大概了熟悉了一下用法。后面有开发需求时会详细补充。<br>首先要知道一点是，我们并不需要创建一个UIPopoverPresentationController，他相当于UIViewController的属性，因此我们只需要创建UIViewController即可。<br>举个例子：假设我们要在 ViewController窗体弹窗，弹窗为FirstViewController（kind of UIViewController）我们用两种方式来实现<br>1、在self.view上创建一个button，给button添加弹窗事件；<br>2、在导航栏添加barButtonItem，给其添加弹窗时间。<br>弹窗事件：</p>
+<pre class=" language-swift"><code class="language-swift"><span class="token number">1</span>、button
+<span class="token punctuation">[</span>objc<span class="token punctuation">]</span> view plain copy
+<span class="token operator">-</span> <span class="token punctuation">(</span>void<span class="token punctuation">)</span>buttonClick  
+<span class="token punctuation">{</span>  
+    <span class="token builtin">FirstViewController</span> <span class="token operator">*</span>firstVC <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token builtin">FirstViewController</span> alloc<span class="token punctuation">]</span> <span class="token keyword">init</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  
+    firstVC<span class="token punctuation">.</span>modalPresentationStyle <span class="token operator">=</span> <span class="token builtin">UIModalPresentationPopover</span><span class="token punctuation">;</span>  
+    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>sourceView <span class="token operator">=</span> popOverButton<span class="token punctuation">;</span>  <span class="token comment" spellcheck="true">//rect参数是以view的左上角为坐标原点（0，0）  </span>
+    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>sourceRect <span class="token operator">=</span> popOverButton<span class="token punctuation">.</span>bounds<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//指定箭头所指区域的矩形框范围（位置和尺寸），以view的左上角为坐标原点  </span>
+    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>permittedArrowDirections <span class="token operator">=</span> <span class="token builtin">UIPopoverArrowDirectionUp</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//箭头方向  </span>
+    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>delegate <span class="token operator">=</span> <span class="token keyword">self</span><span class="token punctuation">;</span>  
+    firstVC<span class="token punctuation">.</span>preferredContentSize <span class="token operator">=</span> <span class="token function">CGSizeMake</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">,</span> <span class="token number">200</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
+    <span class="token punctuation">[</span><span class="token keyword">self</span> presentViewController<span class="token punctuation">:</span>firstVC animated<span class="token punctuation">:</span><span class="token constant">YES</span> completion<span class="token punctuation">:</span><span class="token constant">nil</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  
+<span class="token punctuation">}</span>  
 
-        Log.i(&quot;qiniu&quot;, key + &quot;,\r\n &quot; + info + &quot;,\r\n &quot; + res);
-    }
-}, null);
-</code></pre><ul>
-<li>记录上传进度</li>
-</ul>
-<pre><code>    private void uploadProgress() {
-
-        uploadManager.put(data, key, token, handler,
-                new UploadOptions(null, null, false,
-                        new UpProgressHandler() {
-                            /**
-                             * @param key      即uploadManager.put(file, key, ...)方法指定的key
-                             * @param percent  进度
-                             */
-                            public void progress(String key, double percent) {
-                                Log.i(&quot;qiniu&quot;, key + &quot;: &quot; + percent);
-                            }
-                        }, null));
-
-    }
-</code></pre><ul>
-<li>取消上传<br>内部代码会检测UpCancellationSignal##isCancelled()的返回值，当其返回true时，将停止上传。 可外部维护一个变量isCancelled，当点击取消按钮时，设置isCancelled = true;。如：</li>
-</ul>
-<pre><code>private volatile boolean isCancelled = false;
-
-uploadManager.put(data, key, token,handler,
-    new UploadOptions(null, null, false, progressHandler,
-        new UpCancellationSignal(){
-            public boolean isCancelled(){
-                return isCancelled;
-            }
-        }));
-
-
-
-private void cancell() {
-    isCancelled = true;
-}
-</code></pre><ul>
-<li>记录断点</li>
-</ul>
-<p>分片上传中，可将各个已上传的块记录下来，再次上传时，已上传的部分不用再次上传。 断点记录类需实现 com.qiniu.android.storage.Recorder 接口。已提供保存到文件的 FileRecorder 实现。 </p>
-<pre><code>String dirPath = &lt;断点记录文件保存的文件夹位置&gt;
-Recorder recorder = new FileRecorder(dirPath);
-
-
-
-
-KeyGenerator keyGen = new KeyGenerator(){
-    public String gen(String key, File file){
-
-
-        return key + &quot;_._&quot; + new StringBuffer(file.getAbsolutePath()).reverse();
-    }
-};
-
-
-
-
-
-Configuration config = new Configuration.Builder()
-
-
-                    .recorder(recorder, keyGen)  
-                    .build();
-
-UploadManager uploadManager = new UploadManager(config);
-
-uploadManager.put(data, key, ...)
-</code></pre><h3 id="初始化设置和上传文件的基本用法就记录到这啦！"><a href="#初始化设置和上传文件的基本用法就记录到这啦！" class="headerlink" title="初始化设置和上传文件的基本用法就记录到这啦！"></a>初始化设置和上传文件的基本用法就记录到这啦！</h3>]]></content>
+<span class="token number">2</span>、barButtonItem
+<span class="token punctuation">[</span>objc<span class="token punctuation">]</span> view plain copy
+<span class="token operator">-</span> <span class="token punctuation">(</span>void<span class="token punctuation">)</span>rightBarButtonItemClick  
+<span class="token punctuation">{</span>  
+    <span class="token builtin">FirstViewController</span> <span class="token operator">*</span>firstVC <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token builtin">FirstViewController</span> alloc<span class="token punctuation">]</span><span class="token keyword">init</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  
+    firstVC<span class="token punctuation">.</span>modalPresentationStyle <span class="token operator">=</span> <span class="token builtin">UIModalPresentationPopover</span><span class="token punctuation">;</span>  
+    <span class="token comment" spellcheck="true">/** 
+     *  由于导航上的控件没有指定frame，无法设置sourceView和sourceRect，用下面的。 
+     */</span>  
+    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>barButtonItem <span class="token operator">=</span> <span class="token keyword">self</span><span class="token punctuation">.</span>navigationItem<span class="token punctuation">.</span>rightBarButtonItem<span class="token punctuation">;</span>  
+    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>permittedArrowDirections <span class="token operator">=</span> <span class="token builtin">UIPopoverArrowDirectionUp</span><span class="token punctuation">;</span>  
+    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>delegate <span class="token operator">=</span> <span class="token keyword">self</span><span class="token punctuation">;</span>  
+    firstVC<span class="token punctuation">.</span>preferredContentSize <span class="token operator">=</span> <span class="token function">CGSizeMake</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">,</span> <span class="token number">200</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
+    <span class="token punctuation">[</span><span class="token keyword">self</span> presentViewController<span class="token punctuation">:</span>firstVC animated<span class="token punctuation">:</span><span class="token constant">YES</span> completion<span class="token punctuation">:</span><span class="token constant">nil</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  
+<span class="token comment" spellcheck="true">//    firstVC.popoverPresentationController.passthroughViews = nil;  </span>
+<span class="token punctuation">}</span>  
+注意几点：
+<span class="token number">1</span>、遵守代理：<span class="token builtin">UIPopoverPresentationControllerDelegate</span>
+<span class="token number">2</span>、在phone端必须要适配设备，要设置下面代理方法：
+<span class="token punctuation">[</span>objc<span class="token punctuation">]</span> view plain copy
+<span class="token comment" spellcheck="true">/* For iOS8.0, the only supported adaptive presentation styles are UIModalPresentationFullScreen and UIModalPresentationOverFullScreen. */</span>  
+<span class="token operator">-</span> <span class="token punctuation">(</span><span class="token builtin">UIModalPresentationStyle</span><span class="token punctuation">)</span>adaptivePresentationStyleForPresentationController<span class="token punctuation">:</span><span class="token punctuation">(</span><span class="token builtin">UIPresentationController</span> <span class="token operator">*</span><span class="token punctuation">)</span>controller<span class="token punctuation">;</span>  
+<span class="token operator">-</span>
+</code></pre>
+<p>iPhone下默认是UIModalPresentationFullScreen，需要手动设置为UIModalPresentationNone，否则，是普通的present全屏显示，没有弹窗效果。iPad不需要。<br>3、其他设置根据需求翻相关文档即可。<br>demo：<a href="https://github.com/Lynnll/UIPopOverLearning.git" target="_blank" rel="external">https://github.com/Lynnll/UIPopOverLearning.git</a></p>
+]]></content>
     
     <summary type="html">
     
@@ -3205,10 +3028,10 @@ uploadManager.put(data, key, ...)
     
     </summary>
     
-      <category term="Android" scheme="https://wangyu1997.github.io/categories/Android/"/>
+      <category term="iOS" scheme="https://wangyu1997.github.io/categories/iOS/"/>
     
     
-      <category term="qiniu" scheme="https://wangyu1997.github.io/tags/qiniu/"/>
+      <category term="popover" scheme="https://wangyu1997.github.io/tags/popover/"/>
     
   </entry>
   
@@ -4055,69 +3878,6 @@ open <span class="token keyword">class</span> <span class="token class-name">Str
   </entry>
   
   <entry>
-    <title>UIPopoverPresentationController</title>
-    <link href="https://wangyu1997.github.io/2017/06/12/UIPopoverPresentationController/"/>
-    <id>https://wangyu1997.github.io/2017/06/12/UIPopoverPresentationController/</id>
-    <published>2017-06-12T12:43:11.000Z</published>
-    <updated>2017-06-13T01:23:38.000Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a>
-<p>UIPopoverPresentationController 是 iOS8 后新增的，相当于pad端的UIPopOverController，以后我们也可以在iPhone上使用popOver啦。自己写了一个小demo，大概了熟悉了一下用法。后面有开发需求时会详细补充。<br>首先要知道一点是，我们并不需要创建一个UIPopoverPresentationController，他相当于UIViewController的属性，因此我们只需要创建UIViewController即可。<br>举个例子：假设我们要在 ViewController窗体弹窗，弹窗为FirstViewController（kind of UIViewController）我们用两种方式来实现<br>1、在self.view上创建一个button，给button添加弹窗事件；<br>2、在导航栏添加barButtonItem，给其添加弹窗时间。<br>弹窗事件：</p>
-<pre class=" language-swift"><code class="language-swift"><span class="token number">1</span>、button
-<span class="token punctuation">[</span>objc<span class="token punctuation">]</span> view plain copy
-<span class="token operator">-</span> <span class="token punctuation">(</span>void<span class="token punctuation">)</span>buttonClick  
-<span class="token punctuation">{</span>  
-    <span class="token builtin">FirstViewController</span> <span class="token operator">*</span>firstVC <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token builtin">FirstViewController</span> alloc<span class="token punctuation">]</span> <span class="token keyword">init</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  
-    firstVC<span class="token punctuation">.</span>modalPresentationStyle <span class="token operator">=</span> <span class="token builtin">UIModalPresentationPopover</span><span class="token punctuation">;</span>  
-    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>sourceView <span class="token operator">=</span> popOverButton<span class="token punctuation">;</span>  <span class="token comment" spellcheck="true">//rect参数是以view的左上角为坐标原点（0，0）  </span>
-    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>sourceRect <span class="token operator">=</span> popOverButton<span class="token punctuation">.</span>bounds<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//指定箭头所指区域的矩形框范围（位置和尺寸），以view的左上角为坐标原点  </span>
-    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>permittedArrowDirections <span class="token operator">=</span> <span class="token builtin">UIPopoverArrowDirectionUp</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//箭头方向  </span>
-    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>delegate <span class="token operator">=</span> <span class="token keyword">self</span><span class="token punctuation">;</span>  
-    firstVC<span class="token punctuation">.</span>preferredContentSize <span class="token operator">=</span> <span class="token function">CGSizeMake</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">,</span> <span class="token number">200</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
-    <span class="token punctuation">[</span><span class="token keyword">self</span> presentViewController<span class="token punctuation">:</span>firstVC animated<span class="token punctuation">:</span><span class="token constant">YES</span> completion<span class="token punctuation">:</span><span class="token constant">nil</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  
-<span class="token punctuation">}</span>  
-
-<span class="token number">2</span>、barButtonItem
-<span class="token punctuation">[</span>objc<span class="token punctuation">]</span> view plain copy
-<span class="token operator">-</span> <span class="token punctuation">(</span>void<span class="token punctuation">)</span>rightBarButtonItemClick  
-<span class="token punctuation">{</span>  
-    <span class="token builtin">FirstViewController</span> <span class="token operator">*</span>firstVC <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token builtin">FirstViewController</span> alloc<span class="token punctuation">]</span><span class="token keyword">init</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  
-    firstVC<span class="token punctuation">.</span>modalPresentationStyle <span class="token operator">=</span> <span class="token builtin">UIModalPresentationPopover</span><span class="token punctuation">;</span>  
-    <span class="token comment" spellcheck="true">/** 
-     *  由于导航上的控件没有指定frame，无法设置sourceView和sourceRect，用下面的。 
-     */</span>  
-    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>barButtonItem <span class="token operator">=</span> <span class="token keyword">self</span><span class="token punctuation">.</span>navigationItem<span class="token punctuation">.</span>rightBarButtonItem<span class="token punctuation">;</span>  
-    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>permittedArrowDirections <span class="token operator">=</span> <span class="token builtin">UIPopoverArrowDirectionUp</span><span class="token punctuation">;</span>  
-    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>delegate <span class="token operator">=</span> <span class="token keyword">self</span><span class="token punctuation">;</span>  
-    firstVC<span class="token punctuation">.</span>preferredContentSize <span class="token operator">=</span> <span class="token function">CGSizeMake</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">,</span> <span class="token number">200</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
-    <span class="token punctuation">[</span><span class="token keyword">self</span> presentViewController<span class="token punctuation">:</span>firstVC animated<span class="token punctuation">:</span><span class="token constant">YES</span> completion<span class="token punctuation">:</span><span class="token constant">nil</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  
-<span class="token comment" spellcheck="true">//    firstVC.popoverPresentationController.passthroughViews = nil;  </span>
-<span class="token punctuation">}</span>  
-注意几点：
-<span class="token number">1</span>、遵守代理：<span class="token builtin">UIPopoverPresentationControllerDelegate</span>
-<span class="token number">2</span>、在phone端必须要适配设备，要设置下面代理方法：
-<span class="token punctuation">[</span>objc<span class="token punctuation">]</span> view plain copy
-<span class="token comment" spellcheck="true">/* For iOS8.0, the only supported adaptive presentation styles are UIModalPresentationFullScreen and UIModalPresentationOverFullScreen. */</span>  
-<span class="token operator">-</span> <span class="token punctuation">(</span><span class="token builtin">UIModalPresentationStyle</span><span class="token punctuation">)</span>adaptivePresentationStyleForPresentationController<span class="token punctuation">:</span><span class="token punctuation">(</span><span class="token builtin">UIPresentationController</span> <span class="token operator">*</span><span class="token punctuation">)</span>controller<span class="token punctuation">;</span>  
-<span class="token operator">-</span>
-</code></pre>
-<p>iPhone下默认是UIModalPresentationFullScreen，需要手动设置为UIModalPresentationNone，否则，是普通的present全屏显示，没有弹窗效果。iPad不需要。<br>3、其他设置根据需求翻相关文档即可。<br>demo：<a href="https://github.com/Lynnll/UIPopOverLearning.git" target="_blank" rel="external">https://github.com/Lynnll/UIPopOverLearning.git</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
-    
-    </summary>
-    
-      <category term="iOS" scheme="https://wangyu1997.github.io/categories/iOS/"/>
-    
-    
-      <category term="popover" scheme="https://wangyu1997.github.io/tags/popover/"/>
-    
-  </entry>
-  
-  <entry>
     <title>iOS动画中的枚举UIViewAnimationOptions</title>
     <link href="https://wangyu1997.github.io/2017/06/11/UIViewAnimationOptions/"/>
     <id>https://wangyu1997.github.io/2017/06/11/UIViewAnimationOptions/</id>
@@ -4288,6 +4048,119 @@ UIViewAnimationOptionTransitionFlipFromBottom  //转场从下翻转
     
     
       <category term="LDA" scheme="https://wangyu1997.github.io/tags/LDA/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>iOS UICollectionView自定义cell</title>
+    <link href="https://wangyu1997.github.io/2017/05/19/uicell/"/>
+    <id>https://wangyu1997.github.io/2017/05/19/uicell/</id>
+    <published>2017-05-18T16:43:11.000Z</published>
+    <updated>2017-05-20T10:09:42.000Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>自定义的UITableCell<br><a id="more"></a></p>
+<pre class=" language-mm"><code class="language-mm">//
+//  jokeCell.m
+//  MyLaugh
+//
+//  Created by wangyu on 14/05/2017.
+//  Copyright © 2017 wangyu. All rights reserved.
+//
+
+#import "jokeCell.h"
+#define SCREEN_WIDTH [UIScreen mainScreen].bounds.size.width
+
+@implementation jokeCell
+{
+    UILabel *_titleLabel;
+    UILabel *_contentLabel;
+    UILabel *_updatetimeLabel;
+}
+
+-(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    _titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,5,SCREEN_WIDTH,21)];
+    _titleLabel.backgroundColor = [UIColor clearColor];
+    _titleLabel.textAlignment = NSTextAlignmentCenter;
+    _titleLabel.textColor = [UIColor purpleColor];
+    _titleLabel.font = [UIFont italicSystemFontOfSize:17];
+    _contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 30, SCREEN_WIDTH, 21)];
+    _contentLabel.backgroundColor = [UIColor clearColor];
+    _contentLabel.numberOfLines = 0;
+    _updatetimeLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 30, SCREEN_WIDTH, 21)];
+    _updatetimeLabel.textAlignment = NSTextAlignmentRight;
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
+    return self;
+}
+
+
+- (void)layoutSubviews{
+    [super layoutSubviews];
+    [self.contentView addSubview:_titleLabel];
+    [self.contentView addSubview:_contentLabel];
+    [self.contentView addSubview:_updatetimeLabel];
+}
+
+-(void) setTitle:(NSString *)title
+{
+    _title = title;
+    _titleLabel.text = title;
+}
+
+-(void) setContent:(NSString *)content
+{
+    _content = content;
+    _contentLabel.text = content;
+}
+
+-(void)setUpdatetime:(NSString *)updatetime
+{
+    _updatetime = updatetime;
+    _updatetimeLabel.text = updatetime;
+}
+
+-(void) setContentLabelHeight:(CGFloat)height
+{
+    _contentLabel.frame = CGRectMake(0, 30, _contentLabel.frame.size.width, height);
+    _updatetimeLabel.frame = CGRectMake(0, 35+height, _updatetimeLabel.frame.size.width, 21);
+}
+
+-(CGFloat) getHeight
+{
+    //计算文字高度
+    NSDictionary *attribute = @{NSFontAttributeName: _contentLabel.font};
+    CGSize retSize = [_contentLabel.text boundingRectWithSize:CGSizeMake(SCREEN_WIDTH, MAXFLOAT) options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:attribute context:nil].size;
+    _contentLabel.frame = CGRectMake(0, 30, _contentLabel.frame.size.width, retSize.height);
+    _updatetimeLabel.frame = CGRectMake(0, 35+_contentLabel.frame.size.height, _updatetimeLabel.frame.size.width, 21);
+    return 30+_contentLabel.frame.size.height+10+21+5;
+}
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    // Initialization code
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+
+    // Configure the view for the selected state
+}
+
+@end
+</code></pre>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;自定义的UITableCell&lt;br&gt;
+    
+    </summary>
+    
+      <category term="iOS" scheme="https://wangyu1997.github.io/categories/iOS/"/>
+    
+    
+      <category term="ios" scheme="https://wangyu1997.github.io/tags/ios/"/>
     
   </entry>
   

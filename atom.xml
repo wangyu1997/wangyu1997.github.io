@@ -3252,7 +3252,7 @@ task mybatisGenerate &lt;&lt; {
     <link href="https://wangyu1997.github.io/2017/10/03/VueJs/BetterScroll/"/>
     <id>https://wangyu1997.github.io/2017/10/03/VueJs/BetterScroll/</id>
     <published>2017-10-02T17:43:11.000Z</published>
-    <updated>2017-10-24T07:12:04.000Z</updated>
+    <updated>2017-10-24T07:13:58.000Z</updated>
     
     <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
 <p>From: <a href="https://wangyu1997.github.io/2017/10/03/VueJs/BetterScroll/">https://wangyu1997.github.io/2017/10/03/VueJs/BetterScroll/</a></p>
@@ -3407,7 +3407,7 @@ scroll.scrollTo(0, 500)
     <link href="https://wangyu1997.github.io/2017/10/03/VueJs/Stylus%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/"/>
     <id>https://wangyu1997.github.io/2017/10/03/VueJs/Stylus使用指南/</id>
     <published>2017-10-02T17:43:11.000Z</published>
-    <updated>2017-10-24T07:12:10.000Z</updated>
+    <updated>2017-10-24T07:13:55.000Z</updated>
     
     <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
 <blockquote>
@@ -4214,7 +4214,7 @@ div {
     <link href="https://wangyu1997.github.io/2017/10/02/VueJs/Vue%E5%AE%9E%E6%88%98/"/>
     <id>https://wangyu1997.github.io/2017/10/02/VueJs/Vue实战/</id>
     <published>2017-10-01T17:43:11.000Z</published>
-    <updated>2017-10-24T07:12:17.000Z</updated>
+    <updated>2017-10-24T07:13:50.000Z</updated>
     
     <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
 <p>这个系统使用的技术栈为：Vue+Webpack+Element+Axios+vueRouter.系统是一个快餐店的POS系统，当然我们不可能实现一个完整POS系统的所有功能（业余时间我会开发完成并开源），我们在视频中只完成收银模块的制作。你在这个视频中会学习到很多实战的技巧，让你在真实的工作中得心应手，脱颖而出。 </p>
@@ -5532,7 +5532,7 @@ public class SomeService {
     <link href="https://wangyu1997.github.io/2017/09/28/VueJs/axios%E6%95%99%E7%A8%8B/"/>
     <id>https://wangyu1997.github.io/2017/09/28/VueJs/axios教程/</id>
     <published>2017-09-27T17:43:11.000Z</published>
-    <updated>2017-10-24T07:12:14.000Z</updated>
+    <updated>2017-10-24T07:13:53.000Z</updated>
     
     <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
 <h2 id="一、安装"><a href="#一、安装" class="headerlink" title="一、安装"></a>一、安装</h2><p>1、 利用npm安装<code>npm install axios --save</code><br>2、 利用bower安装<code>bower install axios --save</code><br>3、 直接利用cdn引入<code>&lt;script src=&quot;https://unpkg.com/axios/dist/axios.min.js&quot;&gt;&lt;/script&gt;</code></p>

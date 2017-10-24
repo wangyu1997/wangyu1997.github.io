@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://wangyu1997.github.io/2017/10/24/Spring/AOP/</loc>
+    
+    <lastmod>2017-10-24T14:01:22.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://wangyu1997.github.io/2017/10/03/VueJs/BetterScroll/</loc>
     
     <lastmod>2017-10-24T07:13:58.000Z</lastmod>
@@ -492,7 +499,7 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-agc.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-erl.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
@@ -716,6 +723,13 @@
   </url>
   
   <url>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-agc.js</loc>
+    
+    <lastmod>2017-01-13T03:58:20.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://wangyu1997.github.io/assets/prettify/lang-apollo.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
@@ -723,7 +737,7 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-erl.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/skins/doxy.css</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
@@ -731,13 +745,6 @@
   
   <url>
     <loc>https://wangyu1997.github.io/assets/prettify/skins/desert.css</loc>
-    
-    <lastmod>2017-01-13T03:58:20.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/skins/doxy.css</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     

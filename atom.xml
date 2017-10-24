@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://wangyu1997.github.io/"/>
-  <updated>2017-10-24T06:52:10.000Z</updated>
+  <updated>2017-10-24T14:01:22.000Z</updated>
   <id>https://wangyu1997.github.io/</id>
   
   <author>
@@ -14,6 +14,209 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>学习Spring第五天</title>
+    <link href="https://wangyu1997.github.io/2017/10/24/Spring/AOP/"/>
+    <id>https://wangyu1997.github.io/2017/10/24/Spring/AOP/</id>
+    <published>2017-10-24T13:43:11.000Z</published>
+    <updated>2017-10-24T14:01:22.000Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a>  
+<h2 id="BeanNameAutoProxyCreator"><a href="#BeanNameAutoProxyCreator" class="headerlink" title="BeanNameAutoProxyCreator"></a>BeanNameAutoProxyCreator</h2><p>生产中会有会多bean需要代理，为了节约时间和减少工作量，我们可以使用自动代理来创建代理Bean</p>
+<p>个人感觉十分简单</p>
+<p>首先创建一个BeanNameAutoProxyCreator的Bean，然后把Advisor和需要代理的Bean丢进去(支持正则匹配)</p>
+<pre class=" language-java"><code class="language-java"><span class="token operator">&lt;</span>bean <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator"</span><span class="token operator">></span>
+    <span class="token operator">&lt;</span>property name<span class="token operator">=</span><span class="token string">"beanNames"</span><span class="token operator">></span>
+        <span class="token operator">&lt;</span>list<span class="token operator">></span>
+            <span class="token operator">&lt;</span>value<span class="token operator">></span><span class="token operator">*</span>Service<span class="token operator">&lt;</span><span class="token operator">/</span>value<span class="token operator">></span>
+        <span class="token operator">&lt;</span><span class="token operator">/</span>list<span class="token operator">></span>
+    <span class="token operator">&lt;</span><span class="token operator">/</span>property<span class="token operator">></span>
+    <span class="token operator">&lt;</span>property name<span class="token operator">=</span><span class="token string">"interceptorNames"</span><span class="token operator">></span>
+        <span class="token operator">&lt;</span>list<span class="token operator">></span>
+            <span class="token operator">&lt;</span>value<span class="token operator">></span>customerPointCut<span class="token operator">&lt;</span><span class="token operator">/</span>value<span class="token operator">></span>
+            <span class="token operator">&lt;</span>value<span class="token operator">></span>customerAdvisor<span class="token operator">&lt;</span><span class="token operator">/</span>value<span class="token operator">></span>
+        <span class="token operator">&lt;</span><span class="token operator">/</span>list<span class="token operator">></span>
+    <span class="token operator">&lt;</span><span class="token operator">/</span>property<span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>bean<span class="token operator">></span>
+</code></pre>
+<p>然后测试类不需要在调用Proxy的名字，直接使用，Spring会自动创建代理</p>
+<h2 id="DefaultAdvisorAutoProxyCreator"><a href="#DefaultAdvisorAutoProxyCreator" class="headerlink" title="DefaultAdvisorAutoProxyCreator"></a>DefaultAdvisorAutoProxyCreator</h2><p>听说十分强大，如果有Bean相关联，会自动创建相应的代理</p>
+<p><code>&lt;bean class=&quot;org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator&quot;/&gt;</code></p>
+<p>一行代码即可，感觉是有点方便，运行结果不变</p>
+<p><img src="http://oq5d32gij.bkt.clouddn.com/15088497883546.jpg" alt=""></p>
+<ul>
+<li>拦截器的序列会影响结果，我们需要自己调整顺序如果是使用BeanNameAutoProxyCreator</li>
+</ul>
+<h2 id="AOP-AspectJ-面向切面编程"><a href="#AOP-AspectJ-面向切面编程" class="headerlink" title="AOP+AspectJ 面向切面编程"></a>AOP+AspectJ 面向切面编程</h2><p>AspectJ常见的注解</p>
+<pre><code>@Before – 方法执行前运行
+@After – 运行在方法返回结果后
+@AfterReturning – 运行在方法返回一个结果后，在拦截器返回结果。
+@AfterThrowing – 运行方法在抛出异常后，
+@Around – 围绕方法执行运行，结合以上这三个通知。
+</code></pre><blockquote>
+<p>创建一个Dao</p>
+</blockquote>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">package</span> com<span class="token punctuation">.</span>demo<span class="token punctuation">.</span>Dao<span class="token punctuation">;</span>
+
+<span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">CustomerBo</span> <span class="token punctuation">{</span>
+    <span class="token keyword">void</span> <span class="token function">addCustomer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    String <span class="token function">addCustomerReturnValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">void</span> <span class="token function">addCustomerThrowException</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception<span class="token punctuation">;</span>
+
+    <span class="token keyword">void</span> <span class="token function">addCustomerAround</span><span class="token punctuation">(</span>String name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<blockquote>
+<p>实现类CustomerBoImpl</p>
+</blockquote>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">package</span> com<span class="token punctuation">.</span>demo<span class="token punctuation">.</span>Dao<span class="token punctuation">.</span>Impl<span class="token punctuation">;</span>
+
+<span class="token keyword">import</span> com<span class="token punctuation">.</span>demo<span class="token punctuation">.</span>Dao<span class="token punctuation">.</span>CustomerBo<span class="token punctuation">;</span>
+
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">CustomerBoImpl</span> <span class="token keyword">implements</span> <span class="token class-name">CustomerBo</span> <span class="token punctuation">{</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">addCustomer</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"addCustomer() is running"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> String <span class="token function">addCustomerReturnValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"addCustomerReturnValue() is running"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token string">"abc"</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">addCustomerThrowException</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"addCustomerThrowException() is running"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Exception</span><span class="token punctuation">(</span><span class="token string">"Generic Error"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">addCustomerAround</span><span class="token punctuation">(</span>String name<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"addCustomerAround(String name) is running, args: "</span> <span class="token operator">+</span> name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<blockquote>
+<p>然后定义一个AspectJ用来输出日志信息</p>
+</blockquote>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">package</span> com<span class="token punctuation">.</span>demo<span class="token punctuation">.</span>AspectJ<span class="token punctuation">;</span>
+
+<span class="token keyword">import</span> org<span class="token punctuation">.</span>aspectj<span class="token punctuation">.</span>lang<span class="token punctuation">.</span>JoinPoint<span class="token punctuation">;</span>
+<span class="token keyword">import</span> org<span class="token punctuation">.</span>aspectj<span class="token punctuation">.</span>lang<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span>Aspect<span class="token punctuation">;</span>
+<span class="token keyword">import</span> org<span class="token punctuation">.</span>aspectj<span class="token punctuation">.</span>lang<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span>Before<span class="token punctuation">;</span>
+
+<span class="token annotation punctuation">@Aspect</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">LoggingAspect</span> <span class="token punctuation">{</span>
+
+    <span class="token annotation punctuation">@Before</span><span class="token punctuation">(</span><span class="token string">"execution(* com.demo.Dao.CustomerBo.addCustomer(..))"</span><span class="token punctuation">)</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">logBefore</span><span class="token punctuation">(</span>JoinPoint joinPoint<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"logBefore() is running"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Method "</span> <span class="token operator">+</span> joinPoint<span class="token punctuation">.</span><span class="token function">getSignature</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"**********"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<blockquote>
+<p>在applicationContext.xml中声明Beans</p>
+</blockquote>
+<pre class=" language-xml"><code class="language-xml"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>beans</span> <span class="token attr-name">xmlns</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.springframework.org/schema/beans<span class="token punctuation">"</span></span>
+       <span class="token attr-name"><span class="token namespace">xmlns:</span>xsi</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.w3.org/2001/XMLSchema-instance<span class="token punctuation">"</span></span>
+       <span class="token attr-name"><span class="token namespace">xmlns:</span>aop</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.springframework.org/schema/aop<span class="token punctuation">"</span></span>
+       <span class="token attr-name"><span class="token namespace">xsi:</span>schemaLocation</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop-4.0.xsd <span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span><span class="token namespace">aop:</span>aspectj-autoproxy</span><span class="token punctuation">/></span></span>
+
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>bean</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>customerBo<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.demo.Dao.Impl.CustomerBoImpl<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>bean</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>logAspect<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.demo.AspectJ.LoggingAspect<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>beans</span><span class="token punctuation">></span></span>
+</code></pre>
+<p>这里用到了<code>&lt;aop:aspectj-autoproxy/&gt;</code>开启切片自动拦截</p>
+<p>然后在xml中注册了这个日志拦截切片</p>
+<p>运行结果如下:</p>
+<p><img src="http://oq5d32gij.bkt.clouddn.com/15088527301527.jpg" alt=""></p>
+<blockquote>
+<p>下面把其余的几个注解一起使用</p>
+</blockquote>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">package</span> com<span class="token punctuation">.</span>demo<span class="token punctuation">.</span>AspectJ<span class="token punctuation">;</span>
+
+<span class="token keyword">import</span> org<span class="token punctuation">.</span>aspectj<span class="token punctuation">.</span>lang<span class="token punctuation">.</span>JoinPoint<span class="token punctuation">;</span>
+<span class="token keyword">import</span> org<span class="token punctuation">.</span>aspectj<span class="token punctuation">.</span>lang<span class="token punctuation">.</span>ProceedingJoinPoint<span class="token punctuation">;</span>
+<span class="token keyword">import</span> org<span class="token punctuation">.</span>aspectj<span class="token punctuation">.</span>lang<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span>*<span class="token punctuation">;</span>
+
+<span class="token keyword">import</span> java<span class="token punctuation">.</span>util<span class="token punctuation">.</span>Arrays<span class="token punctuation">;</span>
+
+<span class="token annotation punctuation">@Aspect</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">LoggingAspect</span> <span class="token punctuation">{</span>
+
+    <span class="token annotation punctuation">@Before</span><span class="token punctuation">(</span><span class="token string">"execution(* com.demo.Dao.CustomerBo.addCustomer(..))"</span><span class="token punctuation">)</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">logBefore</span><span class="token punctuation">(</span>JoinPoint joinPoint<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"logBefore() is running"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Method "</span> <span class="token operator">+</span> joinPoint<span class="token punctuation">.</span><span class="token function">getSignature</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"**********"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@After</span><span class="token punctuation">(</span><span class="token string">"execution(* com.demo.Dao.CustomerBo.addCustomer(..))"</span><span class="token punctuation">)</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">logAfter</span><span class="token punctuation">(</span>JoinPoint joinPoint<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"logAfter() is running"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Method "</span> <span class="token operator">+</span> joinPoint<span class="token punctuation">.</span><span class="token function">getSignature</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"**********"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@AfterReturning</span><span class="token punctuation">(</span><span class="token string">"execution(* com.demo.Dao.CustomerBo.addCustomerReturnValue(..))"</span><span class="token punctuation">)</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">logAfterReturn</span><span class="token punctuation">(</span>JoinPoint joinPoint<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"logAfterReturn() is running"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Method "</span> <span class="token operator">+</span> joinPoint<span class="token punctuation">.</span><span class="token function">getSignature</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"**********"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@AfterThrowing</span><span class="token punctuation">(</span>pointcut <span class="token operator">=</span> <span class="token string">"execution(* com.demo.Dao.CustomerBo.addCustomerThrowException(..))"</span><span class="token punctuation">,</span> throwing <span class="token operator">=</span> <span class="token string">"error"</span><span class="token punctuation">)</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">logAfterThrowing</span><span class="token punctuation">(</span>JoinPoint joinPoint<span class="token punctuation">,</span> Throwable error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"logAfterThrowing() is running"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Method : "</span> <span class="token operator">+</span> joinPoint<span class="token punctuation">.</span><span class="token function">getSignature</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Error : "</span> <span class="token operator">+</span> error<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"**********"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@Around</span><span class="token punctuation">(</span><span class="token string">"execution(* com.demo.Dao.CustomerBo.addCustomerAround(..))"</span><span class="token punctuation">)</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">logAround</span><span class="token punctuation">(</span>ProceedingJoinPoint joinPoint<span class="token punctuation">)</span> <span class="token keyword">throws</span> Throwable <span class="token punctuation">{</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"logAround() is running"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Method : "</span> <span class="token operator">+</span> joinPoint<span class="token punctuation">.</span><span class="token function">getSignature</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Method Parameters : "</span> <span class="token operator">+</span> Arrays<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span>joinPoint<span class="token punctuation">.</span><span class="token function">getArgs</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Around Before is running"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        joinPoint<span class="token punctuation">.</span><span class="token function">proceed</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Around After is running"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"**********"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+<span class="token punctuation">}</span>
+</code></pre>
+<p>感觉跟写Advice差不多</p>
+<p>流程就是这样: DaoImpl-&gt;AspectJ-&gt;xml开启aspect自动代理-&gt;xml注入-&gt;调用</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
+    
+    </summary>
+    
+      <category term="Spring" scheme="https://wangyu1997.github.io/categories/Spring/"/>
+    
+    
+      <category term="AOP" scheme="https://wangyu1997.github.io/tags/AOP/"/>
+    
+      <category term="AutoProxyCreator" scheme="https://wangyu1997.github.io/tags/AutoProxyCreator/"/>
+    
+  </entry>
   
   <entry>
     <title>学习Spring第四天</title>
@@ -3248,161 +3451,6 @@ task mybatisGenerate &lt;&lt; {
   </entry>
   
   <entry>
-    <title>Vue轮播解决方案--BetterScroll</title>
-    <link href="https://wangyu1997.github.io/2017/10/03/VueJs/BetterScroll/"/>
-    <id>https://wangyu1997.github.io/2017/10/03/VueJs/BetterScroll/</id>
-    <published>2017-10-02T17:43:11.000Z</published>
-    <updated>2017-10-24T07:13:58.000Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
-<p>From: <a href="https://wangyu1997.github.io/2017/10/03/VueJs/BetterScroll/">https://wangyu1997.github.io/2017/10/03/VueJs/BetterScroll/</a></p>
-<p>inspired by iscroll, and it has a better scroll perfermance <a href="https://link.juejin.im?target=https%3A%2F%2Fustbhuangyi.github.io%2Fbetter-scroll%2F" target="_blank" rel="external">ustbhuangyi.github.io/better-scro…</a></p>
-<h2 id="立即使用"><a href="#立即使用" class="headerlink" title="立即使用"></a>立即使用</h2><pre><code>&lt;body&gt;
-  &lt;div id=&quot;wrapper&quot;&gt;
-    &lt;ul&gt;
-           &lt;li&gt;...&lt;/li&gt;
-           &lt;li&gt;...&lt;/li&gt;
-           ...
-    &lt;/ul&gt;
-  &lt;/div&gt;
-&lt;script type=&quot;text/javascript&quot; src=&quot;better-scroll.js&quot;&gt;&lt;/script&gt;
-&lt;script type=&quot;text/javascript&quot;&gt;
-  new BScroll(document.getElementById(&#39;wrapper&#39;));
-&lt;/script&gt;
-&lt;/body&gt;
-</code></pre><p>搞定 ! </p>
-<h2 id="通过npm引入"><a href="#通过npm引入" class="headerlink" title="通过npm引入"></a>通过npm引入</h2><p>安装better-scroll </p>
-<pre><code>npm install better-scroll
-</code></pre><p>引入better-scroll </p>
-<pre><code>import BScroll from &#39;better-scroll&#39;
-</code></pre><blockquote>
-<p>如果不支持import, 请使用 </p>
-</blockquote>
-<pre><code>var BScroll = require(&#39;better-scroll&#39;)
-</code></pre><h2 id="DEMO"><a href="#DEMO" class="headerlink" title="DEMO"></a>DEMO</h2><p>better-scroll 的源码是基于 Webpack 构建的 </p>
-<p>首先，clone项目源码 </p>
-<pre><code>git clone https://github.com/ustbhuangyi/better-scroll.git
-</code></pre><p>安装依赖 </p>
-<pre><code>cd better-scroll
-npm install
-</code></pre><p>测试demo页 </p>
-<pre><code>npm run dev
-</code></pre><p>打开浏览器访问如下地址, 查看效果 </p>
-<blockquote>
-<p>localhost:9090 </p>
-</blockquote>
-<h2 id="Options-参数"><a href="#Options-参数" class="headerlink" title="Options 参数"></a>Options 参数</h2><p>Example: </p>
-<pre><code>let scroll = new BScroll(document.getElementById(&#39;wrapper&#39;), {
-  startX: 0,
-  startY: 0
-})
-</code></pre><p>Options List: </p>
-<ul>
-<li>startX: <code>0</code> 开始的X轴位置</li>
-<li>startY: <code>0</code> 开始的Y轴位置</li>
-<li>scrollY: <code>true</code> 滚动方向为 Y 轴</li>
-<li>scrollX: ‘true’ 滚动方向为 X 轴</li>
-<li>click: <code>true</code> 是否派发click事件</li>
-<li>directionLockThreshold: <code>5</code></li>
-<li>momentum: <code>true</code> 当快速滑动时是否开启滑动惯性</li>
-<li>bounce: <code>true</code> 是否启用回弹动画效果</li>
-<li>selectedIndex: <code>0</code> wheel 为 true 时有效，表示被选中的 wheel 索引</li>
-<li>rotate: <code>25</code> wheel 为 true 时有效，表示被选中的 wheel 每一层的旋转角度</li>
-<li>wheel: <code>false</code> 该属性是给 picker 组件使用的，普通的列表滚动不需要配置</li>
-<li>snap: <code>false</code> 该属性是给 slider 组件使用的，普通的列表滚动不需要配置</li>
-<li>snapLoop: <code>false</code> 是否可以无缝循环轮播</li>
-<li>snapThreshold: <code>0.1</code> 用手指滑动时页面可切换的阈值，大于这个阈值可以滑动的下一页</li>
-<li>snapSpeed: <code>400</code>, 轮播图切换的动画时间</li>
-<li>swipeTime: <code>2500</code> swipe 持续时间</li>
-<li>bounceTime: <code>700</code> 弹力动画持续的毫秒数</li>
-<li>adjustTime: <code>400</code> wheel 为 true 有用，调整停留位置的时间</li>
-<li>swipeBounceTime: <code>1200</code> swipe 回弹 时间</li>
-<li>deceleration: <code>0.001</code> 滚动动量减速越大越快，建议不大于0.01</li>
-<li>momentumLimitTime: <code>300</code> 符合惯性拖动的最大时间</li>
-<li>momentumLimitDistance: <code>15</code> 符合惯性拖动的最小拖动距离</li>
-<li>resizePolling: <code>60</code> 重新调整窗口大小时，重新计算better-scroll的时间间隔</li>
-<li>preventDefault: <code>true</code> 是否阻止默认事件</li>
-<li>preventDefaultException: <code>{ tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT)$/ }</code> 阻止默认事件的例外配置</li>
-<li>HWCompositing: <code>true</code> 是否启用硬件加速</li>
-<li>useTransition: <code>true</code> 是否使用CSS3的Transition属性</li>
-<li>useTransform: <code>true</code> 是否使用CSS3的Transform属性</li>
-<li>probeType: <code>1</code> 会截流,只有在滚动结束的时候派发一个 scroll 事件。<code>2</code>在手指 move 的时候也会实时派发 scroll 事件，不会截流。 <code>3</code>除了手指 move 的时候派发scroll事件，在 swipe（手指迅速滑动一小段距离）的情况下，列表会有一个长距离的滚动动画，这个滚动的动画过程中也会实时派发滚动事件</li>
-</ul>
-<h2 id="Events-事件"><a href="#Events-事件" class="headerlink" title="Events 事件"></a>Events 事件</h2><p>Example: </p>
-<pre><code>let scroll = new BScroll(document.getElementById(&#39;wrapper&#39;),{
-   probeType: 3
-})
-
-scroll.on(&#39;scroll&#39;, (pos) =&gt; {
-  console.log(pos.x + &#39;~&#39; + pos.y)
-  ...
-})
-</code></pre><p>Events 列表 </p>
-<ul>
-<li>beforeScrollStart - 滚动开始之前触发</li>
-<li>scrollStart - 滚动开始时触发</li>
-<li>scroll - 滚动时触发</li>
-<li>scrollCancel - 取消滚动时触发</li>
-<li>scrollEnd - 滚动结束时触发</li>
-<li>touchend - 手指移开屏幕时触发</li>
-<li>flick - 轻拂时触发</li>
-<li>refresh - 当 better-scroll 刷新时触发</li>
-<li>destroy - 销毁 better-scroll 实例时触发</li>
-</ul>
-<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><ul>
-<li>scrollTo(x, y, time, easing)</li>
-</ul>
-<p>滚动到某个位置，x,y 代表坐标，time 表示动画时间，easing 表示缓动函数 </p>
-<p>Example: </p>
-<pre><code>let scroll = new BScroll(document.getElementById(&#39;wrapper&#39;))
-scroll.scrollTo(0, 500)
-...
-</code></pre><ul>
-<li>scrollToElement(el, time, offsetX, offsetY, easing)</li>
-</ul>
-<p>滚动到某个元素，el（必填）表示 dom 元素，time 表示动画时间，offsetX 和 offsetY 表示坐标偏移量，easing 表示缓动函数 </p>
-<ul>
-<li>refresh()</li>
-</ul>
-<p>强制 scroll 重新计算，当 better-scroll 中的元素发生变化的时候调用此方法。 </p>
-<ul>
-<li>getCurrentPage()</li>
-</ul>
-<p>当 snap 为 true 时，获取滚动的当前页，返回的对象结构为 {x, y, pageX, pageY}，其中 x,y 代表滚动横向和纵向的位置；pageX，pageY 表示横向和纵向的页面索引 </p>
-<ul>
-<li>goToPage(x, y, time, easing)</li>
-</ul>
-<p>当 snap 为 true，滚动到对应的页面，x 表示横向页面索引，y 表示纵向页面索引， time 表示动画，easing 表示缓动函数 </p>
-<ul>
-<li>enable()</li>
-</ul>
-<p>启用 better-scroll，默认开启 </p>
-<ul>
-<li>disable()</li>
-</ul>
-<p>禁用 better-scroll </p>
-<ul>
-<li>destroy()</li>
-</ul>
-<p>销毁 better-scroll，解绑事件 </p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
-    
-    </summary>
-    
-      <category term="VueJs" scheme="https://wangyu1997.github.io/categories/VueJs/"/>
-    
-    
-      <category term="better scroll" scheme="https://wangyu1997.github.io/tags/better-scroll/"/>
-    
-      <category term="vue" scheme="https://wangyu1997.github.io/tags/vue/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Stylus使用指南</title>
     <link href="https://wangyu1997.github.io/2017/10/03/VueJs/Stylus%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/"/>
     <id>https://wangyu1997.github.io/2017/10/03/VueJs/Stylus使用指南/</id>
@@ -4210,6 +4258,161 @@ div {
   </entry>
   
   <entry>
+    <title>Vue轮播解决方案--BetterScroll</title>
+    <link href="https://wangyu1997.github.io/2017/10/03/VueJs/BetterScroll/"/>
+    <id>https://wangyu1997.github.io/2017/10/03/VueJs/BetterScroll/</id>
+    <published>2017-10-02T17:43:11.000Z</published>
+    <updated>2017-10-24T07:13:58.000Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
+<p>From: <a href="https://wangyu1997.github.io/2017/10/03/VueJs/BetterScroll/">https://wangyu1997.github.io/2017/10/03/VueJs/BetterScroll/</a></p>
+<p>inspired by iscroll, and it has a better scroll perfermance <a href="https://link.juejin.im?target=https%3A%2F%2Fustbhuangyi.github.io%2Fbetter-scroll%2F" target="_blank" rel="external">ustbhuangyi.github.io/better-scro…</a></p>
+<h2 id="立即使用"><a href="#立即使用" class="headerlink" title="立即使用"></a>立即使用</h2><pre><code>&lt;body&gt;
+  &lt;div id=&quot;wrapper&quot;&gt;
+    &lt;ul&gt;
+           &lt;li&gt;...&lt;/li&gt;
+           &lt;li&gt;...&lt;/li&gt;
+           ...
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;better-scroll.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+  new BScroll(document.getElementById(&#39;wrapper&#39;));
+&lt;/script&gt;
+&lt;/body&gt;
+</code></pre><p>搞定 ! </p>
+<h2 id="通过npm引入"><a href="#通过npm引入" class="headerlink" title="通过npm引入"></a>通过npm引入</h2><p>安装better-scroll </p>
+<pre><code>npm install better-scroll
+</code></pre><p>引入better-scroll </p>
+<pre><code>import BScroll from &#39;better-scroll&#39;
+</code></pre><blockquote>
+<p>如果不支持import, 请使用 </p>
+</blockquote>
+<pre><code>var BScroll = require(&#39;better-scroll&#39;)
+</code></pre><h2 id="DEMO"><a href="#DEMO" class="headerlink" title="DEMO"></a>DEMO</h2><p>better-scroll 的源码是基于 Webpack 构建的 </p>
+<p>首先，clone项目源码 </p>
+<pre><code>git clone https://github.com/ustbhuangyi/better-scroll.git
+</code></pre><p>安装依赖 </p>
+<pre><code>cd better-scroll
+npm install
+</code></pre><p>测试demo页 </p>
+<pre><code>npm run dev
+</code></pre><p>打开浏览器访问如下地址, 查看效果 </p>
+<blockquote>
+<p>localhost:9090 </p>
+</blockquote>
+<h2 id="Options-参数"><a href="#Options-参数" class="headerlink" title="Options 参数"></a>Options 参数</h2><p>Example: </p>
+<pre><code>let scroll = new BScroll(document.getElementById(&#39;wrapper&#39;), {
+  startX: 0,
+  startY: 0
+})
+</code></pre><p>Options List: </p>
+<ul>
+<li>startX: <code>0</code> 开始的X轴位置</li>
+<li>startY: <code>0</code> 开始的Y轴位置</li>
+<li>scrollY: <code>true</code> 滚动方向为 Y 轴</li>
+<li>scrollX: ‘true’ 滚动方向为 X 轴</li>
+<li>click: <code>true</code> 是否派发click事件</li>
+<li>directionLockThreshold: <code>5</code></li>
+<li>momentum: <code>true</code> 当快速滑动时是否开启滑动惯性</li>
+<li>bounce: <code>true</code> 是否启用回弹动画效果</li>
+<li>selectedIndex: <code>0</code> wheel 为 true 时有效，表示被选中的 wheel 索引</li>
+<li>rotate: <code>25</code> wheel 为 true 时有效，表示被选中的 wheel 每一层的旋转角度</li>
+<li>wheel: <code>false</code> 该属性是给 picker 组件使用的，普通的列表滚动不需要配置</li>
+<li>snap: <code>false</code> 该属性是给 slider 组件使用的，普通的列表滚动不需要配置</li>
+<li>snapLoop: <code>false</code> 是否可以无缝循环轮播</li>
+<li>snapThreshold: <code>0.1</code> 用手指滑动时页面可切换的阈值，大于这个阈值可以滑动的下一页</li>
+<li>snapSpeed: <code>400</code>, 轮播图切换的动画时间</li>
+<li>swipeTime: <code>2500</code> swipe 持续时间</li>
+<li>bounceTime: <code>700</code> 弹力动画持续的毫秒数</li>
+<li>adjustTime: <code>400</code> wheel 为 true 有用，调整停留位置的时间</li>
+<li>swipeBounceTime: <code>1200</code> swipe 回弹 时间</li>
+<li>deceleration: <code>0.001</code> 滚动动量减速越大越快，建议不大于0.01</li>
+<li>momentumLimitTime: <code>300</code> 符合惯性拖动的最大时间</li>
+<li>momentumLimitDistance: <code>15</code> 符合惯性拖动的最小拖动距离</li>
+<li>resizePolling: <code>60</code> 重新调整窗口大小时，重新计算better-scroll的时间间隔</li>
+<li>preventDefault: <code>true</code> 是否阻止默认事件</li>
+<li>preventDefaultException: <code>{ tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT)$/ }</code> 阻止默认事件的例外配置</li>
+<li>HWCompositing: <code>true</code> 是否启用硬件加速</li>
+<li>useTransition: <code>true</code> 是否使用CSS3的Transition属性</li>
+<li>useTransform: <code>true</code> 是否使用CSS3的Transform属性</li>
+<li>probeType: <code>1</code> 会截流,只有在滚动结束的时候派发一个 scroll 事件。<code>2</code>在手指 move 的时候也会实时派发 scroll 事件，不会截流。 <code>3</code>除了手指 move 的时候派发scroll事件，在 swipe（手指迅速滑动一小段距离）的情况下，列表会有一个长距离的滚动动画，这个滚动的动画过程中也会实时派发滚动事件</li>
+</ul>
+<h2 id="Events-事件"><a href="#Events-事件" class="headerlink" title="Events 事件"></a>Events 事件</h2><p>Example: </p>
+<pre><code>let scroll = new BScroll(document.getElementById(&#39;wrapper&#39;),{
+   probeType: 3
+})
+
+scroll.on(&#39;scroll&#39;, (pos) =&gt; {
+  console.log(pos.x + &#39;~&#39; + pos.y)
+  ...
+})
+</code></pre><p>Events 列表 </p>
+<ul>
+<li>beforeScrollStart - 滚动开始之前触发</li>
+<li>scrollStart - 滚动开始时触发</li>
+<li>scroll - 滚动时触发</li>
+<li>scrollCancel - 取消滚动时触发</li>
+<li>scrollEnd - 滚动结束时触发</li>
+<li>touchend - 手指移开屏幕时触发</li>
+<li>flick - 轻拂时触发</li>
+<li>refresh - 当 better-scroll 刷新时触发</li>
+<li>destroy - 销毁 better-scroll 实例时触发</li>
+</ul>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><ul>
+<li>scrollTo(x, y, time, easing)</li>
+</ul>
+<p>滚动到某个位置，x,y 代表坐标，time 表示动画时间，easing 表示缓动函数 </p>
+<p>Example: </p>
+<pre><code>let scroll = new BScroll(document.getElementById(&#39;wrapper&#39;))
+scroll.scrollTo(0, 500)
+...
+</code></pre><ul>
+<li>scrollToElement(el, time, offsetX, offsetY, easing)</li>
+</ul>
+<p>滚动到某个元素，el（必填）表示 dom 元素，time 表示动画时间，offsetX 和 offsetY 表示坐标偏移量，easing 表示缓动函数 </p>
+<ul>
+<li>refresh()</li>
+</ul>
+<p>强制 scroll 重新计算，当 better-scroll 中的元素发生变化的时候调用此方法。 </p>
+<ul>
+<li>getCurrentPage()</li>
+</ul>
+<p>当 snap 为 true 时，获取滚动的当前页，返回的对象结构为 {x, y, pageX, pageY}，其中 x,y 代表滚动横向和纵向的位置；pageX，pageY 表示横向和纵向的页面索引 </p>
+<ul>
+<li>goToPage(x, y, time, easing)</li>
+</ul>
+<p>当 snap 为 true，滚动到对应的页面，x 表示横向页面索引，y 表示纵向页面索引， time 表示动画，easing 表示缓动函数 </p>
+<ul>
+<li>enable()</li>
+</ul>
+<p>启用 better-scroll，默认开启 </p>
+<ul>
+<li>disable()</li>
+</ul>
+<p>禁用 better-scroll </p>
+<ul>
+<li>destroy()</li>
+</ul>
+<p>销毁 better-scroll，解绑事件 </p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
+    
+    </summary>
+    
+      <category term="VueJs" scheme="https://wangyu1997.github.io/categories/VueJs/"/>
+    
+    
+      <category term="better scroll" scheme="https://wangyu1997.github.io/tags/better-scroll/"/>
+    
+      <category term="vue" scheme="https://wangyu1997.github.io/tags/vue/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Vue实战</title>
     <link href="https://wangyu1997.github.io/2017/10/02/VueJs/Vue%E5%AE%9E%E6%88%98/"/>
     <id>https://wangyu1997.github.io/2017/10/02/VueJs/Vue实战/</id>
@@ -4959,251 +5162,6 @@ getAllMoney(){
   </entry>
   
   <entry>
-    <title>AOP编程详解</title>
-    <link href="https://wangyu1997.github.io/2017/10/01/JavaWeb/AOP%E7%BC%96%E7%A8%8B%E8%AF%A6%E8%A7%A3/"/>
-    <id>https://wangyu1997.github.io/2017/10/01/JavaWeb/AOP编程详解/</id>
-    <published>2017-10-01T02:43:11.000Z</published>
-    <updated>2017-10-24T06:29:21.000Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
-<h2 id="基本知识"><a href="#基本知识" class="headerlink" title="基本知识"></a>基本知识</h2><p>其实, 接触了这么久的 AOP, 我感觉, AOP 给人难以理解的一个关键点是它的概念比较多, 而且坑爹的是, 这些概念经过了中文翻译后, 变得面目全非, 相同的一个术语, 在不同的翻译下, 含义总有着各种莫名其妙的差别. 鉴于此, 我在本章的开头, 着重为为大家介绍一个 Spring AOP 的各项术语的基本含义. 为了术语传达的准确性, 我在接下来的叙述中, 能使用英文术语的地方, 尽量使用英文. </p>
-<h3 id="什么是-AOP"><a href="#什么是-AOP" class="headerlink" title="什么是 AOP"></a>什么是 AOP</h3><p>AOP(Aspect-Oriented Programming), 即 <strong>面向切面编程</strong>, 它与 OOP( Object-Oriented Programming, 面向对象编程) 相辅相成, 提供了与 OOP 不同的抽象软件结构的视角.<br>在 OOP 中, 我们以类(class)作为我们的基本单元, 而 AOP 中的基本单元是 <strong>Aspect(切面)</strong></p>
-<h3 id="术语"><a href="#术语" class="headerlink" title="术语"></a>术语</h3><h4 id="Aspect-切面"><a href="#Aspect-切面" class="headerlink" title="Aspect(切面)"></a>Aspect(切面)</h4><p><code>aspect</code> 由 <code>pointcount</code> 和 <code>advice</code> 组成, 它既包含了横切逻辑的定义, 也包括了连接点的定义. Spring AOP就是负责实施切面的框架, 它将切面所定义的横切逻辑织入到切面所指定的连接点中.<br>AOP的工作重心在于如何将增强织入目标对象的连接点上, 这里包含两个工作: </p>
-<ol>
-<li><p>如何通过 pointcut 和 advice 定位到特定的 joinpoint 上 </p>
-</li>
-<li><p>如何在 advice 中编写切面代码. </p>
-</li>
-</ol>
-<p><strong>可以简单地认为, 使用 @Aspect 注解的类就是切面.</strong></p>
-<h4 id="advice-增强"><a href="#advice-增强" class="headerlink" title="advice(增强)"></a>advice(增强)</h4><p>由 aspect 添加到特定的 join point(即满足 point cut 规则的 join point) 的一段代码.<br>许多 AOP框架, 包括 Spring AOP, 会将 advice 模拟为一个拦截器(interceptor), 并且在 join point 上维护多个 advice, 进行层层拦截.<br>例如 HTTP 鉴权的实现, 我们可以为每个使用 RequestMapping 标注的方法织入 advice, 当 HTTP 请求到来时, 首先进入到 advice 代码中, 在这里我们可以分析这个 HTTP 请求是否有相应的权限, 如果有, 则执行 Controller, 如果没有, 则抛出异常. 这里的 advice 就扮演着鉴权拦截器的角色了. </p>
-<h4 id="连接点-join-point"><a href="#连接点-join-point" class="headerlink" title="连接点(join point)"></a>连接点(join point)</h4><blockquote>
-<p>a point during the execution of a program, such as the execution of a method or the handling of an exception. In Spring AOP, a join point always represents a method execution. </p>
-</blockquote>
-<p>程序运行中的一些时间点, 例如一个方法的执行, 或者是一个异常的处理.<br><code>在 Spring AOP 中, join point 总是方法的执行点, 即只有方法连接点.</code></p>
-<h4 id="切点-point-cut"><a href="#切点-point-cut" class="headerlink" title="切点(point cut)"></a>切点(point cut)</h4><p>匹配 join point 的谓词(a predicate that matches join points).<br>Advice 是和特定的 point cut 关联的, 并且在 point cut 相匹配的 join point 中执行.<br><code>在 Spring 中, 所有的方法都可以认为是 joinpoint, 但是我们并不希望在所有的方法上都添加 Advice, 而 pointcut 的作用就是提供一组规则(使用 AspectJ pointcut expression language 来描述) 来匹配joinpoint, 给满足规则的 joinpoint 添加 Advice.</code></p>
-<h4 id="关于join-point-和-point-cut-的区别"><a href="#关于join-point-和-point-cut-的区别" class="headerlink" title="关于join point 和 point cut 的区别"></a>关于join point 和 point cut 的区别</h4><p>在 Spring AOP 中, 所有的方法执行都是 join point. 而 point cut 是一个描述信息, 它修饰的是 join point, 通过 point cut, 我们就可以确定哪些 join point 可以被织入 Advice. 因此 join point 和 point cut 本质上就是两个不同纬度上的东西.<br><code>advice 是在 join point 上执行的, 而 point cut 规定了哪些 join point 可以执行哪些 advice</code></p>
-<h4 id="introduction"><a href="#introduction" class="headerlink" title="introduction"></a>introduction</h4><p>为一个类型添加额外的方法或字段. Spring AOP 允许我们为 <code>目标对象</code> 引入新的接口(和对应的实现). 例如我们可以使用 introduction 来为一个 bean 实现 IsModified 接口, 并以此来简化 caching 的实现. </p>
-<h4 id="目标对象-Target"><a href="#目标对象-Target" class="headerlink" title="目标对象(Target)"></a>目标对象(Target)</h4><p>织入 advice 的目标对象. 目标对象也被称为 <code>advised object</code>.<br><code>因为 Spring AOP 使用运行时代理的方式来实现 aspect, 因此 adviced object 总是一个代理对象(proxied object)</code><br><code>注意, adviced object 指的不是原来的类, 而是织入 advice 后所产生的代理类.</code></p>
-<h4 id="AOP-proxy"><a href="#AOP-proxy" class="headerlink" title="AOP proxy"></a>AOP proxy</h4><p>一个类被 AOP 织入 advice, 就会产生一个结果类, 它是融合了原类和增强逻辑的代理类.<br>在 Spring AOP 中, 一个 AOP 代理是一个 JDK 动态代理对象或 CGLIB 代理对象. </p>
-<h4 id="织入-Weaving"><a href="#织入-Weaving" class="headerlink" title="织入(Weaving)"></a>织入(Weaving)</h4><p>将 aspect 和其他对象连接起来, 并创建 adviced object 的过程.<br>根据不同的实现技术, AOP织入有三种方式: </p>
-<ul>
-<li><p>编译器织入, 这要求有特殊的Java编译器. </p>
-</li>
-<li><p>类装载期织入, 这需要有特殊的类装载器. </p>
-</li>
-<li><p>动态代理织入, 在运行期为目标类添加增强(Advice)生成子类的方式.<br>Spring 采用动态代理织入, 而AspectJ采用编译器织入和类装载期织入. </p>
-</li>
-</ul>
-<h3 id="advice-的类型"><a href="#advice-的类型" class="headerlink" title="advice 的类型"></a>advice 的类型</h3><ul>
-<li><p>before advice, 在 join point 前被执行的 advice. 虽然 before advice 是在 join point 前被执行, 但是它并不能够阻止 join point 的执行, 除非发生了异常(即我们在 before advice 代码中, 不能人为地决定是否继续执行 join point 中的代码) </p>
-</li>
-<li><p>after return advice, 在一个 join point 正常返回后执行的 advice </p>
-</li>
-<li><p>after throwing advice, 当一个 join point 抛出异常后执行的 advice </p>
-</li>
-<li><p>after(final) advice, 无论一个 join point 是正常退出还是发生了异常, 都会被执行的 advice. </p>
-</li>
-<li><p>around advice, 在 join point 前和 joint point 退出后都执行的 advice. 这个是最常用的 advice. </p>
-</li>
-</ul>
-<h3 id="关于-AOP-Proxy"><a href="#关于-AOP-Proxy" class="headerlink" title="关于 AOP Proxy"></a>关于 AOP Proxy</h3><p>Spring AOP 默认使用标准的 JDK 动态代理(dynamic proxy)技术来实现 AOP 代理, 通过它, 我们可以为任意的接口实现代理.<br><code>如果需要为一个类实现代理, 那么可以使用 CGLIB 代理.</code> 当一个业务逻辑对象没有实现接口时, 那么Spring AOP 就默认使用 CGLIB 来作为 AOP 代理了. 即如果我们需要为一个方法织入 advice, 但是这个方法不是一个接口所提供的方法, 则此时 Spring AOP 会使用 CGLIB 来实现动态代理. 鉴于此, Spring AOP 建议基于接口编程, 对接口进行 AOP 而不是类. </p>
-<h2 id="彻底理解-aspect-join-point-point-cut-advice"><a href="#彻底理解-aspect-join-point-point-cut-advice" class="headerlink" title="彻底理解 aspect, join point, point cut, advice"></a>彻底理解 aspect, join point, point cut, advice</h2><p>看完了上面的理论部分知识, 我相信还是会有不少朋友感觉到 AOP 的概念还是很模糊, 对 AOP 中的各种概念理解的还不是很透彻. 其实这很正常, 因为 AOP 中的概念是在是太多了, 我当时也是花了老大劲才梳理清楚的.<br>下面我以一个简单的例子来比喻一下 AOP 中 aspect, jointpoint, pointcut 与 advice 之间的关系. </p>
-<p>让我们来假设一下, 从前有一个叫爪哇的小县城, 在一个月黑风高的晚上, 这个县城中发生了命案. 作案的凶手十分狡猾, 现场没有留下什么有价值的线索. 不过万幸的是, 刚从隔壁回来的老王恰好在这时候无意中发现了凶手行凶的过程, 但是由于天色已晚, 加上凶手蒙着面, 老王并没有看清凶手的面目, 只知道凶手是个男性, 身高约七尺五寸. 爪哇县的县令根据老王的描述, 对守门的士兵下命令说: 凡是发现有身高七尺五寸的男性, 都要抓过来审问. 士兵当然不敢违背县令的命令, 只好把进出城的所有符合条件的人都抓了起来. </p>
-<p>来让我们看一下上面的一个小故事和 AOP 到底有什么对应关系.<br>首先我们知道, 在 Spring AOP 中 join point 指代的是所有方法的执行点, 而 point cut 是一个描述信息, 它修饰的是 join point, 通过 point cut, 我们就可以确定哪些 join point 可以被织入 Advice. 对应到我们在上面举的例子, 我们可以做一个简单的类比, join point 就相当于 <strong>爪哇的小县城里的百姓</strong>, point cut 就相当于 <strong>老王所做的指控, 即凶手是个男性, 身高约七尺五寸</strong>, 而 advice 则是施加在符合老王所描述的嫌疑人的动作: <strong>抓过来审问</strong>.<br>为什么可以这样类比呢? </p>
-<ul>
-<li><p>join point –&gt; 爪哇的小县城里的百姓: 因为根据定义, join point 是所有可能被织入 advice 的候选的点, 在 Spring AOP中, 则可以认为所有方法执行点都是 join point. 而在我们上面的例子中, 命案发生在小县城中, 按理说在此县城中的所有人都有可能是嫌疑人. </p>
-</li>
-<li><p>point cut –&gt; 男性, 身高约七尺五寸: 我们知道, 所有的方法(joint point) 都可以织入 advice, 但是我们并不希望在所有方法上都织入 advice, 而 pointcut 的作用就是提供一组规则来匹配joinpoint, 给满足规则的 joinpoint 添加 advice. 同理, 对于县令来说, 他再昏庸, 也知道不能把县城中的所有百姓都抓起来审问, 而是根据<code>凶手是个男性, 身高约七尺五寸</code>, 把符合条件的人抓起来. 在这里 <code>凶手是个男性, 身高约七尺五寸</code> 就是一个修饰谓语, 它限定了凶手的范围, 满足此修饰规则的百姓都是嫌疑人, 都需要抓起来审问. </p>
-</li>
-<li><p>advice –&gt; 抓过来审问, advice 是一个动作, 即一段 Java 代码, 这段 Java 代码是作用于 point cut 所限定的那些 join point 上的. 同理, 对比到我们的例子中, <code>抓过来审问</code> 这个动作就是对作用于那些满足 <code>男性, 身高约七尺五寸</code> 的<code>爪哇的小县城里的百姓</code>. </p>
-</li>
-<li><p>aspect: aspect 是 point cut 与 advice 的组合, 因此在这里我们就可以类比: <strong>“根据老王的线索, 凡是发现有身高七尺五寸的男性, 都要抓过来审问”</strong> 这一整个动作可以被认为是一个 aspect. </p>
-</li>
-</ul>
-<hr>
-<p>或则我们也可以从语法的角度来简单类比一下. 我们在学英语时, 经常会接触什么 <code>定语</code>, <code>被动句</code> 之类的概念, 那么可以做一个不严谨的类比, 即 <code>joinpoint</code> 可以认为是一个 <code>宾语</code>, 而 <code>pointcut</code> 则可以类比为修饰 <code>joinpoint</code> 的定语, 那么整个 <code>aspect</code> 就可以描述为: <code>满足 pointcut 规则的 joinpoint 会被添加相应的 advice 操作.</code></p>
-<h2 id="AspectJ-支持"><a href="#AspectJ-支持" class="headerlink" title="@AspectJ 支持"></a>@AspectJ 支持</h2><p><strong>@AspectJ</strong> 是一种使用 Java 注解来实现 AOP 的编码风格.<br>@AspectJ 风格的 AOP 是 AspectJ Project 在 AspectJ 5 中引入的, 并且 Spring 也支持@AspectJ 的 AOP 风格. </p>
-<h3 id="使能-AspectJ-支持"><a href="#使能-AspectJ-支持" class="headerlink" title="使能 @AspectJ 支持"></a>使能 @AspectJ 支持</h3><p>@AspectJ 可以以 XML 的方式或以注解的方式来使能, 并且不论以哪种方式使能@ASpectJ, 我们都必须保证 aspectjweaver.jar 在 classpath 中. </p>
-<h4 id="使用-Java-Configuration-方式使能-AspectJ"><a href="#使用-Java-Configuration-方式使能-AspectJ" class="headerlink" title="使用 Java Configuration 方式使能@AspectJ"></a>使用 Java Configuration 方式使能@AspectJ</h4><pre><code>@Configuration
-@EnableAspectJAutoProxy
-public class AppConfig {
-}
-</code></pre><h4 id="使用-XML-方式使能-AspectJ"><a href="#使用-XML-方式使能-AspectJ" class="headerlink" title="使用 XML 方式使能@AspectJ"></a>使用 XML 方式使能@AspectJ</h4><pre><code>&lt;aop:aspectj-autoproxy/&gt;
-</code></pre><h3 id="定义-aspect-切面"><a href="#定义-aspect-切面" class="headerlink" title="定义 aspect(切面)"></a>定义 aspect(切面)</h3><p>当使用注解 <strong>@Aspect</strong> 标注一个 Bean 后, 那么 Spring 框架会自动收集这些 Bean, 并添加到 Spring AOP 中, 例如: </p>
-<pre><code>@Component
-@Aspect
-public class MyTest {
-}
-</code></pre><p><code>注意, 仅仅使用@Aspect 注解, 并不能将一个 Java 对象转换为 Bean, 因此我们还需要使用类似 @Component 之类的注解.</code><br><code>注意, 如果一个 类被@Aspect 标注, 则这个类就不能是其他 aspect 的 **advised object** 了, 因为使用 @Aspect 后, 这个类就会被排除在 auto-proxying 机制之外.</code></p>
-<h3 id="声明-pointcut"><a href="#声明-pointcut" class="headerlink" title="声明 pointcut"></a>声明 pointcut</h3><p>一个 pointcut 的声明由两部分组成: </p>
-<ul>
-<li><p>一个方法签名, 包括方法名和相关参数 </p>
-</li>
-<li><p>一个 pointcut 表达式, 用来指定哪些方法执行是我们感兴趣的(即因此可以织入 advice). </p>
-</li>
-</ul>
-<p>在@AspectJ 风格的 AOP 中, 我们使用一个方法来描述 pointcut, 即: </p>
-<pre><code>@Pointcut(&quot;execution(* com.xys.service.UserService.*(..))&quot;) // 切点表达式
-private void dataAccessOperation() {} // 切点前面
-</code></pre><p><code>这个方法必须无返回值.</code><br><code>这个方法本身就是 pointcut signature, pointcut 表达式使用@Pointcut 注解指定.</code><br>上面我们简单地定义了一个 pointcut, 这个 pointcut 所描述的是: 匹配所有在包 <strong>com.xys.service.UserService</strong> 下的所有方法的执行. </p>
-<h4 id="切点标志符-designator"><a href="#切点标志符-designator" class="headerlink" title="切点标志符(designator)"></a>切点标志符(designator)</h4><p>AspectJ5 的切点表达式由标志符(designator)和操作参数组成. 如 “execution( _greetTo(..))” 的切点表达式, <strong>execution</strong> 就是 标志符, 而圆括号里的_ greetTo(..) 就是操作参数 </p>
-<h5 id="execution"><a href="#execution" class="headerlink" title="execution"></a>execution</h5><p>匹配 join point 的执行, 例如 “execution(* hello(..))” 表示匹配所有目标类中的 hello() 方法. 这个是最基本的 pointcut 标志符. </p>
-<h5 id="within"><a href="#within" class="headerlink" title="within"></a>within</h5><p>匹配特定包下的所有 join point, 例如 <code>within(com.xys.*)</code> 表示 com.xys 包中的所有连接点, 即包中的所有类的所有方法. 而 <code>within(com.xys.service.*Service)</code> 表示在 com.xys.service 包中所有以 Service 结尾的类的所有的连接点. </p>
-<h5 id="this-与-target"><a href="#this-与-target" class="headerlink" title="this 与 target"></a>this 与 target</h5><p>this 的作用是匹配一个 bean, 这个 bean(Spring AOP proxy) 是一个给定类型的实例(instance of). 而 target 匹配的是一个目标对象(target object, 即需要织入 advice 的原始的类), 此对象是一个给定类型的实例(instance of). </p>
-<h5 id="bean"><a href="#bean" class="headerlink" title="bean"></a>bean</h5><p>匹配 bean 名字为指定值的 bean 下的所有方法, 例如: </p>
-<pre><code>bean(*Service) // 匹配名字后缀为 Service 的 bean 下的所有方法
-bean(myService) // 匹配名字为 myService 的 bean 下的所有方法
-</code></pre><h5 id="args"><a href="#args" class="headerlink" title="args"></a>args</h5><p>匹配参数满足要求的的方法.<br>例如: </p>
-<pre><code>@Pointcut(&quot;within(com.xys.demo2.*)&quot;)
-public void pointcut2() {
-}
-
-@Before(value = &quot;pointcut2()  &amp;&amp;  args(name)&quot;)
-public void doSomething(String name) {
-    logger.info(&quot;---page: {}---&quot;, name);
-}
-
-@Service
-public class NormalService {
-    private Logger logger = LoggerFactory.getLogger(getClass());
-
-    public void someMethod() {
-        logger.info(&quot;---NormalService: someMethod invoked---&quot;);
-    }
-
-
-    public String test(String name) {
-        logger.info(&quot;---NormalService: test invoked---&quot;);
-        return &quot;服务一切正常&quot;;
-    }
-}
-</code></pre><p>当 NormalService.test 执行时, 则 advice <code>doSomething</code> 就会执行, test 方法的参数 name 就会传递到 <code>doSomething</code> 中. </p>
-<p>常用例子: </p>
-<pre><code>// 匹配只有一个参数 name 的方法
-@Before(value = &quot;aspectMethod()  &amp;&amp;  args(name)&quot;)
-public void doSomething(String name) {
-}
-
-// 匹配第一个参数为 name 的方法
-@Before(value = &quot;aspectMethod()  &amp;&amp;  args(name, ..)&quot;)
-public void doSomething(String name) {
-}
-
-// 匹配第二个参数为 name 的方法
-Before(value = &quot;aspectMethod()  &amp;&amp;  args(*, name, ..)&quot;)
-public void doSomething(String name) {
-}
-</code></pre><h5 id="annotation"><a href="#annotation" class="headerlink" title="@annotation"></a>@annotation</h5><p>匹配由指定注解所标注的方法, 例如: </p>
-<pre><code>@Pointcut(&quot;@annotation(com.xys.demo1.AuthChecker)&quot;)
-public void pointcut() {
-}
-</code></pre><p>则匹配由注解 <code>AuthChecker</code> 所标注的方法. </p>
-<h4 id="常见的切点表达式"><a href="#常见的切点表达式" class="headerlink" title="常见的切点表达式"></a>常见的切点表达式</h4><h5 id="匹配方法签名"><a href="#匹配方法签名" class="headerlink" title="匹配方法签名"></a>匹配方法签名</h5><pre><code>// 匹配指定包中的所有的方法
-execution(* com.xys.service.*(..))
-
-// 匹配当前包中的指定类的所有方法
-execution(* UserService.*(..))
-
-// 匹配指定包中的所有 public 方法
-execution(public * com.xys.service.*(..))
-
-// 匹配指定包中的所有 public 方法, 并且返回值是 int 类型的方法
-execution(public int com.xys.service.*(..))
-
-// 匹配指定包中的所有 public 方法, 并且第一个参数是 String, 返回值是 int 类型的方法
-execution(public int com.xys.service.*(String name, ..))
-</code></pre><h5 id="匹配类型签名"><a href="#匹配类型签名" class="headerlink" title="匹配类型签名"></a>匹配类型签名</h5><pre><code>// 匹配指定包中的所有的方法, 但不包括子包
-within(com.xys.service.*)
-
-// 匹配指定包中的所有的方法, 包括子包
-within(com.xys.service..*)
-
-// 匹配当前包中的指定类中的方法
-within(UserService)
-
-
-// 匹配一个接口的所有实现类中的实现的方法
-within(UserDao+)
-</code></pre><h5 id="匹配-Bean-名字"><a href="#匹配-Bean-名字" class="headerlink" title="匹配 Bean 名字"></a>匹配 Bean 名字</h5><pre><code>// 匹配以指定名字结尾的 Bean 中的所有方法
-bean(*Service)
-</code></pre><h5 id="切点表达式组合"><a href="#切点表达式组合" class="headerlink" title="切点表达式组合"></a>切点表达式组合</h5><pre><code>// 匹配以 Service 或 ServiceImpl 结尾的 bean
-bean(*Service || *ServiceImpl)
-
-// 匹配名字以 Service 结尾, 并且在包 com.xys.service 中的 bean
-bean(*Service) &amp;&amp; within(com.xys.service.*)
-</code></pre><h3 id="声明-advice"><a href="#声明-advice" class="headerlink" title="声明 advice"></a>声明 advice</h3><p>advice 是和一个 pointcut 表达式关联在一起的, 并且会在匹配的 join point 的方法执行的前/后/周围 运行. <code>pointcut 表达式可以是简单的一个 pointcut 名字的引用, 或者是完整的 pointcut 表达式</code>.<br>下面我们以几个简单的 advice 为例子, 来看一下一个 advice 是如何声明的. </p>
-<h4 id="Before-advice"><a href="#Before-advice" class="headerlink" title="Before advice"></a>Before advice</h4><pre><code>/**
- * @author xiongyongshun
- * @version 1.0
- * @created 16/9/9 13:13
- */
-@Component
-@Aspect
-public class BeforeAspectTest {
-    // 定义一个 Pointcut, 使用 切点表达式函数 来描述对哪些 Join point 使用 advise.
-    @Pointcut(&quot;execution(* com.xys.service.UserService.*(..))&quot;)
-    public void dataAccessOperation() {
-    }
-}
-
-@Component
-@Aspect
-public class AdviseDefine {
-    // 定义 advise
-    @Before(&quot;com.xys.aspect.PointcutDefine.dataAccessOperation()&quot;)
-    public void doBeforeAccessCheck(JoinPoint joinPoint) {
-        System.out.println(&quot;*****Before advise, method: &quot; + joinPoint.getSignature().toShortString() + &quot; *****&quot;);
-    }
-}
-</code></pre><p>这里, <strong>@Before</strong> 引用了一个 pointcut, 即 “com.xys.aspect.PointcutDefine.dataAccessOperation()” 是一个 pointcut 的名字.<br>如果我们在 advice 在内置 pointcut, 则可以: </p>
-<pre><code>@Component
-@Aspect
-public class AdviseDefine {
-    // 将 pointcut 和 advice 同时定义
-    @Before(&quot;within(com.xys.service..*)&quot;)
-    public void doAccessCheck(JoinPoint joinPoint) {
-        System.out.println(&quot;*****doAccessCheck, Before advise, method: &quot; + joinPoint.getSignature().toShortString() + &quot; *****&quot;);
-    }
-}
-</code></pre><h4 id="around-advice"><a href="#around-advice" class="headerlink" title="around advice"></a>around advice</h4><p>around advice 比较特别, 它可以在一个方法的之前之前和之后添加不同的操作, 并且甚至可以决定何时, 如何, 是否调用匹配到的方法. </p>
-<pre><code>@Component
-@Aspect
-public class AdviseDefine {
-    // 定义 advise
-    @Around(&quot;com.xys.aspect.PointcutDefine.dataAccessOperation()&quot;)
-    public Object doAroundAccessCheck(ProceedingJoinPoint pjp) throws Throwable {
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
-        // 开始
-        Object retVal = pjp.proceed();
-        stopWatch.stop();
-        // 结束
-        System.out.println(&quot;invoke method: &quot; + pjp.getSignature().getName() + &quot;, elapsed time: &quot; + stopWatch.getTotalTimeMillis());
-        return retVal;
-    }
-}
-</code></pre><p>around advice 和前面的 before advice 差不多, 只是我们把注解 <strong>@Before</strong> 改为了 <strong>@Around</strong> 了. </p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
-    
-    </summary>
-    
-      <category term="JavaWeb" scheme="https://wangyu1997.github.io/categories/JavaWeb/"/>
-    
-    
-      <category term="AOP" scheme="https://wangyu1997.github.io/tags/AOP/"/>
-    
-      <category term="javaweb" scheme="https://wangyu1997.github.io/tags/javaweb/"/>
-    
-      <category term="Spring" scheme="https://wangyu1997.github.io/tags/Spring/"/>
-    
-  </entry>
-  
-  <entry>
     <title>AOP实战</title>
     <link href="https://wangyu1997.github.io/2017/10/01/JavaWeb/AOP%E5%AE%9E%E6%88%98/"/>
     <id>https://wangyu1997.github.io/2017/10/01/JavaWeb/AOP实战/</id>
@@ -5528,6 +5486,251 @@ public class SomeService {
   </entry>
   
   <entry>
+    <title>AOP编程详解</title>
+    <link href="https://wangyu1997.github.io/2017/10/01/JavaWeb/AOP%E7%BC%96%E7%A8%8B%E8%AF%A6%E8%A7%A3/"/>
+    <id>https://wangyu1997.github.io/2017/10/01/JavaWeb/AOP编程详解/</id>
+    <published>2017-10-01T02:43:11.000Z</published>
+    <updated>2017-10-24T06:29:21.000Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
+<h2 id="基本知识"><a href="#基本知识" class="headerlink" title="基本知识"></a>基本知识</h2><p>其实, 接触了这么久的 AOP, 我感觉, AOP 给人难以理解的一个关键点是它的概念比较多, 而且坑爹的是, 这些概念经过了中文翻译后, 变得面目全非, 相同的一个术语, 在不同的翻译下, 含义总有着各种莫名其妙的差别. 鉴于此, 我在本章的开头, 着重为为大家介绍一个 Spring AOP 的各项术语的基本含义. 为了术语传达的准确性, 我在接下来的叙述中, 能使用英文术语的地方, 尽量使用英文. </p>
+<h3 id="什么是-AOP"><a href="#什么是-AOP" class="headerlink" title="什么是 AOP"></a>什么是 AOP</h3><p>AOP(Aspect-Oriented Programming), 即 <strong>面向切面编程</strong>, 它与 OOP( Object-Oriented Programming, 面向对象编程) 相辅相成, 提供了与 OOP 不同的抽象软件结构的视角.<br>在 OOP 中, 我们以类(class)作为我们的基本单元, 而 AOP 中的基本单元是 <strong>Aspect(切面)</strong></p>
+<h3 id="术语"><a href="#术语" class="headerlink" title="术语"></a>术语</h3><h4 id="Aspect-切面"><a href="#Aspect-切面" class="headerlink" title="Aspect(切面)"></a>Aspect(切面)</h4><p><code>aspect</code> 由 <code>pointcount</code> 和 <code>advice</code> 组成, 它既包含了横切逻辑的定义, 也包括了连接点的定义. Spring AOP就是负责实施切面的框架, 它将切面所定义的横切逻辑织入到切面所指定的连接点中.<br>AOP的工作重心在于如何将增强织入目标对象的连接点上, 这里包含两个工作: </p>
+<ol>
+<li><p>如何通过 pointcut 和 advice 定位到特定的 joinpoint 上 </p>
+</li>
+<li><p>如何在 advice 中编写切面代码. </p>
+</li>
+</ol>
+<p><strong>可以简单地认为, 使用 @Aspect 注解的类就是切面.</strong></p>
+<h4 id="advice-增强"><a href="#advice-增强" class="headerlink" title="advice(增强)"></a>advice(增强)</h4><p>由 aspect 添加到特定的 join point(即满足 point cut 规则的 join point) 的一段代码.<br>许多 AOP框架, 包括 Spring AOP, 会将 advice 模拟为一个拦截器(interceptor), 并且在 join point 上维护多个 advice, 进行层层拦截.<br>例如 HTTP 鉴权的实现, 我们可以为每个使用 RequestMapping 标注的方法织入 advice, 当 HTTP 请求到来时, 首先进入到 advice 代码中, 在这里我们可以分析这个 HTTP 请求是否有相应的权限, 如果有, 则执行 Controller, 如果没有, 则抛出异常. 这里的 advice 就扮演着鉴权拦截器的角色了. </p>
+<h4 id="连接点-join-point"><a href="#连接点-join-point" class="headerlink" title="连接点(join point)"></a>连接点(join point)</h4><blockquote>
+<p>a point during the execution of a program, such as the execution of a method or the handling of an exception. In Spring AOP, a join point always represents a method execution. </p>
+</blockquote>
+<p>程序运行中的一些时间点, 例如一个方法的执行, 或者是一个异常的处理.<br><code>在 Spring AOP 中, join point 总是方法的执行点, 即只有方法连接点.</code></p>
+<h4 id="切点-point-cut"><a href="#切点-point-cut" class="headerlink" title="切点(point cut)"></a>切点(point cut)</h4><p>匹配 join point 的谓词(a predicate that matches join points).<br>Advice 是和特定的 point cut 关联的, 并且在 point cut 相匹配的 join point 中执行.<br><code>在 Spring 中, 所有的方法都可以认为是 joinpoint, 但是我们并不希望在所有的方法上都添加 Advice, 而 pointcut 的作用就是提供一组规则(使用 AspectJ pointcut expression language 来描述) 来匹配joinpoint, 给满足规则的 joinpoint 添加 Advice.</code></p>
+<h4 id="关于join-point-和-point-cut-的区别"><a href="#关于join-point-和-point-cut-的区别" class="headerlink" title="关于join point 和 point cut 的区别"></a>关于join point 和 point cut 的区别</h4><p>在 Spring AOP 中, 所有的方法执行都是 join point. 而 point cut 是一个描述信息, 它修饰的是 join point, 通过 point cut, 我们就可以确定哪些 join point 可以被织入 Advice. 因此 join point 和 point cut 本质上就是两个不同纬度上的东西.<br><code>advice 是在 join point 上执行的, 而 point cut 规定了哪些 join point 可以执行哪些 advice</code></p>
+<h4 id="introduction"><a href="#introduction" class="headerlink" title="introduction"></a>introduction</h4><p>为一个类型添加额外的方法或字段. Spring AOP 允许我们为 <code>目标对象</code> 引入新的接口(和对应的实现). 例如我们可以使用 introduction 来为一个 bean 实现 IsModified 接口, 并以此来简化 caching 的实现. </p>
+<h4 id="目标对象-Target"><a href="#目标对象-Target" class="headerlink" title="目标对象(Target)"></a>目标对象(Target)</h4><p>织入 advice 的目标对象. 目标对象也被称为 <code>advised object</code>.<br><code>因为 Spring AOP 使用运行时代理的方式来实现 aspect, 因此 adviced object 总是一个代理对象(proxied object)</code><br><code>注意, adviced object 指的不是原来的类, 而是织入 advice 后所产生的代理类.</code></p>
+<h4 id="AOP-proxy"><a href="#AOP-proxy" class="headerlink" title="AOP proxy"></a>AOP proxy</h4><p>一个类被 AOP 织入 advice, 就会产生一个结果类, 它是融合了原类和增强逻辑的代理类.<br>在 Spring AOP 中, 一个 AOP 代理是一个 JDK 动态代理对象或 CGLIB 代理对象. </p>
+<h4 id="织入-Weaving"><a href="#织入-Weaving" class="headerlink" title="织入(Weaving)"></a>织入(Weaving)</h4><p>将 aspect 和其他对象连接起来, 并创建 adviced object 的过程.<br>根据不同的实现技术, AOP织入有三种方式: </p>
+<ul>
+<li><p>编译器织入, 这要求有特殊的Java编译器. </p>
+</li>
+<li><p>类装载期织入, 这需要有特殊的类装载器. </p>
+</li>
+<li><p>动态代理织入, 在运行期为目标类添加增强(Advice)生成子类的方式.<br>Spring 采用动态代理织入, 而AspectJ采用编译器织入和类装载期织入. </p>
+</li>
+</ul>
+<h3 id="advice-的类型"><a href="#advice-的类型" class="headerlink" title="advice 的类型"></a>advice 的类型</h3><ul>
+<li><p>before advice, 在 join point 前被执行的 advice. 虽然 before advice 是在 join point 前被执行, 但是它并不能够阻止 join point 的执行, 除非发生了异常(即我们在 before advice 代码中, 不能人为地决定是否继续执行 join point 中的代码) </p>
+</li>
+<li><p>after return advice, 在一个 join point 正常返回后执行的 advice </p>
+</li>
+<li><p>after throwing advice, 当一个 join point 抛出异常后执行的 advice </p>
+</li>
+<li><p>after(final) advice, 无论一个 join point 是正常退出还是发生了异常, 都会被执行的 advice. </p>
+</li>
+<li><p>around advice, 在 join point 前和 joint point 退出后都执行的 advice. 这个是最常用的 advice. </p>
+</li>
+</ul>
+<h3 id="关于-AOP-Proxy"><a href="#关于-AOP-Proxy" class="headerlink" title="关于 AOP Proxy"></a>关于 AOP Proxy</h3><p>Spring AOP 默认使用标准的 JDK 动态代理(dynamic proxy)技术来实现 AOP 代理, 通过它, 我们可以为任意的接口实现代理.<br><code>如果需要为一个类实现代理, 那么可以使用 CGLIB 代理.</code> 当一个业务逻辑对象没有实现接口时, 那么Spring AOP 就默认使用 CGLIB 来作为 AOP 代理了. 即如果我们需要为一个方法织入 advice, 但是这个方法不是一个接口所提供的方法, 则此时 Spring AOP 会使用 CGLIB 来实现动态代理. 鉴于此, Spring AOP 建议基于接口编程, 对接口进行 AOP 而不是类. </p>
+<h2 id="彻底理解-aspect-join-point-point-cut-advice"><a href="#彻底理解-aspect-join-point-point-cut-advice" class="headerlink" title="彻底理解 aspect, join point, point cut, advice"></a>彻底理解 aspect, join point, point cut, advice</h2><p>看完了上面的理论部分知识, 我相信还是会有不少朋友感觉到 AOP 的概念还是很模糊, 对 AOP 中的各种概念理解的还不是很透彻. 其实这很正常, 因为 AOP 中的概念是在是太多了, 我当时也是花了老大劲才梳理清楚的.<br>下面我以一个简单的例子来比喻一下 AOP 中 aspect, jointpoint, pointcut 与 advice 之间的关系. </p>
+<p>让我们来假设一下, 从前有一个叫爪哇的小县城, 在一个月黑风高的晚上, 这个县城中发生了命案. 作案的凶手十分狡猾, 现场没有留下什么有价值的线索. 不过万幸的是, 刚从隔壁回来的老王恰好在这时候无意中发现了凶手行凶的过程, 但是由于天色已晚, 加上凶手蒙着面, 老王并没有看清凶手的面目, 只知道凶手是个男性, 身高约七尺五寸. 爪哇县的县令根据老王的描述, 对守门的士兵下命令说: 凡是发现有身高七尺五寸的男性, 都要抓过来审问. 士兵当然不敢违背县令的命令, 只好把进出城的所有符合条件的人都抓了起来. </p>
+<p>来让我们看一下上面的一个小故事和 AOP 到底有什么对应关系.<br>首先我们知道, 在 Spring AOP 中 join point 指代的是所有方法的执行点, 而 point cut 是一个描述信息, 它修饰的是 join point, 通过 point cut, 我们就可以确定哪些 join point 可以被织入 Advice. 对应到我们在上面举的例子, 我们可以做一个简单的类比, join point 就相当于 <strong>爪哇的小县城里的百姓</strong>, point cut 就相当于 <strong>老王所做的指控, 即凶手是个男性, 身高约七尺五寸</strong>, 而 advice 则是施加在符合老王所描述的嫌疑人的动作: <strong>抓过来审问</strong>.<br>为什么可以这样类比呢? </p>
+<ul>
+<li><p>join point –&gt; 爪哇的小县城里的百姓: 因为根据定义, join point 是所有可能被织入 advice 的候选的点, 在 Spring AOP中, 则可以认为所有方法执行点都是 join point. 而在我们上面的例子中, 命案发生在小县城中, 按理说在此县城中的所有人都有可能是嫌疑人. </p>
+</li>
+<li><p>point cut –&gt; 男性, 身高约七尺五寸: 我们知道, 所有的方法(joint point) 都可以织入 advice, 但是我们并不希望在所有方法上都织入 advice, 而 pointcut 的作用就是提供一组规则来匹配joinpoint, 给满足规则的 joinpoint 添加 advice. 同理, 对于县令来说, 他再昏庸, 也知道不能把县城中的所有百姓都抓起来审问, 而是根据<code>凶手是个男性, 身高约七尺五寸</code>, 把符合条件的人抓起来. 在这里 <code>凶手是个男性, 身高约七尺五寸</code> 就是一个修饰谓语, 它限定了凶手的范围, 满足此修饰规则的百姓都是嫌疑人, 都需要抓起来审问. </p>
+</li>
+<li><p>advice –&gt; 抓过来审问, advice 是一个动作, 即一段 Java 代码, 这段 Java 代码是作用于 point cut 所限定的那些 join point 上的. 同理, 对比到我们的例子中, <code>抓过来审问</code> 这个动作就是对作用于那些满足 <code>男性, 身高约七尺五寸</code> 的<code>爪哇的小县城里的百姓</code>. </p>
+</li>
+<li><p>aspect: aspect 是 point cut 与 advice 的组合, 因此在这里我们就可以类比: <strong>“根据老王的线索, 凡是发现有身高七尺五寸的男性, 都要抓过来审问”</strong> 这一整个动作可以被认为是一个 aspect. </p>
+</li>
+</ul>
+<hr>
+<p>或则我们也可以从语法的角度来简单类比一下. 我们在学英语时, 经常会接触什么 <code>定语</code>, <code>被动句</code> 之类的概念, 那么可以做一个不严谨的类比, 即 <code>joinpoint</code> 可以认为是一个 <code>宾语</code>, 而 <code>pointcut</code> 则可以类比为修饰 <code>joinpoint</code> 的定语, 那么整个 <code>aspect</code> 就可以描述为: <code>满足 pointcut 规则的 joinpoint 会被添加相应的 advice 操作.</code></p>
+<h2 id="AspectJ-支持"><a href="#AspectJ-支持" class="headerlink" title="@AspectJ 支持"></a>@AspectJ 支持</h2><p><strong>@AspectJ</strong> 是一种使用 Java 注解来实现 AOP 的编码风格.<br>@AspectJ 风格的 AOP 是 AspectJ Project 在 AspectJ 5 中引入的, 并且 Spring 也支持@AspectJ 的 AOP 风格. </p>
+<h3 id="使能-AspectJ-支持"><a href="#使能-AspectJ-支持" class="headerlink" title="使能 @AspectJ 支持"></a>使能 @AspectJ 支持</h3><p>@AspectJ 可以以 XML 的方式或以注解的方式来使能, 并且不论以哪种方式使能@ASpectJ, 我们都必须保证 aspectjweaver.jar 在 classpath 中. </p>
+<h4 id="使用-Java-Configuration-方式使能-AspectJ"><a href="#使用-Java-Configuration-方式使能-AspectJ" class="headerlink" title="使用 Java Configuration 方式使能@AspectJ"></a>使用 Java Configuration 方式使能@AspectJ</h4><pre><code>@Configuration
+@EnableAspectJAutoProxy
+public class AppConfig {
+}
+</code></pre><h4 id="使用-XML-方式使能-AspectJ"><a href="#使用-XML-方式使能-AspectJ" class="headerlink" title="使用 XML 方式使能@AspectJ"></a>使用 XML 方式使能@AspectJ</h4><pre><code>&lt;aop:aspectj-autoproxy/&gt;
+</code></pre><h3 id="定义-aspect-切面"><a href="#定义-aspect-切面" class="headerlink" title="定义 aspect(切面)"></a>定义 aspect(切面)</h3><p>当使用注解 <strong>@Aspect</strong> 标注一个 Bean 后, 那么 Spring 框架会自动收集这些 Bean, 并添加到 Spring AOP 中, 例如: </p>
+<pre><code>@Component
+@Aspect
+public class MyTest {
+}
+</code></pre><p><code>注意, 仅仅使用@Aspect 注解, 并不能将一个 Java 对象转换为 Bean, 因此我们还需要使用类似 @Component 之类的注解.</code><br><code>注意, 如果一个 类被@Aspect 标注, 则这个类就不能是其他 aspect 的 **advised object** 了, 因为使用 @Aspect 后, 这个类就会被排除在 auto-proxying 机制之外.</code></p>
+<h3 id="声明-pointcut"><a href="#声明-pointcut" class="headerlink" title="声明 pointcut"></a>声明 pointcut</h3><p>一个 pointcut 的声明由两部分组成: </p>
+<ul>
+<li><p>一个方法签名, 包括方法名和相关参数 </p>
+</li>
+<li><p>一个 pointcut 表达式, 用来指定哪些方法执行是我们感兴趣的(即因此可以织入 advice). </p>
+</li>
+</ul>
+<p>在@AspectJ 风格的 AOP 中, 我们使用一个方法来描述 pointcut, 即: </p>
+<pre><code>@Pointcut(&quot;execution(* com.xys.service.UserService.*(..))&quot;) // 切点表达式
+private void dataAccessOperation() {} // 切点前面
+</code></pre><p><code>这个方法必须无返回值.</code><br><code>这个方法本身就是 pointcut signature, pointcut 表达式使用@Pointcut 注解指定.</code><br>上面我们简单地定义了一个 pointcut, 这个 pointcut 所描述的是: 匹配所有在包 <strong>com.xys.service.UserService</strong> 下的所有方法的执行. </p>
+<h4 id="切点标志符-designator"><a href="#切点标志符-designator" class="headerlink" title="切点标志符(designator)"></a>切点标志符(designator)</h4><p>AspectJ5 的切点表达式由标志符(designator)和操作参数组成. 如 “execution( _greetTo(..))” 的切点表达式, <strong>execution</strong> 就是 标志符, 而圆括号里的_ greetTo(..) 就是操作参数 </p>
+<h5 id="execution"><a href="#execution" class="headerlink" title="execution"></a>execution</h5><p>匹配 join point 的执行, 例如 “execution(* hello(..))” 表示匹配所有目标类中的 hello() 方法. 这个是最基本的 pointcut 标志符. </p>
+<h5 id="within"><a href="#within" class="headerlink" title="within"></a>within</h5><p>匹配特定包下的所有 join point, 例如 <code>within(com.xys.*)</code> 表示 com.xys 包中的所有连接点, 即包中的所有类的所有方法. 而 <code>within(com.xys.service.*Service)</code> 表示在 com.xys.service 包中所有以 Service 结尾的类的所有的连接点. </p>
+<h5 id="this-与-target"><a href="#this-与-target" class="headerlink" title="this 与 target"></a>this 与 target</h5><p>this 的作用是匹配一个 bean, 这个 bean(Spring AOP proxy) 是一个给定类型的实例(instance of). 而 target 匹配的是一个目标对象(target object, 即需要织入 advice 的原始的类), 此对象是一个给定类型的实例(instance of). </p>
+<h5 id="bean"><a href="#bean" class="headerlink" title="bean"></a>bean</h5><p>匹配 bean 名字为指定值的 bean 下的所有方法, 例如: </p>
+<pre><code>bean(*Service) // 匹配名字后缀为 Service 的 bean 下的所有方法
+bean(myService) // 匹配名字为 myService 的 bean 下的所有方法
+</code></pre><h5 id="args"><a href="#args" class="headerlink" title="args"></a>args</h5><p>匹配参数满足要求的的方法.<br>例如: </p>
+<pre><code>@Pointcut(&quot;within(com.xys.demo2.*)&quot;)
+public void pointcut2() {
+}
+
+@Before(value = &quot;pointcut2()  &amp;&amp;  args(name)&quot;)
+public void doSomething(String name) {
+    logger.info(&quot;---page: {}---&quot;, name);
+}
+
+@Service
+public class NormalService {
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
+    public void someMethod() {
+        logger.info(&quot;---NormalService: someMethod invoked---&quot;);
+    }
+
+
+    public String test(String name) {
+        logger.info(&quot;---NormalService: test invoked---&quot;);
+        return &quot;服务一切正常&quot;;
+    }
+}
+</code></pre><p>当 NormalService.test 执行时, 则 advice <code>doSomething</code> 就会执行, test 方法的参数 name 就会传递到 <code>doSomething</code> 中. </p>
+<p>常用例子: </p>
+<pre><code>// 匹配只有一个参数 name 的方法
+@Before(value = &quot;aspectMethod()  &amp;&amp;  args(name)&quot;)
+public void doSomething(String name) {
+}
+
+// 匹配第一个参数为 name 的方法
+@Before(value = &quot;aspectMethod()  &amp;&amp;  args(name, ..)&quot;)
+public void doSomething(String name) {
+}
+
+// 匹配第二个参数为 name 的方法
+Before(value = &quot;aspectMethod()  &amp;&amp;  args(*, name, ..)&quot;)
+public void doSomething(String name) {
+}
+</code></pre><h5 id="annotation"><a href="#annotation" class="headerlink" title="@annotation"></a>@annotation</h5><p>匹配由指定注解所标注的方法, 例如: </p>
+<pre><code>@Pointcut(&quot;@annotation(com.xys.demo1.AuthChecker)&quot;)
+public void pointcut() {
+}
+</code></pre><p>则匹配由注解 <code>AuthChecker</code> 所标注的方法. </p>
+<h4 id="常见的切点表达式"><a href="#常见的切点表达式" class="headerlink" title="常见的切点表达式"></a>常见的切点表达式</h4><h5 id="匹配方法签名"><a href="#匹配方法签名" class="headerlink" title="匹配方法签名"></a>匹配方法签名</h5><pre><code>// 匹配指定包中的所有的方法
+execution(* com.xys.service.*(..))
+
+// 匹配当前包中的指定类的所有方法
+execution(* UserService.*(..))
+
+// 匹配指定包中的所有 public 方法
+execution(public * com.xys.service.*(..))
+
+// 匹配指定包中的所有 public 方法, 并且返回值是 int 类型的方法
+execution(public int com.xys.service.*(..))
+
+// 匹配指定包中的所有 public 方法, 并且第一个参数是 String, 返回值是 int 类型的方法
+execution(public int com.xys.service.*(String name, ..))
+</code></pre><h5 id="匹配类型签名"><a href="#匹配类型签名" class="headerlink" title="匹配类型签名"></a>匹配类型签名</h5><pre><code>// 匹配指定包中的所有的方法, 但不包括子包
+within(com.xys.service.*)
+
+// 匹配指定包中的所有的方法, 包括子包
+within(com.xys.service..*)
+
+// 匹配当前包中的指定类中的方法
+within(UserService)
+
+
+// 匹配一个接口的所有实现类中的实现的方法
+within(UserDao+)
+</code></pre><h5 id="匹配-Bean-名字"><a href="#匹配-Bean-名字" class="headerlink" title="匹配 Bean 名字"></a>匹配 Bean 名字</h5><pre><code>// 匹配以指定名字结尾的 Bean 中的所有方法
+bean(*Service)
+</code></pre><h5 id="切点表达式组合"><a href="#切点表达式组合" class="headerlink" title="切点表达式组合"></a>切点表达式组合</h5><pre><code>// 匹配以 Service 或 ServiceImpl 结尾的 bean
+bean(*Service || *ServiceImpl)
+
+// 匹配名字以 Service 结尾, 并且在包 com.xys.service 中的 bean
+bean(*Service) &amp;&amp; within(com.xys.service.*)
+</code></pre><h3 id="声明-advice"><a href="#声明-advice" class="headerlink" title="声明 advice"></a>声明 advice</h3><p>advice 是和一个 pointcut 表达式关联在一起的, 并且会在匹配的 join point 的方法执行的前/后/周围 运行. <code>pointcut 表达式可以是简单的一个 pointcut 名字的引用, 或者是完整的 pointcut 表达式</code>.<br>下面我们以几个简单的 advice 为例子, 来看一下一个 advice 是如何声明的. </p>
+<h4 id="Before-advice"><a href="#Before-advice" class="headerlink" title="Before advice"></a>Before advice</h4><pre><code>/**
+ * @author xiongyongshun
+ * @version 1.0
+ * @created 16/9/9 13:13
+ */
+@Component
+@Aspect
+public class BeforeAspectTest {
+    // 定义一个 Pointcut, 使用 切点表达式函数 来描述对哪些 Join point 使用 advise.
+    @Pointcut(&quot;execution(* com.xys.service.UserService.*(..))&quot;)
+    public void dataAccessOperation() {
+    }
+}
+
+@Component
+@Aspect
+public class AdviseDefine {
+    // 定义 advise
+    @Before(&quot;com.xys.aspect.PointcutDefine.dataAccessOperation()&quot;)
+    public void doBeforeAccessCheck(JoinPoint joinPoint) {
+        System.out.println(&quot;*****Before advise, method: &quot; + joinPoint.getSignature().toShortString() + &quot; *****&quot;);
+    }
+}
+</code></pre><p>这里, <strong>@Before</strong> 引用了一个 pointcut, 即 “com.xys.aspect.PointcutDefine.dataAccessOperation()” 是一个 pointcut 的名字.<br>如果我们在 advice 在内置 pointcut, 则可以: </p>
+<pre><code>@Component
+@Aspect
+public class AdviseDefine {
+    // 将 pointcut 和 advice 同时定义
+    @Before(&quot;within(com.xys.service..*)&quot;)
+    public void doAccessCheck(JoinPoint joinPoint) {
+        System.out.println(&quot;*****doAccessCheck, Before advise, method: &quot; + joinPoint.getSignature().toShortString() + &quot; *****&quot;);
+    }
+}
+</code></pre><h4 id="around-advice"><a href="#around-advice" class="headerlink" title="around advice"></a>around advice</h4><p>around advice 比较特别, 它可以在一个方法的之前之前和之后添加不同的操作, 并且甚至可以决定何时, 如何, 是否调用匹配到的方法. </p>
+<pre><code>@Component
+@Aspect
+public class AdviseDefine {
+    // 定义 advise
+    @Around(&quot;com.xys.aspect.PointcutDefine.dataAccessOperation()&quot;)
+    public Object doAroundAccessCheck(ProceedingJoinPoint pjp) throws Throwable {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+        // 开始
+        Object retVal = pjp.proceed();
+        stopWatch.stop();
+        // 结束
+        System.out.println(&quot;invoke method: &quot; + pjp.getSignature().getName() + &quot;, elapsed time: &quot; + stopWatch.getTotalTimeMillis());
+        return retVal;
+    }
+}
+</code></pre><p>around advice 和前面的 before advice 差不多, 只是我们把注解 <strong>@Before</strong> 改为了 <strong>@Around</strong> 了. </p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
+    
+    </summary>
+    
+      <category term="JavaWeb" scheme="https://wangyu1997.github.io/categories/JavaWeb/"/>
+    
+    
+      <category term="AOP" scheme="https://wangyu1997.github.io/tags/AOP/"/>
+    
+      <category term="javaweb" scheme="https://wangyu1997.github.io/tags/javaweb/"/>
+    
+      <category term="Spring" scheme="https://wangyu1997.github.io/tags/Spring/"/>
+    
+  </entry>
+  
+  <entry>
     <title>axios使用教程</title>
     <link href="https://wangyu1997.github.io/2017/09/28/VueJs/axios%E6%95%99%E7%A8%8B/"/>
     <id>https://wangyu1997.github.io/2017/09/28/VueJs/axios教程/</id>
@@ -5768,87 +5971,6 @@ instance.interceptors.request.use(function(){})
   </entry>
   
   <entry>
-    <title>Hibernate annotation主键生成策略</title>
-    <link href="https://wangyu1997.github.io/2017/09/20/JavaWeb/Hibernate%E6%B3%A8%E8%A7%A3%E4%B8%BB%E9%94%AE%E7%AD%96%E7%95%A5/"/>
-    <id>https://wangyu1997.github.io/2017/09/20/JavaWeb/Hibernate注解主键策略/</id>
-    <published>2017-09-19T17:43:11.000Z</published>
-    <updated>2017-09-28T10:22:26.000Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
-<p>Hibernate 默认总共支持 13 种生成策略 :  </p>
-<ol>
-<li><p>increment        2.  identity        3. sequence </p>
-</li>
-<li><p>hilo                  5. seqhilo         6. uuid </p>
-</li>
-<li><p>uuid.hex          8. guid             9. native </p>
-</li>
-<li><p>assigned       11. select         12. foreign        13. sequence-identity </p>
-</li>
-</ol>
-<p>下面介绍几个较为常用的策略 :  </p>
-<p>① identity [ 自然递增 ] </p>
-<p> 支持 DB2，MySQL，SQL Server，Sybase 和HypersonicSQL 数据库， 用于为 long 或 short 或 int 类型生成唯一标识。它依赖于底层不同的数据库，与 Hibernate 和 程序员无关。 </p>
-<p>注解示例 :  </p>
-<p>@Id </p>
-<p>@GenericGenerator(name = “idGenerator”, strategy = “identity”) </p>
-<p>@GeneratedValue(generator = “idGenerator”) </p>
-<p>② sequence [ 序列 ] </p>
-<p>支持 Oracle，DB2，PostgreSql，SAPDb 等数据库，用于为 long 或 short 或 int 类型生成唯一标识。它需要底层数据库的支持， 并由数据库来维护这个 sequence 序列。 </p>
-<p>注解示例 :  </p>
-<p>@Id </p>
-<p>@GenericGenerator(name = “idGenerator”, strategy = “sequence”, parameters = {@Parameter(name = “sequence”,value=”seq_name”)}) </p>
-<p>@GeneratedValue(generator = “idGenerator”) </p>
-<p>注意 : 该策略要求设定序列名，否则 hibernate 将无法找到，这将引致抛出异常 : </p>
-<p>org.hibernate.exception.SQLGrammarException: could not get next sequence value </p>
-<p>③ native </p>
-<p>需底层数据库的支持，对于 MySQL，SQL Server 采用 identity 的生成策略，对于 Oracle，则采用 sequence 策略。 </p>
-<p>注解示例 : </p>
-<p>@Id </p>
-<p>@GenericGenerator(name = “idGenerator”, strategy = “native”) </p>
-<p>@GeneratedValue(generator = “idGenerator”) </p>
-<p>④ increment [ 自然递增 ] </p>
-<p>与 identity 策略不同的是，该策略不依赖于底层数据库，而依赖于 hibernate 本身，用于为 long 或 short 或 int 类型生成唯一标识。 </p>
-<p>主键计数器是由 hibernate 的一个实例来维护，每次自增量为 1，但在集群下不能使用该策略，否则将引起主键冲突的情况，该策略适用于所有关系型数据库使用。 </p>
-<p>注解示例 : </p>
-<p>@Id </p>
-<p>@GenericGenerator(name = “idGenerator”, strategy = “increment”) </p>
-<p>@GeneratedValue(generator = “idGenerator”) </p>
-<p>⑤ uuid [ 32位16进制数的字符串 ] </p>
-<p>采用128位UUID算法生成主键，能够保证网络环境下的主键唯一性，也就能够保证在不同数据库及不同服务器下主键的唯一性。 </p>
-<p>uuid 最终被编码成一个32位16进制数的字符串，占用的存储空间较大。用于为 String 类型生成唯一标识，适用于所有关系型数据库。 </p>
-<p>注解示例 : </p>
-<p>@Id </p>
-<p>@GenericGenerator(name = “idGenerator”, strategy = “uuid”) </p>
-<p>@GeneratedValue(generator = “idGenerator”) </p>
-<p>⑤ assigned [ 手工分配主键ID值 ] </p>
-<p>该策略要求程序员必须自己维护和管理主键，当有数据需要存储时，程序员必须自己为该数据分配指定一个主键ID值，如果该数据没有被分配主键ID值或分配的值存在重复，则该数据都将无法被持久化且会引起异常的抛出。 </p>
-<p>注解示例 : </p>
-<p>@Id </p>
-<p>@GenericGenerator(name = “idGenerator”, strategy = “assigned”) </p>
-<p>@GeneratedValue(generator = “idGenerator”) </p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
-    
-    </summary>
-    
-      <category term="JavaWeb" scheme="https://wangyu1997.github.io/categories/JavaWeb/"/>
-    
-    
-      <category term="javaweb" scheme="https://wangyu1997.github.io/tags/javaweb/"/>
-    
-      <category term="hibernate" scheme="https://wangyu1997.github.io/tags/hibernate/"/>
-    
-      <category term="annotation" scheme="https://wangyu1997.github.io/tags/annotation/"/>
-    
-      <category term="primary key" scheme="https://wangyu1997.github.io/tags/primary-key/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Hibernate annotation映射详解</title>
     <link href="https://wangyu1997.github.io/2017/09/20/JavaWeb/Hibernate%20annotation%E6%98%A0%E5%B0%84%E8%AF%A6%E8%A7%A3/"/>
     <id>https://wangyu1997.github.io/2017/09/20/JavaWeb/Hibernate annotation映射详解/</id>
@@ -5978,6 +6100,87 @@ instance.interceptors.request.use(function(){})
       <category term="annotation" scheme="https://wangyu1997.github.io/tags/annotation/"/>
     
       <category term="reflect" scheme="https://wangyu1997.github.io/tags/reflect/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Hibernate annotation主键生成策略</title>
+    <link href="https://wangyu1997.github.io/2017/09/20/JavaWeb/Hibernate%E6%B3%A8%E8%A7%A3%E4%B8%BB%E9%94%AE%E7%AD%96%E7%95%A5/"/>
+    <id>https://wangyu1997.github.io/2017/09/20/JavaWeb/Hibernate注解主键策略/</id>
+    <published>2017-09-19T17:43:11.000Z</published>
+    <updated>2017-09-28T10:22:26.000Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
+<p>Hibernate 默认总共支持 13 种生成策略 :  </p>
+<ol>
+<li><p>increment        2.  identity        3. sequence </p>
+</li>
+<li><p>hilo                  5. seqhilo         6. uuid </p>
+</li>
+<li><p>uuid.hex          8. guid             9. native </p>
+</li>
+<li><p>assigned       11. select         12. foreign        13. sequence-identity </p>
+</li>
+</ol>
+<p>下面介绍几个较为常用的策略 :  </p>
+<p>① identity [ 自然递增 ] </p>
+<p> 支持 DB2，MySQL，SQL Server，Sybase 和HypersonicSQL 数据库， 用于为 long 或 short 或 int 类型生成唯一标识。它依赖于底层不同的数据库，与 Hibernate 和 程序员无关。 </p>
+<p>注解示例 :  </p>
+<p>@Id </p>
+<p>@GenericGenerator(name = “idGenerator”, strategy = “identity”) </p>
+<p>@GeneratedValue(generator = “idGenerator”) </p>
+<p>② sequence [ 序列 ] </p>
+<p>支持 Oracle，DB2，PostgreSql，SAPDb 等数据库，用于为 long 或 short 或 int 类型生成唯一标识。它需要底层数据库的支持， 并由数据库来维护这个 sequence 序列。 </p>
+<p>注解示例 :  </p>
+<p>@Id </p>
+<p>@GenericGenerator(name = “idGenerator”, strategy = “sequence”, parameters = {@Parameter(name = “sequence”,value=”seq_name”)}) </p>
+<p>@GeneratedValue(generator = “idGenerator”) </p>
+<p>注意 : 该策略要求设定序列名，否则 hibernate 将无法找到，这将引致抛出异常 : </p>
+<p>org.hibernate.exception.SQLGrammarException: could not get next sequence value </p>
+<p>③ native </p>
+<p>需底层数据库的支持，对于 MySQL，SQL Server 采用 identity 的生成策略，对于 Oracle，则采用 sequence 策略。 </p>
+<p>注解示例 : </p>
+<p>@Id </p>
+<p>@GenericGenerator(name = “idGenerator”, strategy = “native”) </p>
+<p>@GeneratedValue(generator = “idGenerator”) </p>
+<p>④ increment [ 自然递增 ] </p>
+<p>与 identity 策略不同的是，该策略不依赖于底层数据库，而依赖于 hibernate 本身，用于为 long 或 short 或 int 类型生成唯一标识。 </p>
+<p>主键计数器是由 hibernate 的一个实例来维护，每次自增量为 1，但在集群下不能使用该策略，否则将引起主键冲突的情况，该策略适用于所有关系型数据库使用。 </p>
+<p>注解示例 : </p>
+<p>@Id </p>
+<p>@GenericGenerator(name = “idGenerator”, strategy = “increment”) </p>
+<p>@GeneratedValue(generator = “idGenerator”) </p>
+<p>⑤ uuid [ 32位16进制数的字符串 ] </p>
+<p>采用128位UUID算法生成主键，能够保证网络环境下的主键唯一性，也就能够保证在不同数据库及不同服务器下主键的唯一性。 </p>
+<p>uuid 最终被编码成一个32位16进制数的字符串，占用的存储空间较大。用于为 String 类型生成唯一标识，适用于所有关系型数据库。 </p>
+<p>注解示例 : </p>
+<p>@Id </p>
+<p>@GenericGenerator(name = “idGenerator”, strategy = “uuid”) </p>
+<p>@GeneratedValue(generator = “idGenerator”) </p>
+<p>⑤ assigned [ 手工分配主键ID值 ] </p>
+<p>该策略要求程序员必须自己维护和管理主键，当有数据需要存储时，程序员必须自己为该数据分配指定一个主键ID值，如果该数据没有被分配主键ID值或分配的值存在重复，则该数据都将无法被持久化且会引起异常的抛出。 </p>
+<p>注解示例 : </p>
+<p>@Id </p>
+<p>@GenericGenerator(name = “idGenerator”, strategy = “assigned”) </p>
+<p>@GeneratedValue(generator = “idGenerator”) </p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
+    
+    </summary>
+    
+      <category term="JavaWeb" scheme="https://wangyu1997.github.io/categories/JavaWeb/"/>
+    
+    
+      <category term="javaweb" scheme="https://wangyu1997.github.io/tags/javaweb/"/>
+    
+      <category term="hibernate" scheme="https://wangyu1997.github.io/tags/hibernate/"/>
+    
+      <category term="annotation" scheme="https://wangyu1997.github.io/tags/annotation/"/>
+    
+      <category term="primary key" scheme="https://wangyu1997.github.io/tags/primary-key/"/>
     
   </entry>
   
@@ -6580,146 +6783,6 @@ urlpatterns = patterns(
     
     
       <category term="Django REST framework" scheme="https://wangyu1997.github.io/tags/Django-REST-framework/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>跟着 Github 学习 Restful HTTP API 设计</title>
-    <link href="https://wangyu1997.github.io/2017/07/26/Python/Restful%20HTTP%20API%20/"/>
-    <id>https://wangyu1997.github.io/2017/07/26/Python/Restful HTTP API /</id>
-    <published>2017-07-26T12:43:11.000Z</published>
-    <updated>2017-07-26T05:32:35.000Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
-<p>近几年提供 <code>HTTP API</code> 服务的公司越来越多，许多公司都把 API 作为产品重要的一部分，作为服务提供出去。而微服务的兴起，也让企业内部开始重视和频繁使用 HTTP API 。好的 <code>HTTP API</code> 设计容易理解、符合 RFC 标准、提供使用者便利的功能，其中经常被拿来作为教科书典范的当属 <a href="https://developer.github.com/v3/" target="_blank" rel="external">Github API</a>。这篇文章就通过 <code>Github API</code> 总结了一些非常好的设计原则，可以作为以后要编写 HTTP API 的参考。 </p>
-<p>注意：这篇文章只讨论设计原则，不是强制要求（API 设计者可以根据实际情况实现部分内容，甚至实现出和某些原则相反的内容），也不会给出实现的思路和细节。 </p>
-<h2 id="1-使用-HTTPS"><a href="#1-使用-HTTPS" class="headerlink" title="1. 使用 HTTPS"></a>1. 使用 HTTPS</h2><p>这个和 Restful API 本身没有很大的关系，但是对于增加网站的安全是非常重要的。特别如果你提供的是公开 API，用户的信息泄露或者被攻击会严重影响网站的信誉。 </p>
-<p>NOTE：不要让非SSL的url访问重定向到SSL的url。 </p>
-<h2 id="2-API-地址和版本"><a href="#2-API-地址和版本" class="headerlink" title="2. API 地址和版本"></a>2. API 地址和版本</h2><p>在 <code>url</code> 中指定 API 的版本是个很好地做法。如果 API 变化比较大，可以把 API 设计为子域名，比如 <code>https://api.github.com/v3</code>；也可以简单地把版本放在路径中，比如 <code>https://example.com/api/v1</code>。 </p>
-<h2 id="3-schema"><a href="#3-schema" class="headerlink" title="3. schema"></a>3. schema</h2><p>对于响应返回的格式，JSON 因为它的可读性、紧凑性以及多种语言支持等优点，成为了 HTTP API 最常用的返回格式。因此，最好采用 JSON 作为返回内容的格式。如果用户需要其他格式，比如 <code>xml</code>，应该在请求头部 <code>Accept</code> 中指定。对于不支持的格式，服务端需要返回正确的 status code，并给出详细的说明。 </p>
-<h2 id="4-以资源为中心的-URL-设计"><a href="#4-以资源为中心的-URL-设计" class="headerlink" title="4. 以资源为中心的 URL 设计"></a>4. 以资源为中心的 URL 设计</h2><p>资源是 <code>Restful API</code> 的核心元素，所有的操作都是针对特定资源进行的。而资源就是 <code>URL</code>（Uniform Resoure Locator）表示的，所以简洁、清晰、结构化的 URL 设计是至关重要的。Github 可以说是这方面的典范，下面我们就拿 <code>repository</code> 来说明。 </p>
-<pre><code>/users/:username/repos
-/users/:org/repos
-/repos/:owner/:repo
-/repos/:owner/:repo/tags
-/repos/:owner/:repo/branches/:branch
-</code></pre><p>我们可以看到几个特性： </p>
-<ul>
-<li>资源分为单个文档和集合，尽量使用复数来表示资源，单个资源通过添加 id 或者 name 等来表示</li>
-<li>一个资源可以有多个不同的 URL</li>
-<li>资源可以嵌套，通过类似目录路径的方式来表示，以体现它们之间的关系</li>
-</ul>
-<p><strong>NOTE</strong>: 根据RFC3986定义，URL是大小写敏感的。所以为了避免歧义，尽量使用小写字母。 </p>
-<h2 id="5-使用正确的-Method"><a href="#5-使用正确的-Method" class="headerlink" title="5. 使用正确的 Method"></a>5. 使用正确的 Method</h2><p>有了资源的 URL 设计，所有针对资源的操作都是使用 HTTP 方法指定的。比较常用的方法有： </p>
-<p>Verb描述</p>
-<p>HEAD<br>只获取某个资源的头部信息。比如只想了解某个文件的大小，某个资源的修改日期等 </p>
-<p>GET<br>获取资源 </p>
-<p>POST<br>创建资源 </p>
-<p>PATCH<br>更新资源的部分属性。因为 PATCH 比较新，而且规范比较复杂，所以真正实现的比较少，一般都是用 POST 替代 </p>
-<p>PUT<br>替换资源，客户端需要提供新建资源的所有属性。如果新内容为空，要设置 <code>Content-Length</code> 为 0，以区别错误信息 </p>
-<p>DELETE<br>删除资源 </p>
-<p>比如： </p>
-<pre><code>GET /repos/:owner/:repo/issues
-GET /repos/:owner/:repo/issues/:number
-POST /repos/:owner/:repo/issues
-PATCH /repos/:owner/:repo/issues/:number
-DELETE /repos/:owner/:repo
-</code></pre><p>NOTE：更新和创建操作应该返回最新的资源，来通知用户资源的情况；删除资源一般不会返回内容。 </p>
-<h3 id="不符合-CRUD-的情况"><a href="#不符合-CRUD-的情况" class="headerlink" title="不符合 CRUD 的情况"></a>不符合 CRUD 的情况</h3><p>在实际资源操作中，总会有一些不符合 <code>CRUD</code>（Create-Read-Update-Delete） 的情况，一般有几种处理方法。 </p>
-<h4 id="使用-POST"><a href="#使用-POST" class="headerlink" title="使用 POST"></a>使用 POST</h4><p>为需要的动作增加一个 endpoint，使用 POST 来执行动作，比如 <code>POST /resend</code> 重新发送邮件。 </p>
-<h4 id="增加控制参数"><a href="#增加控制参数" class="headerlink" title="增加控制参数"></a>增加控制参数</h4><p>添加动作相关的参数，通过修改参数来控制动作。比如一个博客网站，会有把写好的文章“发布”的功能，可以用上面的 <code>POST /articles/{:id}/publish</code> 方法，也可以在文章中增加 <code>published:boolean</code> 字段，发布的时候就是更新该字段 <code>PUT /articles/{:id}?published=true</code></p>
-<h4 id="把动作转换成资源"><a href="#把动作转换成资源" class="headerlink" title="把动作转换成资源"></a>把动作转换成资源</h4><p>把动作转换成可以执行 <code>CRUD</code> 操作的资源， github 就是用了这种方法。 </p>
-<p>比如“喜欢”一个 gist，就增加一个 <code>/gists/:id/star</code> 子资源，然后对其进行操作：“喜欢”使用 <code>PUT /gists/:id/star</code>，“取消喜欢”使用 <code>DELETE /gists/:id/star</code> 。 </p>
-<p>另外一个例子是 <code>Fork</code>，这也是一个动作，但是在 gist 下面增加 <code>forks</code>资源，就能把动作变成 <code>CRUD</code> 兼容的：<code>POST /gists/:id/forks</code> 可以执行用户 fork 的动作。 </p>
-<h2 id="6-Query-让查询更自由"><a href="#6-Query-让查询更自由" class="headerlink" title="6. Query 让查询更自由"></a>6. Query 让查询更自由</h2><p>比如查询某个 repo 下面 issues 的时候，可以通过以下参数来控制返回哪些结果： </p>
-<ul>
-<li>state：issue 的状态，可以是 <code>open</code>，<code>closed</code>，<code>all</code></li>
-<li>since：在指定时间点之后更新过的才会返回</li>
-<li>assignee：被 assign 给某个 user 的 issues</li>
-<li>sort：选择排序的值，可以是 <code>created</code>、<code>updated</code>、<code>comments</code></li>
-<li>direction：排序的方向，升序（asc）还是降序（desc）</li>
-<li>……</li>
-</ul>
-<h2 id="7-分页-Pagination"><a href="#7-分页-Pagination" class="headerlink" title="7. 分页 Pagination"></a>7. 分页 Pagination</h2><p>当返回某个资源的列表时，如果要返回的数目特别多，比如 github 的 <code>/users</code>，就需要使用分页分批次按照需要来返回特定数量的结果。 </p>
-<p>分页的实现会用到上面提到的 url query，通过两个参数来控制要返回的资源结果： </p>
-<ul>
-<li>per_page：每页返回多少资源，如果没提供会使用预设的默认值；这个数量也是有一个最大值，不然用户把它设置成一个非常大的值（比如 <code>99999999</code>）也失去了设计的初衷</li>
-<li>page：要获取哪一页的资源，默认是第一页</li>
-</ul>
-<p>返回的资源列表为 <code>[(page-1)*per_page, page*per_page)</code>。github API 文档中还提到一个很好的点，相关的分页信息还可以存放到 <code>Link</code> 头部，这样客户端可以直接得到诸如<code>下一页</code>、<code>最后一页</code>、<code>上一页</code>等内容的 url 地址，而不是自己手动去计算和拼接。 </p>
-<h2 id="8-选择合适的状态码"><a href="#8-选择合适的状态码" class="headerlink" title="8. 选择合适的状态码"></a>8. 选择合适的状态码</h2><p>HTTP 应答中，需要带一个很重要的字段：<code>status code</code>。它说明了请求的大致情况，是否正常完成、需要进一步处理、出现了什么错误，对于客户端非常重要。状态码都是三位的整数，大概分成了几个区间： </p>
-<ul>
-<li><code>2XX</code>：请求正常处理并返回</li>
-<li><code>3XX</code>：重定向，请求的资源位置发生变化</li>
-<li><code>4XX</code>：客户端发送的请求有错误</li>
-<li><code>5XX</code>：服务器端错误</li>
-</ul>
-<p>在 HTTP API 设计中，经常用到的状态码以及它们的意义如下表： </p>
-<p>状态码Label解释</p>
-<p>200<br>OK<br>请求成功接收并处理，一般响应中都会有 body </p>
-<p>201<br>Created<br>请求已完成，并导致了一个或者多个资源被创建，最常用在 POST 创建资源的时候 </p>
-<p>202<br>Accepted<br>请求已经接收并开始处理，但是处理还没有完成。一般用在异步处理的情况，响应 body 中应该告诉客户端去哪里查看任务的状态 </p>
-<p>204<br>No Content<br>请求已经处理完成，但是没有信息要返回，经常用在 PUT 更新资源的时候（客户端提供资源的所有属性，因此不需要服务端返回）。如果有重要的 metadata，可以放到头部返回 </p>
-<p>301<br>Moved Permanently<br>请求的资源已经永久性地移动到另外一个地方，后续所有的请求都应该直接访问新地址。服务端会把新地址写在 <code>Location</code> 头部字段，方便客户端使用。允许客户端把 POST 请求修改为 GET。 </p>
-<p>304<br>Not Modified<br>请求的资源和之前的版本一样，没有发生改变。用来缓存资源，和条件性请求（conditional request）一起出现 </p>
-<p>307<br>Temporary Redirect<br>目标资源暂时性地移动到新的地址，客户端需要去新地址进行操作，但是<strong>不能</strong>修改请求的方法。 </p>
-<p>308<br>Permanent Redirect<br>和 301 类似，除了客户端<strong>不能</strong>修改原请求的方法 </p>
-<p>400<br>Bad Request<br>客户端发送的请求有错误（请求语法错误，body 数据格式有误，body 缺少必须的字段等），导致服务端无法处理 </p>
-<p>401<br>Unauthorized<br>请求的资源需要认证，客户端没有提供认证信息或者认证信息不正确 </p>
-<p>403<br>Forbidden<br>服务器端接收到并理解客户端的请求，但是客户端的权限不足。比如，普通用户想操作只有管理员才有权限的资源。 </p>
-<p>404<br>Not Found<br>客户端要访问的资源不存在，链接失效或者客户端伪造 URL 的时候回遇到这个情况 </p>
-<p>405<br>Method Not Allowed<br>服务端接收到了请求，而且要访问的资源也存在，但是不支持对应的方法。服务端<strong>必须</strong>返回 <code>Allow</code> 头部，告诉客户端哪些方法是允许的 </p>
-<p>415<br>Unsupported Media Type<br>服务端不支持客户端请求的资源格式，一般是因为客户端在 <code>Content-Type</code> 或者 <code>Content-Encoding</code> 中申明了希望的返回格式，但是服务端没有实现。比如，客户端希望收到 <code>xml</code>返回，但是服务端支持 <code>Json</code></p>
-<p>429<br>Too Many Requests<br>客户端在规定的时间里发送了太多请求，在进行限流的时候会用到 </p>
-<p>500<br>Internal Server Error<br>服务器内部错误，导致无法完成请求的内容 </p>
-<p>503<br>Service Unavailable<br>服务器因为负载过高或者维护，暂时无法提供服务。服务器端应该返回 <code>Retry-After</code> 头部，告诉客户端过一段时间再来重试 </p>
-<p>上面这些状态码覆盖了 API 设计中大部分的情况，如果对某个状态码不清楚或者希望查看更完整的列表，可以参考 <a href="https://httpstatuses.com/" target="_blank" rel="external">HTTP Status Code</a> 这个网站，或者 <a href="https://tools.ietf.org/html/rfc7231#section-6" target="_blank" rel="external">RFC7231 Response Status Codes</a> 的内容。 </p>
-<h2 id="9-错误处理：给出详细的信息"><a href="#9-错误处理：给出详细的信息" class="headerlink" title="9. 错误处理：给出详细的信息"></a>9. 错误处理：给出详细的信息</h2><p>如果出错的话，在 response body 中通过 <code>message</code> 给出明确的信息。 </p>
-<p>比如客户端发送的请求有错误，一般会返回 <code>4XX Bad Request</code> 结果。这个结果很模糊，给出错误 message 的话，能更好地让客户端知道具体哪里有问题，进行快速修改。 </p>
-<ul>
-<li>如果请求的 JSON 数据无法解析，会返回 <code>Problems parsing JSON</code></li>
-<li>如果缺少必要的 filed，会返回 <code>422 Unprocessable Entity</code>，除了 message 之外，还通过 <code>errors</code> 给出了哪些 field 缺少了，能够方便调用方快速排错</li>
-</ul>
-<p>基本的思路就是尽可能提供更准确的错误信息：比如数据不是正确的 json，缺少必要的字段，字段的值不符合规定…… 而不是直接说“请求错误”之类的信息。 </p>
-<h2 id="10-验证和授权"><a href="#10-验证和授权" class="headerlink" title="10. 验证和授权"></a>10. 验证和授权</h2><p>一般来说，让任何人随意访问公开的 API 是不好的做法。验证和授权是两件事情： </p>
-<ul>
-<li>验证（Authentication）是为了确定用户是其申明的身份，比如提供账户的密码。不然的话，任何人伪造成其他身份（比如其他用户或者管理员）是非常危险的</li>
-<li>授权（Authorization）是为了保证用户有对请求资源特定操作的权限。比如用户的私人信息只能自己能访问，其他人无法看到；有些特殊的操作只能管理员可以操作，其他用户有只读的权限等等</li>
-</ul>
-<p>如果没有通过验证（提供的用户名和密码不匹配，token 不正确等），需要返回 <a href="https://httpstatuses.com/401" target="_blank" rel="external"><strong>401 Unauthorized</strong></a>状态码，并在 body 中说明具体的错误信息；而没有被授权访问的资源操作，需要返回 <a href="https://httpstatuses.com/403" target="_blank" rel="external"><strong>403 Forbidden</strong></a> 状态码，还有详细的错误信息。 </p>
-<p><strong>NOTE</strong>：Github API 对某些用户未被授权访问的资源操作返回 <a href="https://httpstatuses.com/404" target="_blank" rel="external"><strong>404 Not Found</strong></a>，目的是为了防止私有资源的泄露（比如黑客可以自动化试探用户的私有资源，返回 403 的话，就等于告诉黑客用户有这些私有的资源）。 </p>
-<h2 id="11-限流-rate-limit"><a href="#11-限流-rate-limit" class="headerlink" title="11. 限流 rate limit"></a>11. 限流 rate limit</h2><p>如果对访问的次数不加控制，很可能会造成 API 被滥用，甚至被 <a href="https://en.wikipedia.org/wiki/Denial-of-service_attack" target="_blank" rel="external">DDos 攻击</a>。根据使用者不同的身份对其进行限流，可以防止这些情况，减少服务器的压力。 </p>
-<p>对用户的请求限流之后，要有方法告诉用户它的请求使用情况，<code>Github API</code> 使用的三个相关的头部： </p>
-<ul>
-<li><code>X-RateLimit-Limit</code>: 用户每个小时允许发送请求的最大值</li>
-<li><code>X-RateLimit-Remaining</code>：当前时间窗口剩下的可用请求数目</li>
-<li><code>X-RateLimit-Rest</code>: 时间窗口重置的时候，到这个时间点可用的请求数量就会变成 <code>X-RateLimit-Limit</code> 的值</li>
-</ul>
-<p>如果允许没有登录的用户使用 API（可以让用户试用），可以把 <code>X-RateLimit-Limit</code> 的值设置得很小，比如 Github 使用的 <code>60</code>。没有登录的用户是按照请求的 IP 来确定的，而登录的用户按照认证后的信息来确定身份。 </p>
-<p>对于超过流量的请求，可以返回 <a href="https://httpstatuses.com/429" target="_blank" rel="external"><strong>429 Too many requests</strong></a> 状态码，并附带错误信息。而 <code>Github API</code> 返回的是 <a href="https://httpstatuses.com/403" target="_blank" rel="external"><strong>403 Forbidden</strong></a>，虽然没有 <code>429</code> 更准确，也是可以理解的。 </p>
-<p>Github 更进一步，提供了不影响当然 <code>RateLimit</code> 的请求查看当前 <code>RateLimit</code> 的接口 <a href="https://developer.github.com/v3/rate_limit/" target="_blank" rel="external"><strong>GET /rate_limit</strong></a>。 </p>
-<h2 id="12-Hypermedia-API"><a href="#12-Hypermedia-API" class="headerlink" title="12. Hypermedia API"></a>12. Hypermedia API</h2><p>Restful API 的设计最好做到 Hypermedia：在返回结果中提供相关资源的链接。这种设计也被称为 <a href="http://en.wikipedia.org/wiki/HATEOAS" target="_blank" rel="external">HATEOAS</a>。这样做的好处是，用户可以根据返回结果就能得到后续操作需要访问的地址。 </p>
-<p>比如访问 <a href="https://api.github.com/" target="_blank" rel="external">api.github.com</a>，就可以看到 Github API 支持的资源操作。 </p>
-<h2 id="13-编写优秀的文档"><a href="#13-编写优秀的文档" class="headerlink" title="13. 编写优秀的文档"></a>13. 编写优秀的文档</h2><p>API 最终是给人使用的，不管是公司内部，还是公开的 API 都是一样。即使我们遵循了上面提到的所有规范，设计的 API 非常优雅，用户还是不知道怎么使用我们的 API。最后一步，但非常重要的一步是：为你的 API 编写优秀的文档。 </p>
-<p>对每个请求以及返回的参数给出说明，最好给出一个详细而完整地示例，提醒用户需要注意的地方……反正目标就是用户可以根据你的文档就能直接使用 API，而不是要发邮件给你，或者跑到你的座位上问你一堆问题。 </p>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
-<li><a href="https://developer.github.com/v3/" target="_blank" rel="external">Github API v3</a></li>
-<li><a href="http://www.ruanyifeng.com/blog/2014/05/restful_api.html" target="_blank" rel="external">RESTful API 设计指南</a></li>
-<li><a href="http://wangwei.info/about-rest-api/" target="_blank" rel="external">REST接口设计规范</a></li>
-<li><a href="http://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm" target="_blank" rel="external">Restful API 首次被提出的论文：Architectural Styles and the Design of Network-based Software Architectures</a></li>
-</ul>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
-    
-    </summary>
-    
-      <category term="Python" scheme="https://wangyu1997.github.io/categories/Python/"/>
-    
-    
-      <category term="Restful Framework" scheme="https://wangyu1997.github.io/tags/Restful-Framework/"/>
     
   </entry>
   

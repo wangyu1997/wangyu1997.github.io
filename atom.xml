@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://wangyu1997.github.io/"/>
-  <updated>2017-10-24T15:36:21.000Z</updated>
+  <updated>2017-10-24T15:39:57.000Z</updated>
   <id>https://wangyu1997.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://wangyu1997.github.io/2017/10/24/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%AE%BA/"/>
     <id>https://wangyu1997.github.io/2017/10/24/计算机组成原理/计算机系统概论/</id>
     <published>2017-10-24T14:43:11.000Z</published>
-    <updated>2017-10-24T15:36:21.000Z</updated>
+    <updated>2017-10-24T15:39:57.000Z</updated>
     
     <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>物联网：把感应器嵌入和装备到电网、铁路、桥梁、隧道、公路、建筑、供水系统、大坝、油气管道等各种物体中，并且被普遍连接，形成所谓的“物联网”，然后将“物联网”与现有的互联网整合起来，实现人类社会与无力系统的整合，形成智慧地球</p>
 <a id="more"></a>      
@@ -35,7 +35,7 @@
 </li>
 </ul>
 <h2 id="计算机系统的层次结构"><a href="#计算机系统的层次结构" class="headerlink" title="计算机系统的层次结构"></a>计算机系统的层次结构</h2><p>层次结构：</p>
-<p><img src="media/15088579483898.jpg" alt=""></p>
+<p><img src="http://oq5d32gij.bkt.clouddn.com/15088579483898.jpg" alt=""></p>
 <p>系统复杂性管理的方法：</p>
 <blockquote>
 <p>抽象：隐藏系统中不重要的细节</p>
@@ -93,6 +93,10 @@
     
     
       <category term="概论" scheme="https://wangyu1997.github.io/tags/%E6%A6%82%E8%AE%BA/"/>
+    
+      <category term="计算机体系结构" scheme="https://wangyu1997.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/"/>
+    
+      <category term="计算机组成" scheme="https://wangyu1997.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90/"/>
     
   </entry>
   
@@ -2625,160 +2629,6 @@ helper.generateOutput();
   </entry>
   
   <entry>
-    <title>Groovy读取yaml和properties文件</title>
-    <link href="https://wangyu1997.github.io/2017/10/10/JavaWeb/Groovy%E8%AF%BB%E5%8F%96yaml%E5%92%8Cproperties%E6%96%87%E4%BB%B6/"/>
-    <id>https://wangyu1997.github.io/2017/10/10/JavaWeb/Groovy读取yaml和properties文件/</id>
-    <published>2017-10-10T02:43:11.000Z</published>
-    <updated>2017-10-24T06:36:53.000Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
-<p>Java 可以使用 <code>PropertiesConfiguration</code> 来读取 properties 属性文件，Spring 4.3 后还支持了 <code>Yaml 格式的属性文件</code></p>
-<ul>
-<li>PropertiesConfiguration: 读取时可以自动进行类型转换，可以给定默认值</li>
-<li>Yaml 格式的属性文件: 可以使用树形结构，方便分组，比 <code>.properties</code> 属性文件更灵活，但是以普通的 <code>java.util.Properties</code> 来读取</li>
-</ul>
-<h1 id="Gradle-依赖"><a href="#Gradle-依赖" class="headerlink" title="Gradle 依赖"></a>Gradle 依赖</h1><pre><code>compile &#39;org.springframework:spring-context:4.3.0.RELEASE&#39;
-
-compile &#39;org.yaml:snakeyaml:1.17&#39;
-
-compile &#39;commons-configuration:commons-configuration:1.10&#39;
-
-testCompile &#39;org.springframework:spring-test:4.3.0.RELEASE&#39;
-
-testCompile &#39;junit:junit:4.12&#39;
-</code></pre><h1 id="属性文件"><a href="#属性文件" class="headerlink" title="属性文件"></a>属性文件</h1><blockquote>
-<p>config.properties </p>
-</blockquote>
-<pre><code>username=Dr. Alice 
-
-age=22 
-
-config.yml
-</code></pre><p>#mysql </p>
-<pre><code>mysql: 
-
-    jdbc: 
-
-        url: jdbc:mysql://localhost:3306 
-
-        dirverClass: com.mysql.jdbc.Driver 
-
-        username: root 
-
-        password: root 
-
-        username: Ritchie Yu 
-</code></pre><h1 id="Spring-Bean-配置文件"><a href="#Spring-Bean-配置文件" class="headerlink" title="Spring Bean 配置文件"></a>Spring Bean 配置文件</h1><blockquote>
-<p>spring-beans-config.xml </p>
-</blockquote>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-
-&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
-
-xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-
-xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
-
-http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;
-
-&lt;bean id=&quot;yamlProperties&quot; class=&quot;org.springframework.beans.factory.config.YamlPropertiesFactoryBean&quot;&gt;
-
-&lt;property name=&quot;resources&quot;&gt;
-
-&lt;list&gt;
-
-&lt;value&gt;classpath:config.yml&lt;/value&gt;
-
-&lt;/list&gt;
-
-&lt;/property&gt;
-
-&lt;/bean&gt;
-
-&lt;bean id=&quot;propertiesConfig&quot; class=&quot;org.apache.commons.configuration.PropertiesConfiguration&quot;&gt;
-
-&lt;constructor-arg value=&quot;config.properties&quot;/&gt;
-
-&lt;/bean&gt;
-
-&lt;/beans&gt;
-</code></pre><h1 id="测试案例"><a href="#测试案例" class="headerlink" title="测试案例"></a>测试案例</h1><pre><code>import org.apache.commons.configuration.PropertiesConfiguration; 
-
-import org.junit.runner.RunWith; 
-
-import org.junit.Test; 
-
-import org.springframework.test.context.ContextConfiguration; 
-
-import org.springframework.test.context.junit4.SpringRunner; 
-
-import javax.annotation.Resource; 
-
-import java.util.Properties; 
-
-@RunWith(SpringRunner.class) 
-
-@ContextConfiguration({&quot;classpath:spring-beans-config.xml&quot;}) 
-
-public class TestYamlPropertiesAndPropertiesConfig { 
-
-@Resource(name = &quot;yamlProperties&quot;) 
-
-private Properties yamlProperties; 
-
-@Resource(name = &quot;propertiesConfig&quot;) 
-
-private PropertiesConfiguration propertiesConfig; 
-
-@Test
-
-public void testYamlProperties() { 
-
-System.out.println(yamlProperties.getProperty(&quot;mysql.jdbc.url&quot;)); 
-
-System.out.println(yamlProperties.getProperty(&quot;username&quot;)); 
-
-} 
-
-@Test
-
-public void testPropertiesConfig() { 
-
-System.out.println(propertiesConfig.getString(&quot;username&quot;)); 
-
-System.out.println(propertiesConfig.getInteger(&quot;age&quot;, 0)); 
-
-} 
-
-} 
-</code></pre><p>输出: </p>
-<pre><code>Dr. Alice 
-
-22 
-
-jdbc:mysql://localhost:3306 
-
-Ritchie Yu 
-</code></pre>]]></content>
-    
-    <summary type="html">
-    
-      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
-    
-    </summary>
-    
-      <category term="JavaWeb" scheme="https://wangyu1997.github.io/categories/JavaWeb/"/>
-    
-    
-      <category term="gradle" scheme="https://wangyu1997.github.io/tags/gradle/"/>
-    
-      <category term="groovy" scheme="https://wangyu1997.github.io/tags/groovy/"/>
-    
-      <category term="yaml" scheme="https://wangyu1997.github.io/tags/yaml/"/>
-    
-  </entry>
-  
-  <entry>
     <title>MyBatis最详细配置</title>
     <link href="https://wangyu1997.github.io/2017/10/10/JavaWeb/MyBatis%E6%9C%80%E8%AF%A6%E7%BB%86%E9%85%8D%E7%BD%AE/"/>
     <id>https://wangyu1997.github.io/2017/10/10/JavaWeb/MyBatis最详细配置/</id>
@@ -3082,11 +2932,165 @@ Ritchie Yu
       <category term="JavaWeb" scheme="https://wangyu1997.github.io/categories/JavaWeb/"/>
     
     
-      <category term="gradle" scheme="https://wangyu1997.github.io/tags/gradle/"/>
-    
       <category term="javaweb" scheme="https://wangyu1997.github.io/tags/javaweb/"/>
     
+      <category term="gradle" scheme="https://wangyu1997.github.io/tags/gradle/"/>
+    
       <category term="mybatis" scheme="https://wangyu1997.github.io/tags/mybatis/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Groovy读取yaml和properties文件</title>
+    <link href="https://wangyu1997.github.io/2017/10/10/JavaWeb/Groovy%E8%AF%BB%E5%8F%96yaml%E5%92%8Cproperties%E6%96%87%E4%BB%B6/"/>
+    <id>https://wangyu1997.github.io/2017/10/10/JavaWeb/Groovy读取yaml和properties文件/</id>
+    <published>2017-10-10T02:43:11.000Z</published>
+    <updated>2017-10-24T06:36:53.000Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
+<p>Java 可以使用 <code>PropertiesConfiguration</code> 来读取 properties 属性文件，Spring 4.3 后还支持了 <code>Yaml 格式的属性文件</code></p>
+<ul>
+<li>PropertiesConfiguration: 读取时可以自动进行类型转换，可以给定默认值</li>
+<li>Yaml 格式的属性文件: 可以使用树形结构，方便分组，比 <code>.properties</code> 属性文件更灵活，但是以普通的 <code>java.util.Properties</code> 来读取</li>
+</ul>
+<h1 id="Gradle-依赖"><a href="#Gradle-依赖" class="headerlink" title="Gradle 依赖"></a>Gradle 依赖</h1><pre><code>compile &#39;org.springframework:spring-context:4.3.0.RELEASE&#39;
+
+compile &#39;org.yaml:snakeyaml:1.17&#39;
+
+compile &#39;commons-configuration:commons-configuration:1.10&#39;
+
+testCompile &#39;org.springframework:spring-test:4.3.0.RELEASE&#39;
+
+testCompile &#39;junit:junit:4.12&#39;
+</code></pre><h1 id="属性文件"><a href="#属性文件" class="headerlink" title="属性文件"></a>属性文件</h1><blockquote>
+<p>config.properties </p>
+</blockquote>
+<pre><code>username=Dr. Alice 
+
+age=22 
+
+config.yml
+</code></pre><p>#mysql </p>
+<pre><code>mysql: 
+
+    jdbc: 
+
+        url: jdbc:mysql://localhost:3306 
+
+        dirverClass: com.mysql.jdbc.Driver 
+
+        username: root 
+
+        password: root 
+
+        username: Ritchie Yu 
+</code></pre><h1 id="Spring-Bean-配置文件"><a href="#Spring-Bean-配置文件" class="headerlink" title="Spring Bean 配置文件"></a>Spring Bean 配置文件</h1><blockquote>
+<p>spring-beans-config.xml </p>
+</blockquote>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+
+xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+
+xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+
+http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;
+
+&lt;bean id=&quot;yamlProperties&quot; class=&quot;org.springframework.beans.factory.config.YamlPropertiesFactoryBean&quot;&gt;
+
+&lt;property name=&quot;resources&quot;&gt;
+
+&lt;list&gt;
+
+&lt;value&gt;classpath:config.yml&lt;/value&gt;
+
+&lt;/list&gt;
+
+&lt;/property&gt;
+
+&lt;/bean&gt;
+
+&lt;bean id=&quot;propertiesConfig&quot; class=&quot;org.apache.commons.configuration.PropertiesConfiguration&quot;&gt;
+
+&lt;constructor-arg value=&quot;config.properties&quot;/&gt;
+
+&lt;/bean&gt;
+
+&lt;/beans&gt;
+</code></pre><h1 id="测试案例"><a href="#测试案例" class="headerlink" title="测试案例"></a>测试案例</h1><pre><code>import org.apache.commons.configuration.PropertiesConfiguration; 
+
+import org.junit.runner.RunWith; 
+
+import org.junit.Test; 
+
+import org.springframework.test.context.ContextConfiguration; 
+
+import org.springframework.test.context.junit4.SpringRunner; 
+
+import javax.annotation.Resource; 
+
+import java.util.Properties; 
+
+@RunWith(SpringRunner.class) 
+
+@ContextConfiguration({&quot;classpath:spring-beans-config.xml&quot;}) 
+
+public class TestYamlPropertiesAndPropertiesConfig { 
+
+@Resource(name = &quot;yamlProperties&quot;) 
+
+private Properties yamlProperties; 
+
+@Resource(name = &quot;propertiesConfig&quot;) 
+
+private PropertiesConfiguration propertiesConfig; 
+
+@Test
+
+public void testYamlProperties() { 
+
+System.out.println(yamlProperties.getProperty(&quot;mysql.jdbc.url&quot;)); 
+
+System.out.println(yamlProperties.getProperty(&quot;username&quot;)); 
+
+} 
+
+@Test
+
+public void testPropertiesConfig() { 
+
+System.out.println(propertiesConfig.getString(&quot;username&quot;)); 
+
+System.out.println(propertiesConfig.getInteger(&quot;age&quot;, 0)); 
+
+} 
+
+} 
+</code></pre><p>输出: </p>
+<pre><code>Dr. Alice 
+
+22 
+
+jdbc:mysql://localhost:3306 
+
+Ritchie Yu 
+</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
+    
+    </summary>
+    
+      <category term="JavaWeb" scheme="https://wangyu1997.github.io/categories/JavaWeb/"/>
+    
+    
+      <category term="gradle" scheme="https://wangyu1997.github.io/tags/gradle/"/>
+    
+      <category term="groovy" scheme="https://wangyu1997.github.io/tags/groovy/"/>
+    
+      <category term="yaml" scheme="https://wangyu1997.github.io/tags/yaml/"/>
     
   </entry>
   
@@ -3337,9 +3341,9 @@ task mybatisGenerate &lt;&lt; {
       <category term="JavaWeb" scheme="https://wangyu1997.github.io/categories/JavaWeb/"/>
     
     
-      <category term="gradle" scheme="https://wangyu1997.github.io/tags/gradle/"/>
-    
       <category term="javaweb" scheme="https://wangyu1997.github.io/tags/javaweb/"/>
+    
+      <category term="gradle" scheme="https://wangyu1997.github.io/tags/gradle/"/>
     
       <category term="mybatis" scheme="https://wangyu1997.github.io/tags/mybatis/"/>
     
@@ -5558,9 +5562,9 @@ public class SomeService {
       <category term="JavaWeb" scheme="https://wangyu1997.github.io/categories/JavaWeb/"/>
     
     
-      <category term="javaweb" scheme="https://wangyu1997.github.io/tags/javaweb/"/>
-    
       <category term="AOP" scheme="https://wangyu1997.github.io/tags/AOP/"/>
+    
+      <category term="javaweb" scheme="https://wangyu1997.github.io/tags/javaweb/"/>
     
       <category term="Spring" scheme="https://wangyu1997.github.io/tags/Spring/"/>
     
@@ -5803,9 +5807,9 @@ public class AdviseDefine {
       <category term="JavaWeb" scheme="https://wangyu1997.github.io/categories/JavaWeb/"/>
     
     
-      <category term="javaweb" scheme="https://wangyu1997.github.io/tags/javaweb/"/>
-    
       <category term="AOP" scheme="https://wangyu1997.github.io/tags/AOP/"/>
+    
+      <category term="javaweb" scheme="https://wangyu1997.github.io/tags/javaweb/"/>
     
       <category term="Spring" scheme="https://wangyu1997.github.io/tags/Spring/"/>
     

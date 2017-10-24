@@ -2,35 +2,133 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://wangyu1997.github.io/2017/09/20/Hibernate%E6%B3%A8%E8%A7%A3%E4%B8%BB%E9%94%AE%E7%AD%96%E7%95%A5/</loc>
+    <loc>https://wangyu1997.github.io/2017/10/02/VueJs/Vue%E5%AE%9E%E6%88%98/</loc>
+    
+    <lastmod>2017-10-24T07:12:17.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangyu1997.github.io/2017/09/28/VueJs/axios%E6%95%99%E7%A8%8B/</loc>
+    
+    <lastmod>2017-10-24T07:12:14.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangyu1997.github.io/2017/10/03/VueJs/Stylus%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/</loc>
+    
+    <lastmod>2017-10-24T07:12:10.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangyu1997.github.io/2017/10/04/VueJs/flex%E5%B8%83%E5%B1%80/</loc>
+    
+    <lastmod>2017-10-24T07:12:07.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangyu1997.github.io/2017/10/03/VueJs/BetterScroll/</loc>
+    
+    <lastmod>2017-10-24T07:12:04.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangyu1997.github.io/2017/10/09/JavaWeb/Gradle%E9%83%A8%E7%BD%B2mybatis/</loc>
+    
+    <lastmod>2017-10-24T07:01:03.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangyu1997.github.io/2017/10/22/Spring/AspectJ/</loc>
+    
+    <lastmod>2017-10-24T06:52:10.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangyu1997.github.io/2017/10/21/Spring/JdbcTemplate/</loc>
+    
+    <lastmod>2017-10-24T06:49:48.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangyu1997.github.io/2017/10/20/Spring/Spring%E4%BD%BF%E7%94%A8jdbc/</loc>
+    
+    <lastmod>2017-10-24T06:48:11.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangyu1997.github.io/2017/10/19/Spring/xml%E8%8E%B7%E5%8F%96Bean/</loc>
+    
+    <lastmod>2017-10-24T06:47:02.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangyu1997.github.io/2017/10/10/JavaWeb/Groovy%E8%AF%BB%E5%8F%96yaml%E5%92%8Cproperties%E6%96%87%E4%BB%B6/</loc>
+    
+    <lastmod>2017-10-24T06:36:53.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangyu1997.github.io/2017/10/10/JavaWeb/MyBatis%E6%9C%80%E8%AF%A6%E7%BB%86%E9%85%8D%E7%BD%AE/</loc>
+    
+    <lastmod>2017-10-24T06:34:07.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangyu1997.github.io/2017/10/01/JavaWeb/AOP%E5%AE%9E%E6%88%98/</loc>
+    
+    <lastmod>2017-10-24T06:31:06.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangyu1997.github.io/2017/10/01/JavaWeb/AOP%E7%BC%96%E7%A8%8B%E8%AF%A6%E8%A7%A3/</loc>
+    
+    <lastmod>2017-10-24T06:29:21.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangyu1997.github.io/2017/09/20/JavaWeb/Hibernate%E6%B3%A8%E8%A7%A3%E4%B8%BB%E9%94%AE%E7%AD%96%E7%95%A5/</loc>
     
     <lastmod>2017-09-28T10:22:26.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/2017/09/20/Hibernate%20annotation%E6%98%A0%E5%B0%84%E8%AF%A6%E8%A7%A3/</loc>
+    <loc>https://wangyu1997.github.io/2017/09/20/JavaWeb/Hibernate%20annotation%E6%98%A0%E5%B0%84%E8%AF%A6%E8%A7%A3/</loc>
     
     <lastmod>2017-09-19T18:09:53.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/2017/07/26/%20Django%20REST%20framework/</loc>
+    <loc>https://wangyu1997.github.io/2017/07/26/Python/%20Django%20REST%20framework/</loc>
     
     <lastmod>2017-09-19T17:56:31.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/2017/08/03/Swift%E4%B8%AD%E6%9C%89%E7%94%A8%E7%9A%84tips/</loc>
+    <loc>https://wangyu1997.github.io/2017/08/03/iOS/Swift%E4%B8%AD%E6%9C%89%E7%94%A8%E7%9A%84tips/</loc>
     
     <lastmod>2017-09-19T17:37:55.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/2017/08/22/Ubuntu%E9%85%8D%E7%BD%AE%E9%98%B2%E7%81%AB%E5%A2%99/</loc>
+    <loc>https://wangyu1997.github.io/2017/08/22/%E9%82%A3%E4%BA%9B%E5%B9%B4%E5%80%92%E8%85%BE%E8%BF%87%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%99%A8/Ubuntu%E9%85%8D%E7%BD%AE%E9%98%B2%E7%81%AB%E5%A2%99/</loc>
     
     <lastmod>2017-09-19T17:36:54.000Z</lastmod>
     
@@ -65,7 +163,7 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/2017/07/26/Restful%20HTTP%20API%20/</loc>
+    <loc>https://wangyu1997.github.io/2017/07/26/Python/Restful%20HTTP%20API%20/</loc>
     
     <lastmod>2017-07-26T05:32:35.000Z</lastmod>
     
@@ -79,98 +177,98 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/2017/07/20/Kindeditor%E5%9C%A8Django%E4%B8%AD%E4%BD%BF%E7%94%A8/</loc>
+    <loc>https://wangyu1997.github.io/2017/07/20/Python/Kindeditor%E5%9C%A8Django%E4%B8%AD%E4%BD%BF%E7%94%A8/</loc>
     
     <lastmod>2017-07-25T18:40:18.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/2017/07/02/docker%20django%E7%8E%AF%E5%A2%83/</loc>
+    <loc>https://wangyu1997.github.io/2017/07/02/Python/docker%20django%E7%8E%AF%E5%A2%83/</loc>
     
     <lastmod>2017-07-21T10:08:57.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/2017/07/05/django+mysql/</loc>
+    <loc>https://wangyu1997.github.io/2017/07/05/Python/django+mysql/</loc>
     
     <lastmod>2017-07-21T10:08:56.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/2017/07/01/vultr%E6%90%AD%E5%BB%BAss/</loc>
+    <loc>https://wangyu1997.github.io/2017/07/01/%E9%82%A3%E4%BA%9B%E5%B9%B4%E5%80%92%E8%85%BE%E8%BF%87%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%99%A8/vultr%E6%90%AD%E5%BB%BAss/</loc>
     
     <lastmod>2017-07-02T10:58:14.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/2017/06/12/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/</loc>
+    <loc>https://wangyu1997.github.io/2017/06/12/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/</loc>
     
     <lastmod>2017-07-01T16:26:38.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/2017/06/14/Alamofire%20%E4%B8%AD%E6%96%87%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/</loc>
+    <loc>https://wangyu1997.github.io/2017/06/14/iOS/Alamofire%20%E4%B8%AD%E6%96%87%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/</loc>
     
     <lastmod>2017-07-01T16:26:36.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/2017/06/14/%E4%B8%83%E7%89%9B%E4%BA%91%E5%82%A8%E5%AD%98/</loc>
+    <loc>https://wangyu1997.github.io/2017/06/14/Android/%E4%B8%83%E7%89%9B%E4%BA%91%E5%82%A8%E5%AD%98/</loc>
     
     <lastmod>2017-07-01T16:26:35.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/2017/06/21/Centos%20LNMP/</loc>
+    <loc>https://wangyu1997.github.io/2017/06/21/%E9%82%A3%E4%BA%9B%E5%B9%B4%E5%80%92%E8%85%BE%E8%BF%87%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%99%A8/Centos%20LNMP/</loc>
     
     <lastmod>2017-07-01T16:26:34.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/2017/07/01/MarkDown%20%E8%AF%AD%E6%B3%95%E5%85%A5%E9%97%A8/</loc>
+    <loc>https://wangyu1997.github.io/2017/07/01/%E6%9D%82%E8%AE%B0/MarkDown%20%E8%AF%AD%E6%B3%95%E5%85%A5%E9%97%A8/</loc>
     
     <lastmod>2017-07-01T16:26:32.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/2017/06/12/Alamofire/</loc>
+    <loc>https://wangyu1997.github.io/2017/06/12/iOS/Alamofire/</loc>
     
     <lastmod>2017-06-14T15:45:40.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/2017/05/26/LDA/</loc>
+    <loc>https://wangyu1997.github.io/2017/05/26/machine-learning/LDA/</loc>
     
     <lastmod>2017-06-13T09:02:14.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/2017/06/12/UIPopoverPresentationController/</loc>
+    <loc>https://wangyu1997.github.io/2017/06/12/iOS/UIPopoverPresentationController/</loc>
     
     <lastmod>2017-06-13T01:23:38.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/2017/06/11/UIViewAnimationOptions/</loc>
+    <loc>https://wangyu1997.github.io/2017/06/11/iOS/UIViewAnimationOptions/</loc>
     
     <lastmod>2017-06-11T12:12:45.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/2017/05/18/math/</loc>
+    <loc>https://wangyu1997.github.io/2017/05/18/machine-learning/math/</loc>
     
     <lastmod>2017-05-26T15:34:55.000Z</lastmod>
     
@@ -191,7 +289,7 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/2017/05/19/uicell/</loc>
+    <loc>https://wangyu1997.github.io/2017/05/19/iOS/uicell/</loc>
     
     <lastmod>2017-05-20T10:09:42.000Z</lastmod>
     
@@ -229,13 +327,6 @@
     <loc>https://wangyu1997.github.io/assets/js/DPlayer.min.js</loc>
     
     <lastmod>2017-05-06T19:36:36.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/skins/sunburst.css</loc>
-    
-    <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
   </url>
   
@@ -331,7 +422,7 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-aea.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-lassoscript.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
@@ -401,7 +492,7 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-matlab.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-aea.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
@@ -604,14 +695,14 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/prettify.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/prettify.css</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/prettify.css</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/prettify.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
@@ -646,13 +737,6 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/skins/doxy.css</loc>
-    
-    <lastmod>2017-01-13T03:58:20.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://wangyu1997.github.io/assets/prettify/skins/sons-of-obsidian.css</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
@@ -660,7 +744,21 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-lassoscript.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/skins/doxy.css</loc>
+    
+    <lastmod>2017-01-13T03:58:20.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangyu1997.github.io/assets/prettify/skins/sunburst.css</loc>
+    
+    <lastmod>2017-01-13T03:58:20.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-matlab.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     

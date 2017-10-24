@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <head>
+    <!--
+        © Material Theme
+        https://github.com/viosey/hexo-theme-material
+        Version: 1.3.3 -->
+
+    <!-- Title -->
+    
+    <title>
+        
+            AOP实战 | 
+        
+        人不如故
+    </title>
+
+    <!-- Meta & Info -->
+    <meta charset="utf-8">
+
+    <!-- dns prefetch -->
+    <meta http-equiv="x-dns-prefetch-control" content="on">
+    
+    
+    
+    
+        <link rel="dns-prefetch" href="https://hm.baidu.com"/>
+    
+    
+        <link rel="dns-prefetch" href="https://www.google-analytics.com"/>
+    
+    
+        <link rel="dns-prefetch" href="https://busuanzi.ibruce.info"/>
+    
+
+    <meta http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#000">
+    <meta name="author" content="人不如故">
+    <meta name="description" content="世间一场大梦，人生几度秋凉。">
+    <meta name="keywords" content="null,AOP,javaweb,Spring">
+
+    <!-- Favicons -->
+    <link rel="icon shortcut" type="image/ico" href="/img/favicon.png">
+    <link rel="icon" sizes="192x192" href="/img/favicon.png">
+    <link rel="apple-touch-icon" href="/img/favicon.png">
+
+    <!--iOS -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-title" content="Title">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="480">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="人不如故">
+
+    <!-- The Open Graph protocol -->
+    <meta property="og:url" content="https://wangyu1997.github.io">
+    <meta property="og:type" content="blog">
+    <meta property="og:title" content="AOP实战 | 人不如故">
+    <meta property="og:description" content="世间一场大梦，人生几度秋凉。">
+    <meta property="og:article:tag" content="AOP"> <meta property="og:article:tag" content="javaweb"> <meta property="og:article:tag" content="Spring"> 
+
+    <!--[if lte IE 9]>
+        <link rel="stylesheet" href="/css/ie-blocker.css">
+
+        
+            <script src="/js/ie-blocker.zhCN.js"></script>
+        
+    <![endif]-->
+    <!-- Import CSS & jQuery -->
+    
+        <link rel="stylesheet" href="/css/material.min.css">
+        <link rel="stylesheet" href="/css/style.min.css">
+        <!-- Config CSS -->
+
+
+<!-- Other Styles -->
+<style>
+  body, html {
+    font-family: Roboto, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+  }
+
+  a {
+    color: #000;
+  }
+
+  .mdl-card__media,
+  #search-label,
+  #search-form-label:after,
+  #scheme-Paradox .hot_tags-count,
+  #scheme-Paradox .sidebar_archives-count,
+  #scheme-Paradox .sidebar-colored .sidebar-header,
+  #scheme-Paradox .sidebar-colored .sidebar-badge{
+    background-color: #000 !important;
+  }
+
+  /* Sidebar User Drop Down Menu Text Color */
+  #scheme-Paradox .sidebar-colored .sidebar-nav>.dropdown>.dropdown-menu>li>a:hover,
+  #scheme-Paradox .sidebar-colored .sidebar-nav>.dropdown>.dropdown-menu>li>a:focus {
+    color: #000 !important;
+  }
+
+  #post_entry-right-info,
+  .sidebar-colored .sidebar-nav li:hover > a,
+  .sidebar-colored .sidebar-nav li:hover > a i,
+  .sidebar-colored .sidebar-nav li > a:hover,
+  .sidebar-colored .sidebar-nav li > a:hover i,
+  .sidebar-colored .sidebar-nav li > a:focus i,
+  .sidebar-colored .sidebar-nav > .open > a,
+  .sidebar-colored .sidebar-nav > .open > a:hover,
+  .sidebar-colored .sidebar-nav > .open > a:focus,
+  #ds-reset #ds-ctx .ds-ctx-entry .ds-ctx-head a {
+    color: #000 !important;
+  }
+
+  .toTop {
+    background: #000 !important;
+  }
+
+  .material-layout .material-post>.material-nav,
+  .material-layout .material-index>.material-nav,
+  .material-nav a {
+    color: #000;
+  }
+
+  #scheme-Paradox .MD-burger-layer {
+    background-color: #000;
+  }
+
+  #scheme-Paradox #post-toc-trigger-btn {
+    color: #000;
+  }
+
+  .post-toc a:hover {
+    color: #000;
+    text-decoration: underline;
+  }
+
+</style>
+
+
+<!-- Theme Background Related-->
+
+    <style>
+      body{
+        background-image: url(/img/bg.jpg);
+      }
+    </style>
+
+
+
+
+<!-- Fade Effect -->
+
+    <style>
+      .fade {
+        transition: all 800ms linear;
+        -webkit-transform: translate3d(0,0,0);
+        -moz-transform: translate3d(0,0,0);
+        -ms-transform: translate3d(0,0,0);
+        -o-transform: translate3d(0,0,0);
+        transform: translate3d(0,0,0);
+        opacity: 1;
+      }
+
+      .fade.out{
+        opacity: 0;
+      }
+    </style>
+
+
+        <script src="/js/jquery.min.js"></script>
+        <script src="/js/queue.js"></script>
+    
+
+    <!-- UC Browser Compatible -->
+    <script>
+        var agent = navigator.userAgent.toLowerCase();
+        if(agent.indexOf('ucbrowser')>0) {
+            document.write("<link rel=\"stylesheet\" href=\"/css/uc.css\">");
+            alert('由于 UC 浏览器使用极旧的内核，而本网站使用了一些新的特性。\n为了您能更好的浏览，推荐使用 Chrome 或 Firefox 浏览器。');
+        }
+    </script>
+
+    
+    <!-- Baidu Analytics -->
+    <script>
+        var _hmt = _hmt || [];
+        (function() {var hm = document.createElement('script');
+        hm.src = 'https://hm.baidu.com/hm.js?0c1235d6c5795e257894fa96152e0154';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    
+
+    
+    <!-- Google Analytics -->
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-99567775-1', 'auto');ga('send', 'pageview');
+    </script>
+    
+
+
+    <!-- Bing Background -->
+    
+
+    <!-- Custom Head -->
+    
+<link rel="stylesheet" href="/css/prism-dark.css" type="text/css"></head>
+
+
+    
+        <body id="scheme-Paradox" class="lazy">
+            <div class="material-layout  mdl-js-layout has-drawer is-upgraded">
+                
+
+                <!-- Main Container -->
+                <main class="material-layout__content" id="main">
+
+                    <!-- Top Anchor -->
+                    <div id="top">
+                        <!---->
+                    </div>
+
+                    
+                        <!-- Hamburger Button -->
+                        <button class="MD-burger-icon sidebar-toggle">
+                            <span class="MD-burger-layer"></span>
+                        </button>
+                    
+
+                    <!-- Post TOC -->
+
+    
+    <!-- Back Button -->
+    <!--
+    <div class="material-back" id="backhome-div" tabindex="0">
+        <a class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
+           href="#" onclick="window.history.back();return false;"
+           target="_self"
+           role="button"
+           data-upgraded=",MaterialButton,MaterialRipple">
+            <i class="material-icons" role="presentation">arrow_back</i>
+            <span class="mdl-button__ripple-container">
+                <span class="mdl-ripple"></span>
+            </span>
+        </a>
+    </div>
+    -->
+
+    <!-- Left aligned menu below button -->
+    <button id="post-toc-trigger-btn"
+        class="mdl-button mdl-js-button mdl-button--icon">
+        <i class="material-icons">format_list_numbered</i>
+    </button>
+
+    <ul class="post-toc-wrap mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="post-toc-trigger-btn" style="max-height:80vh; overflow-y:scroll;">
+        <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Spring-AOP-实战"><span class="post-toc-number">1.</span> <span class="post-toc-text">Spring AOP 实战</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#HTTP-接口鉴权"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">HTTP 接口鉴权</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#完整源码"><span class="post-toc-number">1.1.1.</span> <span class="post-toc-text">完整源码</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#方法调用日志"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">方法调用日志</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#完整源码-1"><span class="post-toc-number">1.2.1.</span> <span class="post-toc-text">完整源码</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#方法耗时统计"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">方法耗时统计</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#完整源码-2"><span class="post-toc-number">1.3.1.</span> <span class="post-toc-text">完整源码</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#总结"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">总结</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#End"><span class="post-toc-number">2.</span> <span class="post-toc-text">End.</span></a></li></ol>
+
+        <!--
+        <li class="mdl-menu__item">
+            Some Action
+        </li>
+        -->
+    </ul>
+
+
+
+
+<!-- Layouts -->
+
+    <!-- Post Module -->
+    <div class="material-post_container">
+
+        <div class="material-post mdl-grid">
+            <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
+
+                <!-- Post Header(Thumbnail & Title) -->
+                
+    <!-- Paradox Post Header -->
+    
+        <!-- Custom Thumbnail -->
+        <div class="post_thumbnail-custom mdl-card__media mdl-color-text--grey-50" style="background-image:url(http://oq5d32gij.bkt.clouddn.com/15068377972390.jpg)">
+    
+            <p class="article-headline-p">
+                AOP实战
+            </p>
+        </div>
+
+
+
+
+
+                
+                    <!-- Paradox Post Info -->
+                    <div class="mdl-color-text--grey-700 mdl-card__supporting-text meta">
+
+    <!-- Author Avatar -->
+    <div id="author-avatar">
+        <img src="/img/avatar.png" width="44px" height="44px" alt="Author Avatar"/>
+    </div>
+    <!-- Author Name & Date -->
+    <div>
+        <strong>人不如故</strong>
+        <span>10月 01, 2017</span>
+    </div>
+
+    <div class="section-spacer"></div>
+
+    <!-- Favorite -->
+    <!--
+        <button id="article-functions-like-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon btn-like">
+            <i class="material-icons" role="presentation">favorite</i>
+            <span class="visuallyhidden">favorites</span>
+        </button>
+    -->
+
+    <!-- Qrcode -->
+    
+        <button id="article-functions-qrcode-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+            <i class="material-icons" role="presentation">devices other</i>
+            <span class="visuallyhidden">devices other</span>
+        </button>
+        <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-qrcode-button">
+            <li class="mdl-menu__item">在其它设备中阅读本文章</li>
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPYAAAD2CAAAAADAeSUUAAAC2ElEQVR42u3aUXbiMAwFUPa/aboASniSQpvY118cyCS5/ugbSX48t1wPbGxsbGxsbGxs7EuyH/H65UYv379en9/h3ed3v1bfGRsbG3tt9oc//YfX9O6Q/KvjrSw/ERsbG3sD9rsAmMfMfEOPPydbg42NjY1dLQPykub46djY2NjY3w6w3jdJXFWvxMbGxsbOS4LqYOD4+jzY/q2Xho2NjX15dl5CXOfzn863sbGxsS/Mrq5eoTJvMz3HCxsbG3tVdv6ieeExOe5TfXphE7GxsbGXZldft3eH6nGfs56LjY2NvTY7LzAmrZ/8RZNfjwfAhaYSNjY29nLs6oA2uU/15eYj3mjQi42Njb0oO2/0Jy+atKuS0KoOG76S29jY2Ni3ZfcKiSqpWnLkAYmNjY29J3syfO01j3oHfZKwxMbGxt6N3QuVk49ItoqQUYBhY2Nj35ydlA15oZKT8hA67UgQNjY29gbsHjX/vhpdJ3+PjY2NvSg7/0//vPCoFjbNQ5Z5BYaNjY29BDsfl+blRzIGSO7ZK1GapQg2Njb2zdnNSIjLj+rhzl6B9OGIDzY2NvY27CTe8rhKCpvkWZNfsbGxsXdgT0qF6pihOqytRtfJR3awsbGxb8KuHm38diu/1/Ya5TY2Njb2bdl582gSYzmpd9wn2mJsbGzsRdnVdlIvrnoD3TwyR700bGxs7CXY84Z+dTQ7GRg3R8XY2NjYG7DzEEoCLw+5SWspfzo2Njb2DuxkHNt70fngobewsbGxd2BXV++RebDNx71vr8TGxsZelN0Mg7hVVA3IvIVUbkhhY2NjL81OQmvS9O8FVb5lx2NjbGxs7H3Y+XC3ulnfaxsVBs/Y2NjY2HHgVTcoKV1OOEKEjY2NjR1cMy8z8jFDMrrAxsbG3o09Gc02Q6W4xZPWFTY2Nvba7GrjJj+mUx0n5NefMB7AxsbGXoK9z8LGxsbGxsbGxsa+zPoBFEK5zFaZPFkAAAAASUVORK5CYII=">
+        </ul>
+    
+
+    <!-- Tags (bookmark) -->
+    
+    <button id="article-functions-viewtags-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+        <i class="material-icons" role="presentation">bookmark</i>
+        <span class="visuallyhidden">bookmark</span>
+    </button>
+    <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-viewtags-button">
+        <li class="mdl-menu__item">
+        <a class="post_tag-link" href="/tags/AOP/">AOP</a></li><li class="mdl-menu__item"><a class="post_tag-link" href="/tags/Spring/">Spring</a></li><li class="mdl-menu__item"><a class="post_tag-link" href="/tags/javaweb/">javaweb</a>
+    </ul>
+    
+
+    <!-- Share -->
+    <button id="article-fuctions-share-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+    <i class="material-icons" role="presentation">share</i>
+    <span class="visuallyhidden">share</span>
+</button>
+<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-fuctions-share-button">
+    
+
+    
+        
+            <!-- Busuanzi Views -->
+            <a class="post_share-link" href="#">
+                <li class="mdl-menu__item">
+                    <span id="busuanzi_container_page_pv">
+                        <span id="busuanzi_value_page_pv"></span>&nbsp;浏览量
+                    </span>
+                </li>
+            </a>
+        
+    
+
+    <!-- Share Weibo -->
+    
+        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=AOP实战&url=https://wangyu1997.github.io//2017/10/01/JavaWeb/AOP实战/index.html&pic=&searchPic=false&style=simple" target="_blank">
+            <li class="mdl-menu__item">
+                分享到微博
+            </li>
+        </a>
+    
+
+    <!-- Share Twitter -->
+    
+        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=AOP实战&url=https://wangyu1997.github.io//2017/10/01/JavaWeb/AOP实战/index.html&via=人不如故" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Twitter
+            </li>
+        </a>
+    
+
+    <!-- Share Facebook -->
+    
+        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=https://wangyu1997.github.io//2017/10/01/JavaWeb/AOP实战/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Facebook
+            </li>
+        </a>
+    
+
+    <!-- Share Google+ -->
+    
+        <a class="post_share-link" href="https://plus.google.com/share?url=https://wangyu1997.github.io//2017/10/01/JavaWeb/AOP实战/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Google+
+            </li>
+        </a>
+    
+
+    <!-- Share LinkedIn -->
+    
+
+    <!-- Share QQ -->
+    
+        <a class="post_share-link" href="http://connect.qq.com/widget/shareqq/index.html?site=人不如故&title=AOP实战&summary=世间一场大梦，人生几度秋凉。&pics=https://wangyu1997.github.io/img/favicon.png&url=https://wangyu1997.github.io/2017/10/01/JavaWeb/AOP实战/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 QQ
+            </li>
+        </a>
+    
+
+    <!-- Share Telegram -->
+    
+</ul>
+
+</div>
+
+                
+
+                <!-- Post Content -->
+                <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
+   
+    
+            <link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
+<p>接上一小节<a href="https://wangyu1997.github.io/2017/10/01/JavaWeb/AOP%E7%BC%96%E7%A8%8B%E8%AF%A6%E8%A7%A3/">彻底征服 Spring AOP 之 理论篇</a></p>
+<h2 id="Spring-AOP-实战"><a href="#Spring-AOP-实战" class="headerlink" title="Spring AOP 实战"></a>Spring AOP 实战</h2><p>看了上面这么多的理论知识, 不知道大家有没有觉得枯燥哈. 不过不要急, 俗话说理论是实践的基础, 对 Spring AOP 有了基本的理论认识后, 我们来看一下下面几个具体的例子吧.<br>下面的几个例子是我在工作中所遇见的比较常用的 Spring AOP 的使用场景, 我精简了很多有干扰我们学习的注意力的细枝末节, 以力求整个例子的简洁性. </p>
+<p>下面几个 Demo 的源码都可以在我的 <a href="https://github.com/yongshun/some_java_code" target="_blank" rel="external">Github</a> 上下载到. </p>
+<h3 id="HTTP-接口鉴权"><a href="#HTTP-接口鉴权" class="headerlink" title="HTTP 接口鉴权"></a>HTTP 接口鉴权</h3><p>首先让我们来想象一下如下场景: 我们需要提供的 HTTP RESTful 服务, 这个服务会提供一些比较敏感的信息, 因此对于某些接口的调用会进行调用方权限的校验, 而某些不太敏感的接口则不设置权限, 或所需要的权限比较低(例如某些监控接口, 服务状态接口等).<br>实现这样的需求的方法有很多, 例如我们可以在每个 HTTP 接口方法中对服务请求的调用方进行权限的检查, 当调用方权限不符时, 方法返回错误. 当然这样做并无不可, 不过如果我们的 api 接口很多, 每个接口都进行这样的判断, 无疑有很多冗余的代码, 并且很有可能有某个粗心的家伙忘记了对调用者的权限进行验证, 这样就会造成潜在的 bug.<br>那么除了上面的所说的方法外, 还有没有别的比较优雅的方式来实现呢? 当然有啦, 不然我在这啰嗦半天干嘛呢, 它就是我们今天的主角: <code>AOP</code>. </p>
+<p>让我们来提炼一下我们的需求: </p>
+<ol>
+<li><p>可以定制地为某些指定的 HTTP RESTful api 提供权限验证功能. </p>
+</li>
+<li><p>当调用方的权限不符时, 返回错误. </p>
+</li>
+</ol>
+<p>根据上面所提出的需求, 我们可以进行如下设计: </p>
+<ol>
+<li><p>提供一个特殊的注解 <code>AuthChecker</code>, 这个是一个方法注解, 有此注解所标注的 Controller 需要进行调用方权限的认证. </p>
+</li>
+<li><p>利用 Spring AOP, 以 <strong>@annotation</strong> 切点标志符来匹配有注解 <code>AuthChecker</code> 所标注的 joinpoint. </p>
+</li>
+<li><p>在 advice 中, 简单地检查调用者请求中的 Cookie 中是否有我们指定的 token, 如果有, 则认为此调用者权限合法, 允许调用, 反之权限不合法, 范围错误. </p>
+</li>
+</ol>
+<p>根据上面的设计, 我们来看一下具体的源码吧.<br>首先是 <code>AuthChecker</code> 注解的定义:<br><strong>AuthChecker.java:</strong></p>
+<pre><code>@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface AuthChecker {
+}
+</code></pre><p><code>AuthChecker</code> 注解是一个方法注解, 它用于注解 RequestMapping 方法. </p>
+<p>有了注解的定义, 那我们再来看一下 aspect 的实现吧:<br><strong>HttpAopAdviseDefine.java:</strong></p>
+<pre><code>@Component
+@Aspect
+public class HttpAopAdviseDefine {
+
+    // 定义一个 Pointcut, 使用 切点表达式函数 来描述对哪些 Join point 使用 advise.
+    @Pointcut(&quot;@annotation(com.xys.demo1.AuthChecker)&quot;)
+    public void pointcut() {
+    }
+
+    // 定义 advise
+    @Around(&quot;pointcut()&quot;)
+    public Object checkAuth(ProceedingJoinPoint joinPoint) throws Throwable {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+                .getRequest();
+
+        // 检查用户所传递的 token 是否合法
+        String token = getUserToken(request);
+        if (!token.equalsIgnoreCase(&quot;123456&quot;)) {
+            return &quot;错误, 权限不合法!&quot;;
+        }
+
+        return joinPoint.proceed();
+    }
+
+    private String getUserToken(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies == null) {
+            return &quot;&quot;;
+        }
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equalsIgnoreCase(&quot;user_token&quot;)) {
+                return cookie.getValue();
+            }
+        }
+        return &quot;&quot;;
+    }
+}
+</code></pre><p>在这个 aspect 中, 我们首先定义了一个 pointcut, 以 <strong>@annotation</strong> 切点标志符来匹配有注解 <code>AuthChecker</code> 所标注的 joinpoint, 即: </p>
+<pre><code>// 定义一个 Pointcut, 使用 切点表达式函数 来描述对哪些 Join point 使用 advise.
+@Pointcut(&quot;@annotation(com.xys.demo1.AuthChecker)&quot;)
+public void pointcut() {
+}
+</code></pre><p>然后再定义一个 advice: </p>
+<pre><code>// 定义 advise
+@Around(&quot;pointcut()&quot;)
+public Object checkAuth(ProceedingJoinPoint joinPoint) throws Throwable {
+    HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+            .getRequest();
+
+    // 检查用户所传递的 token 是否合法
+    String token = getUserToken(request);
+    if (!token.equalsIgnoreCase(&quot;123456&quot;)) {
+        return &quot;错误, 权限不合法!&quot;;
+    }
+
+    return joinPoint.proceed();
+}
+</code></pre><p>当被 <code>AuthChecker</code> 注解所标注的方法调用前, 会执行我们的这个 advice, 而这个 advice 的处理逻辑很简单, 即从 HTTP 请求中获取名为 <code>user_token</code> 的 cookie 的值, 如果它的值是 <code>123456</code>, 则我们认为此 HTTP 请求合法, 进而调用 <code>joinPoint.proceed()</code> 将 HTTP 请求转交给相应的控制器处理; 而如果<code>user_token</code> cookie 的值不是 <code>123456</code>, 或为空, 则认为此 HTTP 请求非法, 返回错误. </p>
+<p>接下来我们来写一个模拟的 HTTP 接口:<br><strong>DemoController.java:</strong></p>
+<pre><code>@RestController
+public class DemoController {
+    @RequestMapping(&quot;/aop/http/alive&quot;)
+    public String alive() {
+        return &quot;服务一切正常&quot;;
+    }
+
+    @AuthChecker
+    @RequestMapping(&quot;/aop/http/user_info&quot;)
+    public String callSomeInterface() {
+        return &quot;调用了 user_info 接口.&quot;;
+    }
+}
+</code></pre><p>注意到上面我们提供了两个 HTTP 接口, 其中 接口 <strong>/aop/http/alive</strong> 是没有 <code>AuthChecker</code> 标注的, 而 <strong>/aop/http/user_info</strong> 接口则用到了 <code>@AuthChecker</code> 标注. 那么自然地, 当请求了 <strong>/aop/http/user_info</strong> 接口时, 就会触发我们所设置的权限校验逻辑. </p>
+<p>接下来我们来验证一下, 我们所实现的功能是否有效吧.<br>首先在 Postman 中, 调用 <strong>/aop/http/alive</strong> 接口, 请求头中不加任何参数: </p>
+<p>可以看到, 我们的 HTTP 请求完全没问题. </p>
+<p>那么再来看一下请求 <strong>/aop/http/user_info</strong> 接口会怎样呢: </p>
+<p>当我们请求 <strong>/aop/http/user_info</strong> 接口时, 服务返回一个权限异常的错误, 为什么会这样呢? 自然就是我们的权限认证系统起了作为: 当一个方法被调用并且这个方法有 <code>AuthChecker</code> 标注时, 那么首先会执行到我们的 <code>around advice</code>, 在这个 advice 中, 我们会校验 HTTP 请求的 cookie 字段中是否有携带 <code>user_token</code> 字段时, 如果没有, 则返回权限错误.<br>那么为了能够正常地调用 <strong>/aop/http/user_info</strong> 接口, 我们可以在 Cookie 中添加 <strong>user_token=123456</strong>, 这样我们可以愉快的玩耍了: </p>
+<blockquote>
+<p><code>注意</code>, Postman 默认是不支持 Cookie 的, 所以为了实现添加 Cookie 的功能, 我们需要安装 Postman 的 <code>interceptor</code> 插件. 安装方法可以看<a href="https://www.getpostman.com/docs/interceptor_cookies" target="_blank" rel="external">官网的文章</a></p>
+</blockquote>
+<h4 id="完整源码"><a href="#完整源码" class="headerlink" title="完整源码"></a>完整源码</h4><p><a href="https://github.com/yongshun/some_java_code/tree/master/SpringAOPDemo/src/main/java/com/xys/demo1" target="_blank" rel="external">HTTP 接口鉴权</a></p>
+<h3 id="方法调用日志"><a href="#方法调用日志" class="headerlink" title="方法调用日志"></a>方法调用日志</h3><p>第二个 AOP 实例是记录一个方法调用的log. 这应该是一个很常见的功能了.<br>首先假设我们有如下需求: </p>
+<ol>
+<li><p>某个服务下的方法的调用需要有 log: 记录调用的参数以及返回结果. </p>
+</li>
+<li><p>当方法调用出异常时, 有特殊处理, 例如打印异常 log, 报警等. </p>
+</li>
+</ol>
+<p>根据上面的需求, 我们可以使用 before advice 来在调用方法前打印调用的参数, 使用 after returning advice 在方法返回打印返回的结果. 而当方法调用失败后, 可以使用 after throwing advice 来做相应的处理.<br>那么我们来看一下 aspect 的实现: </p>
+<pre><code>@Component
+@Aspect
+public class LogAopAdviseDefine {
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
+    // 定义一个 Pointcut, 使用 切点表达式函数 来描述对哪些 Join point 使用 advise.
+    @Pointcut(&quot;within(NeedLogService)&quot;)
+    public void pointcut() {
+    }
+
+    // 定义 advise
+    @Before(&quot;pointcut()&quot;)
+    public void logMethodInvokeParam(JoinPoint joinPoint) {
+        logger.info(&quot;---Before method {} invoke, param: {}---&quot;, joinPoint.getSignature().toShortString(), joinPoint.getArgs());
+    }
+
+    @AfterReturning(pointcut = &quot;pointcut()&quot;, returning = &quot;retVal&quot;)
+    public void logMethodInvokeResult(JoinPoint joinPoint, Object retVal) {
+        logger.info(&quot;---After method {} invoke, result: {}---&quot;, joinPoint.getSignature().toShortString(), joinPoint.getArgs());
+    }
+
+    @AfterThrowing(pointcut = &quot;pointcut()&quot;, throwing = &quot;exception&quot;)
+    public void logMethodInvokeException(JoinPoint joinPoint, Exception exception) {
+        logger.info(&quot;---method {} invoke exception: {}---&quot;, joinPoint.getSignature().toShortString(), exception.getMessage());
+    }
+}
+</code></pre><p>第一步, 自然是定义一个 <code>pointcut</code>, 以 <strong>within</strong> 切点标志符来匹配类 <code>NeedLogService</code> 下的所有 joinpoint, 即: </p>
+<pre><code>@Pointcut(&quot;within(NeedLogService)&quot;)
+public void pointcut() {
+}
+</code></pre><p>接下来根据我们前面的设计, 我们分别定义了三个 advice, 第一个是一个 before advice: </p>
+<pre><code>@Before(&quot;pointcut()&quot;)
+public void logMethodInvokeParam(JoinPoint joinPoint) {
+    logger.info(&quot;---Before method {} invoke, param: {}---&quot;, joinPoint.getSignature().toShortString(), joinPoint.getArgs());
+}
+</code></pre><p>它在一个符合要求的 joinpoint 方法调用前执行, 打印调用的方法名和调用的参数. </p>
+<p>第二个是 after return advice: </p>
+<pre><code>@AfterReturning(pointcut = &quot;pointcut()&quot;, returning = &quot;retVal&quot;)
+public void logMethodInvokeResult(JoinPoint joinPoint, Object retVal) {
+    logger.info(&quot;---After method {} invoke, result: {}---&quot;, joinPoint.getSignature().toShortString(), joinPoint.getArgs());
+}
+</code></pre><p>这个 advice 会在方法调用成功后打印出方法名还反的参数. </p>
+<p>最后一个是 after throw advice: </p>
+<pre><code>@AfterThrowing(pointcut = &quot;pointcut()&quot;, throwing = &quot;exception&quot;)
+public void logMethodInvokeException(JoinPoint joinPoint, Exception exception) {
+    logger.info(&quot;---method {} invoke exception: {}---&quot;, joinPoint.getSignature().toShortString(), exception.getMessage());
+}
+</code></pre><p>这个 advice 会在指定的 joinpoint 抛出异常时执行, 打印异常的信息. </p>
+<p>接下来我们再写两个 Service 类:<br><strong>NeedLogService.java:</strong></p>
+<pre><code>@Service
+public class NeedLogService {
+    private Logger logger = LoggerFactory.getLogger(getClass());
+    private Random random = new Random(System.currentTimeMillis());
+
+    public int logMethod(String someParam) {
+        logger.info(&quot;---NeedLogService: logMethod invoked, param: {}---&quot;, someParam);
+        return random.nextInt();
+    }
+
+    public void exceptionMethod() throws Exception {
+        logger.info(&quot;---NeedLogService: exceptionMethod invoked---&quot;);
+        throw new Exception(&quot;Something bad happened!&quot;);
+    }
+}
+</code></pre><p><strong>NormalService.java:</strong></p>
+<pre><code>@Service
+public class NormalService {
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
+    public void someMethod() {
+        logger.info(&quot;---NormalService: someMethod invoked---&quot;);
+    }
+}
+</code></pre><p>根据我们 pointcut 的规则, 类 NeedLogService 下的所有方法都会被织入 advice, 而类 NormalService 则不会. </p>
+<p>最后我们分别调用这几个方法: </p>
+<pre><code>@PostConstruct
+public void test() {
+    needLogService.logMethod(&quot;xys&quot;);
+    try {
+        needLogService.exceptionMethod();
+    } catch (Exception e) {
+        // Ignore
+    }
+    normalService.someMethod();
+}
+</code></pre><p>我们可以看到有如下输出: </p>
+<pre><code>---Before method NeedLogService.logMethod(..) invoke, param: [xys]---
+---NeedLogService: logMethod invoked, param: xys---
+---After method NeedLogService.logMethod(..) invoke, result: [xys]---
+
+---Before method NeedLogService.exceptionMethod() invoke, param: []---
+---NeedLogService: exceptionMethod invoked---
+---method NeedLogService.exceptionMethod() invoke exception: Something bad happened!---
+
+---NormalService: someMethod invoked---
+</code></pre><p>根据 log, 我们知道, NeedLogService.logMethod 执行的前后确实有 advice 执行了, 并且在 NeedLogService.exceptionMethod 抛出异常后, <code>logMethodInvokeException</code> 这个 advice 也被执行了. 而由于 pointcut 的匹配规则, 在 <code>NormalService</code> 类中的方法则不会织入 advice. </p>
+<h4 id="完整源码-1"><a href="#完整源码-1" class="headerlink" title="完整源码"></a>完整源码</h4><p><a href="https://github.com/yongshun/some_java_code/tree/master/SpringAOPDemo/src/main/java/com/xys/demo2" target="_blank" rel="external">方法调用日志</a></p>
+<h3 id="方法耗时统计"><a href="#方法耗时统计" class="headerlink" title="方法耗时统计"></a>方法耗时统计</h3><p>作为程序员, 我们都知道服务监控对于一个服务能够长期稳定运行的重要性, 因此很多公司都有自己内部的监控报警系统, 或者是使用一些开源的系统, 例如小米的 Falcon 监控系统. </p>
+<p>那么在程序监控中, AOP 有哪些用武之地呢? 我们来假想一下如下场景: </p>
+<blockquote>
+<p>有一天, leader 对小王说, “小王啊, 你负责的那个服务不太稳定啊, 经常有超时发生! 你有对这些服务接口进行过耗时统计吗?”<br>耗时统计? 小王嘀咕了, 小声的回答到: “还没有加呢.”<br>leader: “你看着办吧, 我明天要看到各个时段的服务接口调用的耗时分布!”<br>小王这就犯难了, 虽然说计算一个方法的调用耗时并不是一个很难的事情, 但是整个服务有二十来个接口呢, 一个一个地添加统计代码, 那还不是要累死人了.<br>看着同事一个一个都下班回家了, 小王眉头更加紧了. 不过此时小王灵机一动: “噫, 有了!”.<br>小王想到了一个好方法, 立即动手, 吭哧吭哧地几分钟就搞定了. </p>
+</blockquote>
+<p>那么小王的解决方法是什么呢? 自然是我们的主角 <code>AOP</code> 啦. </p>
+<p>首先让我们来提炼一下需求: </p>
+<ol>
+<li><p>为服务中的每个方法调用进行调用耗时记录. </p>
+</li>
+<li><p>将方法调用的时间戳, 方法名, 调用耗时上报到监控平台 </p>
+</li>
+</ol>
+<p>有了需求, 自然设计实现就很简单了. 首先我们可以使用 around advice, 然后在方法调用前, 记录一下开始时间, 然后在方法调用结束后, 记录结束时间, 它们的时间差就是方法的调用耗时. </p>
+<p>我们来看一下具体的 aspect 实现: </p>
+<p><strong>ExpiredAopAdviseDefine.java:</strong></p>
+<pre><code>@Component
+@Aspect
+public class ExpiredAopAdviseDefine {
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
+    // 定义一个 Pointcut, 使用 切点表达式函数 来描述对哪些 Join point 使用 advise.
+    @Pointcut(&quot;within(SomeService)&quot;)
+    public void pointcut() {
+    }
+
+    // 定义 advise
+    // 定义 advise
+    @Around(&quot;pointcut()&quot;)
+    public Object methodInvokeExpiredTime(ProceedingJoinPoint pjp) throws Throwable {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+        // 开始
+        Object retVal = pjp.proceed();
+        stopWatch.stop();
+        // 结束
+
+        // 上报到公司监控平台
+        reportToMonitorSystem(pjp.getSignature().toShortString(), stopWatch.getTotalTimeMillis());
+
+        return retVal;
+    }
+
+
+    public void reportToMonitorSystem(String methodName, long expiredTime) {
+        logger.info(&quot;---method {} invoked, expired time: {} ms---&quot;, methodName, expiredTime);
+        //
+    }
+}
+</code></pre><p>aspect 一开始定义了一个 <code>pointcut</code>, 匹配 <code>SomeService</code> 类下的所有的方法.<br>接着呢, 定义了一个 around advice: </p>
+<pre><code>@Around(&quot;pointcut()&quot;)
+public Object methodInvokeExpiredTime(ProceedingJoinPoint pjp) throws Throwable {
+    StopWatch stopWatch = new StopWatch();
+    stopWatch.start();
+    // 开始
+    Object retVal = pjp.proceed();
+    stopWatch.stop();
+    // 结束
+
+    // 上报到公司监控平台
+    reportToMonitorSystem(pjp.getSignature().toShortString(), stopWatch.getTotalTimeMillis());
+
+    return retVal;
+}
+</code></pre><p>advice 中的代码也很简单, 它使用了 Spring 提供的 StopWatch 来统计一段代码的执行时间. 首先我们先调用 <strong>stopWatch.start()</strong> 开始计时, 然后通过 <code>pjp.proceed()</code> 来调用我们实际的服务方法, 当调用结束后, 通过 <strong>stopWatch.stop()</strong> 来结束计时. </p>
+<p>接着我们来写一个简单的服务, 这个服务提供一个 <strong>someMethod</strong> 方法用于模拟一个耗时的方法调用:<br><strong>SomeService.java:</strong></p>
+<pre><code>@Service
+public class SomeService {
+    private Logger logger = LoggerFactory.getLogger(getClass());
+    private Random random = new Random(System.currentTimeMillis());
+
+    public void someMethod() {
+        logger.info(&quot;---SomeService: someMethod invoked---&quot;);
+        try {
+            // 模拟耗时任务
+            Thread.sleep(random.nextInt(500));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre><p>这样当 <code>SomeService</code> 类下的方法调用时, 我们所提供的 advice 就会被执行, 因此就可以自动地为我们统计此方法的调用耗时, 并自动上报到监控系统中了.<br>看到 <code>AOP</code> 的威力了吧, 我们这里仅仅使用了寥寥数语就把一个需求完美地解决了, 并且还与原来的业务逻辑完全解耦, 扩展及其方便. </p>
+<h4 id="完整源码-2"><a href="#完整源码-2" class="headerlink" title="完整源码"></a>完整源码</h4><p><a href="https://github.com/yongshun/some_java_code/tree/master/SpringAOPDemo/src/main/java/com/xys/demo3" target="_blank" rel="external">方法耗时统计</a></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>通过上面的几个简单例子, 我们对 <code>Spring AOP</code> 的使用应该有了一个更为深入的了解了. 其实 Spring AOP 的使用的地方不止这些, 例如 Spring 的 <code>声明式事务</code> 就是在 AOP 之上构建的. 读者朋友也可以根据自己的实际业务场景, 合理使用 Spring AOP, 发挥它的强大功能! </p>
+<h2 id="End"><a href="#End" class="headerlink" title="End."></a>End.</h2>
+           
+         <style type="text/css">
+.hljs-comment,
+.hljs-quote {
+  color: #999999;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+  color: #f2777a;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+  color: #f99157;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+  color: #ffcc66;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+  color: #99cc99;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+  color: #6699cc;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+  color: #cc99cc;
+}
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  background: #2d2d2d !important;
+  color: #cccccc !important;
+  padding: 1em !important;
+}
+
+pre{
+    background: #2d2d2d !important;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+</style>
+<script type="text/javascript">
+// $(function(){
+// 	//代码高亮自定义
+// 	$("code").each(function(){
+// 		$(this).html("<ul><li>" + $(this).html().replace(/\n/g,"\n</li><li>") +"\n</li></ul>");
+// 	});
+// });
+</script>
+
+<style type="text/css">
+/*.hljs {
+	border: 0;
+	font-family: "Consulas", "Courier New", Courier, mono, serif;
+	font-size: 12px;
+	background: #eee !important;
+	display: block;
+	padding: 1px;
+	margin: 0;
+	width: 100%;
+	font-weight: 200;
+	color: #333;
+	white-space: pre-wrap
+}*/
+/*.hljs ul {
+	list-style: decimal;
+	background-color: #fff;
+	margin: 0px 0px 0 0px !important;
+	padding: 0px;
+}*/
+/*.hljs ul li {
+	list-style: decimal-leading-zero;
+	border-left: 1px solid #ddd !important;
+	background: #fff;
+	padding: 5px!important;
+	margin: 0 !important;
+  width: 20px !important;
+	line-height: 14px;
+	word-break: break-all;
+	word-wrap: break-word;
+}*/
+/*.hljs ul li:nth-of-type(even) {
+	background-color: #fcfcfc;
+	color: inherit;
+}*/
+</style>
+<script src="https://cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+       <script >hljs.initHighlightingOnLoad();</script>  
+         
+    
+             
+           <style type="text/css">
+           #rewardButton {
+    cursor: pointer;
+    border: 0;
+    outline: 0;
+    border-radius: 100%;
+    padding: 0;
+    margin: 0;
+    letter-spacing: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+}
+#rewardButton span {
+    display: inline-block;
+    width: 80px;
+    height: 35px;
+    border-radius: 5px;
+    padding-top: 5px;
+    color: #fff;
+    font-weight: 400;
+    font-style: normal;
+    font-variant: normal;
+    font-stretch: normal;
+    font-size: 18px;
+    font-family: "Microsoft Yahei";
+    background: #F44336;
+}
+#rewardButton span:hover{
+    background: #F7877F;
+}
+#QR{
+    padding-top:20px;
+}
+#QR a{
+    border:0;
+}
+#QR img{
+    width: 180px;
+    max-width: 100%;
+    display: inline-block;
+    margin: 0.8em 2em 0 2em;
+}
+#wechat:hover p{
+    animation: roll 0.1s infinite linear;
+    -webkit-animation: roll 0.1s infinite linear;
+    -moz-animation: roll 0.1s infinite linear;
+}
+#alipay:hover p{
+    animation: roll 0.1s infinite linear;
+    -webkit-animation: roll 0.1s infinite linear;
+    -moz-animation: roll 0.1s infinite linear;
+}
+@keyframes roll {
+    from {
+      transform(rotateZ(30deg));
+    }
+    to {
+      transform(rotateZ(-30deg));
+    }
+}
+
+           </style>
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/uploads/wechat.JPG" alt="人不如故 WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/uploads/ali.JPG" alt="人不如故 Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+           
+
+
+     
+    
+    
+</div>
+
+
+                
+
+                <!-- Post Comments -->
+                
+                    
+
+
+
+
+    <!-- 使用 DISQUS -->
+    <div id="disqus-comment">
+        <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+        this.page.url = 'https://wangyu1997.github.io/2017/10/01/JavaWeb/AOP实战/';  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'https://wangyu1997.github.io/2017/10/01/JavaWeb/AOP实战/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    queue.offer(function() {
+            (function() { // DON'T EDIT BELOW THIS LINE
+                var d = document;
+                var s = d.createElement('script');
+                s.src = '//https-wangyu1997-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', + new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        });
+</script>
+
+    </div>
+    <style>
+        #disqus-comment{
+            background-color: #eee;
+            padding: 2pc;
+        }
+    </style>
+
+
+
+
+                
+            </div>
+
+            <!-- Post Prev & Next Nav -->
+            <nav class="material-nav mdl-color-text--grey-50 mdl-cell mdl-cell--12-col">
+    <!-- Prev Nav -->
+    
+        <a href="/2017/10/01/JavaWeb/AOP编程详解/" id="post_nav-newer" class="prev-content">
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_back</i>
+            </button>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            新篇
+        </a>
+    
+
+    <!-- Section Spacer -->
+    <div class="section-spacer"></div>
+
+    <!-- Next Nav -->
+    
+        <a href="/2017/09/28/VueJs/axios教程/" id="post_nav-older" class="next-content">
+            旧篇
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_forward</i>
+            </button>
+        </a>
+    
+</nav>
+
+        </div>
+    </div>
+
+
+
+                    
+                        <!-- Overlay For Active Sidebar -->
+<div class="sidebar-overlay"></div>
+
+<!-- Material sidebar -->
+<aside id="sidebar" class="sidebar sidebar-colored sidebar-fixed-left" role="navigation">
+    <div id="sidebar-main">
+        <!-- Sidebar Header -->
+        <div class="sidebar-header header-cover" style="background-image: url(/img/sidebar_header.png);">
+    <!-- Top bar -->
+    <div class="top-bar"></div>
+
+    <!-- Sidebar toggle button -->
+    <button type="button" class="sidebar-toggle mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" style="display: initial;" data-upgraded=",MaterialButton,MaterialRipple">
+        <i class="material-icons">clear_all</i>
+        <span class="mdl-button__ripple-container">
+            <span class="mdl-ripple">
+            </span>
+        </span>
+    </button>
+
+    <!-- Sidebar Avatar -->
+    <div class="sidebar-image">
+        <img src="/img/avatar.png" alt="人不如故's avatar">
+    </div>
+
+    <!-- Sidebar Email -->
+    <a data-toggle="dropdown" class="sidebar-brand" href="#settings-dropdown">
+        wangyu19970819@gmail.com
+        <b class="caret"></b>
+    </a>
+</div>
+
+
+        <!-- Sidebar Navigation  -->
+        <ul class="nav sidebar-nav">
+    <!-- User dropdown  -->
+    <li class="dropdown">
+        <ul id="settings-dropdown" class="dropdown-menu">
+            
+                <li>
+             
+                    <a href="mailto:wangyu19970819@gmail.com" target="_blank" title="Email Me">
+               
+                        
+                            <i class="material-icons sidebar-material-icons sidebar-indent-left1pc-element">email</i>
+                        
+                        Email Me
+                    </a>
+                </li>
+            
+                <li>
+             
+                    <a href="/about" target="_self" title="关于">
+              
+                        
+                            <i class="material-icons sidebar-material-icons sidebar-indent-left1pc-element">person</i>
+                        
+                        关于
+                    </a>
+                </li>
+            
+        </ul>
+    </li>
+
+    <!-- Homepage -->
+    
+        <li id="sidebar-first-li">
+            <a href="/" target="_self">
+                
+                    <i class="material-icons sidebar-material-icons">home</i>
+                
+                主页
+            </a>
+        </li>
+        
+    
+
+
+    <!-- Categories  -->
+    
+        <li class="dropdown">
+            <a href="#" class="ripple-effect dropdown-toggle" data-toggle="dropdown">
+                
+                    <i class="material-icons sidebar-material-icons">chrome_reader_mode</i>
+                
+                分类
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                <a class="sidebar_archives-link" href="/categories/Android/">Android<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/categories/JavaWeb/">JavaWeb<span class="sidebar_archives-count">7</span></a></li><li><a class="sidebar_archives-link" href="/categories/Python/">Python<span class="sidebar_archives-count">5</span></a></li><li><a class="sidebar_archives-link" href="/categories/Spring/">Spring<span class="sidebar_archives-count">4</span></a></li><li><a class="sidebar_archives-link" href="/categories/VueJs/">VueJs<span class="sidebar_archives-count">5</span></a></li><li><a class="sidebar_archives-link" href="/categories/iOS/">iOS<span class="sidebar_archives-count">6</span></a></li><li><a class="sidebar_archives-link" href="/categories/machine-learning/">machine learning<span class="sidebar_archives-count">2</span></a></li><li><a class="sidebar_archives-link" href="/categories/操作系统/">操作系统<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/categories/杂记/">杂记<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/categories/那些年倒腾过的服务器/">那些年倒腾过的服务器<span class="sidebar_archives-count">3</span></a>
+            </ul>
+        </li>
+        
+    
+
+    <!-- Pages  -->
+    
+        <li>
+            <a href="/links" title="小伙伴们">
+                
+                    <i class="material-icons sidebar-material-icons">group</i>
+                
+                小伙伴们
+            </a>
+        </li>
+        
+    
+        <li>
+            <a href="/tags" title="标签">
+                
+                    <i class="material-icons sidebar-material-icons">loyalty</i>
+                
+                标签
+            </a>
+        </li>
+        
+    
+
+            <!-- Archives  -->
+    
+        <li class="dropdown">
+            <a href="#" class="ripple-effect dropdown-toggle" data-toggle="dropdown">
+                
+                    <i class="material-icons sidebar-material-icons">inbox</i>
+                
+                    归档
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+            <li>
+                <a class="sidebar_archives-link" href="/archives/2017/10/">十月 2017<span class="sidebar_archives-count">13</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/09/">九月 2017<span class="sidebar_archives-count">3</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/08/">八月 2017<span class="sidebar_archives-count">2</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/07/">七月 2017<span class="sidebar_archives-count">7</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/06/">六月 2017<span class="sidebar_archives-count">7</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/05/">五月 2017<span class="sidebar_archives-count">3</span></a>
+            </ul>
+        </li>
+        
+    
+
+          <!-- rss -->
+    
+        <li id="sidebar-first-li">
+            <a href="/gallery" target="_self">
+                
+                    <i class="material-icons sidebar-material-icons">favorite</i>
+                
+                情愫
+            </a>
+        </li>
+        
+    
+
+      <!-- board -->
+    
+        <li id="sidebar-first-li">
+            <a href="/board" target="_self">
+                
+                    <i class="material-icons sidebar-material-icons">question_answer</i>
+                
+                留言板
+            </a>
+        </li>
+        
+    
+
+      <!-- rss -->
+    
+        <li id="sidebar-first-li">
+            <a href="/atom.xml" target="_blank">
+                
+                    <i class="material-icons sidebar-material-icons">cast_connected</i>
+                
+                RSS订阅
+            </a>
+        </li>
+        
+            <li class="divider"></li>
+        
+    
+
+    <!-- Article Number  -->
+    
+        <li>
+            <a href="/archives">
+                文章总数
+                <span class="sidebar-badge">35</span>
+            </a>
+        </li>
+        
+    
+</ul>
+
+
+        <!-- Sidebar Footer -->
+        <!--
+I'm glad you use this theme, the development is no so easy, I hope you can keep the copyright, I will thank you so much.
+If you still want to delete the copyrights, could you still retain the first one? Which namely "Theme Material"
+It will not impact the appearance and can give developers a lot of support :)
+
+很高兴您使用并喜欢该主题，开发不易 十分谢谢与希望您可以保留一下版权声明。
+如果您仍然想删除的话 能否只保留第一项呢？即 "Theme Material"
+它不会影响美观并可以给开发者很大的支持和动力。 :)
+-->
+
+<!-- Sidebar Divider -->
+
+
+<!-- Theme Material -->
+
+
+<!-- Help & Support -->
+<!--
+
+-->
+
+<!-- Feedback -->
+<!--
+
+-->
+
+<!-- About Theme -->
+<!--
+
+-->
+
+    </div>
+
+    <!-- Sidebar Image -->
+    
+
+</aside>
+
+                    
+
+                    
+                        <!-- Footer Top Button -->
+                        <div class="toTop-wrap">
+    <a href="#top" class="toTop">
+        <i class="material-icons footer_top-i">expand_less</i>
+    </a>
+</div>
+
+                    
+
+                    
+ 
+  <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+   <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+ 
+
+
+                    <!--Footer-->
+<footer class="mdl-mini-footer" id="bottom">
+    
+        <!-- Paradox Footer Left Section -->
+        <div class="mdl-mini-footer--left-section sns-list">
+    <!-- Twitter -->
+    
+
+    <!-- Facebook -->
+    
+        <a href="https://www.facebook.com/renburugu" target="_blank">
+            <button class="mdl-mini-footer--social-btn social-btn" style="background-image: url(/img/footer/footer_ico-facebook.svg);">
+                <span class="visuallyhidden">Facebook</span>
+            </button><!--
+     --></a>
+    
+
+    <!-- Google + -->
+    
+
+    <!-- Weibo -->
+    
+
+    <!-- Instagram -->
+    
+
+    <!-- Tumblr -->
+    
+
+    <!-- Github -->
+    
+        <a href="https://github.com/wangyu1997" target="_blank">
+            <button class="mdl-mini-footer--social-btn social-btn" style="background-image: url(/img/footer/footer_ico-github.svg);">
+                <span class="visuallyhidden">Github</span>
+            </button><!--
+     --></a>
+    
+
+    <!-- LinkedIn -->
+    
+
+    <!-- Zhihu -->
+    
+
+    <!-- Bilibili -->
+    
+
+    <!-- Telegram -->
+    
+</div>
+
+
+        <!--Copyright-->
+        <div id="copyright">
+            Copyright&nbsp;©&nbsp;
+            <script type="text/javascript">
+                var fd = new Date();
+                document.write(fd.getFullYear());
+            </script>
+            &nbsp;人不如故
+        </div>
+
+        <!-- Paradox Footer Right Section -->
+
+        <!--
+        I am glad you use this theme, the development is no so easy, I hope you can keep the copyright.
+        It will not impact the appearance and can give developers a lot of support :)
+
+        很高兴您使用该主题，开发不易，希望您可以保留一下版权声明。
+        它不会影响美观并可以给开发者很大的支持。 :)
+        -->
+
+        <div class="mdl-mini-footer--right-section">
+            <div>
+                <div class="footer-develop-div">Follow me on - <a href="https://www.facebook.com/renburugu" target="_blank" class="footer-develop-a">FaceTime</a></div>
+                <div class="footer-develop-div">Fork me on - <a href="https://github.com/wangyu1997" target="_blank" class="footer-develop-a">GitHub</a></div>
+            </div>
+        </div>
+    
+</footer>
+
+
+                    <!-- Import File -->
+
+    <script src="/js/lazyload.min.js"></script>
+    <script src="/js/js.min.js"></script>
+
+
+
+    <script src="/js/nprogress.js"></script>
+
+
+<script type="text/javascript">
+    NProgress.configure({
+        showSpinner: true
+    });
+    NProgress.start();
+    $('#nprogress .bar').css({
+        'background': '#29d'
+    });
+    $('#nprogress .peg').css({
+        'box-shadow': '0 0 10px #29d, 0 0 15px #29d'
+    });
+    $('#nprogress .spinner-icon').css({
+        'border-top-color': '#29d',
+        'border-left-color': '#29d'
+    });
+    setTimeout(function() {
+        NProgress.done();
+        $('.fade').removeClass('out');
+    }, 800);
+</script>
+
+
+
+    
+        <script src="/js/smoothscroll.js"></script>
+    
+
+
+
+
+
+    <!-- Busuanzi -->
+    <script src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+
+    <!-- 使用 DISQUS js 代码 -->
+    <script id="dsq-count-scr" src="//https-wangyu1997-github-io.disqus.com/count.js" async></script>
+
+
+
+
+
+<!-- Window Load-->
+<script>
+    $(window).load(function() {
+        // Post_Toc parent position fixed
+        $('.post-toc-wrap').parent('.mdl-menu__container').css('position', 'fixed');
+    });
+</script>
+
+<!-- MathJax Load-->
+
+<script>
+    <!-- Offer LazyLoad -->
+    queue.offer(function(){
+        $('.lazy').lazyload({
+            effect : 'show'
+        });
+    });
+
+    <!-- Start Queue -->
+    $(document).ready(function(){
+        setTimeout(function(){
+            setInterval(function(){
+                queue.execNext();
+            },200);
+        },3000);
+    });
+</script>
+
+                </main>
+            </div>
+        </body>
+    
+</html>

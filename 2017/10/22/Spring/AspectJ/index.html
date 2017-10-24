@@ -1,0 +1,2107 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <head>
+    <!--
+        © Material Theme
+        https://github.com/viosey/hexo-theme-material
+        Version: 1.3.3 -->
+
+    <!-- Title -->
+    
+    <title>
+        
+            学习Spring第四天 | 
+        
+        人不如故
+    </title>
+
+    <!-- Meta & Info -->
+    <meta charset="utf-8">
+
+    <!-- dns prefetch -->
+    <meta http-equiv="x-dns-prefetch-control" content="on">
+    
+    
+    
+    
+        <link rel="dns-prefetch" href="https://hm.baidu.com"/>
+    
+    
+        <link rel="dns-prefetch" href="https://www.google-analytics.com"/>
+    
+    
+        <link rel="dns-prefetch" href="https://busuanzi.ibruce.info"/>
+    
+
+    <meta http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#000">
+    <meta name="author" content="人不如故">
+    <meta name="description" content="世间一场大梦，人生几度秋凉。">
+    <meta name="keywords" content="null,Spring,AspectJ,PropertyPlaceholderConfigurer,Spring AOP,dependency,inheritance">
+
+    <!-- Favicons -->
+    <link rel="icon shortcut" type="image/ico" href="/img/favicon.png">
+    <link rel="icon" sizes="192x192" href="/img/favicon.png">
+    <link rel="apple-touch-icon" href="/img/favicon.png">
+
+    <!--iOS -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-title" content="Title">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="480">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="人不如故">
+
+    <!-- The Open Graph protocol -->
+    <meta property="og:url" content="https://wangyu1997.github.io">
+    <meta property="og:type" content="blog">
+    <meta property="og:title" content="学习Spring第四天 | 人不如故">
+    <meta property="og:description" content="世间一场大梦，人生几度秋凉。">
+    <meta property="og:article:tag" content="Spring"> <meta property="og:article:tag" content="AspectJ"> <meta property="og:article:tag" content="PropertyPlaceholderConfigurer"> <meta property="og:article:tag" content="Spring AOP"> <meta property="og:article:tag" content="dependency"> <meta property="og:article:tag" content="inheritance"> 
+
+    <!--[if lte IE 9]>
+        <link rel="stylesheet" href="/css/ie-blocker.css">
+
+        
+            <script src="/js/ie-blocker.zhCN.js"></script>
+        
+    <![endif]-->
+    <!-- Import CSS & jQuery -->
+    
+        <link rel="stylesheet" href="/css/material.min.css">
+        <link rel="stylesheet" href="/css/style.min.css">
+        <!-- Config CSS -->
+
+
+<!-- Other Styles -->
+<style>
+  body, html {
+    font-family: Roboto, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+  }
+
+  a {
+    color: #000;
+  }
+
+  .mdl-card__media,
+  #search-label,
+  #search-form-label:after,
+  #scheme-Paradox .hot_tags-count,
+  #scheme-Paradox .sidebar_archives-count,
+  #scheme-Paradox .sidebar-colored .sidebar-header,
+  #scheme-Paradox .sidebar-colored .sidebar-badge{
+    background-color: #000 !important;
+  }
+
+  /* Sidebar User Drop Down Menu Text Color */
+  #scheme-Paradox .sidebar-colored .sidebar-nav>.dropdown>.dropdown-menu>li>a:hover,
+  #scheme-Paradox .sidebar-colored .sidebar-nav>.dropdown>.dropdown-menu>li>a:focus {
+    color: #000 !important;
+  }
+
+  #post_entry-right-info,
+  .sidebar-colored .sidebar-nav li:hover > a,
+  .sidebar-colored .sidebar-nav li:hover > a i,
+  .sidebar-colored .sidebar-nav li > a:hover,
+  .sidebar-colored .sidebar-nav li > a:hover i,
+  .sidebar-colored .sidebar-nav li > a:focus i,
+  .sidebar-colored .sidebar-nav > .open > a,
+  .sidebar-colored .sidebar-nav > .open > a:hover,
+  .sidebar-colored .sidebar-nav > .open > a:focus,
+  #ds-reset #ds-ctx .ds-ctx-entry .ds-ctx-head a {
+    color: #000 !important;
+  }
+
+  .toTop {
+    background: #000 !important;
+  }
+
+  .material-layout .material-post>.material-nav,
+  .material-layout .material-index>.material-nav,
+  .material-nav a {
+    color: #000;
+  }
+
+  #scheme-Paradox .MD-burger-layer {
+    background-color: #000;
+  }
+
+  #scheme-Paradox #post-toc-trigger-btn {
+    color: #000;
+  }
+
+  .post-toc a:hover {
+    color: #000;
+    text-decoration: underline;
+  }
+
+</style>
+
+
+<!-- Theme Background Related-->
+
+    <style>
+      body{
+        background-image: url(/img/bg.jpg);
+      }
+    </style>
+
+
+
+
+<!-- Fade Effect -->
+
+    <style>
+      .fade {
+        transition: all 800ms linear;
+        -webkit-transform: translate3d(0,0,0);
+        -moz-transform: translate3d(0,0,0);
+        -ms-transform: translate3d(0,0,0);
+        -o-transform: translate3d(0,0,0);
+        transform: translate3d(0,0,0);
+        opacity: 1;
+      }
+
+      .fade.out{
+        opacity: 0;
+      }
+    </style>
+
+
+        <script src="/js/jquery.min.js"></script>
+        <script src="/js/queue.js"></script>
+    
+
+    <!-- UC Browser Compatible -->
+    <script>
+        var agent = navigator.userAgent.toLowerCase();
+        if(agent.indexOf('ucbrowser')>0) {
+            document.write("<link rel=\"stylesheet\" href=\"/css/uc.css\">");
+            alert('由于 UC 浏览器使用极旧的内核，而本网站使用了一些新的特性。\n为了您能更好的浏览，推荐使用 Chrome 或 Firefox 浏览器。');
+        }
+    </script>
+
+    
+    <!-- Baidu Analytics -->
+    <script>
+        var _hmt = _hmt || [];
+        (function() {var hm = document.createElement('script');
+        hm.src = 'https://hm.baidu.com/hm.js?0c1235d6c5795e257894fa96152e0154';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    
+
+    
+    <!-- Google Analytics -->
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-99567775-1', 'auto');ga('send', 'pageview');
+    </script>
+    
+
+
+    <!-- Bing Background -->
+    
+
+    <!-- Custom Head -->
+    
+<link rel="stylesheet" href="/css/prism-dark.css" type="text/css"></head>
+
+
+    
+        <body id="scheme-Paradox" class="lazy">
+            <div class="material-layout  mdl-js-layout has-drawer is-upgraded">
+                
+
+                <!-- Main Container -->
+                <main class="material-layout__content" id="main">
+
+                    <!-- Top Anchor -->
+                    <div id="top">
+                        <!---->
+                    </div>
+
+                    
+                        <!-- Hamburger Button -->
+                        <button class="MD-burger-icon sidebar-toggle">
+                            <span class="MD-burger-layer"></span>
+                        </button>
+                    
+
+                    <!-- Post TOC -->
+
+    
+    <!-- Back Button -->
+    <!--
+    <div class="material-back" id="backhome-div" tabindex="0">
+        <a class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
+           href="#" onclick="window.history.back();return false;"
+           target="_self"
+           role="button"
+           data-upgraded=",MaterialButton,MaterialRipple">
+            <i class="material-icons" role="presentation">arrow_back</i>
+            <span class="mdl-button__ripple-container">
+                <span class="mdl-ripple"></span>
+            </span>
+        </a>
+    </div>
+    -->
+
+    <!-- Left aligned menu below button -->
+    <button id="post-toc-trigger-btn"
+        class="mdl-button mdl-js-button mdl-button--icon">
+        <i class="material-icons">format_list_numbered</i>
+    </button>
+
+    <ul class="post-toc-wrap mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="post-toc-trigger-btn" style="max-height:80vh; overflow-y:scroll;">
+        <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Spring-PropertyPlaceholderConfigurer的使用"><span class="post-toc-number">1.</span> <span class="post-toc-text">Spring PropertyPlaceholderConfigurer的使用</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Bean的继承"><span class="post-toc-number">2.</span> <span class="post-toc-text">Bean的继承</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Required注解"><span class="post-toc-number">3.</span> <span class="post-toc-text">@Required注解</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#自定义required注解-个人感觉没什么用…"><span class="post-toc-number">4.</span> <span class="post-toc-text">自定义required注解(个人感觉没什么用…)</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#InitializingBean和DisposableBean接口"><span class="post-toc-number">5.</span> <span class="post-toc-text">InitializingBean和DisposableBean接口</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#init-method和destroy-method"><span class="post-toc-number">6.</span> <span class="post-toc-text">init-method和destroy-method</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Spring中的EL表达式"><span class="post-toc-number">7.</span> <span class="post-toc-text">Spring中的EL表达式</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#ExpressionParser-不知道有什么用…"><span class="post-toc-number">7.1.</span> <span class="post-toc-text">ExpressionParser(不知道有什么用…)</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Spring自动扫描组件"><span class="post-toc-number">8.</span> <span class="post-toc-text">Spring自动扫描组件</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#component-scan过滤器的使用"><span class="post-toc-number">8.1.</span> <span class="post-toc-text">component-scan过滤器的使用</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Spring-AOP"><span class="post-toc-number">9.</span> <span class="post-toc-text">Spring AOP</span></a></li></ol>
+
+        <!--
+        <li class="mdl-menu__item">
+            Some Action
+        </li>
+        -->
+    </ul>
+
+
+
+
+<!-- Layouts -->
+
+    <!-- Post Module -->
+    <div class="material-post_container">
+
+        <div class="material-post mdl-grid">
+            <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
+
+                <!-- Post Header(Thumbnail & Title) -->
+                
+    <!-- Paradox Post Header -->
+    
+        <!-- Custom Thumbnail -->
+        <div class="post_thumbnail-custom mdl-card__media mdl-color-text--grey-50" style="background-image:url(http://oq5d32gij.bkt.clouddn.com/15086029029468.jpg)">
+    
+            <p class="article-headline-p">
+                学习Spring第四天
+            </p>
+        </div>
+
+
+
+
+
+                
+                    <!-- Paradox Post Info -->
+                    <div class="mdl-color-text--grey-700 mdl-card__supporting-text meta">
+
+    <!-- Author Avatar -->
+    <div id="author-avatar">
+        <img src="/img/avatar.png" width="44px" height="44px" alt="Author Avatar"/>
+    </div>
+    <!-- Author Name & Date -->
+    <div>
+        <strong>人不如故</strong>
+        <span>10月 22, 2017</span>
+    </div>
+
+    <div class="section-spacer"></div>
+
+    <!-- Favorite -->
+    <!--
+        <button id="article-functions-like-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon btn-like">
+            <i class="material-icons" role="presentation">favorite</i>
+            <span class="visuallyhidden">favorites</span>
+        </button>
+    -->
+
+    <!-- Qrcode -->
+    
+        <button id="article-functions-qrcode-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+            <i class="material-icons" role="presentation">devices other</i>
+            <span class="visuallyhidden">devices other</span>
+        </button>
+        <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-qrcode-button">
+            <li class="mdl-menu__item">在其它设备中阅读本文章</li>
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPYAAAD2CAAAAADAeSUUAAAC2UlEQVR42u3aW1LDMBAEwNz/0nAACjOzMuBI7a9UHrZa+djaWb0+jrxe2NjY2NjY2NjY2I9kv+Lr6/d/eEx8n+T+17+9fhY2Njb2CewEcP39BNBu6PWz8jVjY2Njn8O+XlB068vfJq+TMjlbMzY2NjZ2vgV547FSCLGxsbGxl25RBkZF9FO+g42NjY09C2jawcBdn/5bloaNjY39eHY76H3C63+Yb2NjY2M/kt1ew+IRb2JbLIuVY2NjY2/KvjfWnw2Dk3smIdf1/bGxsbF3Zf/Gw/LNase9KxuKjY2NvSt7PcRJFnpd3mZjgPyQKDY2NvYJ7Ha5eUyfINvhxKy9wcbGxt6VnZervCFZHwzMtqYe9GJjY2NvxM4DpqRtSMpP3pysN0XY2NjYe7OTx98bHs2i/xv+GGxsbOxN2cnodOWgTBsGtc1MEV1hY2NjH8C+i9eGSu0AuC2Q2NjY2Oew8wOOs++30VK+6djY2NjYeUlYOaCzPtCdBWHY2NjYe7NXxrdJKcrLXtt+tKMFbGxs7L3Zs5imbRXawcCsLfn2idjY2NibstsmIV9KPpqdxVX5p9jY2NgnsPMyszIMyAvkbPCAjY2NfSY7f3xUJOLwKH9nNhIoxgPY2NjYG7HbMUDeZiRNSzSsXfiTsLGxsXdl5yVh1rrcdYxy5e/BxsbGPoE9KyTt9uVHNtebmaWpCDY2NvZbsdtAvw10khLYxlX5dmNjY2OfwJ7B8si+xdzQcuR1GxsbG3s7dl4eVoKhNsZqj2wOszRsbGzst2W30U8e+kRBT9lg5CMHbGxs7NPYs6KVl5Y24s9HzsNWBBsbG3tTdl5+8tgoHzwkQ9+2ycHGxsbGbge3eWnJC1iytmgsjY2NjY190zB4JbrK2b9ewLCxsbEfyc5L0Uobk0dO+XcSPDY2Nvbe7HbQm49a14/v/ID5y/k2NjY29iPZ51zY2NjY2NjY2NjYj7k+AdqnIIL5b9aJAAAAAElFTkSuQmCC">
+        </ul>
+    
+
+    <!-- Tags (bookmark) -->
+    
+    <button id="article-functions-viewtags-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+        <i class="material-icons" role="presentation">bookmark</i>
+        <span class="visuallyhidden">bookmark</span>
+    </button>
+    <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-viewtags-button">
+        <li class="mdl-menu__item">
+        <a class="post_tag-link" href="/tags/AspectJ/">AspectJ</a></li><li class="mdl-menu__item"><a class="post_tag-link" href="/tags/PropertyPlaceholderConfigurer/">PropertyPlaceholderConfigurer</a></li><li class="mdl-menu__item"><a class="post_tag-link" href="/tags/Spring/">Spring</a></li><li class="mdl-menu__item"><a class="post_tag-link" href="/tags/Spring-AOP/">Spring AOP</a></li><li class="mdl-menu__item"><a class="post_tag-link" href="/tags/dependency/">dependency</a></li><li class="mdl-menu__item"><a class="post_tag-link" href="/tags/inheritance/">inheritance</a>
+    </ul>
+    
+
+    <!-- Share -->
+    <button id="article-fuctions-share-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+    <i class="material-icons" role="presentation">share</i>
+    <span class="visuallyhidden">share</span>
+</button>
+<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-fuctions-share-button">
+    
+
+    
+        
+            <!-- Busuanzi Views -->
+            <a class="post_share-link" href="#">
+                <li class="mdl-menu__item">
+                    <span id="busuanzi_container_page_pv">
+                        <span id="busuanzi_value_page_pv"></span>&nbsp;浏览量
+                    </span>
+                </li>
+            </a>
+        
+    
+
+    <!-- Share Weibo -->
+    
+        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=学习Spring第四天&url=https://wangyu1997.github.io//2017/10/22/Spring/AspectJ/index.html&pic=&searchPic=false&style=simple" target="_blank">
+            <li class="mdl-menu__item">
+                分享到微博
+            </li>
+        </a>
+    
+
+    <!-- Share Twitter -->
+    
+        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=学习Spring第四天&url=https://wangyu1997.github.io//2017/10/22/Spring/AspectJ/index.html&via=人不如故" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Twitter
+            </li>
+        </a>
+    
+
+    <!-- Share Facebook -->
+    
+        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=https://wangyu1997.github.io//2017/10/22/Spring/AspectJ/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Facebook
+            </li>
+        </a>
+    
+
+    <!-- Share Google+ -->
+    
+        <a class="post_share-link" href="https://plus.google.com/share?url=https://wangyu1997.github.io//2017/10/22/Spring/AspectJ/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Google+
+            </li>
+        </a>
+    
+
+    <!-- Share LinkedIn -->
+    
+
+    <!-- Share QQ -->
+    
+        <a class="post_share-link" href="http://connect.qq.com/widget/shareqq/index.html?site=人不如故&title=学习Spring第四天&summary=世间一场大梦，人生几度秋凉。&pics=https://wangyu1997.github.io/img/favicon.png&url=https://wangyu1997.github.io/2017/10/22/Spring/AspectJ/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 QQ
+            </li>
+        </a>
+    
+
+    <!-- Share Telegram -->
+    
+</ul>
+
+</div>
+
+                
+
+                <!-- Post Content -->
+                <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
+   
+    
+            <link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a>  
+<h2 id="Spring-PropertyPlaceholderConfigurer的使用"><a href="#Spring-PropertyPlaceholderConfigurer的使用" class="headerlink" title="Spring PropertyPlaceholderConfigurer的使用"></a>Spring PropertyPlaceholderConfigurer的使用</h2><blockquote>
+<p>对于一些隐秘的或者是全局变量的操作我们希望可以统一的管理他，我们可以把这些配置写在properties或者yaml文件里，然后在xml配置文件里获取相应的值，PropertyPlaceholderConfigurer就可以帮助我们实现这个功能 </p>
+</blockquote>
+<p>我们还是从简单的jdbc开始，项目结构如下： </p>
+<p><img src="http://oq5d32gij.bkt.clouddn.com/15086031216749.jpg" alt=""></p>
+<blockquote>
+<p>gradle依赖 </p>
+</blockquote>
+<pre><code>testCompile group: &#39;junit&#39;, name: &#39;junit&#39;, version: &#39;4.12&#39;
+
+compile group: &#39;org.springframework&#39;, name: &#39;spring-context&#39;, version: &#39;5.0.0.RELEASE&#39;
+
+compile group: &#39;mysql&#39;, name: &#39;mysql-connector-java&#39;, version: &#39;8.0.8-dmr&#39;
+
+compile group: &#39;org.springframework&#39;, name: &#39;spring-jdbc&#39;, version: &#39;5.0.0.RELEASE&#39;
+
+compile group: &#39;org.springframework&#39;, name: &#39;spring-core&#39;, version: &#39;5.0.0.RELEASE&#39;
+</code></pre><p>数据表如下: </p>
+<p><img src="http://oq5d32gij.bkt.clouddn.com/15086032783308.jpg" alt=""></p>
+<blockquote>
+<p>首先我们新建一个Entity </p>
+</blockquote>
+<pre><code>Customer.java
+
+package com.demo.Model;
+
+public class Customer {
+    private int custId;
+    private String name;
+    private int age;
+
+    public void setCustId(int custId) {
+        this.custId = custId;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public int getCustId() {
+        return custId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    @Override
+    public String toString() {
+        return &quot;Cust_Id: &quot; + custId + &quot;\nName: &quot; + name + &quot;\nAge: &quot; + age;
+    }
+}
+</code></pre><blockquote>
+<p>Dao层接口实现 </p>
+</blockquote>
+<pre><code>CustomerDao.java
+
+package com.demo.Dao;
+
+import com.demo.Model.Customer;
+
+public interface CustomerDao {
+    void insert(Customer customer);
+
+    Customer findById(int custId);
+}
+</code></pre><blockquote>
+<p>Impl实现接口方法 </p>
+</blockquote>
+<pre><code>CustomerDaoImpl.java
+
+package com.demo.Impl;
+
+import com.demo.Dao.CustomerDao;
+import com.demo.Model.Customer;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.support.JdbcDaoSupport;
+
+import java.util.List;
+
+public class CustomerDaoImpl extends JdbcDaoSupport implements CustomerDao {
+    @Override
+    public void insert(Customer customer) {
+
+        String sql = &quot;INSERT INTO customer VALUES (? ,? ,?)&quot;;
+        getJdbcTemplate().update(sql, customer.getCustId(), customer.getName(), customer.getAge());
+    }
+
+    @Override
+    public Customer findById(int custId) {
+        String sql = &quot;SELECT * FROM customer WHERE CUST_ID = ?&quot;;
+
+        List&lt;Customer&gt; customers = getJdbcTemplate().query(sql, new Object[]{custId}, new BeanPropertyRowMapper&lt;&gt;(Customer.class));
+
+        return customers.get(0);
+    }
+}
+</code></pre><p>上面都是很基本的Jdbc操作，通过增删改查来测试代码 </p>
+<blockquote>
+<p>不同于之前，我们把数据库的变量写在properties里 </p>
+</blockquote>
+<pre><code>data-config.properties
+
+jdbc.driverClassName=com.mysql.cj.jdbc.Driver
+jdbc.url=jdbc:mysql://localhost:3306/Spring
+jdbc.username=root
+jdbc.password=19970819wy
+</code></pre><blockquote>
+<p>Spring-Beans中配置dataSource和beans </p>
+</blockquote>
+<pre><code>&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+        xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+        xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd&quot;&gt;
+
+    &lt;bean class=&quot;org.springframework.beans.factory.config.PropertyPlaceholderConfigurer&quot;&gt;
+        &lt;property name=&quot;location&quot; value=&quot;database-config.properties&quot;/&gt;
+    &lt;/bean&gt;
+
+    &lt;bean id=&quot;dataSource&quot; class=&quot;org.springframework.jdbc.datasource.DriverManagerDataSource&quot;&gt;
+        &lt;property name=&quot;driverClassName&quot; value=&quot;${jdbc.driverClassName}&quot;/&gt;
+        &lt;property name=&quot;url&quot; value=&quot;${jdbc.url}&quot;/&gt;
+        &lt;property name=&quot;username&quot; value=&quot;${jdbc.username}&quot;/&gt;
+        &lt;property name=&quot;password&quot; value=&quot;${jdbc.password}&quot;/&gt;
+    &lt;/bean&gt;
+
+    &lt;bean id=&quot;customer&quot; class=&quot;com.demo.Impl.CustomerDaoImpl&quot;&gt;
+        &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot;/&gt;
+    &lt;/bean&gt;
+&lt;/beans&gt;
+</code></pre><p>这里我们首先通过PropertyPlaceholderConfigurer来导入properties里的变量(location属性定位properties文件)<br>然后我们就可以在dataSource里通过${}来获取对应的值 </p>
+<blockquote>
+<p>测试类 </p>
+</blockquote>
+<pre><code>App.java
+
+package com.demo;
+
+import com.demo.Impl.CustomerDaoImpl;
+import com.demo.Model.Customer;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class App {
+    public static void main(String[] args) {
+        ApplicationContext context = new ClassPathXmlApplicationContext(&quot;Spring-Beans.xml&quot;);
+
+        Customer customer = new Customer();
+        customer.setCustId(1);
+        customer.setName(&quot;RenBuRuGu&quot;);
+        customer.setAge(20);
+
+        CustomerDaoImpl impl = context.getBean(CustomerDaoImpl.class);
+
+        impl.insert(customer);
+
+        System.out.println(impl.findById(1));
+    }
+}
+</code></pre><h2 id="Bean的继承"><a href="#Bean的继承" class="headerlink" title="Bean的继承"></a>Bean的继承</h2><p>继承的方式有两种 直接继承和抽象继承<br>子类可以继承父类的一系列属性 </p>
+<blockquote>
+<p>直接继承 </p>
+</blockquote>
+<p>我个人认为有两种 一种是class由父类指定，子类不指定class，那么父类和子类都会共享同一个实体类，子类可以省略父类既定的字段或者重写。第二种是父类子类都指定class，这里的class不一定要存在继承关系，只要相应的class有共享的字段即可(我感觉这样不是很好) </p>
+<blockquote>
+<p>创建一个entity </p>
+</blockquote>
+<pre><code>package com.demo.Model;
+
+public class Customer {
+    private int type;
+    private String action;
+    private String country;
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    @Override
+    public String toString() {
+        return &quot;type: &quot; + type + &quot;\naction: &quot; + action + &quot;\ncountry: &quot; + country;
+        }
+    }
+</code></pre><blockquote>
+<p>xml配置文件 </p>
+</blockquote>
+<pre><code>&lt;bean id=&quot;baseBean&quot; class=&quot;com.demo.Model.Customer&quot;&gt;
+    &lt;property name=&quot;country&quot; value=&quot;China&quot;/&gt;
+&lt;/bean&gt;
+
+&lt;bean id=&quot;customerBean&quot; parent=&quot;baseBean&quot;&gt;
+    &lt;property name=&quot;action&quot; value=&quot;buy&quot;/&gt;
+    &lt;property name=&quot;type&quot; value=&quot;1&quot;/&gt;
+&lt;/bean&gt;
+</code></pre><blockquote>
+<p>这样子类的country字段就变成China了 运行结果如下: </p>
+</blockquote>
+<p><img src="http://oq5d32gij.bkt.clouddn.com/15086384239944.jpg" alt=""></p>
+<blockquote>
+<p>抽象继承 </p>
+</blockquote>
+<p>抽象继承也分为两种，一般抽象继承和纯抽象继承 </p>
+<p>抽象继承的目的是为了父类只提供属性模板而不可被实例化，直接抽象继承很简单，只需要在父类后面加一个<code>abstract=&quot;true&quot;</code>即可 </p>
+<pre><code>&lt;bean id=&quot;baseBean&quot; class=&quot;com.demo.Model.Customer&quot; abstract=&quot;true&quot;&gt;
+    &lt;property name=&quot;country&quot; value=&quot;China&quot;/&gt;
+&lt;/bean&gt;
+
+&lt;bean id=&quot;customerBean&quot; parent=&quot;baseBean&quot;&gt;
+    &lt;property name=&quot;action&quot; value=&quot;buy&quot;/&gt;
+    &lt;property name=&quot;type&quot; value=&quot;1&quot;/&gt;
+&lt;/bean&gt;
+</code></pre><p>纯抽象继承允许父类不设置class，只是为了共享字段使用 </p>
+<pre><code>&lt;bean id=&quot;baseBean&quot; abstract=&quot;true&quot;&gt;
+    &lt;property name=&quot;country&quot; value=&quot;China&quot;/&gt;
+&lt;/bean&gt;
+
+&lt;bean id=&quot;customerBean&quot; parent=&quot;baseBean&quot; class=&quot;com.demo.Model.Customer&quot;&gt;
+    &lt;property name=&quot;action&quot; value=&quot;buy&quot;/&gt;
+    &lt;property name=&quot;type&quot; value=&quot;1&quot;/&gt;
+&lt;/bean&gt;
+</code></pre><ul>
+<li>父类的属性值在子类中可以被覆盖</li>
+</ul>
+<p>##依赖检查(感觉4.x这个功能不被支持，更多的使用注解完成(如@Required字段)) </p>
+<blockquote>
+<p>当我们在xml配置文件中没有对属性值进行赋值时，一般不会报错，如果我们需要它报错，就要用到依赖检查这个功能(<code>dependency-check</code>)<br>依赖检查分为四种 none(默认) simple objects all </p>
+</blockquote>
+<p>默认方式为none，即他不会检查是否赋值 </p>
+<p>simple方式只检查基本数据类型(int, long,double…)和集合类型(map, list..)，如果以上任何属性都没有设置，UnsatisfiedDependencyException将被抛出 </p>
+<p>objects方式检查对象类型的数据 </p>
+<p>all检查任何类型的数据 </p>
+<blockquote>
+<p>举一个objects的例子 </p>
+</blockquote>
+<pre><code>&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+    xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-2.5.xsd&quot;&gt;
+
+    &lt;bean id=&quot;CustomerBean&quot; class=&quot;com.demo.Model.Customer&quot; 
+            dependency-check=&quot;objects&quot;&gt;
+        &lt;property name=&quot;action&quot; value=&quot;buy&quot; /&gt;
+        &lt;property name=&quot;type&quot; value=&quot;1&quot; /&gt;
+    &lt;/bean&gt;
+
+    &lt;bean id=&quot;PersonBean&quot; class=&quot;com.demo.Model.Person&quot;&gt;
+        &lt;property name=&quot;name&quot; value=&quot;RenBuRuGu&quot; /&gt;
+        &lt;property name=&quot;address&quot; value=&quot;address ABC&quot; /&gt;
+        &lt;property name=&quot;age&quot; value=&quot;20&quot; /&gt;
+    &lt;/bean&gt;
+
+&lt;/beans&gt;
+</code></pre><p>这里我们漏掉了person的注入，由于使用objects的依赖检查方式，将会收到UnsatisfiedDependencyException报错 </p>
+<h2 id="Required注解"><a href="#Required注解" class="headerlink" title="@Required注解"></a>@Required注解</h2><blockquote>
+<p>对于必须的字段我们可以采用@Required注解的方式 </p>
+</blockquote>
+<pre><code>public class Customer 
+{
+    private Person person;
+    private int type;
+    private String action;
+
+    public Person getPerson() {
+        return person;
+    }
+
+    @Required
+    public void setPerson(Person person) {
+        this.person = person;
+    }
+}
+</code></pre><p>还要在xml配置文件中打开annotation注解，像以前一样，有两种方式 </p>
+<p><code>&lt;context:annotation-config/&gt;</code>和<code>&lt;bean class=&quot;org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor&quot;/&gt;</code></p>
+<h2 id="自定义required注解-个人感觉没什么用…"><a href="#自定义required注解-个人感觉没什么用…" class="headerlink" title="自定义required注解(个人感觉没什么用…)"></a>自定义required注解(个人感觉没什么用…)</h2><blockquote>
+<p>首先自定义一个注解 </p>
+</blockquote>
+<pre><code>import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface Mandatory {
+}
+</code></pre><blockquote>
+<p>现在我们可以在业务逻辑中使用它 </p>
+</blockquote>
+<pre><code>public class Customer 
+{
+    private Person person;
+    private int type;
+    private String action;
+
+    @Mandatory
+    public void setPerson(Person person) {
+        this.person = person;
+    }
+
+}
+</code></pre><blockquote>
+<p>最后需要在xml中去注册它 </p>
+</blockquote>
+<pre><code>&lt;bean class=&quot;org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor&quot;&gt;
+    &lt;property name=&quot;requiredAnnotationType&quot; value=&quot;com.demo.Annotation.Mandatory&quot;/&gt;
+&lt;/bean&gt;
+
+&lt;bean id=&quot;CustomerBean&quot; class=&quot;com.demo.Model.Customer&quot;&gt;
+    &lt;property name=&quot;action&quot; value=&quot;buy&quot; /&gt;
+    &lt;property name=&quot;type&quot; value=&quot;1&quot; /&gt;
+&lt;/bean&gt;
+</code></pre><h2 id="InitializingBean和DisposableBean接口"><a href="#InitializingBean和DisposableBean接口" class="headerlink" title="InitializingBean和DisposableBean接口"></a>InitializingBean和DisposableBean接口</h2><p>这两个接口在我理解中是两个钩子，分别用在bean初始化完成和即将被销毁时调用<br>InitializingBean中的afterPropertiesSet()用于执行初始化方法<br>DisposableBean中的destroy()用于执行bean被容器销毁之前的操作 </p>
+<pre><code>Person.java
+
+package com.demo.Model;
+
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
+
+public class Person implements InitializingBean,DisposableBean {
+    private int age;
+    private String name;
+    private String address;
+
+    @Override
+    public void destroy() throws Exception {
+        System.out.println(&quot;Destroy&quot;);
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        System.out.println(&quot;Init&quot;);
+    }
+}
+
+App.java
+
+public class App {
+    public static void main(String[] args) {
+        ConfigurableApplicationContext context = new ClassPathXmlApplicationContext(&quot;Spring-Beans.xml&quot;);
+
+        Person person = context.getBean(Person.class);
+
+        context.close();
+    }
+}
+</code></pre><p>运行结果如下: </p>
+<p><img src="http://oq5d32gij.bkt.clouddn.com/15086423947200.jpg" alt=""></p>
+<p>官方不推荐这么做，我也不推荐，因为如果钩子方法都写在业务代码中，就违反了Spring的低耦合机制，业务代码和Spring容器的耦合度大大加强。 </p>
+<h2 id="init-method和destroy-method"><a href="#init-method和destroy-method" class="headerlink" title="init-method和destroy-method"></a>init-method和destroy-method</h2><blockquote>
+<p>不继承接口，我们单纯的写两个方法，然后在xml配置文件中将他们指定为初始化和销毁之前执行的方法 </p>
+</blockquote>
+<pre><code>package com.demo.Model;
+
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
+
+public class Person{
+    private int age;
+    private String name;
+    private String address;
+
+    public void destroy() throws Exception {
+        System.out.println(&quot;Destroy&quot;);
+    }
+
+    public void init() throws Exception {
+        System.out.println(&quot;Init&quot;);
+    }
+}
+</code></pre><blockquote>
+<p>我们在xml中手动管理 </p>
+</blockquote>
+<pre><code>&lt;bean id=&quot;person&quot; class=&quot;com.demo.Model.Person&quot;
+        init-method=&quot;init&quot;
+        destroy-method=&quot;destroy&quot;
+        p:name=&quot;RenBuRuGu&quot;
+        p:age=&quot;20&quot;
+        p:address=&quot;JiangSu NanJing&quot;/&gt;
+</code></pre><ul>
+<li><p>@PostConstruct 和 @PreDestroy可以帮我们达到同样的目的 当然前提是需要在xml中开启注解</p>
+<p>package com.demo.Model;</p>
+<p>import org.springframework.beans.factory.DisposableBean;<br>import org.springframework.beans.factory.InitializingBean;</p>
+<p>import javax.annotation.PostConstruct;<br>import javax.annotation.PreDestroy;</p>
+<p>public class Person{</p>
+<pre><code>private int age;
+private String name;
+private String address;
+
+@PreDestroy
+public void destroy() throws Exception {
+    System.out.println(&quot;Destroy&quot;);
+}
+
+@PostConstruct
+public void init() throws Exception {
+    System.out.println(&quot;Init&quot;);
+}
+</code></pre><p>}</p>
+</li>
+</ul>
+<p>xml中不需要写init和destroy方法 </p>
+<h2 id="Spring中的EL表达式"><a href="#Spring中的EL表达式" class="headerlink" title="Spring中的EL表达式"></a>Spring中的EL表达式</h2><p>el表达式可以简化代码量，我觉得还是很有必要了解的 </p>
+<p>1、在使用PropertyPlaceholderConfigurer从properties文件引入配置信息时，使用<code>${SpEL expression}</code>来引用<br>2、引用同一xml中的其他bean的属性,使用<code>#{SpEL expression}</code></p>
+<pre><code>&lt;bean id=&quot;itemBean&quot; class=&quot;com.demo.Model.Item&quot;&gt;
+    &lt;property name=&quot;name&quot; value=&quot;RenBuRuGu&quot;/&gt;
+    &lt;property name=&quot;qty&quot; value=&quot;10&quot;/&gt;
+&lt;/bean&gt;
+
+&lt;bean id=&quot;customer&quot; class=&quot;com.demo.Model.Customer&quot;&gt;
+    &lt;property name=&quot;item&quot; value=&quot;#{itemBean}&quot;/&gt;
+    &lt;property name=&quot;itemName&quot; value=&quot;#{itemBean.name}&quot;/&gt;
+&lt;/bean&gt;
+</code></pre><p>Spring EL也可以使用纯注解的方式完成，但是有几个前提<br>1、每一个bean使用Component注解(个人理解相当于xml中配置bean)<br>2、相应的字段增加@Value注解，Spring EL表达式写在注解中<br>3、xml配置文件中开启自动扫描Components </p>
+<blockquote>
+<p>item.java </p>
+</blockquote>
+<pre><code>package com.demo.Model;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+@Component(&quot;itemBean&quot;)
+public class Item {
+    @Value(&quot;RenBuRuGu&quot;)
+    private String name;
+
+    @Value(&quot;10&quot;)
+    private int qty;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getQty() {
+        return qty;
+    }
+
+    public void setQty(int qty) {
+        this.qty = qty;
+    }
+
+    @Override
+    public String toString() {
+        return name + &quot;  &quot; + qty;
+    }
+}
+</code></pre><blockquote>
+<p>Customer.java </p>
+</blockquote>
+<pre><code>package com.demo.Model;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+@Component(&quot;customerBean&quot;)
+public class Customer {
+
+    @Value(&quot;#{itemBean}&quot;)
+    private Item item;
+
+    @Value(&quot;#{itemBean.name}&quot;)
+    private String itemName;
+
+    public Item getItem() {
+        return item;
+    }
+
+    public void setItem(Item item) {
+        this.item = item;
+    }
+
+    public String getItemName() {
+        return itemName;
+    }
+
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
+    }
+
+    @Override
+    public String toString() {
+        return item + &quot;  &quot; + itemName;
+    }
+}
+</code></pre><blockquote>
+<p>Spring-Beans.xml </p>
+</blockquote>
+<pre><code>&lt;context:component-scan base-package=&quot;com.demo.Model&quot;/&gt;
+</code></pre><ul>
+<li>EL表达式可以直接引用Entity实例、属性和方法，也可以执行java内置的方法，运算符和三元表达式</li>
+<li><p>EL表达式中的正则匹配 可以简单的使用<code>matches</code>关键字</p>
+<p>@Component(“customerBean”)<br>public class Customer {</p>
+</li>
+</ul>
+<pre><code>    String emailRegEx = &quot;^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)&quot; +
+                &quot;*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$&quot;;
+
+
+    @Value(&quot;#{&#39;100&#39; matches &#39;\\d+&#39; }&quot;)
+    private boolean validDigit;
+
+
+    @Value(&quot;#{ (&#39;100&#39; matches &#39;\\d+&#39;) == true ? &quot; +
+                &quot;&#39;yes this is digit&#39; : &#39;No this is not a digit&#39;  }&quot;)
+    private String msg;
+
+
+    @Value(&quot;#{emailBean.emailAddress matches customerBean.emailRegEx}&quot;)
+    private boolean validEmail;
+
+
+}
+</code></pre><h3 id="ExpressionParser-不知道有什么用…"><a href="#ExpressionParser-不知道有什么用…" class="headerlink" title="ExpressionParser(不知道有什么用…)"></a>ExpressionParser(不知道有什么用…)</h3><p>看意思好像大概也许是提取字符并转化成相应的数据类型 </p>
+<pre><code>ExpressionParser parser = new SpelExpressionParser();
+Expression exp = parser.parseExpression(&quot;&#39;put spel expression here&#39;&quot;);
+String msg = exp.getValue(String.class);
+</code></pre><p>下面给个例子自己感受一下 </p>
+<pre><code>import org.springframework.expression.Expression;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
+
+public class App {
+    public static void main(String[] args) {
+
+        ExpressionParser parser = new SpelExpressionParser();
+
+        Expression exp = parser.parseExpression(&quot;&#39;Hello World&#39;&quot;);
+        String msg1 = exp.getValue(String.class);
+        System.out.println(msg1);
+
+        Expression exp2 = parser.parseExpression(&quot;&#39;Hello World&#39;.length()&quot;);  
+        int msg2 = (Integer) exp2.getValue();
+        System.out.println(msg2);
+
+        Expression exp3 = parser.parseExpression(&quot;100 * 2&quot;);  
+        int msg3 = (Integer) exp3.getValue();
+        System.out.println(msg3);
+
+        Item item = new Item(&quot;RenBuRuGu&quot;, 100);
+
+        StandardEvaluationContext itemContext = new StandardEvaluationContext(item);
+
+
+        Expression exp4 = parser.parseExpression(&quot;name&quot;);
+        String msg4 = exp4.getValue(itemContext, String.class);
+        System.out.println(msg4);
+
+        Expression exp5 = parser.parseExpression(&quot;name == &#39;RenBuRuGu&#39;&quot;);
+        boolean msg5 = exp5.getValue(itemContext, Boolean.class);
+        System.out.println(msg5);
+
+    }
+}
+</code></pre><h2 id="Spring自动扫描组件"><a href="#Spring自动扫描组件" class="headerlink" title="Spring自动扫描组件"></a>Spring自动扫描组件</h2><p>Spring的业务逻辑分为好多层(DAO,Service,Controller,Views)，主要目的还是为了解耦 </p>
+<blockquote>
+<p>一般我们都会通过xml的方式来注册组件<br>Dao层<br>首先创建一个CustomerDao </p>
+</blockquote>
+<pre><code>package com.demo.Dao;
+
+public class CustomerDao {
+    @Override
+    public String toString() {
+        return &quot;Hello, This is CustomerDao&quot;;
+    }
+}
+</code></pre><blockquote>
+<p>Service层实现业务逻辑 </p>
+</blockquote>
+<pre><code>package com.demo.Service;
+
+import com.demo.Dao.CustomerDao;
+
+public class CustomerService {
+    CustomerDao customerDao;
+
+    public void setCustomerDao(CustomerDao customerDao) {
+        this.customerDao = customerDao;
+    }
+
+    @Override
+    public String toString() {
+        return &quot;CustomerService [ customerDao = &quot; +  customerDao + &quot; ]&quot;;
+    }
+}
+</code></pre><blockquote>
+<p>xml注册bean </p>
+</blockquote>
+<pre><code>&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+        xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+        xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd&quot;&gt;
+    &lt;bean id=&quot;customerDao&quot; class=&quot;com.demo.Dao.CustomerDao&quot;/&gt;
+
+    &lt;bean id=&quot;customerService&quot; class=&quot;com.demo.Service.CustomerService&quot;&gt;
+        &lt;property name=&quot;customerDao&quot; ref=&quot;customerDao&quot;/&gt;
+    &lt;/bean&gt;
+&lt;/beans&gt;
+</code></pre><blockquote>
+<p>测试函数 </p>
+</blockquote>
+<pre><code>package com.demo;
+
+import com.demo.Service.CustomerService;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class App {
+    public static void main(String[] args) {
+        ApplicationContext context = new ClassPathXmlApplicationContext(&quot;Spring-Beans.xml&quot;);
+
+        CustomerService service = context.getBean(CustomerService.class);
+
+        System.out.println(service);
+    }
+}
+</code></pre><p>运行结果如下: </p>
+<p><img src="http://oq5d32gij.bkt.clouddn.com/15086548386608.jpg" alt=""></p>
+<p>这是一般做法 </p>
+<blockquote>
+<p>我们还可以通过自动扫描组件来完成相同的工作 </p>
+</blockquote>
+<p>像之前所说，给所有的实体类加上@Components注解，通过注解的方式注册实体类 </p>
+<pre><code>CustomerDao.java
+
+package com.demo.Dao;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class CustomerDao {
+    @Override
+    public String toString() {
+        return &quot;Hello, This is CustomerDao&quot;;
+    }
+}
+
+CustomerService.java
+
+package com.demo.Service;
+
+import com.demo.Dao.CustomerDao;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
+public class CustomerService {
+    private CustomerDao customerDao;
+
+    @Autowired
+    public void setCustomerDao(CustomerDao customerDao) {
+        this.customerDao = customerDao;
+    }
+
+    @Override
+    public String toString() {
+        return &quot;CustomerService [ customerDao = &quot; +  customerDao + &quot; ]&quot;;
+    }
+}
+</code></pre><blockquote>
+<p>然后在xml中开启自动扫描beans </p>
+</blockquote>
+<pre><code>&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+        xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+        xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+        xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd&quot;&gt;
+    &lt;context:component-scan base-package=&quot;com.demo&quot;/&gt;
+&lt;/beans&gt;
+</code></pre><p>运行结果相同 </p>
+<p>为了区分开功能不同的各个模块，Spring官方给出了四种注解 </p>
+<pre><code>@Component – 指示自动扫描组件。
+@Repository – 表示在持久层DAO组件。
+@Service – 表示在业务层服务组件。
+@Controller – 表示在表示层控制器组件。
+</code></pre><p>所有的注解最后都会被编译为Components，但是这样就可以很好的区分业务层和持久层的组件 </p>
+<blockquote>
+<p>附上代码 </p>
+</blockquote>
+<pre><code>CustomerDao.java
+
+package com.demo.Dao;
+
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class CustomerDao {
+    @Override
+    public String toString() {
+        return &quot;Hello, This is CustomerDao&quot;;
+    }
+}
+
+CustomerService.java
+
+package com.demo.Service;
+
+import com.demo.Dao.CustomerDao;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class CustomerService {
+    private CustomerDao customerDao;
+
+    @Autowired
+    public void setCustomerDao(CustomerDao customerDao) {
+        this.customerDao = customerDao;
+    }
+
+    @Override
+    public String toString() {
+        return &quot;CustomerService [ customerDao = &quot; +  customerDao + &quot; ]&quot;;
+    }
+}
+</code></pre><h3 id="component-scan过滤器的使用"><a href="#component-scan过滤器的使用" class="headerlink" title="component-scan过滤器的使用"></a>component-scan过滤器的使用</h3><p>过滤器有两种(include-filter和exclude-filter)，顾名思义，一个是包含的过滤器另一个则是排除的过滤器.<br>filter可以通过很多种方式进行过滤,有以下几种类型: </p>
+<pre><code>annotation  注解方式
+regix       正则表达式
+custom      自定义方式
+assignable  未知.....
+aspectj     切片方式(面向切片编程)
+</code></pre><blockquote>
+<p>通过正则过滤 </p>
+</blockquote>
+<pre><code>&lt;context:component-scan base-package=&quot;com.yiibai&quot; &gt;
+
+    &lt;context:include-filter type=&quot;regex&quot; 
+                    expression=&quot;com.demo.Dao.*DAO.*&quot; /&gt;
+
+    &lt;context:include-filter type=&quot;regex&quot; 
+                    expression=&quot;com.demo.Services.*Service.*&quot; /&gt;
+
+&lt;/context:component-scan&gt;
+</code></pre><p>通过include的方式，Spring只会扫描在com.demo.Dao和com.demo.Service包下面名为_Dao._和_Service._的文件 </p>
+<blockquote>
+<p>通过annotation注解的方式 </p>
+</blockquote>
+<pre><code>&lt;context:component-scan base-package=&quot;com.demo&quot;&gt;
+    &lt;context:exclude-filter type=&quot;annotation&quot; expression=&quot;org.springframework.stereotype.Service&quot;/&gt;
+&lt;/context:component-scan&gt;
+</code></pre><p>通过exclude-filter方式，所有@Service注解的entity将会被Spring忽略 </p>
+<h2 id="Spring-AOP"><a href="#Spring-AOP" class="headerlink" title="Spring AOP"></a>Spring AOP</h2><ul>
+<li>面向接口编程</li>
+</ul>
+<p>我们首先来创建一个简单的小例子 </p>
+<blockquote>
+<p>创建Service层 </p>
+</blockquote>
+<pre><code>CustomerService.java
+
+package com.demo.Service;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+@Service
+public class CustomerService {
+
+    @Value(&quot;RenBuRuGu&quot;)
+    private String name;
+
+    @Value(&quot;https://wangyu1997.github.io/&quot;)
+    private String url;
+
+    public void printName() {
+        System.out.println(&quot;Customer name: &quot; + this.name);
+    }
+
+    public void printUrl() {
+        System.out.println(&quot;Customer url: &quot; + this.url);
+    }
+
+    public void printThrowException() {
+        throw new IllegalArgumentException();
+    }
+}
+</code></pre><blockquote>
+<p>创建入口测试函数 </p>
+</blockquote>
+<pre><code>package com.demo;
+
+import com.demo.Service.CustomerService;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+@ComponentScan({&quot;com.demo.Service&quot;})
+public class App {
+    public static void main(String[] args) {
+        ApplicationContext context = new AnnotationConfigApplicationContext(App.class);
+
+        CustomerService customerService = context.getBean(CustomerService.class);
+
+        customerService.printName();
+        customerService.printUrl();
+        customerService.printThrowException();
+    }
+}
+</code></pre><p>运行结果如下: </p>
+<p><img src="http://oq5d32gij.bkt.clouddn.com/15086575392576.jpg" alt=""></p>
+<blockquote>
+<p>通过注解的方式加入AOP </p>
+</blockquote>
+<p>1、之前通知 </p>
+<p>首先实现MethodBeforeAdvice方法 </p>
+<pre><code>@Component(&quot;heiBeforeMethod&quot;)
+public class HiBeforeMethod implements MethodBeforeAdvice {
+    @Override
+    public void before(Method method, Object[] args, @Nullable Object target) throws Throwable {
+        System.out.println(&quot;Method Before:  Hey Spring AOP !&quot;);
+    }
+}
+</code></pre><p>在配置文件中注册一个代理bean </p>
+<pre><code>@Configuration
+public class CustomerServiceProxy {
+
+    @Bean(&quot;customerServiceProxy&quot;)
+    public ProxyFactoryBean proxyFactoryBean() {
+        ProxyFactoryBean bean = new ProxyFactoryBean();
+        bean.setTargetName(&quot;customerService&quot;);
+        bean.setInterceptorNames(&quot;heiBeforeMethod&quot;);
+
+        return bean;
+    }
+
+}
+</code></pre><p>测试类中调用 </p>
+<pre><code>@Configuration
+@ComponentScan({&quot;com.demo.Service&quot;,&quot;com.demo.Impl&quot;})
+@Import({CustomerServiceProxy.class})
+public class App {
+    public static void main(String[] args) {
+        ApplicationContext context = new AnnotationConfigApplicationContext(App.class);
+        CustomerService customerService = (CustomerService) context.getBean(&quot;customerServiceProxy&quot;);
+
+        customerService.printName();
+        customerService.printUrl();
+        try {
+            customerService.printThrowException();
+        }catch (IllegalArgumentException e){
+            System.out.println(&quot;Throw exception...&quot;);
+        }
+    }
+}
+</code></pre><p>注意这里的引用不再是<code>customerService</code>而是<code>customerServiceProxy</code></p>
+<p>运行结果如下: </p>
+<p><img src="http://oq5d32gij.bkt.clouddn.com/15086609643673.jpg" alt=""></p>
+<p>2、返回后通知 </p>
+<p>通过重写AfterReturningAdvice的afterReturning方法来实现功能 </p>
+<blockquote>
+<p>接着上面再加一个类 </p>
+</blockquote>
+<pre><code>package com.demo.Impl;
+
+import org.springframework.aop.AfterReturningAdvice;
+import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Component;
+
+import java.lang.reflect.Method;
+
+@Component(&quot;afterReturn&quot;)
+public class AfterReturn implements AfterReturningAdvice {
+    @Override
+    public void afterReturning(@Nullable Object returnValue, Method method, Object[] args, @Nullable Object target) throws Throwable {
+        System.out.println(&quot;Spring after returning: Spring AOP!&quot;);
+    }
+}
+</code></pre><blockquote>
+<p>CustomerServiceProxy中InterceptorNames加入该类 </p>
+</blockquote>
+<p><code>bean.setInterceptorNames(&quot;afterReturn&quot;,&quot;heiBeforeMethod&quot;);</code></p>
+<p>运行结果如下: </p>
+<p><img src="http://oq5d32gij.bkt.clouddn.com/15086613289318.jpg" alt=""></p>
+<p>3、抛出后通知，即方法抛出异常后调用 </p>
+<p>同上，新建一个类实现ThrowsAdvice的afterThrowing方法即可 </p>
+<p><img src="http://oq5d32gij.bkt.clouddn.com/15086615601291.jpg" alt=""></p>
+<p>不过，我感觉，可能是在新版本中被删除了吧… </p>
+<p>4、环绕通知 </p>
+<p>我感觉这种方式十分强大，首先实现MethodInterceptor的invoke方法，这里用到了反射 </p>
+<pre><code>package com.demo.Impl;
+
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
+import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
+
+@Component(&quot;aroundMethod&quot;)
+public class AroundMethod implements MethodInterceptor {
+    @Override
+    public Object invoke(MethodInvocation invocation) throws Throwable {
+        System.out.println(&quot;Method name : &quot; + invocation.getMethod().getName());
+        System.out.println(&quot;Method arguments : &quot; + Arrays.toString(invocation.getArguments()));
+
+        System.out.println(&quot;Around: Method Before&quot;);
+        try {
+            Object result = invocation.proceed();
+
+            System.out.println(&quot;Around: Method After&quot;);
+
+            return result;
+        } catch (Exception ignored) {
+            System.out.println(&quot;Around: Method Exception&quot;);
+
+            throw ignored;
+        }
+    }
+}
+</code></pre><p>运行结果如下: </p>
+<p><img src="http://oq5d32gij.bkt.clouddn.com/15086622863646.jpg" alt=""></p>
+
+           
+         <style type="text/css">
+.hljs-comment,
+.hljs-quote {
+  color: #999999;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+  color: #f2777a;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+  color: #f99157;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+  color: #ffcc66;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+  color: #99cc99;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+  color: #6699cc;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+  color: #cc99cc;
+}
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  background: #2d2d2d !important;
+  color: #cccccc !important;
+  padding: 1em !important;
+}
+
+pre{
+    background: #2d2d2d !important;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+</style>
+<script type="text/javascript">
+// $(function(){
+// 	//代码高亮自定义
+// 	$("code").each(function(){
+// 		$(this).html("<ul><li>" + $(this).html().replace(/\n/g,"\n</li><li>") +"\n</li></ul>");
+// 	});
+// });
+</script>
+
+<style type="text/css">
+/*.hljs {
+	border: 0;
+	font-family: "Consulas", "Courier New", Courier, mono, serif;
+	font-size: 12px;
+	background: #eee !important;
+	display: block;
+	padding: 1px;
+	margin: 0;
+	width: 100%;
+	font-weight: 200;
+	color: #333;
+	white-space: pre-wrap
+}*/
+/*.hljs ul {
+	list-style: decimal;
+	background-color: #fff;
+	margin: 0px 0px 0 0px !important;
+	padding: 0px;
+}*/
+/*.hljs ul li {
+	list-style: decimal-leading-zero;
+	border-left: 1px solid #ddd !important;
+	background: #fff;
+	padding: 5px!important;
+	margin: 0 !important;
+  width: 20px !important;
+	line-height: 14px;
+	word-break: break-all;
+	word-wrap: break-word;
+}*/
+/*.hljs ul li:nth-of-type(even) {
+	background-color: #fcfcfc;
+	color: inherit;
+}*/
+</style>
+<script src="https://cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+       <script >hljs.initHighlightingOnLoad();</script>  
+         
+    
+             
+           <style type="text/css">
+           #rewardButton {
+    cursor: pointer;
+    border: 0;
+    outline: 0;
+    border-radius: 100%;
+    padding: 0;
+    margin: 0;
+    letter-spacing: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+}
+#rewardButton span {
+    display: inline-block;
+    width: 80px;
+    height: 35px;
+    border-radius: 5px;
+    padding-top: 5px;
+    color: #fff;
+    font-weight: 400;
+    font-style: normal;
+    font-variant: normal;
+    font-stretch: normal;
+    font-size: 18px;
+    font-family: "Microsoft Yahei";
+    background: #F44336;
+}
+#rewardButton span:hover{
+    background: #F7877F;
+}
+#QR{
+    padding-top:20px;
+}
+#QR a{
+    border:0;
+}
+#QR img{
+    width: 180px;
+    max-width: 100%;
+    display: inline-block;
+    margin: 0.8em 2em 0 2em;
+}
+#wechat:hover p{
+    animation: roll 0.1s infinite linear;
+    -webkit-animation: roll 0.1s infinite linear;
+    -moz-animation: roll 0.1s infinite linear;
+}
+#alipay:hover p{
+    animation: roll 0.1s infinite linear;
+    -webkit-animation: roll 0.1s infinite linear;
+    -moz-animation: roll 0.1s infinite linear;
+}
+@keyframes roll {
+    from {
+      transform(rotateZ(30deg));
+    }
+    to {
+      transform(rotateZ(-30deg));
+    }
+}
+
+           </style>
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/uploads/wechat.JPG" alt="人不如故 WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/uploads/ali.JPG" alt="人不如故 Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+           
+
+
+     
+    
+    
+</div>
+
+
+                
+
+                <!-- Post Comments -->
+                
+                    
+
+
+
+
+    <!-- 使用 DISQUS -->
+    <div id="disqus-comment">
+        <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+        this.page.url = 'https://wangyu1997.github.io/2017/10/22/Spring/AspectJ/';  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'https://wangyu1997.github.io/2017/10/22/Spring/AspectJ/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    queue.offer(function() {
+            (function() { // DON'T EDIT BELOW THIS LINE
+                var d = document;
+                var s = d.createElement('script');
+                s.src = '//https-wangyu1997-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', + new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        });
+</script>
+
+    </div>
+    <style>
+        #disqus-comment{
+            background-color: #eee;
+            padding: 2pc;
+        }
+    </style>
+
+
+
+
+                
+            </div>
+
+            <!-- Post Prev & Next Nav -->
+            <nav class="material-nav mdl-color-text--grey-50 mdl-cell mdl-cell--12-col">
+    <!-- Prev Nav -->
+    
+
+    <!-- Section Spacer -->
+    <div class="section-spacer"></div>
+
+    <!-- Next Nav -->
+    
+        <a href="/2017/10/21/Spring/JdbcTemplate/" id="post_nav-older" class="next-content">
+            旧篇
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_forward</i>
+            </button>
+        </a>
+    
+</nav>
+
+        </div>
+    </div>
+
+
+
+                    
+                        <!-- Overlay For Active Sidebar -->
+<div class="sidebar-overlay"></div>
+
+<!-- Material sidebar -->
+<aside id="sidebar" class="sidebar sidebar-colored sidebar-fixed-left" role="navigation">
+    <div id="sidebar-main">
+        <!-- Sidebar Header -->
+        <div class="sidebar-header header-cover" style="background-image: url(/img/sidebar_header.png);">
+    <!-- Top bar -->
+    <div class="top-bar"></div>
+
+    <!-- Sidebar toggle button -->
+    <button type="button" class="sidebar-toggle mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" style="display: initial;" data-upgraded=",MaterialButton,MaterialRipple">
+        <i class="material-icons">clear_all</i>
+        <span class="mdl-button__ripple-container">
+            <span class="mdl-ripple">
+            </span>
+        </span>
+    </button>
+
+    <!-- Sidebar Avatar -->
+    <div class="sidebar-image">
+        <img src="/img/avatar.png" alt="人不如故's avatar">
+    </div>
+
+    <!-- Sidebar Email -->
+    <a data-toggle="dropdown" class="sidebar-brand" href="#settings-dropdown">
+        wangyu19970819@gmail.com
+        <b class="caret"></b>
+    </a>
+</div>
+
+
+        <!-- Sidebar Navigation  -->
+        <ul class="nav sidebar-nav">
+    <!-- User dropdown  -->
+    <li class="dropdown">
+        <ul id="settings-dropdown" class="dropdown-menu">
+            
+                <li>
+             
+                    <a href="mailto:wangyu19970819@gmail.com" target="_blank" title="Email Me">
+               
+                        
+                            <i class="material-icons sidebar-material-icons sidebar-indent-left1pc-element">email</i>
+                        
+                        Email Me
+                    </a>
+                </li>
+            
+                <li>
+             
+                    <a href="/about" target="_self" title="关于">
+              
+                        
+                            <i class="material-icons sidebar-material-icons sidebar-indent-left1pc-element">person</i>
+                        
+                        关于
+                    </a>
+                </li>
+            
+        </ul>
+    </li>
+
+    <!-- Homepage -->
+    
+        <li id="sidebar-first-li">
+            <a href="/" target="_self">
+                
+                    <i class="material-icons sidebar-material-icons">home</i>
+                
+                主页
+            </a>
+        </li>
+        
+    
+
+
+    <!-- Categories  -->
+    
+        <li class="dropdown">
+            <a href="#" class="ripple-effect dropdown-toggle" data-toggle="dropdown">
+                
+                    <i class="material-icons sidebar-material-icons">chrome_reader_mode</i>
+                
+                分类
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                <a class="sidebar_archives-link" href="/categories/Android/">Android<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/categories/JavaWeb/">JavaWeb<span class="sidebar_archives-count">7</span></a></li><li><a class="sidebar_archives-link" href="/categories/Python/">Python<span class="sidebar_archives-count">5</span></a></li><li><a class="sidebar_archives-link" href="/categories/Spring/">Spring<span class="sidebar_archives-count">4</span></a></li><li><a class="sidebar_archives-link" href="/categories/VueJs/">VueJs<span class="sidebar_archives-count">5</span></a></li><li><a class="sidebar_archives-link" href="/categories/iOS/">iOS<span class="sidebar_archives-count">6</span></a></li><li><a class="sidebar_archives-link" href="/categories/machine-learning/">machine learning<span class="sidebar_archives-count">2</span></a></li><li><a class="sidebar_archives-link" href="/categories/操作系统/">操作系统<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/categories/杂记/">杂记<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/categories/那些年倒腾过的服务器/">那些年倒腾过的服务器<span class="sidebar_archives-count">3</span></a>
+            </ul>
+        </li>
+        
+    
+
+    <!-- Pages  -->
+    
+        <li>
+            <a href="/links" title="小伙伴们">
+                
+                    <i class="material-icons sidebar-material-icons">group</i>
+                
+                小伙伴们
+            </a>
+        </li>
+        
+    
+        <li>
+            <a href="/tags" title="标签">
+                
+                    <i class="material-icons sidebar-material-icons">loyalty</i>
+                
+                标签
+            </a>
+        </li>
+        
+    
+
+            <!-- Archives  -->
+    
+        <li class="dropdown">
+            <a href="#" class="ripple-effect dropdown-toggle" data-toggle="dropdown">
+                
+                    <i class="material-icons sidebar-material-icons">inbox</i>
+                
+                    归档
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+            <li>
+                <a class="sidebar_archives-link" href="/archives/2017/10/">十月 2017<span class="sidebar_archives-count">13</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/09/">九月 2017<span class="sidebar_archives-count">3</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/08/">八月 2017<span class="sidebar_archives-count">2</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/07/">七月 2017<span class="sidebar_archives-count">7</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/06/">六月 2017<span class="sidebar_archives-count">7</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/05/">五月 2017<span class="sidebar_archives-count">3</span></a>
+            </ul>
+        </li>
+        
+    
+
+          <!-- rss -->
+    
+        <li id="sidebar-first-li">
+            <a href="/gallery" target="_self">
+                
+                    <i class="material-icons sidebar-material-icons">favorite</i>
+                
+                情愫
+            </a>
+        </li>
+        
+    
+
+      <!-- board -->
+    
+        <li id="sidebar-first-li">
+            <a href="/board" target="_self">
+                
+                    <i class="material-icons sidebar-material-icons">question_answer</i>
+                
+                留言板
+            </a>
+        </li>
+        
+    
+
+      <!-- rss -->
+    
+        <li id="sidebar-first-li">
+            <a href="/atom.xml" target="_blank">
+                
+                    <i class="material-icons sidebar-material-icons">cast_connected</i>
+                
+                RSS订阅
+            </a>
+        </li>
+        
+            <li class="divider"></li>
+        
+    
+
+    <!-- Article Number  -->
+    
+        <li>
+            <a href="/archives">
+                文章总数
+                <span class="sidebar-badge">35</span>
+            </a>
+        </li>
+        
+    
+</ul>
+
+
+        <!-- Sidebar Footer -->
+        <!--
+I'm glad you use this theme, the development is no so easy, I hope you can keep the copyright, I will thank you so much.
+If you still want to delete the copyrights, could you still retain the first one? Which namely "Theme Material"
+It will not impact the appearance and can give developers a lot of support :)
+
+很高兴您使用并喜欢该主题，开发不易 十分谢谢与希望您可以保留一下版权声明。
+如果您仍然想删除的话 能否只保留第一项呢？即 "Theme Material"
+它不会影响美观并可以给开发者很大的支持和动力。 :)
+-->
+
+<!-- Sidebar Divider -->
+
+
+<!-- Theme Material -->
+
+
+<!-- Help & Support -->
+<!--
+
+-->
+
+<!-- Feedback -->
+<!--
+
+-->
+
+<!-- About Theme -->
+<!--
+
+-->
+
+    </div>
+
+    <!-- Sidebar Image -->
+    
+
+</aside>
+
+                    
+
+                    
+                        <!-- Footer Top Button -->
+                        <div class="toTop-wrap">
+    <a href="#top" class="toTop">
+        <i class="material-icons footer_top-i">expand_less</i>
+    </a>
+</div>
+
+                    
+
+                    
+ 
+  <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+   <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+ 
+
+
+                    <!--Footer-->
+<footer class="mdl-mini-footer" id="bottom">
+    
+        <!-- Paradox Footer Left Section -->
+        <div class="mdl-mini-footer--left-section sns-list">
+    <!-- Twitter -->
+    
+
+    <!-- Facebook -->
+    
+        <a href="https://www.facebook.com/renburugu" target="_blank">
+            <button class="mdl-mini-footer--social-btn social-btn" style="background-image: url(/img/footer/footer_ico-facebook.svg);">
+                <span class="visuallyhidden">Facebook</span>
+            </button><!--
+     --></a>
+    
+
+    <!-- Google + -->
+    
+
+    <!-- Weibo -->
+    
+
+    <!-- Instagram -->
+    
+
+    <!-- Tumblr -->
+    
+
+    <!-- Github -->
+    
+        <a href="https://github.com/wangyu1997" target="_blank">
+            <button class="mdl-mini-footer--social-btn social-btn" style="background-image: url(/img/footer/footer_ico-github.svg);">
+                <span class="visuallyhidden">Github</span>
+            </button><!--
+     --></a>
+    
+
+    <!-- LinkedIn -->
+    
+
+    <!-- Zhihu -->
+    
+
+    <!-- Bilibili -->
+    
+
+    <!-- Telegram -->
+    
+</div>
+
+
+        <!--Copyright-->
+        <div id="copyright">
+            Copyright&nbsp;©&nbsp;
+            <script type="text/javascript">
+                var fd = new Date();
+                document.write(fd.getFullYear());
+            </script>
+            &nbsp;人不如故
+        </div>
+
+        <!-- Paradox Footer Right Section -->
+
+        <!--
+        I am glad you use this theme, the development is no so easy, I hope you can keep the copyright.
+        It will not impact the appearance and can give developers a lot of support :)
+
+        很高兴您使用该主题，开发不易，希望您可以保留一下版权声明。
+        它不会影响美观并可以给开发者很大的支持。 :)
+        -->
+
+        <div class="mdl-mini-footer--right-section">
+            <div>
+                <div class="footer-develop-div">Follow me on - <a href="https://www.facebook.com/renburugu" target="_blank" class="footer-develop-a">FaceTime</a></div>
+                <div class="footer-develop-div">Fork me on - <a href="https://github.com/wangyu1997" target="_blank" class="footer-develop-a">GitHub</a></div>
+            </div>
+        </div>
+    
+</footer>
+
+
+                    <!-- Import File -->
+
+    <script src="/js/lazyload.min.js"></script>
+    <script src="/js/js.min.js"></script>
+
+
+
+    <script src="/js/nprogress.js"></script>
+
+
+<script type="text/javascript">
+    NProgress.configure({
+        showSpinner: true
+    });
+    NProgress.start();
+    $('#nprogress .bar').css({
+        'background': '#29d'
+    });
+    $('#nprogress .peg').css({
+        'box-shadow': '0 0 10px #29d, 0 0 15px #29d'
+    });
+    $('#nprogress .spinner-icon').css({
+        'border-top-color': '#29d',
+        'border-left-color': '#29d'
+    });
+    setTimeout(function() {
+        NProgress.done();
+        $('.fade').removeClass('out');
+    }, 800);
+</script>
+
+
+
+    
+        <script src="/js/smoothscroll.js"></script>
+    
+
+
+
+
+
+    <!-- Busuanzi -->
+    <script src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+
+    <!-- 使用 DISQUS js 代码 -->
+    <script id="dsq-count-scr" src="//https-wangyu1997-github-io.disqus.com/count.js" async></script>
+
+
+
+
+
+<!-- Window Load-->
+<script>
+    $(window).load(function() {
+        // Post_Toc parent position fixed
+        $('.post-toc-wrap').parent('.mdl-menu__container').css('position', 'fixed');
+    });
+</script>
+
+<!-- MathJax Load-->
+
+<script>
+    <!-- Offer LazyLoad -->
+    queue.offer(function(){
+        $('.lazy').lazyload({
+            effect : 'show'
+        });
+    });
+
+    <!-- Start Queue -->
+    $(document).ready(function(){
+        setTimeout(function(){
+            setInterval(function(){
+                queue.execNext();
+            },200);
+        },3000);
+    });
+</script>
+
+                </main>
+            </div>
+        </body>
+    
+</html>

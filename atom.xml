@@ -2341,6 +2341,160 @@ helper.generateOutput();
   </entry>
   
   <entry>
+    <title>Groovy读取yaml和properties文件</title>
+    <link href="https://wangyu1997.github.io/2017/10/10/JavaWeb/Groovy%E8%AF%BB%E5%8F%96yaml%E5%92%8Cproperties%E6%96%87%E4%BB%B6/"/>
+    <id>https://wangyu1997.github.io/2017/10/10/JavaWeb/Groovy读取yaml和properties文件/</id>
+    <published>2017-10-10T02:43:11.000Z</published>
+    <updated>2017-10-24T06:36:53.000Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
+<p>Java 可以使用 <code>PropertiesConfiguration</code> 来读取 properties 属性文件，Spring 4.3 后还支持了 <code>Yaml 格式的属性文件</code></p>
+<ul>
+<li>PropertiesConfiguration: 读取时可以自动进行类型转换，可以给定默认值</li>
+<li>Yaml 格式的属性文件: 可以使用树形结构，方便分组，比 <code>.properties</code> 属性文件更灵活，但是以普通的 <code>java.util.Properties</code> 来读取</li>
+</ul>
+<h1 id="Gradle-依赖"><a href="#Gradle-依赖" class="headerlink" title="Gradle 依赖"></a>Gradle 依赖</h1><pre><code>compile &#39;org.springframework:spring-context:4.3.0.RELEASE&#39;
+
+compile &#39;org.yaml:snakeyaml:1.17&#39;
+
+compile &#39;commons-configuration:commons-configuration:1.10&#39;
+
+testCompile &#39;org.springframework:spring-test:4.3.0.RELEASE&#39;
+
+testCompile &#39;junit:junit:4.12&#39;
+</code></pre><h1 id="属性文件"><a href="#属性文件" class="headerlink" title="属性文件"></a>属性文件</h1><blockquote>
+<p>config.properties </p>
+</blockquote>
+<pre><code>username=Dr. Alice 
+
+age=22 
+
+config.yml
+</code></pre><p>#mysql </p>
+<pre><code>mysql: 
+
+    jdbc: 
+
+        url: jdbc:mysql://localhost:3306 
+
+        dirverClass: com.mysql.jdbc.Driver 
+
+        username: root 
+
+        password: root 
+
+        username: Ritchie Yu 
+</code></pre><h1 id="Spring-Bean-配置文件"><a href="#Spring-Bean-配置文件" class="headerlink" title="Spring Bean 配置文件"></a>Spring Bean 配置文件</h1><blockquote>
+<p>spring-beans-config.xml </p>
+</blockquote>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+
+xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+
+xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+
+http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;
+
+&lt;bean id=&quot;yamlProperties&quot; class=&quot;org.springframework.beans.factory.config.YamlPropertiesFactoryBean&quot;&gt;
+
+&lt;property name=&quot;resources&quot;&gt;
+
+&lt;list&gt;
+
+&lt;value&gt;classpath:config.yml&lt;/value&gt;
+
+&lt;/list&gt;
+
+&lt;/property&gt;
+
+&lt;/bean&gt;
+
+&lt;bean id=&quot;propertiesConfig&quot; class=&quot;org.apache.commons.configuration.PropertiesConfiguration&quot;&gt;
+
+&lt;constructor-arg value=&quot;config.properties&quot;/&gt;
+
+&lt;/bean&gt;
+
+&lt;/beans&gt;
+</code></pre><h1 id="测试案例"><a href="#测试案例" class="headerlink" title="测试案例"></a>测试案例</h1><pre><code>import org.apache.commons.configuration.PropertiesConfiguration; 
+
+import org.junit.runner.RunWith; 
+
+import org.junit.Test; 
+
+import org.springframework.test.context.ContextConfiguration; 
+
+import org.springframework.test.context.junit4.SpringRunner; 
+
+import javax.annotation.Resource; 
+
+import java.util.Properties; 
+
+@RunWith(SpringRunner.class) 
+
+@ContextConfiguration({&quot;classpath:spring-beans-config.xml&quot;}) 
+
+public class TestYamlPropertiesAndPropertiesConfig { 
+
+@Resource(name = &quot;yamlProperties&quot;) 
+
+private Properties yamlProperties; 
+
+@Resource(name = &quot;propertiesConfig&quot;) 
+
+private PropertiesConfiguration propertiesConfig; 
+
+@Test
+
+public void testYamlProperties() { 
+
+System.out.println(yamlProperties.getProperty(&quot;mysql.jdbc.url&quot;)); 
+
+System.out.println(yamlProperties.getProperty(&quot;username&quot;)); 
+
+} 
+
+@Test
+
+public void testPropertiesConfig() { 
+
+System.out.println(propertiesConfig.getString(&quot;username&quot;)); 
+
+System.out.println(propertiesConfig.getInteger(&quot;age&quot;, 0)); 
+
+} 
+
+} 
+</code></pre><p>输出: </p>
+<pre><code>Dr. Alice 
+
+22 
+
+jdbc:mysql://localhost:3306 
+
+Ritchie Yu 
+</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
+    
+    </summary>
+    
+      <category term="JavaWeb" scheme="https://wangyu1997.github.io/categories/JavaWeb/"/>
+    
+    
+      <category term="gradle" scheme="https://wangyu1997.github.io/tags/gradle/"/>
+    
+      <category term="groovy" scheme="https://wangyu1997.github.io/tags/groovy/"/>
+    
+      <category term="yaml" scheme="https://wangyu1997.github.io/tags/yaml/"/>
+    
+  </entry>
+  
+  <entry>
     <title>MyBatis最详细配置</title>
     <link href="https://wangyu1997.github.io/2017/10/10/JavaWeb/MyBatis%E6%9C%80%E8%AF%A6%E7%BB%86%E9%85%8D%E7%BD%AE/"/>
     <id>https://wangyu1997.github.io/2017/10/10/JavaWeb/MyBatis最详细配置/</id>
@@ -2649,160 +2803,6 @@ helper.generateOutput();
       <category term="gradle" scheme="https://wangyu1997.github.io/tags/gradle/"/>
     
       <category term="mybatis" scheme="https://wangyu1997.github.io/tags/mybatis/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Groovy读取yaml和properties文件</title>
-    <link href="https://wangyu1997.github.io/2017/10/10/JavaWeb/Groovy%E8%AF%BB%E5%8F%96yaml%E5%92%8Cproperties%E6%96%87%E4%BB%B6/"/>
-    <id>https://wangyu1997.github.io/2017/10/10/JavaWeb/Groovy读取yaml和properties文件/</id>
-    <published>2017-10-10T02:43:11.000Z</published>
-    <updated>2017-10-24T06:36:53.000Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
-<p>Java 可以使用 <code>PropertiesConfiguration</code> 来读取 properties 属性文件，Spring 4.3 后还支持了 <code>Yaml 格式的属性文件</code></p>
-<ul>
-<li>PropertiesConfiguration: 读取时可以自动进行类型转换，可以给定默认值</li>
-<li>Yaml 格式的属性文件: 可以使用树形结构，方便分组，比 <code>.properties</code> 属性文件更灵活，但是以普通的 <code>java.util.Properties</code> 来读取</li>
-</ul>
-<h1 id="Gradle-依赖"><a href="#Gradle-依赖" class="headerlink" title="Gradle 依赖"></a>Gradle 依赖</h1><pre><code>compile &#39;org.springframework:spring-context:4.3.0.RELEASE&#39;
-
-compile &#39;org.yaml:snakeyaml:1.17&#39;
-
-compile &#39;commons-configuration:commons-configuration:1.10&#39;
-
-testCompile &#39;org.springframework:spring-test:4.3.0.RELEASE&#39;
-
-testCompile &#39;junit:junit:4.12&#39;
-</code></pre><h1 id="属性文件"><a href="#属性文件" class="headerlink" title="属性文件"></a>属性文件</h1><blockquote>
-<p>config.properties </p>
-</blockquote>
-<pre><code>username=Dr. Alice 
-
-age=22 
-
-config.yml
-</code></pre><p>#mysql </p>
-<pre><code>mysql: 
-
-    jdbc: 
-
-        url: jdbc:mysql://localhost:3306 
-
-        dirverClass: com.mysql.jdbc.Driver 
-
-        username: root 
-
-        password: root 
-
-        username: Ritchie Yu 
-</code></pre><h1 id="Spring-Bean-配置文件"><a href="#Spring-Bean-配置文件" class="headerlink" title="Spring Bean 配置文件"></a>Spring Bean 配置文件</h1><blockquote>
-<p>spring-beans-config.xml </p>
-</blockquote>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-
-&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
-
-xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-
-xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
-
-http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;
-
-&lt;bean id=&quot;yamlProperties&quot; class=&quot;org.springframework.beans.factory.config.YamlPropertiesFactoryBean&quot;&gt;
-
-&lt;property name=&quot;resources&quot;&gt;
-
-&lt;list&gt;
-
-&lt;value&gt;classpath:config.yml&lt;/value&gt;
-
-&lt;/list&gt;
-
-&lt;/property&gt;
-
-&lt;/bean&gt;
-
-&lt;bean id=&quot;propertiesConfig&quot; class=&quot;org.apache.commons.configuration.PropertiesConfiguration&quot;&gt;
-
-&lt;constructor-arg value=&quot;config.properties&quot;/&gt;
-
-&lt;/bean&gt;
-
-&lt;/beans&gt;
-</code></pre><h1 id="测试案例"><a href="#测试案例" class="headerlink" title="测试案例"></a>测试案例</h1><pre><code>import org.apache.commons.configuration.PropertiesConfiguration; 
-
-import org.junit.runner.RunWith; 
-
-import org.junit.Test; 
-
-import org.springframework.test.context.ContextConfiguration; 
-
-import org.springframework.test.context.junit4.SpringRunner; 
-
-import javax.annotation.Resource; 
-
-import java.util.Properties; 
-
-@RunWith(SpringRunner.class) 
-
-@ContextConfiguration({&quot;classpath:spring-beans-config.xml&quot;}) 
-
-public class TestYamlPropertiesAndPropertiesConfig { 
-
-@Resource(name = &quot;yamlProperties&quot;) 
-
-private Properties yamlProperties; 
-
-@Resource(name = &quot;propertiesConfig&quot;) 
-
-private PropertiesConfiguration propertiesConfig; 
-
-@Test
-
-public void testYamlProperties() { 
-
-System.out.println(yamlProperties.getProperty(&quot;mysql.jdbc.url&quot;)); 
-
-System.out.println(yamlProperties.getProperty(&quot;username&quot;)); 
-
-} 
-
-@Test
-
-public void testPropertiesConfig() { 
-
-System.out.println(propertiesConfig.getString(&quot;username&quot;)); 
-
-System.out.println(propertiesConfig.getInteger(&quot;age&quot;, 0)); 
-
-} 
-
-} 
-</code></pre><p>输出: </p>
-<pre><code>Dr. Alice 
-
-22 
-
-jdbc:mysql://localhost:3306 
-
-Ritchie Yu 
-</code></pre>]]></content>
-    
-    <summary type="html">
-    
-      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
-    
-    </summary>
-    
-      <category term="JavaWeb" scheme="https://wangyu1997.github.io/categories/JavaWeb/"/>
-    
-    
-      <category term="gradle" scheme="https://wangyu1997.github.io/tags/gradle/"/>
-    
-      <category term="groovy" scheme="https://wangyu1997.github.io/tags/groovy/"/>
-    
-      <category term="yaml" scheme="https://wangyu1997.github.io/tags/yaml/"/>
     
   </entry>
   
@@ -3244,6 +3244,161 @@ task mybatisGenerate &lt;&lt; {
       <category term="boxing" scheme="https://wangyu1997.github.io/tags/boxing/"/>
     
       <category term="flexing box" scheme="https://wangyu1997.github.io/tags/flexing-box/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Vue轮播解决方案--BetterScroll</title>
+    <link href="https://wangyu1997.github.io/2017/10/03/VueJs/BetterScroll/"/>
+    <id>https://wangyu1997.github.io/2017/10/03/VueJs/BetterScroll/</id>
+    <published>2017-10-02T17:43:11.000Z</published>
+    <updated>2017-10-24T07:13:58.000Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
+<p>From: <a href="https://wangyu1997.github.io/2017/10/03/VueJs/BetterScroll/">https://wangyu1997.github.io/2017/10/03/VueJs/BetterScroll/</a></p>
+<p>inspired by iscroll, and it has a better scroll perfermance <a href="https://link.juejin.im?target=https%3A%2F%2Fustbhuangyi.github.io%2Fbetter-scroll%2F" target="_blank" rel="external">ustbhuangyi.github.io/better-scro…</a></p>
+<h2 id="立即使用"><a href="#立即使用" class="headerlink" title="立即使用"></a>立即使用</h2><pre><code>&lt;body&gt;
+  &lt;div id=&quot;wrapper&quot;&gt;
+    &lt;ul&gt;
+           &lt;li&gt;...&lt;/li&gt;
+           &lt;li&gt;...&lt;/li&gt;
+           ...
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;better-scroll.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+  new BScroll(document.getElementById(&#39;wrapper&#39;));
+&lt;/script&gt;
+&lt;/body&gt;
+</code></pre><p>搞定 ! </p>
+<h2 id="通过npm引入"><a href="#通过npm引入" class="headerlink" title="通过npm引入"></a>通过npm引入</h2><p>安装better-scroll </p>
+<pre><code>npm install better-scroll
+</code></pre><p>引入better-scroll </p>
+<pre><code>import BScroll from &#39;better-scroll&#39;
+</code></pre><blockquote>
+<p>如果不支持import, 请使用 </p>
+</blockquote>
+<pre><code>var BScroll = require(&#39;better-scroll&#39;)
+</code></pre><h2 id="DEMO"><a href="#DEMO" class="headerlink" title="DEMO"></a>DEMO</h2><p>better-scroll 的源码是基于 Webpack 构建的 </p>
+<p>首先，clone项目源码 </p>
+<pre><code>git clone https://github.com/ustbhuangyi/better-scroll.git
+</code></pre><p>安装依赖 </p>
+<pre><code>cd better-scroll
+npm install
+</code></pre><p>测试demo页 </p>
+<pre><code>npm run dev
+</code></pre><p>打开浏览器访问如下地址, 查看效果 </p>
+<blockquote>
+<p>localhost:9090 </p>
+</blockquote>
+<h2 id="Options-参数"><a href="#Options-参数" class="headerlink" title="Options 参数"></a>Options 参数</h2><p>Example: </p>
+<pre><code>let scroll = new BScroll(document.getElementById(&#39;wrapper&#39;), {
+  startX: 0,
+  startY: 0
+})
+</code></pre><p>Options List: </p>
+<ul>
+<li>startX: <code>0</code> 开始的X轴位置</li>
+<li>startY: <code>0</code> 开始的Y轴位置</li>
+<li>scrollY: <code>true</code> 滚动方向为 Y 轴</li>
+<li>scrollX: ‘true’ 滚动方向为 X 轴</li>
+<li>click: <code>true</code> 是否派发click事件</li>
+<li>directionLockThreshold: <code>5</code></li>
+<li>momentum: <code>true</code> 当快速滑动时是否开启滑动惯性</li>
+<li>bounce: <code>true</code> 是否启用回弹动画效果</li>
+<li>selectedIndex: <code>0</code> wheel 为 true 时有效，表示被选中的 wheel 索引</li>
+<li>rotate: <code>25</code> wheel 为 true 时有效，表示被选中的 wheel 每一层的旋转角度</li>
+<li>wheel: <code>false</code> 该属性是给 picker 组件使用的，普通的列表滚动不需要配置</li>
+<li>snap: <code>false</code> 该属性是给 slider 组件使用的，普通的列表滚动不需要配置</li>
+<li>snapLoop: <code>false</code> 是否可以无缝循环轮播</li>
+<li>snapThreshold: <code>0.1</code> 用手指滑动时页面可切换的阈值，大于这个阈值可以滑动的下一页</li>
+<li>snapSpeed: <code>400</code>, 轮播图切换的动画时间</li>
+<li>swipeTime: <code>2500</code> swipe 持续时间</li>
+<li>bounceTime: <code>700</code> 弹力动画持续的毫秒数</li>
+<li>adjustTime: <code>400</code> wheel 为 true 有用，调整停留位置的时间</li>
+<li>swipeBounceTime: <code>1200</code> swipe 回弹 时间</li>
+<li>deceleration: <code>0.001</code> 滚动动量减速越大越快，建议不大于0.01</li>
+<li>momentumLimitTime: <code>300</code> 符合惯性拖动的最大时间</li>
+<li>momentumLimitDistance: <code>15</code> 符合惯性拖动的最小拖动距离</li>
+<li>resizePolling: <code>60</code> 重新调整窗口大小时，重新计算better-scroll的时间间隔</li>
+<li>preventDefault: <code>true</code> 是否阻止默认事件</li>
+<li>preventDefaultException: <code>{ tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT)$/ }</code> 阻止默认事件的例外配置</li>
+<li>HWCompositing: <code>true</code> 是否启用硬件加速</li>
+<li>useTransition: <code>true</code> 是否使用CSS3的Transition属性</li>
+<li>useTransform: <code>true</code> 是否使用CSS3的Transform属性</li>
+<li>probeType: <code>1</code> 会截流,只有在滚动结束的时候派发一个 scroll 事件。<code>2</code>在手指 move 的时候也会实时派发 scroll 事件，不会截流。 <code>3</code>除了手指 move 的时候派发scroll事件，在 swipe（手指迅速滑动一小段距离）的情况下，列表会有一个长距离的滚动动画，这个滚动的动画过程中也会实时派发滚动事件</li>
+</ul>
+<h2 id="Events-事件"><a href="#Events-事件" class="headerlink" title="Events 事件"></a>Events 事件</h2><p>Example: </p>
+<pre><code>let scroll = new BScroll(document.getElementById(&#39;wrapper&#39;),{
+   probeType: 3
+})
+
+scroll.on(&#39;scroll&#39;, (pos) =&gt; {
+  console.log(pos.x + &#39;~&#39; + pos.y)
+  ...
+})
+</code></pre><p>Events 列表 </p>
+<ul>
+<li>beforeScrollStart - 滚动开始之前触发</li>
+<li>scrollStart - 滚动开始时触发</li>
+<li>scroll - 滚动时触发</li>
+<li>scrollCancel - 取消滚动时触发</li>
+<li>scrollEnd - 滚动结束时触发</li>
+<li>touchend - 手指移开屏幕时触发</li>
+<li>flick - 轻拂时触发</li>
+<li>refresh - 当 better-scroll 刷新时触发</li>
+<li>destroy - 销毁 better-scroll 实例时触发</li>
+</ul>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><ul>
+<li>scrollTo(x, y, time, easing)</li>
+</ul>
+<p>滚动到某个位置，x,y 代表坐标，time 表示动画时间，easing 表示缓动函数 </p>
+<p>Example: </p>
+<pre><code>let scroll = new BScroll(document.getElementById(&#39;wrapper&#39;))
+scroll.scrollTo(0, 500)
+...
+</code></pre><ul>
+<li>scrollToElement(el, time, offsetX, offsetY, easing)</li>
+</ul>
+<p>滚动到某个元素，el（必填）表示 dom 元素，time 表示动画时间，offsetX 和 offsetY 表示坐标偏移量，easing 表示缓动函数 </p>
+<ul>
+<li>refresh()</li>
+</ul>
+<p>强制 scroll 重新计算，当 better-scroll 中的元素发生变化的时候调用此方法。 </p>
+<ul>
+<li>getCurrentPage()</li>
+</ul>
+<p>当 snap 为 true 时，获取滚动的当前页，返回的对象结构为 {x, y, pageX, pageY}，其中 x,y 代表滚动横向和纵向的位置；pageX，pageY 表示横向和纵向的页面索引 </p>
+<ul>
+<li>goToPage(x, y, time, easing)</li>
+</ul>
+<p>当 snap 为 true，滚动到对应的页面，x 表示横向页面索引，y 表示纵向页面索引， time 表示动画，easing 表示缓动函数 </p>
+<ul>
+<li>enable()</li>
+</ul>
+<p>启用 better-scroll，默认开启 </p>
+<ul>
+<li>disable()</li>
+</ul>
+<p>禁用 better-scroll </p>
+<ul>
+<li>destroy()</li>
+</ul>
+<p>销毁 better-scroll，解绑事件 </p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
+    
+    </summary>
+    
+      <category term="VueJs" scheme="https://wangyu1997.github.io/categories/VueJs/"/>
+    
+    
+      <category term="better scroll" scheme="https://wangyu1997.github.io/tags/better-scroll/"/>
+    
+      <category term="vue" scheme="https://wangyu1997.github.io/tags/vue/"/>
     
   </entry>
   
@@ -4055,161 +4210,6 @@ div {
   </entry>
   
   <entry>
-    <title>Vue轮播解决方案--BetterScroll</title>
-    <link href="https://wangyu1997.github.io/2017/10/03/VueJs/BetterScroll/"/>
-    <id>https://wangyu1997.github.io/2017/10/03/VueJs/BetterScroll/</id>
-    <published>2017-10-02T17:43:11.000Z</published>
-    <updated>2017-10-24T07:13:58.000Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
-<p>From: <a href="https://wangyu1997.github.io/2017/10/03/VueJs/BetterScroll/">https://wangyu1997.github.io/2017/10/03/VueJs/BetterScroll/</a></p>
-<p>inspired by iscroll, and it has a better scroll perfermance <a href="https://link.juejin.im?target=https%3A%2F%2Fustbhuangyi.github.io%2Fbetter-scroll%2F" target="_blank" rel="external">ustbhuangyi.github.io/better-scro…</a></p>
-<h2 id="立即使用"><a href="#立即使用" class="headerlink" title="立即使用"></a>立即使用</h2><pre><code>&lt;body&gt;
-  &lt;div id=&quot;wrapper&quot;&gt;
-    &lt;ul&gt;
-           &lt;li&gt;...&lt;/li&gt;
-           &lt;li&gt;...&lt;/li&gt;
-           ...
-    &lt;/ul&gt;
-  &lt;/div&gt;
-&lt;script type=&quot;text/javascript&quot; src=&quot;better-scroll.js&quot;&gt;&lt;/script&gt;
-&lt;script type=&quot;text/javascript&quot;&gt;
-  new BScroll(document.getElementById(&#39;wrapper&#39;));
-&lt;/script&gt;
-&lt;/body&gt;
-</code></pre><p>搞定 ! </p>
-<h2 id="通过npm引入"><a href="#通过npm引入" class="headerlink" title="通过npm引入"></a>通过npm引入</h2><p>安装better-scroll </p>
-<pre><code>npm install better-scroll
-</code></pre><p>引入better-scroll </p>
-<pre><code>import BScroll from &#39;better-scroll&#39;
-</code></pre><blockquote>
-<p>如果不支持import, 请使用 </p>
-</blockquote>
-<pre><code>var BScroll = require(&#39;better-scroll&#39;)
-</code></pre><h2 id="DEMO"><a href="#DEMO" class="headerlink" title="DEMO"></a>DEMO</h2><p>better-scroll 的源码是基于 Webpack 构建的 </p>
-<p>首先，clone项目源码 </p>
-<pre><code>git clone https://github.com/ustbhuangyi/better-scroll.git
-</code></pre><p>安装依赖 </p>
-<pre><code>cd better-scroll
-npm install
-</code></pre><p>测试demo页 </p>
-<pre><code>npm run dev
-</code></pre><p>打开浏览器访问如下地址, 查看效果 </p>
-<blockquote>
-<p>localhost:9090 </p>
-</blockquote>
-<h2 id="Options-参数"><a href="#Options-参数" class="headerlink" title="Options 参数"></a>Options 参数</h2><p>Example: </p>
-<pre><code>let scroll = new BScroll(document.getElementById(&#39;wrapper&#39;), {
-  startX: 0,
-  startY: 0
-})
-</code></pre><p>Options List: </p>
-<ul>
-<li>startX: <code>0</code> 开始的X轴位置</li>
-<li>startY: <code>0</code> 开始的Y轴位置</li>
-<li>scrollY: <code>true</code> 滚动方向为 Y 轴</li>
-<li>scrollX: ‘true’ 滚动方向为 X 轴</li>
-<li>click: <code>true</code> 是否派发click事件</li>
-<li>directionLockThreshold: <code>5</code></li>
-<li>momentum: <code>true</code> 当快速滑动时是否开启滑动惯性</li>
-<li>bounce: <code>true</code> 是否启用回弹动画效果</li>
-<li>selectedIndex: <code>0</code> wheel 为 true 时有效，表示被选中的 wheel 索引</li>
-<li>rotate: <code>25</code> wheel 为 true 时有效，表示被选中的 wheel 每一层的旋转角度</li>
-<li>wheel: <code>false</code> 该属性是给 picker 组件使用的，普通的列表滚动不需要配置</li>
-<li>snap: <code>false</code> 该属性是给 slider 组件使用的，普通的列表滚动不需要配置</li>
-<li>snapLoop: <code>false</code> 是否可以无缝循环轮播</li>
-<li>snapThreshold: <code>0.1</code> 用手指滑动时页面可切换的阈值，大于这个阈值可以滑动的下一页</li>
-<li>snapSpeed: <code>400</code>, 轮播图切换的动画时间</li>
-<li>swipeTime: <code>2500</code> swipe 持续时间</li>
-<li>bounceTime: <code>700</code> 弹力动画持续的毫秒数</li>
-<li>adjustTime: <code>400</code> wheel 为 true 有用，调整停留位置的时间</li>
-<li>swipeBounceTime: <code>1200</code> swipe 回弹 时间</li>
-<li>deceleration: <code>0.001</code> 滚动动量减速越大越快，建议不大于0.01</li>
-<li>momentumLimitTime: <code>300</code> 符合惯性拖动的最大时间</li>
-<li>momentumLimitDistance: <code>15</code> 符合惯性拖动的最小拖动距离</li>
-<li>resizePolling: <code>60</code> 重新调整窗口大小时，重新计算better-scroll的时间间隔</li>
-<li>preventDefault: <code>true</code> 是否阻止默认事件</li>
-<li>preventDefaultException: <code>{ tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT)$/ }</code> 阻止默认事件的例外配置</li>
-<li>HWCompositing: <code>true</code> 是否启用硬件加速</li>
-<li>useTransition: <code>true</code> 是否使用CSS3的Transition属性</li>
-<li>useTransform: <code>true</code> 是否使用CSS3的Transform属性</li>
-<li>probeType: <code>1</code> 会截流,只有在滚动结束的时候派发一个 scroll 事件。<code>2</code>在手指 move 的时候也会实时派发 scroll 事件，不会截流。 <code>3</code>除了手指 move 的时候派发scroll事件，在 swipe（手指迅速滑动一小段距离）的情况下，列表会有一个长距离的滚动动画，这个滚动的动画过程中也会实时派发滚动事件</li>
-</ul>
-<h2 id="Events-事件"><a href="#Events-事件" class="headerlink" title="Events 事件"></a>Events 事件</h2><p>Example: </p>
-<pre><code>let scroll = new BScroll(document.getElementById(&#39;wrapper&#39;),{
-   probeType: 3
-})
-
-scroll.on(&#39;scroll&#39;, (pos) =&gt; {
-  console.log(pos.x + &#39;~&#39; + pos.y)
-  ...
-})
-</code></pre><p>Events 列表 </p>
-<ul>
-<li>beforeScrollStart - 滚动开始之前触发</li>
-<li>scrollStart - 滚动开始时触发</li>
-<li>scroll - 滚动时触发</li>
-<li>scrollCancel - 取消滚动时触发</li>
-<li>scrollEnd - 滚动结束时触发</li>
-<li>touchend - 手指移开屏幕时触发</li>
-<li>flick - 轻拂时触发</li>
-<li>refresh - 当 better-scroll 刷新时触发</li>
-<li>destroy - 销毁 better-scroll 实例时触发</li>
-</ul>
-<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><ul>
-<li>scrollTo(x, y, time, easing)</li>
-</ul>
-<p>滚动到某个位置，x,y 代表坐标，time 表示动画时间，easing 表示缓动函数 </p>
-<p>Example: </p>
-<pre><code>let scroll = new BScroll(document.getElementById(&#39;wrapper&#39;))
-scroll.scrollTo(0, 500)
-...
-</code></pre><ul>
-<li>scrollToElement(el, time, offsetX, offsetY, easing)</li>
-</ul>
-<p>滚动到某个元素，el（必填）表示 dom 元素，time 表示动画时间，offsetX 和 offsetY 表示坐标偏移量，easing 表示缓动函数 </p>
-<ul>
-<li>refresh()</li>
-</ul>
-<p>强制 scroll 重新计算，当 better-scroll 中的元素发生变化的时候调用此方法。 </p>
-<ul>
-<li>getCurrentPage()</li>
-</ul>
-<p>当 snap 为 true 时，获取滚动的当前页，返回的对象结构为 {x, y, pageX, pageY}，其中 x,y 代表滚动横向和纵向的位置；pageX，pageY 表示横向和纵向的页面索引 </p>
-<ul>
-<li>goToPage(x, y, time, easing)</li>
-</ul>
-<p>当 snap 为 true，滚动到对应的页面，x 表示横向页面索引，y 表示纵向页面索引， time 表示动画，easing 表示缓动函数 </p>
-<ul>
-<li>enable()</li>
-</ul>
-<p>启用 better-scroll，默认开启 </p>
-<ul>
-<li>disable()</li>
-</ul>
-<p>禁用 better-scroll </p>
-<ul>
-<li>destroy()</li>
-</ul>
-<p>销毁 better-scroll，解绑事件 </p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
-    
-    </summary>
-    
-      <category term="VueJs" scheme="https://wangyu1997.github.io/categories/VueJs/"/>
-    
-    
-      <category term="better scroll" scheme="https://wangyu1997.github.io/tags/better-scroll/"/>
-    
-      <category term="vue" scheme="https://wangyu1997.github.io/tags/vue/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Vue实战</title>
     <link href="https://wangyu1997.github.io/2017/10/02/VueJs/Vue%E5%AE%9E%E6%88%98/"/>
     <id>https://wangyu1997.github.io/2017/10/02/VueJs/Vue实战/</id>
@@ -4959,6 +4959,251 @@ getAllMoney(){
   </entry>
   
   <entry>
+    <title>AOP编程详解</title>
+    <link href="https://wangyu1997.github.io/2017/10/01/JavaWeb/AOP%E7%BC%96%E7%A8%8B%E8%AF%A6%E8%A7%A3/"/>
+    <id>https://wangyu1997.github.io/2017/10/01/JavaWeb/AOP编程详解/</id>
+    <published>2017-10-01T02:43:11.000Z</published>
+    <updated>2017-10-24T06:29:21.000Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
+<h2 id="基本知识"><a href="#基本知识" class="headerlink" title="基本知识"></a>基本知识</h2><p>其实, 接触了这么久的 AOP, 我感觉, AOP 给人难以理解的一个关键点是它的概念比较多, 而且坑爹的是, 这些概念经过了中文翻译后, 变得面目全非, 相同的一个术语, 在不同的翻译下, 含义总有着各种莫名其妙的差别. 鉴于此, 我在本章的开头, 着重为为大家介绍一个 Spring AOP 的各项术语的基本含义. 为了术语传达的准确性, 我在接下来的叙述中, 能使用英文术语的地方, 尽量使用英文. </p>
+<h3 id="什么是-AOP"><a href="#什么是-AOP" class="headerlink" title="什么是 AOP"></a>什么是 AOP</h3><p>AOP(Aspect-Oriented Programming), 即 <strong>面向切面编程</strong>, 它与 OOP( Object-Oriented Programming, 面向对象编程) 相辅相成, 提供了与 OOP 不同的抽象软件结构的视角.<br>在 OOP 中, 我们以类(class)作为我们的基本单元, 而 AOP 中的基本单元是 <strong>Aspect(切面)</strong></p>
+<h3 id="术语"><a href="#术语" class="headerlink" title="术语"></a>术语</h3><h4 id="Aspect-切面"><a href="#Aspect-切面" class="headerlink" title="Aspect(切面)"></a>Aspect(切面)</h4><p><code>aspect</code> 由 <code>pointcount</code> 和 <code>advice</code> 组成, 它既包含了横切逻辑的定义, 也包括了连接点的定义. Spring AOP就是负责实施切面的框架, 它将切面所定义的横切逻辑织入到切面所指定的连接点中.<br>AOP的工作重心在于如何将增强织入目标对象的连接点上, 这里包含两个工作: </p>
+<ol>
+<li><p>如何通过 pointcut 和 advice 定位到特定的 joinpoint 上 </p>
+</li>
+<li><p>如何在 advice 中编写切面代码. </p>
+</li>
+</ol>
+<p><strong>可以简单地认为, 使用 @Aspect 注解的类就是切面.</strong></p>
+<h4 id="advice-增强"><a href="#advice-增强" class="headerlink" title="advice(增强)"></a>advice(增强)</h4><p>由 aspect 添加到特定的 join point(即满足 point cut 规则的 join point) 的一段代码.<br>许多 AOP框架, 包括 Spring AOP, 会将 advice 模拟为一个拦截器(interceptor), 并且在 join point 上维护多个 advice, 进行层层拦截.<br>例如 HTTP 鉴权的实现, 我们可以为每个使用 RequestMapping 标注的方法织入 advice, 当 HTTP 请求到来时, 首先进入到 advice 代码中, 在这里我们可以分析这个 HTTP 请求是否有相应的权限, 如果有, 则执行 Controller, 如果没有, 则抛出异常. 这里的 advice 就扮演着鉴权拦截器的角色了. </p>
+<h4 id="连接点-join-point"><a href="#连接点-join-point" class="headerlink" title="连接点(join point)"></a>连接点(join point)</h4><blockquote>
+<p>a point during the execution of a program, such as the execution of a method or the handling of an exception. In Spring AOP, a join point always represents a method execution. </p>
+</blockquote>
+<p>程序运行中的一些时间点, 例如一个方法的执行, 或者是一个异常的处理.<br><code>在 Spring AOP 中, join point 总是方法的执行点, 即只有方法连接点.</code></p>
+<h4 id="切点-point-cut"><a href="#切点-point-cut" class="headerlink" title="切点(point cut)"></a>切点(point cut)</h4><p>匹配 join point 的谓词(a predicate that matches join points).<br>Advice 是和特定的 point cut 关联的, 并且在 point cut 相匹配的 join point 中执行.<br><code>在 Spring 中, 所有的方法都可以认为是 joinpoint, 但是我们并不希望在所有的方法上都添加 Advice, 而 pointcut 的作用就是提供一组规则(使用 AspectJ pointcut expression language 来描述) 来匹配joinpoint, 给满足规则的 joinpoint 添加 Advice.</code></p>
+<h4 id="关于join-point-和-point-cut-的区别"><a href="#关于join-point-和-point-cut-的区别" class="headerlink" title="关于join point 和 point cut 的区别"></a>关于join point 和 point cut 的区别</h4><p>在 Spring AOP 中, 所有的方法执行都是 join point. 而 point cut 是一个描述信息, 它修饰的是 join point, 通过 point cut, 我们就可以确定哪些 join point 可以被织入 Advice. 因此 join point 和 point cut 本质上就是两个不同纬度上的东西.<br><code>advice 是在 join point 上执行的, 而 point cut 规定了哪些 join point 可以执行哪些 advice</code></p>
+<h4 id="introduction"><a href="#introduction" class="headerlink" title="introduction"></a>introduction</h4><p>为一个类型添加额外的方法或字段. Spring AOP 允许我们为 <code>目标对象</code> 引入新的接口(和对应的实现). 例如我们可以使用 introduction 来为一个 bean 实现 IsModified 接口, 并以此来简化 caching 的实现. </p>
+<h4 id="目标对象-Target"><a href="#目标对象-Target" class="headerlink" title="目标对象(Target)"></a>目标对象(Target)</h4><p>织入 advice 的目标对象. 目标对象也被称为 <code>advised object</code>.<br><code>因为 Spring AOP 使用运行时代理的方式来实现 aspect, 因此 adviced object 总是一个代理对象(proxied object)</code><br><code>注意, adviced object 指的不是原来的类, 而是织入 advice 后所产生的代理类.</code></p>
+<h4 id="AOP-proxy"><a href="#AOP-proxy" class="headerlink" title="AOP proxy"></a>AOP proxy</h4><p>一个类被 AOP 织入 advice, 就会产生一个结果类, 它是融合了原类和增强逻辑的代理类.<br>在 Spring AOP 中, 一个 AOP 代理是一个 JDK 动态代理对象或 CGLIB 代理对象. </p>
+<h4 id="织入-Weaving"><a href="#织入-Weaving" class="headerlink" title="织入(Weaving)"></a>织入(Weaving)</h4><p>将 aspect 和其他对象连接起来, 并创建 adviced object 的过程.<br>根据不同的实现技术, AOP织入有三种方式: </p>
+<ul>
+<li><p>编译器织入, 这要求有特殊的Java编译器. </p>
+</li>
+<li><p>类装载期织入, 这需要有特殊的类装载器. </p>
+</li>
+<li><p>动态代理织入, 在运行期为目标类添加增强(Advice)生成子类的方式.<br>Spring 采用动态代理织入, 而AspectJ采用编译器织入和类装载期织入. </p>
+</li>
+</ul>
+<h3 id="advice-的类型"><a href="#advice-的类型" class="headerlink" title="advice 的类型"></a>advice 的类型</h3><ul>
+<li><p>before advice, 在 join point 前被执行的 advice. 虽然 before advice 是在 join point 前被执行, 但是它并不能够阻止 join point 的执行, 除非发生了异常(即我们在 before advice 代码中, 不能人为地决定是否继续执行 join point 中的代码) </p>
+</li>
+<li><p>after return advice, 在一个 join point 正常返回后执行的 advice </p>
+</li>
+<li><p>after throwing advice, 当一个 join point 抛出异常后执行的 advice </p>
+</li>
+<li><p>after(final) advice, 无论一个 join point 是正常退出还是发生了异常, 都会被执行的 advice. </p>
+</li>
+<li><p>around advice, 在 join point 前和 joint point 退出后都执行的 advice. 这个是最常用的 advice. </p>
+</li>
+</ul>
+<h3 id="关于-AOP-Proxy"><a href="#关于-AOP-Proxy" class="headerlink" title="关于 AOP Proxy"></a>关于 AOP Proxy</h3><p>Spring AOP 默认使用标准的 JDK 动态代理(dynamic proxy)技术来实现 AOP 代理, 通过它, 我们可以为任意的接口实现代理.<br><code>如果需要为一个类实现代理, 那么可以使用 CGLIB 代理.</code> 当一个业务逻辑对象没有实现接口时, 那么Spring AOP 就默认使用 CGLIB 来作为 AOP 代理了. 即如果我们需要为一个方法织入 advice, 但是这个方法不是一个接口所提供的方法, 则此时 Spring AOP 会使用 CGLIB 来实现动态代理. 鉴于此, Spring AOP 建议基于接口编程, 对接口进行 AOP 而不是类. </p>
+<h2 id="彻底理解-aspect-join-point-point-cut-advice"><a href="#彻底理解-aspect-join-point-point-cut-advice" class="headerlink" title="彻底理解 aspect, join point, point cut, advice"></a>彻底理解 aspect, join point, point cut, advice</h2><p>看完了上面的理论部分知识, 我相信还是会有不少朋友感觉到 AOP 的概念还是很模糊, 对 AOP 中的各种概念理解的还不是很透彻. 其实这很正常, 因为 AOP 中的概念是在是太多了, 我当时也是花了老大劲才梳理清楚的.<br>下面我以一个简单的例子来比喻一下 AOP 中 aspect, jointpoint, pointcut 与 advice 之间的关系. </p>
+<p>让我们来假设一下, 从前有一个叫爪哇的小县城, 在一个月黑风高的晚上, 这个县城中发生了命案. 作案的凶手十分狡猾, 现场没有留下什么有价值的线索. 不过万幸的是, 刚从隔壁回来的老王恰好在这时候无意中发现了凶手行凶的过程, 但是由于天色已晚, 加上凶手蒙着面, 老王并没有看清凶手的面目, 只知道凶手是个男性, 身高约七尺五寸. 爪哇县的县令根据老王的描述, 对守门的士兵下命令说: 凡是发现有身高七尺五寸的男性, 都要抓过来审问. 士兵当然不敢违背县令的命令, 只好把进出城的所有符合条件的人都抓了起来. </p>
+<p>来让我们看一下上面的一个小故事和 AOP 到底有什么对应关系.<br>首先我们知道, 在 Spring AOP 中 join point 指代的是所有方法的执行点, 而 point cut 是一个描述信息, 它修饰的是 join point, 通过 point cut, 我们就可以确定哪些 join point 可以被织入 Advice. 对应到我们在上面举的例子, 我们可以做一个简单的类比, join point 就相当于 <strong>爪哇的小县城里的百姓</strong>, point cut 就相当于 <strong>老王所做的指控, 即凶手是个男性, 身高约七尺五寸</strong>, 而 advice 则是施加在符合老王所描述的嫌疑人的动作: <strong>抓过来审问</strong>.<br>为什么可以这样类比呢? </p>
+<ul>
+<li><p>join point –&gt; 爪哇的小县城里的百姓: 因为根据定义, join point 是所有可能被织入 advice 的候选的点, 在 Spring AOP中, 则可以认为所有方法执行点都是 join point. 而在我们上面的例子中, 命案发生在小县城中, 按理说在此县城中的所有人都有可能是嫌疑人. </p>
+</li>
+<li><p>point cut –&gt; 男性, 身高约七尺五寸: 我们知道, 所有的方法(joint point) 都可以织入 advice, 但是我们并不希望在所有方法上都织入 advice, 而 pointcut 的作用就是提供一组规则来匹配joinpoint, 给满足规则的 joinpoint 添加 advice. 同理, 对于县令来说, 他再昏庸, 也知道不能把县城中的所有百姓都抓起来审问, 而是根据<code>凶手是个男性, 身高约七尺五寸</code>, 把符合条件的人抓起来. 在这里 <code>凶手是个男性, 身高约七尺五寸</code> 就是一个修饰谓语, 它限定了凶手的范围, 满足此修饰规则的百姓都是嫌疑人, 都需要抓起来审问. </p>
+</li>
+<li><p>advice –&gt; 抓过来审问, advice 是一个动作, 即一段 Java 代码, 这段 Java 代码是作用于 point cut 所限定的那些 join point 上的. 同理, 对比到我们的例子中, <code>抓过来审问</code> 这个动作就是对作用于那些满足 <code>男性, 身高约七尺五寸</code> 的<code>爪哇的小县城里的百姓</code>. </p>
+</li>
+<li><p>aspect: aspect 是 point cut 与 advice 的组合, 因此在这里我们就可以类比: <strong>“根据老王的线索, 凡是发现有身高七尺五寸的男性, 都要抓过来审问”</strong> 这一整个动作可以被认为是一个 aspect. </p>
+</li>
+</ul>
+<hr>
+<p>或则我们也可以从语法的角度来简单类比一下. 我们在学英语时, 经常会接触什么 <code>定语</code>, <code>被动句</code> 之类的概念, 那么可以做一个不严谨的类比, 即 <code>joinpoint</code> 可以认为是一个 <code>宾语</code>, 而 <code>pointcut</code> 则可以类比为修饰 <code>joinpoint</code> 的定语, 那么整个 <code>aspect</code> 就可以描述为: <code>满足 pointcut 规则的 joinpoint 会被添加相应的 advice 操作.</code></p>
+<h2 id="AspectJ-支持"><a href="#AspectJ-支持" class="headerlink" title="@AspectJ 支持"></a>@AspectJ 支持</h2><p><strong>@AspectJ</strong> 是一种使用 Java 注解来实现 AOP 的编码风格.<br>@AspectJ 风格的 AOP 是 AspectJ Project 在 AspectJ 5 中引入的, 并且 Spring 也支持@AspectJ 的 AOP 风格. </p>
+<h3 id="使能-AspectJ-支持"><a href="#使能-AspectJ-支持" class="headerlink" title="使能 @AspectJ 支持"></a>使能 @AspectJ 支持</h3><p>@AspectJ 可以以 XML 的方式或以注解的方式来使能, 并且不论以哪种方式使能@ASpectJ, 我们都必须保证 aspectjweaver.jar 在 classpath 中. </p>
+<h4 id="使用-Java-Configuration-方式使能-AspectJ"><a href="#使用-Java-Configuration-方式使能-AspectJ" class="headerlink" title="使用 Java Configuration 方式使能@AspectJ"></a>使用 Java Configuration 方式使能@AspectJ</h4><pre><code>@Configuration
+@EnableAspectJAutoProxy
+public class AppConfig {
+}
+</code></pre><h4 id="使用-XML-方式使能-AspectJ"><a href="#使用-XML-方式使能-AspectJ" class="headerlink" title="使用 XML 方式使能@AspectJ"></a>使用 XML 方式使能@AspectJ</h4><pre><code>&lt;aop:aspectj-autoproxy/&gt;
+</code></pre><h3 id="定义-aspect-切面"><a href="#定义-aspect-切面" class="headerlink" title="定义 aspect(切面)"></a>定义 aspect(切面)</h3><p>当使用注解 <strong>@Aspect</strong> 标注一个 Bean 后, 那么 Spring 框架会自动收集这些 Bean, 并添加到 Spring AOP 中, 例如: </p>
+<pre><code>@Component
+@Aspect
+public class MyTest {
+}
+</code></pre><p><code>注意, 仅仅使用@Aspect 注解, 并不能将一个 Java 对象转换为 Bean, 因此我们还需要使用类似 @Component 之类的注解.</code><br><code>注意, 如果一个 类被@Aspect 标注, 则这个类就不能是其他 aspect 的 **advised object** 了, 因为使用 @Aspect 后, 这个类就会被排除在 auto-proxying 机制之外.</code></p>
+<h3 id="声明-pointcut"><a href="#声明-pointcut" class="headerlink" title="声明 pointcut"></a>声明 pointcut</h3><p>一个 pointcut 的声明由两部分组成: </p>
+<ul>
+<li><p>一个方法签名, 包括方法名和相关参数 </p>
+</li>
+<li><p>一个 pointcut 表达式, 用来指定哪些方法执行是我们感兴趣的(即因此可以织入 advice). </p>
+</li>
+</ul>
+<p>在@AspectJ 风格的 AOP 中, 我们使用一个方法来描述 pointcut, 即: </p>
+<pre><code>@Pointcut(&quot;execution(* com.xys.service.UserService.*(..))&quot;) // 切点表达式
+private void dataAccessOperation() {} // 切点前面
+</code></pre><p><code>这个方法必须无返回值.</code><br><code>这个方法本身就是 pointcut signature, pointcut 表达式使用@Pointcut 注解指定.</code><br>上面我们简单地定义了一个 pointcut, 这个 pointcut 所描述的是: 匹配所有在包 <strong>com.xys.service.UserService</strong> 下的所有方法的执行. </p>
+<h4 id="切点标志符-designator"><a href="#切点标志符-designator" class="headerlink" title="切点标志符(designator)"></a>切点标志符(designator)</h4><p>AspectJ5 的切点表达式由标志符(designator)和操作参数组成. 如 “execution( _greetTo(..))” 的切点表达式, <strong>execution</strong> 就是 标志符, 而圆括号里的_ greetTo(..) 就是操作参数 </p>
+<h5 id="execution"><a href="#execution" class="headerlink" title="execution"></a>execution</h5><p>匹配 join point 的执行, 例如 “execution(* hello(..))” 表示匹配所有目标类中的 hello() 方法. 这个是最基本的 pointcut 标志符. </p>
+<h5 id="within"><a href="#within" class="headerlink" title="within"></a>within</h5><p>匹配特定包下的所有 join point, 例如 <code>within(com.xys.*)</code> 表示 com.xys 包中的所有连接点, 即包中的所有类的所有方法. 而 <code>within(com.xys.service.*Service)</code> 表示在 com.xys.service 包中所有以 Service 结尾的类的所有的连接点. </p>
+<h5 id="this-与-target"><a href="#this-与-target" class="headerlink" title="this 与 target"></a>this 与 target</h5><p>this 的作用是匹配一个 bean, 这个 bean(Spring AOP proxy) 是一个给定类型的实例(instance of). 而 target 匹配的是一个目标对象(target object, 即需要织入 advice 的原始的类), 此对象是一个给定类型的实例(instance of). </p>
+<h5 id="bean"><a href="#bean" class="headerlink" title="bean"></a>bean</h5><p>匹配 bean 名字为指定值的 bean 下的所有方法, 例如: </p>
+<pre><code>bean(*Service) // 匹配名字后缀为 Service 的 bean 下的所有方法
+bean(myService) // 匹配名字为 myService 的 bean 下的所有方法
+</code></pre><h5 id="args"><a href="#args" class="headerlink" title="args"></a>args</h5><p>匹配参数满足要求的的方法.<br>例如: </p>
+<pre><code>@Pointcut(&quot;within(com.xys.demo2.*)&quot;)
+public void pointcut2() {
+}
+
+@Before(value = &quot;pointcut2()  &amp;&amp;  args(name)&quot;)
+public void doSomething(String name) {
+    logger.info(&quot;---page: {}---&quot;, name);
+}
+
+@Service
+public class NormalService {
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
+    public void someMethod() {
+        logger.info(&quot;---NormalService: someMethod invoked---&quot;);
+    }
+
+
+    public String test(String name) {
+        logger.info(&quot;---NormalService: test invoked---&quot;);
+        return &quot;服务一切正常&quot;;
+    }
+}
+</code></pre><p>当 NormalService.test 执行时, 则 advice <code>doSomething</code> 就会执行, test 方法的参数 name 就会传递到 <code>doSomething</code> 中. </p>
+<p>常用例子: </p>
+<pre><code>// 匹配只有一个参数 name 的方法
+@Before(value = &quot;aspectMethod()  &amp;&amp;  args(name)&quot;)
+public void doSomething(String name) {
+}
+
+// 匹配第一个参数为 name 的方法
+@Before(value = &quot;aspectMethod()  &amp;&amp;  args(name, ..)&quot;)
+public void doSomething(String name) {
+}
+
+// 匹配第二个参数为 name 的方法
+Before(value = &quot;aspectMethod()  &amp;&amp;  args(*, name, ..)&quot;)
+public void doSomething(String name) {
+}
+</code></pre><h5 id="annotation"><a href="#annotation" class="headerlink" title="@annotation"></a>@annotation</h5><p>匹配由指定注解所标注的方法, 例如: </p>
+<pre><code>@Pointcut(&quot;@annotation(com.xys.demo1.AuthChecker)&quot;)
+public void pointcut() {
+}
+</code></pre><p>则匹配由注解 <code>AuthChecker</code> 所标注的方法. </p>
+<h4 id="常见的切点表达式"><a href="#常见的切点表达式" class="headerlink" title="常见的切点表达式"></a>常见的切点表达式</h4><h5 id="匹配方法签名"><a href="#匹配方法签名" class="headerlink" title="匹配方法签名"></a>匹配方法签名</h5><pre><code>// 匹配指定包中的所有的方法
+execution(* com.xys.service.*(..))
+
+// 匹配当前包中的指定类的所有方法
+execution(* UserService.*(..))
+
+// 匹配指定包中的所有 public 方法
+execution(public * com.xys.service.*(..))
+
+// 匹配指定包中的所有 public 方法, 并且返回值是 int 类型的方法
+execution(public int com.xys.service.*(..))
+
+// 匹配指定包中的所有 public 方法, 并且第一个参数是 String, 返回值是 int 类型的方法
+execution(public int com.xys.service.*(String name, ..))
+</code></pre><h5 id="匹配类型签名"><a href="#匹配类型签名" class="headerlink" title="匹配类型签名"></a>匹配类型签名</h5><pre><code>// 匹配指定包中的所有的方法, 但不包括子包
+within(com.xys.service.*)
+
+// 匹配指定包中的所有的方法, 包括子包
+within(com.xys.service..*)
+
+// 匹配当前包中的指定类中的方法
+within(UserService)
+
+
+// 匹配一个接口的所有实现类中的实现的方法
+within(UserDao+)
+</code></pre><h5 id="匹配-Bean-名字"><a href="#匹配-Bean-名字" class="headerlink" title="匹配 Bean 名字"></a>匹配 Bean 名字</h5><pre><code>// 匹配以指定名字结尾的 Bean 中的所有方法
+bean(*Service)
+</code></pre><h5 id="切点表达式组合"><a href="#切点表达式组合" class="headerlink" title="切点表达式组合"></a>切点表达式组合</h5><pre><code>// 匹配以 Service 或 ServiceImpl 结尾的 bean
+bean(*Service || *ServiceImpl)
+
+// 匹配名字以 Service 结尾, 并且在包 com.xys.service 中的 bean
+bean(*Service) &amp;&amp; within(com.xys.service.*)
+</code></pre><h3 id="声明-advice"><a href="#声明-advice" class="headerlink" title="声明 advice"></a>声明 advice</h3><p>advice 是和一个 pointcut 表达式关联在一起的, 并且会在匹配的 join point 的方法执行的前/后/周围 运行. <code>pointcut 表达式可以是简单的一个 pointcut 名字的引用, 或者是完整的 pointcut 表达式</code>.<br>下面我们以几个简单的 advice 为例子, 来看一下一个 advice 是如何声明的. </p>
+<h4 id="Before-advice"><a href="#Before-advice" class="headerlink" title="Before advice"></a>Before advice</h4><pre><code>/**
+ * @author xiongyongshun
+ * @version 1.0
+ * @created 16/9/9 13:13
+ */
+@Component
+@Aspect
+public class BeforeAspectTest {
+    // 定义一个 Pointcut, 使用 切点表达式函数 来描述对哪些 Join point 使用 advise.
+    @Pointcut(&quot;execution(* com.xys.service.UserService.*(..))&quot;)
+    public void dataAccessOperation() {
+    }
+}
+
+@Component
+@Aspect
+public class AdviseDefine {
+    // 定义 advise
+    @Before(&quot;com.xys.aspect.PointcutDefine.dataAccessOperation()&quot;)
+    public void doBeforeAccessCheck(JoinPoint joinPoint) {
+        System.out.println(&quot;*****Before advise, method: &quot; + joinPoint.getSignature().toShortString() + &quot; *****&quot;);
+    }
+}
+</code></pre><p>这里, <strong>@Before</strong> 引用了一个 pointcut, 即 “com.xys.aspect.PointcutDefine.dataAccessOperation()” 是一个 pointcut 的名字.<br>如果我们在 advice 在内置 pointcut, 则可以: </p>
+<pre><code>@Component
+@Aspect
+public class AdviseDefine {
+    // 将 pointcut 和 advice 同时定义
+    @Before(&quot;within(com.xys.service..*)&quot;)
+    public void doAccessCheck(JoinPoint joinPoint) {
+        System.out.println(&quot;*****doAccessCheck, Before advise, method: &quot; + joinPoint.getSignature().toShortString() + &quot; *****&quot;);
+    }
+}
+</code></pre><h4 id="around-advice"><a href="#around-advice" class="headerlink" title="around advice"></a>around advice</h4><p>around advice 比较特别, 它可以在一个方法的之前之前和之后添加不同的操作, 并且甚至可以决定何时, 如何, 是否调用匹配到的方法. </p>
+<pre><code>@Component
+@Aspect
+public class AdviseDefine {
+    // 定义 advise
+    @Around(&quot;com.xys.aspect.PointcutDefine.dataAccessOperation()&quot;)
+    public Object doAroundAccessCheck(ProceedingJoinPoint pjp) throws Throwable {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+        // 开始
+        Object retVal = pjp.proceed();
+        stopWatch.stop();
+        // 结束
+        System.out.println(&quot;invoke method: &quot; + pjp.getSignature().getName() + &quot;, elapsed time: &quot; + stopWatch.getTotalTimeMillis());
+        return retVal;
+    }
+}
+</code></pre><p>around advice 和前面的 before advice 差不多, 只是我们把注解 <strong>@Before</strong> 改为了 <strong>@Around</strong> 了. </p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
+    
+    </summary>
+    
+      <category term="JavaWeb" scheme="https://wangyu1997.github.io/categories/JavaWeb/"/>
+    
+    
+      <category term="AOP" scheme="https://wangyu1997.github.io/tags/AOP/"/>
+    
+      <category term="javaweb" scheme="https://wangyu1997.github.io/tags/javaweb/"/>
+    
+      <category term="Spring" scheme="https://wangyu1997.github.io/tags/Spring/"/>
+    
+  </entry>
+  
+  <entry>
     <title>AOP实战</title>
     <link href="https://wangyu1997.github.io/2017/10/01/JavaWeb/AOP%E5%AE%9E%E6%88%98/"/>
     <id>https://wangyu1997.github.io/2017/10/01/JavaWeb/AOP实战/</id>
@@ -5264,251 +5509,6 @@ public class SomeService {
 <h4 id="完整源码-2"><a href="#完整源码-2" class="headerlink" title="完整源码"></a>完整源码</h4><p><a href="https://github.com/yongshun/some_java_code/tree/master/SpringAOPDemo/src/main/java/com/xys/demo3" target="_blank" rel="external">方法耗时统计</a></p>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>通过上面的几个简单例子, 我们对 <code>Spring AOP</code> 的使用应该有了一个更为深入的了解了. 其实 Spring AOP 的使用的地方不止这些, 例如 Spring 的 <code>声明式事务</code> 就是在 AOP 之上构建的. 读者朋友也可以根据自己的实际业务场景, 合理使用 Spring AOP, 发挥它的强大功能! </p>
 <h2 id="End"><a href="#End" class="headerlink" title="End."></a>End.</h2>]]></content>
-    
-    <summary type="html">
-    
-      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
-    
-    </summary>
-    
-      <category term="JavaWeb" scheme="https://wangyu1997.github.io/categories/JavaWeb/"/>
-    
-    
-      <category term="AOP" scheme="https://wangyu1997.github.io/tags/AOP/"/>
-    
-      <category term="javaweb" scheme="https://wangyu1997.github.io/tags/javaweb/"/>
-    
-      <category term="Spring" scheme="https://wangyu1997.github.io/tags/Spring/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>AOP编程详解</title>
-    <link href="https://wangyu1997.github.io/2017/10/01/JavaWeb/AOP%E7%BC%96%E7%A8%8B%E8%AF%A6%E8%A7%A3/"/>
-    <id>https://wangyu1997.github.io/2017/10/01/JavaWeb/AOP编程详解/</id>
-    <published>2017-10-01T02:43:11.000Z</published>
-    <updated>2017-10-24T06:29:21.000Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
-<h2 id="基本知识"><a href="#基本知识" class="headerlink" title="基本知识"></a>基本知识</h2><p>其实, 接触了这么久的 AOP, 我感觉, AOP 给人难以理解的一个关键点是它的概念比较多, 而且坑爹的是, 这些概念经过了中文翻译后, 变得面目全非, 相同的一个术语, 在不同的翻译下, 含义总有着各种莫名其妙的差别. 鉴于此, 我在本章的开头, 着重为为大家介绍一个 Spring AOP 的各项术语的基本含义. 为了术语传达的准确性, 我在接下来的叙述中, 能使用英文术语的地方, 尽量使用英文. </p>
-<h3 id="什么是-AOP"><a href="#什么是-AOP" class="headerlink" title="什么是 AOP"></a>什么是 AOP</h3><p>AOP(Aspect-Oriented Programming), 即 <strong>面向切面编程</strong>, 它与 OOP( Object-Oriented Programming, 面向对象编程) 相辅相成, 提供了与 OOP 不同的抽象软件结构的视角.<br>在 OOP 中, 我们以类(class)作为我们的基本单元, 而 AOP 中的基本单元是 <strong>Aspect(切面)</strong></p>
-<h3 id="术语"><a href="#术语" class="headerlink" title="术语"></a>术语</h3><h4 id="Aspect-切面"><a href="#Aspect-切面" class="headerlink" title="Aspect(切面)"></a>Aspect(切面)</h4><p><code>aspect</code> 由 <code>pointcount</code> 和 <code>advice</code> 组成, 它既包含了横切逻辑的定义, 也包括了连接点的定义. Spring AOP就是负责实施切面的框架, 它将切面所定义的横切逻辑织入到切面所指定的连接点中.<br>AOP的工作重心在于如何将增强织入目标对象的连接点上, 这里包含两个工作: </p>
-<ol>
-<li><p>如何通过 pointcut 和 advice 定位到特定的 joinpoint 上 </p>
-</li>
-<li><p>如何在 advice 中编写切面代码. </p>
-</li>
-</ol>
-<p><strong>可以简单地认为, 使用 @Aspect 注解的类就是切面.</strong></p>
-<h4 id="advice-增强"><a href="#advice-增强" class="headerlink" title="advice(增强)"></a>advice(增强)</h4><p>由 aspect 添加到特定的 join point(即满足 point cut 规则的 join point) 的一段代码.<br>许多 AOP框架, 包括 Spring AOP, 会将 advice 模拟为一个拦截器(interceptor), 并且在 join point 上维护多个 advice, 进行层层拦截.<br>例如 HTTP 鉴权的实现, 我们可以为每个使用 RequestMapping 标注的方法织入 advice, 当 HTTP 请求到来时, 首先进入到 advice 代码中, 在这里我们可以分析这个 HTTP 请求是否有相应的权限, 如果有, 则执行 Controller, 如果没有, 则抛出异常. 这里的 advice 就扮演着鉴权拦截器的角色了. </p>
-<h4 id="连接点-join-point"><a href="#连接点-join-point" class="headerlink" title="连接点(join point)"></a>连接点(join point)</h4><blockquote>
-<p>a point during the execution of a program, such as the execution of a method or the handling of an exception. In Spring AOP, a join point always represents a method execution. </p>
-</blockquote>
-<p>程序运行中的一些时间点, 例如一个方法的执行, 或者是一个异常的处理.<br><code>在 Spring AOP 中, join point 总是方法的执行点, 即只有方法连接点.</code></p>
-<h4 id="切点-point-cut"><a href="#切点-point-cut" class="headerlink" title="切点(point cut)"></a>切点(point cut)</h4><p>匹配 join point 的谓词(a predicate that matches join points).<br>Advice 是和特定的 point cut 关联的, 并且在 point cut 相匹配的 join point 中执行.<br><code>在 Spring 中, 所有的方法都可以认为是 joinpoint, 但是我们并不希望在所有的方法上都添加 Advice, 而 pointcut 的作用就是提供一组规则(使用 AspectJ pointcut expression language 来描述) 来匹配joinpoint, 给满足规则的 joinpoint 添加 Advice.</code></p>
-<h4 id="关于join-point-和-point-cut-的区别"><a href="#关于join-point-和-point-cut-的区别" class="headerlink" title="关于join point 和 point cut 的区别"></a>关于join point 和 point cut 的区别</h4><p>在 Spring AOP 中, 所有的方法执行都是 join point. 而 point cut 是一个描述信息, 它修饰的是 join point, 通过 point cut, 我们就可以确定哪些 join point 可以被织入 Advice. 因此 join point 和 point cut 本质上就是两个不同纬度上的东西.<br><code>advice 是在 join point 上执行的, 而 point cut 规定了哪些 join point 可以执行哪些 advice</code></p>
-<h4 id="introduction"><a href="#introduction" class="headerlink" title="introduction"></a>introduction</h4><p>为一个类型添加额外的方法或字段. Spring AOP 允许我们为 <code>目标对象</code> 引入新的接口(和对应的实现). 例如我们可以使用 introduction 来为一个 bean 实现 IsModified 接口, 并以此来简化 caching 的实现. </p>
-<h4 id="目标对象-Target"><a href="#目标对象-Target" class="headerlink" title="目标对象(Target)"></a>目标对象(Target)</h4><p>织入 advice 的目标对象. 目标对象也被称为 <code>advised object</code>.<br><code>因为 Spring AOP 使用运行时代理的方式来实现 aspect, 因此 adviced object 总是一个代理对象(proxied object)</code><br><code>注意, adviced object 指的不是原来的类, 而是织入 advice 后所产生的代理类.</code></p>
-<h4 id="AOP-proxy"><a href="#AOP-proxy" class="headerlink" title="AOP proxy"></a>AOP proxy</h4><p>一个类被 AOP 织入 advice, 就会产生一个结果类, 它是融合了原类和增强逻辑的代理类.<br>在 Spring AOP 中, 一个 AOP 代理是一个 JDK 动态代理对象或 CGLIB 代理对象. </p>
-<h4 id="织入-Weaving"><a href="#织入-Weaving" class="headerlink" title="织入(Weaving)"></a>织入(Weaving)</h4><p>将 aspect 和其他对象连接起来, 并创建 adviced object 的过程.<br>根据不同的实现技术, AOP织入有三种方式: </p>
-<ul>
-<li><p>编译器织入, 这要求有特殊的Java编译器. </p>
-</li>
-<li><p>类装载期织入, 这需要有特殊的类装载器. </p>
-</li>
-<li><p>动态代理织入, 在运行期为目标类添加增强(Advice)生成子类的方式.<br>Spring 采用动态代理织入, 而AspectJ采用编译器织入和类装载期织入. </p>
-</li>
-</ul>
-<h3 id="advice-的类型"><a href="#advice-的类型" class="headerlink" title="advice 的类型"></a>advice 的类型</h3><ul>
-<li><p>before advice, 在 join point 前被执行的 advice. 虽然 before advice 是在 join point 前被执行, 但是它并不能够阻止 join point 的执行, 除非发生了异常(即我们在 before advice 代码中, 不能人为地决定是否继续执行 join point 中的代码) </p>
-</li>
-<li><p>after return advice, 在一个 join point 正常返回后执行的 advice </p>
-</li>
-<li><p>after throwing advice, 当一个 join point 抛出异常后执行的 advice </p>
-</li>
-<li><p>after(final) advice, 无论一个 join point 是正常退出还是发生了异常, 都会被执行的 advice. </p>
-</li>
-<li><p>around advice, 在 join point 前和 joint point 退出后都执行的 advice. 这个是最常用的 advice. </p>
-</li>
-</ul>
-<h3 id="关于-AOP-Proxy"><a href="#关于-AOP-Proxy" class="headerlink" title="关于 AOP Proxy"></a>关于 AOP Proxy</h3><p>Spring AOP 默认使用标准的 JDK 动态代理(dynamic proxy)技术来实现 AOP 代理, 通过它, 我们可以为任意的接口实现代理.<br><code>如果需要为一个类实现代理, 那么可以使用 CGLIB 代理.</code> 当一个业务逻辑对象没有实现接口时, 那么Spring AOP 就默认使用 CGLIB 来作为 AOP 代理了. 即如果我们需要为一个方法织入 advice, 但是这个方法不是一个接口所提供的方法, 则此时 Spring AOP 会使用 CGLIB 来实现动态代理. 鉴于此, Spring AOP 建议基于接口编程, 对接口进行 AOP 而不是类. </p>
-<h2 id="彻底理解-aspect-join-point-point-cut-advice"><a href="#彻底理解-aspect-join-point-point-cut-advice" class="headerlink" title="彻底理解 aspect, join point, point cut, advice"></a>彻底理解 aspect, join point, point cut, advice</h2><p>看完了上面的理论部分知识, 我相信还是会有不少朋友感觉到 AOP 的概念还是很模糊, 对 AOP 中的各种概念理解的还不是很透彻. 其实这很正常, 因为 AOP 中的概念是在是太多了, 我当时也是花了老大劲才梳理清楚的.<br>下面我以一个简单的例子来比喻一下 AOP 中 aspect, jointpoint, pointcut 与 advice 之间的关系. </p>
-<p>让我们来假设一下, 从前有一个叫爪哇的小县城, 在一个月黑风高的晚上, 这个县城中发生了命案. 作案的凶手十分狡猾, 现场没有留下什么有价值的线索. 不过万幸的是, 刚从隔壁回来的老王恰好在这时候无意中发现了凶手行凶的过程, 但是由于天色已晚, 加上凶手蒙着面, 老王并没有看清凶手的面目, 只知道凶手是个男性, 身高约七尺五寸. 爪哇县的县令根据老王的描述, 对守门的士兵下命令说: 凡是发现有身高七尺五寸的男性, 都要抓过来审问. 士兵当然不敢违背县令的命令, 只好把进出城的所有符合条件的人都抓了起来. </p>
-<p>来让我们看一下上面的一个小故事和 AOP 到底有什么对应关系.<br>首先我们知道, 在 Spring AOP 中 join point 指代的是所有方法的执行点, 而 point cut 是一个描述信息, 它修饰的是 join point, 通过 point cut, 我们就可以确定哪些 join point 可以被织入 Advice. 对应到我们在上面举的例子, 我们可以做一个简单的类比, join point 就相当于 <strong>爪哇的小县城里的百姓</strong>, point cut 就相当于 <strong>老王所做的指控, 即凶手是个男性, 身高约七尺五寸</strong>, 而 advice 则是施加在符合老王所描述的嫌疑人的动作: <strong>抓过来审问</strong>.<br>为什么可以这样类比呢? </p>
-<ul>
-<li><p>join point –&gt; 爪哇的小县城里的百姓: 因为根据定义, join point 是所有可能被织入 advice 的候选的点, 在 Spring AOP中, 则可以认为所有方法执行点都是 join point. 而在我们上面的例子中, 命案发生在小县城中, 按理说在此县城中的所有人都有可能是嫌疑人. </p>
-</li>
-<li><p>point cut –&gt; 男性, 身高约七尺五寸: 我们知道, 所有的方法(joint point) 都可以织入 advice, 但是我们并不希望在所有方法上都织入 advice, 而 pointcut 的作用就是提供一组规则来匹配joinpoint, 给满足规则的 joinpoint 添加 advice. 同理, 对于县令来说, 他再昏庸, 也知道不能把县城中的所有百姓都抓起来审问, 而是根据<code>凶手是个男性, 身高约七尺五寸</code>, 把符合条件的人抓起来. 在这里 <code>凶手是个男性, 身高约七尺五寸</code> 就是一个修饰谓语, 它限定了凶手的范围, 满足此修饰规则的百姓都是嫌疑人, 都需要抓起来审问. </p>
-</li>
-<li><p>advice –&gt; 抓过来审问, advice 是一个动作, 即一段 Java 代码, 这段 Java 代码是作用于 point cut 所限定的那些 join point 上的. 同理, 对比到我们的例子中, <code>抓过来审问</code> 这个动作就是对作用于那些满足 <code>男性, 身高约七尺五寸</code> 的<code>爪哇的小县城里的百姓</code>. </p>
-</li>
-<li><p>aspect: aspect 是 point cut 与 advice 的组合, 因此在这里我们就可以类比: <strong>“根据老王的线索, 凡是发现有身高七尺五寸的男性, 都要抓过来审问”</strong> 这一整个动作可以被认为是一个 aspect. </p>
-</li>
-</ul>
-<hr>
-<p>或则我们也可以从语法的角度来简单类比一下. 我们在学英语时, 经常会接触什么 <code>定语</code>, <code>被动句</code> 之类的概念, 那么可以做一个不严谨的类比, 即 <code>joinpoint</code> 可以认为是一个 <code>宾语</code>, 而 <code>pointcut</code> 则可以类比为修饰 <code>joinpoint</code> 的定语, 那么整个 <code>aspect</code> 就可以描述为: <code>满足 pointcut 规则的 joinpoint 会被添加相应的 advice 操作.</code></p>
-<h2 id="AspectJ-支持"><a href="#AspectJ-支持" class="headerlink" title="@AspectJ 支持"></a>@AspectJ 支持</h2><p><strong>@AspectJ</strong> 是一种使用 Java 注解来实现 AOP 的编码风格.<br>@AspectJ 风格的 AOP 是 AspectJ Project 在 AspectJ 5 中引入的, 并且 Spring 也支持@AspectJ 的 AOP 风格. </p>
-<h3 id="使能-AspectJ-支持"><a href="#使能-AspectJ-支持" class="headerlink" title="使能 @AspectJ 支持"></a>使能 @AspectJ 支持</h3><p>@AspectJ 可以以 XML 的方式或以注解的方式来使能, 并且不论以哪种方式使能@ASpectJ, 我们都必须保证 aspectjweaver.jar 在 classpath 中. </p>
-<h4 id="使用-Java-Configuration-方式使能-AspectJ"><a href="#使用-Java-Configuration-方式使能-AspectJ" class="headerlink" title="使用 Java Configuration 方式使能@AspectJ"></a>使用 Java Configuration 方式使能@AspectJ</h4><pre><code>@Configuration
-@EnableAspectJAutoProxy
-public class AppConfig {
-}
-</code></pre><h4 id="使用-XML-方式使能-AspectJ"><a href="#使用-XML-方式使能-AspectJ" class="headerlink" title="使用 XML 方式使能@AspectJ"></a>使用 XML 方式使能@AspectJ</h4><pre><code>&lt;aop:aspectj-autoproxy/&gt;
-</code></pre><h3 id="定义-aspect-切面"><a href="#定义-aspect-切面" class="headerlink" title="定义 aspect(切面)"></a>定义 aspect(切面)</h3><p>当使用注解 <strong>@Aspect</strong> 标注一个 Bean 后, 那么 Spring 框架会自动收集这些 Bean, 并添加到 Spring AOP 中, 例如: </p>
-<pre><code>@Component
-@Aspect
-public class MyTest {
-}
-</code></pre><p><code>注意, 仅仅使用@Aspect 注解, 并不能将一个 Java 对象转换为 Bean, 因此我们还需要使用类似 @Component 之类的注解.</code><br><code>注意, 如果一个 类被@Aspect 标注, 则这个类就不能是其他 aspect 的 **advised object** 了, 因为使用 @Aspect 后, 这个类就会被排除在 auto-proxying 机制之外.</code></p>
-<h3 id="声明-pointcut"><a href="#声明-pointcut" class="headerlink" title="声明 pointcut"></a>声明 pointcut</h3><p>一个 pointcut 的声明由两部分组成: </p>
-<ul>
-<li><p>一个方法签名, 包括方法名和相关参数 </p>
-</li>
-<li><p>一个 pointcut 表达式, 用来指定哪些方法执行是我们感兴趣的(即因此可以织入 advice). </p>
-</li>
-</ul>
-<p>在@AspectJ 风格的 AOP 中, 我们使用一个方法来描述 pointcut, 即: </p>
-<pre><code>@Pointcut(&quot;execution(* com.xys.service.UserService.*(..))&quot;) // 切点表达式
-private void dataAccessOperation() {} // 切点前面
-</code></pre><p><code>这个方法必须无返回值.</code><br><code>这个方法本身就是 pointcut signature, pointcut 表达式使用@Pointcut 注解指定.</code><br>上面我们简单地定义了一个 pointcut, 这个 pointcut 所描述的是: 匹配所有在包 <strong>com.xys.service.UserService</strong> 下的所有方法的执行. </p>
-<h4 id="切点标志符-designator"><a href="#切点标志符-designator" class="headerlink" title="切点标志符(designator)"></a>切点标志符(designator)</h4><p>AspectJ5 的切点表达式由标志符(designator)和操作参数组成. 如 “execution( _greetTo(..))” 的切点表达式, <strong>execution</strong> 就是 标志符, 而圆括号里的_ greetTo(..) 就是操作参数 </p>
-<h5 id="execution"><a href="#execution" class="headerlink" title="execution"></a>execution</h5><p>匹配 join point 的执行, 例如 “execution(* hello(..))” 表示匹配所有目标类中的 hello() 方法. 这个是最基本的 pointcut 标志符. </p>
-<h5 id="within"><a href="#within" class="headerlink" title="within"></a>within</h5><p>匹配特定包下的所有 join point, 例如 <code>within(com.xys.*)</code> 表示 com.xys 包中的所有连接点, 即包中的所有类的所有方法. 而 <code>within(com.xys.service.*Service)</code> 表示在 com.xys.service 包中所有以 Service 结尾的类的所有的连接点. </p>
-<h5 id="this-与-target"><a href="#this-与-target" class="headerlink" title="this 与 target"></a>this 与 target</h5><p>this 的作用是匹配一个 bean, 这个 bean(Spring AOP proxy) 是一个给定类型的实例(instance of). 而 target 匹配的是一个目标对象(target object, 即需要织入 advice 的原始的类), 此对象是一个给定类型的实例(instance of). </p>
-<h5 id="bean"><a href="#bean" class="headerlink" title="bean"></a>bean</h5><p>匹配 bean 名字为指定值的 bean 下的所有方法, 例如: </p>
-<pre><code>bean(*Service) // 匹配名字后缀为 Service 的 bean 下的所有方法
-bean(myService) // 匹配名字为 myService 的 bean 下的所有方法
-</code></pre><h5 id="args"><a href="#args" class="headerlink" title="args"></a>args</h5><p>匹配参数满足要求的的方法.<br>例如: </p>
-<pre><code>@Pointcut(&quot;within(com.xys.demo2.*)&quot;)
-public void pointcut2() {
-}
-
-@Before(value = &quot;pointcut2()  &amp;&amp;  args(name)&quot;)
-public void doSomething(String name) {
-    logger.info(&quot;---page: {}---&quot;, name);
-}
-
-@Service
-public class NormalService {
-    private Logger logger = LoggerFactory.getLogger(getClass());
-
-    public void someMethod() {
-        logger.info(&quot;---NormalService: someMethod invoked---&quot;);
-    }
-
-
-    public String test(String name) {
-        logger.info(&quot;---NormalService: test invoked---&quot;);
-        return &quot;服务一切正常&quot;;
-    }
-}
-</code></pre><p>当 NormalService.test 执行时, 则 advice <code>doSomething</code> 就会执行, test 方法的参数 name 就会传递到 <code>doSomething</code> 中. </p>
-<p>常用例子: </p>
-<pre><code>// 匹配只有一个参数 name 的方法
-@Before(value = &quot;aspectMethod()  &amp;&amp;  args(name)&quot;)
-public void doSomething(String name) {
-}
-
-// 匹配第一个参数为 name 的方法
-@Before(value = &quot;aspectMethod()  &amp;&amp;  args(name, ..)&quot;)
-public void doSomething(String name) {
-}
-
-// 匹配第二个参数为 name 的方法
-Before(value = &quot;aspectMethod()  &amp;&amp;  args(*, name, ..)&quot;)
-public void doSomething(String name) {
-}
-</code></pre><h5 id="annotation"><a href="#annotation" class="headerlink" title="@annotation"></a>@annotation</h5><p>匹配由指定注解所标注的方法, 例如: </p>
-<pre><code>@Pointcut(&quot;@annotation(com.xys.demo1.AuthChecker)&quot;)
-public void pointcut() {
-}
-</code></pre><p>则匹配由注解 <code>AuthChecker</code> 所标注的方法. </p>
-<h4 id="常见的切点表达式"><a href="#常见的切点表达式" class="headerlink" title="常见的切点表达式"></a>常见的切点表达式</h4><h5 id="匹配方法签名"><a href="#匹配方法签名" class="headerlink" title="匹配方法签名"></a>匹配方法签名</h5><pre><code>// 匹配指定包中的所有的方法
-execution(* com.xys.service.*(..))
-
-// 匹配当前包中的指定类的所有方法
-execution(* UserService.*(..))
-
-// 匹配指定包中的所有 public 方法
-execution(public * com.xys.service.*(..))
-
-// 匹配指定包中的所有 public 方法, 并且返回值是 int 类型的方法
-execution(public int com.xys.service.*(..))
-
-// 匹配指定包中的所有 public 方法, 并且第一个参数是 String, 返回值是 int 类型的方法
-execution(public int com.xys.service.*(String name, ..))
-</code></pre><h5 id="匹配类型签名"><a href="#匹配类型签名" class="headerlink" title="匹配类型签名"></a>匹配类型签名</h5><pre><code>// 匹配指定包中的所有的方法, 但不包括子包
-within(com.xys.service.*)
-
-// 匹配指定包中的所有的方法, 包括子包
-within(com.xys.service..*)
-
-// 匹配当前包中的指定类中的方法
-within(UserService)
-
-
-// 匹配一个接口的所有实现类中的实现的方法
-within(UserDao+)
-</code></pre><h5 id="匹配-Bean-名字"><a href="#匹配-Bean-名字" class="headerlink" title="匹配 Bean 名字"></a>匹配 Bean 名字</h5><pre><code>// 匹配以指定名字结尾的 Bean 中的所有方法
-bean(*Service)
-</code></pre><h5 id="切点表达式组合"><a href="#切点表达式组合" class="headerlink" title="切点表达式组合"></a>切点表达式组合</h5><pre><code>// 匹配以 Service 或 ServiceImpl 结尾的 bean
-bean(*Service || *ServiceImpl)
-
-// 匹配名字以 Service 结尾, 并且在包 com.xys.service 中的 bean
-bean(*Service) &amp;&amp; within(com.xys.service.*)
-</code></pre><h3 id="声明-advice"><a href="#声明-advice" class="headerlink" title="声明 advice"></a>声明 advice</h3><p>advice 是和一个 pointcut 表达式关联在一起的, 并且会在匹配的 join point 的方法执行的前/后/周围 运行. <code>pointcut 表达式可以是简单的一个 pointcut 名字的引用, 或者是完整的 pointcut 表达式</code>.<br>下面我们以几个简单的 advice 为例子, 来看一下一个 advice 是如何声明的. </p>
-<h4 id="Before-advice"><a href="#Before-advice" class="headerlink" title="Before advice"></a>Before advice</h4><pre><code>/**
- * @author xiongyongshun
- * @version 1.0
- * @created 16/9/9 13:13
- */
-@Component
-@Aspect
-public class BeforeAspectTest {
-    // 定义一个 Pointcut, 使用 切点表达式函数 来描述对哪些 Join point 使用 advise.
-    @Pointcut(&quot;execution(* com.xys.service.UserService.*(..))&quot;)
-    public void dataAccessOperation() {
-    }
-}
-
-@Component
-@Aspect
-public class AdviseDefine {
-    // 定义 advise
-    @Before(&quot;com.xys.aspect.PointcutDefine.dataAccessOperation()&quot;)
-    public void doBeforeAccessCheck(JoinPoint joinPoint) {
-        System.out.println(&quot;*****Before advise, method: &quot; + joinPoint.getSignature().toShortString() + &quot; *****&quot;);
-    }
-}
-</code></pre><p>这里, <strong>@Before</strong> 引用了一个 pointcut, 即 “com.xys.aspect.PointcutDefine.dataAccessOperation()” 是一个 pointcut 的名字.<br>如果我们在 advice 在内置 pointcut, 则可以: </p>
-<pre><code>@Component
-@Aspect
-public class AdviseDefine {
-    // 将 pointcut 和 advice 同时定义
-    @Before(&quot;within(com.xys.service..*)&quot;)
-    public void doAccessCheck(JoinPoint joinPoint) {
-        System.out.println(&quot;*****doAccessCheck, Before advise, method: &quot; + joinPoint.getSignature().toShortString() + &quot; *****&quot;);
-    }
-}
-</code></pre><h4 id="around-advice"><a href="#around-advice" class="headerlink" title="around advice"></a>around advice</h4><p>around advice 比较特别, 它可以在一个方法的之前之前和之后添加不同的操作, 并且甚至可以决定何时, 如何, 是否调用匹配到的方法. </p>
-<pre><code>@Component
-@Aspect
-public class AdviseDefine {
-    // 定义 advise
-    @Around(&quot;com.xys.aspect.PointcutDefine.dataAccessOperation()&quot;)
-    public Object doAroundAccessCheck(ProceedingJoinPoint pjp) throws Throwable {
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
-        // 开始
-        Object retVal = pjp.proceed();
-        stopWatch.stop();
-        // 结束
-        System.out.println(&quot;invoke method: &quot; + pjp.getSignature().getName() + &quot;, elapsed time: &quot; + stopWatch.getTotalTimeMillis());
-        return retVal;
-    }
-}
-</code></pre><p>around advice 和前面的 before advice 差不多, 只是我们把注解 <strong>@Before</strong> 改为了 <strong>@Around</strong> 了. </p>
-]]></content>
     
     <summary type="html">
     

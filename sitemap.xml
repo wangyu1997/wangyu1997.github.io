@@ -464,6 +464,13 @@
   </url>
   
   <url>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-logtalk.js</loc>
+    
+    <lastmod>2017-01-13T03:58:20.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://wangyu1997.github.io/assets/prettify/lang-ls.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
@@ -485,13 +492,6 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-matlab.js</loc>
-    
-    <lastmod>2017-01-13T03:58:20.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://wangyu1997.github.io/assets/prettify/lang-agc.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
@@ -499,14 +499,14 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-mumps.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-ml.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-logtalk.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-mumps.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
@@ -674,14 +674,14 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-xquery.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-yaml.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-yaml.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-xquery.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
@@ -730,14 +730,14 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/skins/doxy.css</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/skins/desert.css</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/skins/desert.css</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/skins/doxy.css</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
@@ -758,7 +758,7 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-ml.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-matlab.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     

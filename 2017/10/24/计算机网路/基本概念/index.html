@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <link rel="stylesheet" href="/css iconfont.css"></%->
+<head>
+    <!--
+        © Material Theme
+        https://github.com/viosey/hexo-theme-material
+        Version: 1.3.3 -->
+
+    <!-- Title -->
+    
+    <title>
+        
+            计算机网络基本概念 | 
+        
+        人不如故
+    </title>
+
+    <!-- Meta & Info -->
+    <meta charset="utf-8">
+
+    <!-- dns prefetch -->
+    <meta http-equiv="x-dns-prefetch-control" content="on">
+    
+    
+    
+    
+        <link rel="dns-prefetch" href="https://hm.baidu.com"/>
+    
+    
+        <link rel="dns-prefetch" href="https://www.google-analytics.com"/>
+    
+    
+        <link rel="dns-prefetch" href="https://busuanzi.ibruce.info"/>
+    
+
+    <meta http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#000">
+    <meta name="author" content="人不如故">
+    <meta name="description" content="世间一场大梦，人生几度秋凉。">
+    <meta name="keywords" content="null,计算机网络,基本概念,网络协议">
+
+    <!-- Favicons -->
+    <link rel="icon shortcut" type="image/ico" href="/img/favicon.png">
+    <link rel="icon" sizes="192x192" href="/img/favicon.png">
+    <link rel="apple-touch-icon" href="/img/favicon.png">
+
+    <!--iOS -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-title" content="Title">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="480">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="人不如故">
+
+    <!-- The Open Graph protocol -->
+    <meta property="og:url" content="https://wangyu1997.github.io">
+    <meta property="og:type" content="blog">
+    <meta property="og:title" content="计算机网络基本概念 | 人不如故">
+    <meta property="og:description" content="世间一场大梦，人生几度秋凉。">
+    <meta property="og:article:tag" content="计算机网络"> <meta property="og:article:tag" content="基本概念"> <meta property="og:article:tag" content="网络协议"> 
+
+    <!--[if lte IE 9]>
+        <link rel="stylesheet" href="/css/ie-blocker.css">
+
+        
+            <script src="/js/ie-blocker.zhCN.js"></script>
+        
+    <![endif]-->
+    <!-- Import CSS & jQuery -->
+    
+        <link rel="stylesheet" href="/css/material.min.css">
+        <link rel="stylesheet" href="/css/style.min.css">
+        <!-- Config CSS -->
+
+
+<!-- Other Styles -->
+<style>
+  body, html {
+    font-family: Roboto, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+  }
+
+  a {
+    color: #000;
+  }
+
+  .mdl-card__media,
+  #search-label,
+  #search-form-label:after,
+  #scheme-Paradox .hot_tags-count,
+  #scheme-Paradox .sidebar_archives-count,
+  #scheme-Paradox .sidebar-colored .sidebar-header,
+  #scheme-Paradox .sidebar-colored .sidebar-badge{
+    background-color: #000 !important;
+  }
+
+  /* Sidebar User Drop Down Menu Text Color */
+  #scheme-Paradox .sidebar-colored .sidebar-nav>.dropdown>.dropdown-menu>li>a:hover,
+  #scheme-Paradox .sidebar-colored .sidebar-nav>.dropdown>.dropdown-menu>li>a:focus {
+    color: #000 !important;
+  }
+
+  #post_entry-right-info,
+  .sidebar-colored .sidebar-nav li:hover > a,
+  .sidebar-colored .sidebar-nav li:hover > a i,
+  .sidebar-colored .sidebar-nav li > a:hover,
+  .sidebar-colored .sidebar-nav li > a:hover i,
+  .sidebar-colored .sidebar-nav li > a:focus i,
+  .sidebar-colored .sidebar-nav > .open > a,
+  .sidebar-colored .sidebar-nav > .open > a:hover,
+  .sidebar-colored .sidebar-nav > .open > a:focus,
+  #ds-reset #ds-ctx .ds-ctx-entry .ds-ctx-head a {
+    color: #000 !important;
+  }
+
+  .toTop {
+    background: #000 !important;
+  }
+
+  .material-layout .material-post>.material-nav,
+  .material-layout .material-index>.material-nav,
+  .material-nav a {
+    color: #000;
+  }
+
+  #scheme-Paradox .MD-burger-layer {
+    background-color: #000;
+  }
+
+  #scheme-Paradox #post-toc-trigger-btn {
+    color: #000;
+  }
+
+  .post-toc a:hover {
+    color: #000;
+    text-decoration: underline;
+  }
+
+</style>
+
+
+<!-- Theme Background Related-->
+
+    <style>
+      body{
+        background-image: url(/img/bg.jpg);
+      }
+    </style>
+
+
+
+
+<!-- Fade Effect -->
+
+    <style>
+      .fade {
+        transition: all 800ms linear;
+        -webkit-transform: translate3d(0,0,0);
+        -moz-transform: translate3d(0,0,0);
+        -ms-transform: translate3d(0,0,0);
+        -o-transform: translate3d(0,0,0);
+        transform: translate3d(0,0,0);
+        opacity: 1;
+      }
+
+      .fade.out{
+        opacity: 0;
+      }
+    </style>
+
+
+        <script src="/js/jquery.min.js"></script>
+        <script src="/js/queue.js"></script>
+    
+
+    <!-- UC Browser Compatible -->
+    <script>
+        var agent = navigator.userAgent.toLowerCase();
+        if(agent.indexOf('ucbrowser')>0) {
+            document.write("<link rel=\"stylesheet\" href=\"/css/uc.css\">");
+            alert('由于 UC 浏览器使用极旧的内核，而本网站使用了一些新的特性。\n为了您能更好的浏览，推荐使用 Chrome 或 Firefox 浏览器。');
+        }
+    </script>
+
+    
+    <!-- Baidu Analytics -->
+    <script>
+        var _hmt = _hmt || [];
+        (function() {var hm = document.createElement('script');
+        hm.src = 'https://hm.baidu.com/hm.js?0c1235d6c5795e257894fa96152e0154';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    
+
+    
+    <!-- Google Analytics -->
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-99567775-1', 'auto');ga('send', 'pageview');
+    </script>
+    
+
+
+    <!-- Bing Background -->
+    
+
+    <!-- Custom Head -->
+    
+<link rel="stylesheet" href="/css/prism-dark.css" type="text/css"></head>
+
+
+    
+        <body id="scheme-Paradox" class="lazy">
+            <div class="material-layout  mdl-js-layout has-drawer is-upgraded">
+                
+
+                <!-- Main Container -->
+                <main class="material-layout__content" id="main">
+
+                    <!-- Top Anchor -->
+                    <div id="top">
+                        <!---->
+                    </div>
+
+                    
+                        <!-- Hamburger Button -->
+                        <button class="MD-burger-icon sidebar-toggle">
+                            <span class="MD-burger-layer"></span>
+                        </button>
+                    
+
+                    <!-- Post TOC -->
+
+    
+    <!-- Back Button -->
+    <!--
+    <div class="material-back" id="backhome-div" tabindex="0">
+        <a class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
+           href="#" onclick="window.history.back();return false;"
+           target="_self"
+           role="button"
+           data-upgraded=",MaterialButton,MaterialRipple">
+            <i class="material-icons" role="presentation">arrow_back</i>
+            <span class="mdl-button__ripple-container">
+                <span class="mdl-ripple"></span>
+            </span>
+        </a>
+    </div>
+    -->
+
+    <!-- Left aligned menu below button -->
+    <button id="post-toc-trigger-btn"
+        class="mdl-button mdl-js-button mdl-button--icon">
+        <i class="material-icons">format_list_numbered</i>
+    </button>
+
+    <ul class="post-toc-wrap mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="post-toc-trigger-btn" style="max-height:80vh; overflow-y:scroll;">
+        
+
+        <!--
+        <li class="mdl-menu__item">
+            Some Action
+        </li>
+        -->
+    </ul>
+
+
+
+
+<!-- Layouts -->
+
+    <!-- Post Module -->
+    <div class="material-post_container">
+
+        <div class="material-post mdl-grid">
+            <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
+
+                <!-- Post Header(Thumbnail & Title) -->
+                
+    <!-- Paradox Post Header -->
+    
+        <!-- Custom Thumbnail -->
+        <div class="post_thumbnail-custom mdl-card__media mdl-color-text--grey-50" style="background-image:url(http://oq5d32gij.bkt.clouddn.com/15088595623416.png)">
+    
+            <p class="article-headline-p">
+                计算机网络基本概念
+            </p>
+        </div>
+
+
+
+
+
+                
+                    <!-- Paradox Post Info -->
+                    <div class="mdl-color-text--grey-700 mdl-card__supporting-text meta">
+
+    <!-- Author Avatar -->
+    <div id="author-avatar">
+        <img src="/img/avatar.png" width="44px" height="44px" alt="Author Avatar"/>
+    </div>
+    <!-- Author Name & Date -->
+    <div>
+        <strong>人不如故</strong>
+        <span>10月 24, 2017</span>
+    </div>
+
+    <div class="section-spacer"></div>
+
+    <!-- Favorite -->
+    <!--
+        <button id="article-functions-like-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon btn-like">
+            <i class="material-icons" role="presentation">favorite</i>
+            <span class="visuallyhidden">favorites</span>
+        </button>
+    -->
+
+    <!-- Qrcode -->
+    
+        <button id="article-functions-qrcode-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+            <i class="material-icons" role="presentation">devices other</i>
+            <span class="visuallyhidden">devices other</span>
+        </button>
+        <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-qrcode-button">
+            <li class="mdl-menu__item">在其它设备中阅读本文章</li>
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPYAAAD2CAAAAADAeSUUAAACyUlEQVR42u3aQVIDMQwEwPz/03ClCtjMWFsk2O0TFbwbtzgISX58HLke2NjY2NjY2NjY2G/JfsTr6/4fXvrt8992rj31/Qz5mbGxsbFPYOeHuw5HEqy1PUnonwQUGxsb+wB2e6A8EJMgTv4M2NjY2Nhtwrg+6GRhY2NjY/99AlvbnwQaGxsbG3vexM8B+RggT5kv6KVhY2Njvz17bdD72p9fNt/GxsbGfjP22lorJ9rCI0lUxZmxsbGxN2Vft4HaqzPJyLYNR/7s6PIlNjY29kbs5CvbMiAfFeSXO9uGFDY2NvZp7OvjrqWZpGGUYBaTKzY2NvbW7DwJTYqEvFzJx71JiLGxsbH3Zq81aNpD5Iz2nfl3YWNjY+/KbnnXT+XFxuTZvEzCxsbGPoG9lsbaxNa2qNqkGJVP2NjY2Aew26s27Qi2HTAn14lyPDY2Nvbe7PnVnDVeO0hIUmPRS8PGxsbegj15aTs2aEua9jJQUYpgY2Njb8rO/9FvU9o8Ed7QzMLGxsY+jD1Jb2vj4bt+i42NjY2dFANrI9hJEypJhE+Cjo2NjX0Au23oTIK1lpbyMQM2Njb2mex8KJuPZpPLN/nOZDyMjY2NfSZ7Ak4A81Q0GU5gY2Nj782eFCFtWTK5oNOWRtjY2NjnsNtWTp024nHCvYPnugLDxsbG/ufsvEhYS2l3tZnWCiFsbGzsE9h5skka9Pk1mnZgvPYebGxs7NPYSTs+ebYtGCbjgSgc2NjY2Juy25WXJUkjabKn3omNjY29KXt+FWbePMoTWLsTGxsb+xx2nrTmg+G8XMnfP6rAsLGxsTdiT5pHbYnSpsC8qXTbVAQbGxv7GHbb9E9ga+XNk0+wsbGxseMBwPWhJ6Fca1FhY2Njn8O+a7g7aSq131IEAhsbG3tr9tqg995kUzeJ4hIIGxsbe2/2OQsbGxsbGxsbGxv7bdYnbmjO4Wne9GsAAAAASUVORK5CYII=">
+        </ul>
+    
+
+    <!-- Tags (bookmark) -->
+    
+    <button id="article-functions-viewtags-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+        <i class="material-icons" role="presentation">bookmark</i>
+        <span class="visuallyhidden">bookmark</span>
+    </button>
+    <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-viewtags-button">
+        <li class="mdl-menu__item">
+        <a class="post_tag-link" href="/tags/基本概念/">基本概念</a></li><li class="mdl-menu__item"><a class="post_tag-link" href="/tags/网络协议/">网络协议</a></li><li class="mdl-menu__item"><a class="post_tag-link" href="/tags/计算机网络/">计算机网络</a>
+    </ul>
+    
+
+    <!-- Share -->
+    <button id="article-fuctions-share-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+    <i class="material-icons" role="presentation">share</i>
+    <span class="visuallyhidden">share</span>
+</button>
+<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-fuctions-share-button">
+    
+
+    
+        
+            <!-- Busuanzi Views -->
+            <a class="post_share-link" href="#">
+                <li class="mdl-menu__item">
+                    <span id="busuanzi_container_page_pv">
+                        <span id="busuanzi_value_page_pv"></span>&nbsp;浏览量
+                    </span>
+                </li>
+            </a>
+        
+    
+
+    <!-- Share Weibo -->
+    
+        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=计算机网络基本概念&url=https://wangyu1997.github.io//2017/10/24/计算机网路/基本概念/index.html&pic=&searchPic=false&style=simple" target="_blank">
+            <li class="mdl-menu__item">
+                分享到微博
+            </li>
+        </a>
+    
+
+    <!-- Share Twitter -->
+    
+        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=计算机网络基本概念&url=https://wangyu1997.github.io//2017/10/24/计算机网路/基本概念/index.html&via=人不如故" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Twitter
+            </li>
+        </a>
+    
+
+    <!-- Share Facebook -->
+    
+        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=https://wangyu1997.github.io//2017/10/24/计算机网路/基本概念/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Facebook
+            </li>
+        </a>
+    
+
+    <!-- Share Google+ -->
+    
+        <a class="post_share-link" href="https://plus.google.com/share?url=https://wangyu1997.github.io//2017/10/24/计算机网路/基本概念/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Google+
+            </li>
+        </a>
+    
+
+    <!-- Share LinkedIn -->
+    
+
+    <!-- Share QQ -->
+    
+        <a class="post_share-link" href="http://connect.qq.com/widget/shareqq/index.html?site=人不如故&title=计算机网络基本概念&summary=世间一场大梦，人生几度秋凉。&pics=https://wangyu1997.github.io/img/favicon.png&url=https://wangyu1997.github.io/2017/10/24/计算机网路/基本概念/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 QQ
+            </li>
+        </a>
+    
+
+    <!-- Share Telegram -->
+    
+</ul>
+
+</div>
+
+                
+
+                <!-- Post Content -->
+                <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
+   
+    
+            <link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>计算机网络是通信技术和计算机技术紧密结合的产物</p>
+<a id="more"></a>    
+<p>通信系统模型：</p>
+<p><img src="media/15088842118439.jpg" alt=""></p>
+<ul>
+<li>计算机网络就是一种通信网络</li>
+</ul>
+<p>定义：计算机网络就是互连的、自治的计算机集合</p>
+<ul>
+<li>自治：无主从关系</li>
+<li>互连：互联互通<br>  通信链路</li>
+</ul>
+<p><img src="media/15088843816499.jpg" alt=""></p>
+<p>当两台主机距离过远时，直接使用物理链路连接不可行。通过交换网络互连主机</p>
+<p><img src="media/15088844808106.jpg" alt=""></p>
+<p>Internet：</p>
+<p>组成细节角度</p>
+<pre><code>全球最大的互联网络
+ * ISP（Internet Service Provider）网络互连的“网络之网络”
+    数以百万计的互连的计算设备集合
+     * 主机=端系统
+     * 运行各种网络应用
+* 通信链路
+    光纤、铜缆、无线电、卫星...
+分组交换：转发分组（数据包）
+    * 路由器和交换机
+</code></pre><p>服务角度</p>
+<pre><code>为网络应用提供通信服务的通信基础设施
+    * Web、VoIP、email、网络游戏、电子商务、社交网络...
+为网络应用提供应用编程接口(API)
+    * 支持应用程序“连接”Internet，发送／接收数据
+    * 提供类似于邮政系统的数据传输服务
+</code></pre><p><img src="media/15088846455227.jpg" alt=""></p>
+<p>硬件（主机、路由器、通信链路等）是计算机网络的基础<br>计算机网络中的数据必须交换遵守事先预定好的规则</p>
+<blockquote>
+<p>任何通信和信息交换过程都需要规则</p>
+</blockquote>
+<p>网络通信：</p>
+<pre><code>* 通信主体是“机器”不是人
+* 交换”电子化“或”数字化“消息
+* 计算机网络的所有通信过程都必须遵守某种／些规则---协议
+</code></pre><blockquote>
+<p>网络协议，简称协议，是为进行网络中的数据交换而建立的规则、标准或约定<br>协议规定了通信实体之间所交换的消息的格式、意义、顺序以及针对收到消息或发生的事件所采取的动作（action）</p>
+</blockquote>
+<p>协议三要素：<br>语法（Syntax）</p>
+<pre><code>* 数据与控制信息的结构或格式
+* 信号电平
+</code></pre><p>语意（Semantics）</p>
+<pre><code>* 需要发出何种控制信息
+* 完成何种动作以及作出何种响应
+* 差错控制
+</code></pre><p>时序（Timing）</p>
+<pre><code>* 事件顺序
+* 速度匹配
+</code></pre><ul>
+<li>协议规范了网络中所有信息发送和接收过程</li>
+<li>学习网络的重要内容之一</li>
+<li>网络创新的表现形式之一</li>
+<li>Internet协议标准<br>  RFC：Request for Comments<br>  IETF：互联网工程任务组</li>
+</ul>
+<p>网络边缘：</p>
+<pre><code>* 主机
+* 网络应用
+</code></pre><p>接入网络、物理介质</p>
+<pre><code>* 有线或无线通信链路
+</code></pre><p>网络核心（核心网络）</p>
+<pre><code>* 互联的路由器（或分组转发设备）
+* 网络之网络
+</code></pre><p>主机（端系统）</p>
+<pre><code>* 位于“网络边缘”
+* 运行网络应用程序
+    Web、email
+</code></pre><p>客户／服务器（client／server）应用模型<br>    客户端发送请求，接收服务器响应（Web，FTP）<br>对等（peer-peer，P2P）应用模型<br>    无专用服务器<br>    通信在对等实体之间直接进行</p>
+<blockquote>
+<p>接入网络</p>
+</blockquote>
+<p><img src="media/15088866522095.jpg" alt=""></p>
+<p>数字用户线路（DSL）（独占）<br>    利用已有的电话线连接中心局的DSLAM<br>    语音通过DSL电话线接入电话网<br>上行低，下行快</p>
+<p><img src="media/15088866356085.jpg" alt=""></p>
+<p>电缆网络：有线电视网络（共享）</p>
+<p><img src="media/15088868501997.jpg" alt=""></p>
+<p>频分多路复用：在不同频带（载波）上传输不同的频道<br>HFC：混合光纤同轴电缆（共享）<br>    非对称</p>
+<p>典型家庭网络的接入：</p>
+<p><img src="media/15088869044970.jpg" alt=""></p>
+<p>机构接入：</p>
+<p><img src="media/15088869559608.jpg" alt=""></p>
+<p>无线接入：<br>通过共享的无线接入网络连接端系统与路由器<br>    通过基站（base station）或称为“接入点”（access point）</p>
+<p>无线局域网络（LANs）<br>广域无线接入（蜂窝网）</p>
+<p>网络核心的关键功能：路由+转发<br>    路由：确定分组从源到目的传输路径<br>    转发：将分组从路由器的输入端口交换至正确的输出端口</p>
+
+           
+         <style type="text/css">
+.hljs-comment,
+.hljs-quote {
+  color: #999999;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+  color: #f2777a;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+  color: #f99157;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+  color: #ffcc66;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+  color: #99cc99;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+  color: #6699cc;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+  color: #cc99cc;
+}
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  background: #2d2d2d !important;
+  color: #cccccc !important;
+  padding: 1em !important;
+}
+
+pre{
+    background: #2d2d2d !important;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+</style>
+<script type="text/javascript">
+// $(function(){
+// 	//代码高亮自定义
+// 	$("code").each(function(){
+// 		$(this).html("<ul><li>" + $(this).html().replace(/\n/g,"\n</li><li>") +"\n</li></ul>");
+// 	});
+// });
+</script>
+
+<style type="text/css">
+/*.hljs {
+	border: 0;
+	font-family: "Consulas", "Courier New", Courier, mono, serif;
+	font-size: 12px;
+	background: #eee !important;
+	display: block;
+	padding: 1px;
+	margin: 0;
+	width: 100%;
+	font-weight: 200;
+	color: #333;
+	white-space: pre-wrap
+}*/
+/*.hljs ul {
+	list-style: decimal;
+	background-color: #fff;
+	margin: 0px 0px 0 0px !important;
+	padding: 0px;
+}*/
+/*.hljs ul li {
+	list-style: decimal-leading-zero;
+	border-left: 1px solid #ddd !important;
+	background: #fff;
+	padding: 5px!important;
+	margin: 0 !important;
+  width: 20px !important;
+	line-height: 14px;
+	word-break: break-all;
+	word-wrap: break-word;
+}*/
+/*.hljs ul li:nth-of-type(even) {
+	background-color: #fcfcfc;
+	color: inherit;
+}*/
+</style>
+<script src="https://cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+       <script >hljs.initHighlightingOnLoad();</script>  
+         
+    
+             
+           <style type="text/css">
+           #rewardButton {
+    cursor: pointer;
+    border: 0;
+    outline: 0;
+    border-radius: 100%;
+    padding: 0;
+    margin: 0;
+    letter-spacing: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+}
+#rewardButton span {
+    display: inline-block;
+    width: 80px;
+    height: 35px;
+    border-radius: 5px;
+    padding-top: 5px;
+    color: #fff;
+    font-weight: 400;
+    font-style: normal;
+    font-variant: normal;
+    font-stretch: normal;
+    font-size: 18px;
+    font-family: "Microsoft Yahei";
+    background: #F44336;
+}
+#rewardButton span:hover{
+    background: #F7877F;
+}
+#QR{
+    padding-top:20px;
+}
+#QR a{
+    border:0;
+}
+#QR img{
+    width: 180px;
+    max-width: 100%;
+    display: inline-block;
+    margin: 0.8em 2em 0 2em;
+}
+#wechat:hover p{
+    animation: roll 0.1s infinite linear;
+    -webkit-animation: roll 0.1s infinite linear;
+    -moz-animation: roll 0.1s infinite linear;
+}
+#alipay:hover p{
+    animation: roll 0.1s infinite linear;
+    -webkit-animation: roll 0.1s infinite linear;
+    -moz-animation: roll 0.1s infinite linear;
+}
+@keyframes roll {
+    from {
+      transform(rotateZ(30deg));
+    }
+    to {
+      transform(rotateZ(-30deg));
+    }
+}
+
+           </style>
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/uploads/wechat.JPG" alt="人不如故 WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/uploads/ali.JPG" alt="人不如故 Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+           
+
+
+     
+    
+    
+</div>
+
+
+                
+
+                <!-- Post Comments -->
+                
+                    
+
+
+
+
+    <!-- 使用 DISQUS -->
+    <div id="disqus-comment">
+        <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+        this.page.url = 'https://wangyu1997.github.io/2017/10/24/计算机网路/基本概念/';  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'https://wangyu1997.github.io/2017/10/24/计算机网路/基本概念/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    queue.offer(function() {
+            (function() { // DON'T EDIT BELOW THIS LINE
+                var d = document;
+                var s = d.createElement('script');
+                s.src = '//https-wangyu1997-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', + new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        });
+</script>
+
+    </div>
+    <style>
+        #disqus-comment{
+            background-color: #eee;
+            padding: 2pc;
+        }
+    </style>
+
+
+
+
+                
+            </div>
+
+            <!-- Post Prev & Next Nav -->
+            <nav class="material-nav mdl-color-text--grey-50 mdl-cell mdl-cell--12-col">
+    <!-- Prev Nav -->
+    
+        <a href="/2017/10/25/Spring/Hibernate/" id="post_nav-newer" class="prev-content">
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_back</i>
+            </button>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            新篇
+        </a>
+    
+
+    <!-- Section Spacer -->
+    <div class="section-spacer"></div>
+
+    <!-- Next Nav -->
+    
+        <a href="/2017/10/24/计算机组成原理/计算机系统概论/" id="post_nav-older" class="next-content">
+            旧篇
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_forward</i>
+            </button>
+        </a>
+    
+</nav>
+
+        </div>
+    </div>
+
+
+
+                    
+                        <!-- Overlay For Active Sidebar -->
+<div class="sidebar-overlay"></div>
+
+<!-- Material sidebar -->
+<aside id="sidebar" class="sidebar sidebar-colored sidebar-fixed-left" role="navigation">
+    <div id="sidebar-main">
+        <!-- Sidebar Header -->
+        <div class="sidebar-header header-cover" style="background-image: url(/img/sidebar_header.png);">
+    <!-- Top bar -->
+    <div class="top-bar"></div>
+
+    <!-- Sidebar toggle button -->
+    <button type="button" class="sidebar-toggle mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" style="display: initial;" data-upgraded=",MaterialButton,MaterialRipple">
+        <i class="material-icons">clear_all</i>
+        <span class="mdl-button__ripple-container">
+            <span class="mdl-ripple">
+            </span>
+        </span>
+    </button>
+
+    <!-- Sidebar Avatar -->
+    <div class="sidebar-image">
+        <img src="/img/avatar.png" alt="人不如故's avatar">
+    </div>
+
+    <!-- Sidebar Email -->
+    <a data-toggle="dropdown" class="sidebar-brand" href="#settings-dropdown">
+        wangyu19970819@gmail.com
+        <b class="caret"></b>
+    </a>
+</div>
+
+
+        <!-- Sidebar Navigation  -->
+        <ul class="nav sidebar-nav">
+    <!-- User dropdown  -->
+    <li class="dropdown">
+        <ul id="settings-dropdown" class="dropdown-menu">
+            
+                <li>
+             
+                    <a href="mailto:wangyu19970819@gmail.com" target="_blank" title="Email Me">
+               
+                        
+                            <i class="material-icons sidebar-material-icons sidebar-indent-left1pc-element">email</i>
+                        
+                        Email Me
+                    </a>
+                </li>
+            
+                <li>
+             
+                    <a href="/about" target="_self" title="关于">
+              
+                        
+                            <i class="material-icons sidebar-material-icons sidebar-indent-left1pc-element">person</i>
+                        
+                        关于
+                    </a>
+                </li>
+            
+        </ul>
+    </li>
+
+    <!-- Homepage -->
+    
+        <li id="sidebar-first-li">
+            <a href="/" target="_self">
+                
+                    <i class="material-icons sidebar-material-icons">home</i>
+                
+                主页
+            </a>
+        </li>
+        
+    
+
+
+    <!-- Categories  -->
+    
+        <li class="dropdown">
+            <a href="#" class="ripple-effect dropdown-toggle" data-toggle="dropdown">
+                
+                    <i class="material-icons sidebar-material-icons">chrome_reader_mode</i>
+                
+                分类
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                <a class="sidebar_archives-link" href="/categories/Android/">Android<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/categories/JavaWeb/">JavaWeb<span class="sidebar_archives-count">7</span></a></li><li><a class="sidebar_archives-link" href="/categories/Python/">Python<span class="sidebar_archives-count">5</span></a></li><li><a class="sidebar_archives-link" href="/categories/Spring/">Spring<span class="sidebar_archives-count">7</span></a></li><li><a class="sidebar_archives-link" href="/categories/VueJs/">VueJs<span class="sidebar_archives-count">5</span></a></li><li><a class="sidebar_archives-link" href="/categories/iOS/">iOS<span class="sidebar_archives-count">6</span></a></li><li><a class="sidebar_archives-link" href="/categories/machine-learning/">machine learning<span class="sidebar_archives-count">2</span></a></li><li><a class="sidebar_archives-link" href="/categories/操作系统/">操作系统<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/categories/杂记/">杂记<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/categories/组成原理/">组成原理<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/categories/计算机网络/">计算机网络<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/categories/那些年倒腾过的服务器/">那些年倒腾过的服务器<span class="sidebar_archives-count">3</span></a>
+            </ul>
+        </li>
+        
+    
+
+    <!-- Pages  -->
+    
+        <li>
+            <a href="/links" title="小伙伴们">
+                
+                    <i class="material-icons sidebar-material-icons">group</i>
+                
+                小伙伴们
+            </a>
+        </li>
+        
+    
+        <li>
+            <a href="/tags" title="标签">
+                
+                    <i class="material-icons sidebar-material-icons">loyalty</i>
+                
+                标签
+            </a>
+        </li>
+        
+    
+
+            <!-- Archives  -->
+    
+        <li class="dropdown">
+            <a href="#" class="ripple-effect dropdown-toggle" data-toggle="dropdown">
+                
+                    <i class="material-icons sidebar-material-icons">inbox</i>
+                
+                    归档
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+            <li>
+                <a class="sidebar_archives-link" href="/archives/2017/11/">十一月 2017<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/10/">十月 2017<span class="sidebar_archives-count">17</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/09/">九月 2017<span class="sidebar_archives-count">3</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/08/">八月 2017<span class="sidebar_archives-count">2</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/07/">七月 2017<span class="sidebar_archives-count">7</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/06/">六月 2017<span class="sidebar_archives-count">7</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/05/">五月 2017<span class="sidebar_archives-count">3</span></a>
+            </ul>
+        </li>
+        
+    
+
+          <!-- rss -->
+    
+        <li id="sidebar-first-li">
+            <a href="/gallery" target="_self">
+                
+                    <i class="material-icons sidebar-material-icons">favorite</i>
+                
+                情愫
+            </a>
+        </li>
+        
+    
+
+      <!-- board -->
+    
+        <li id="sidebar-first-li">
+            <a href="/board" target="_self">
+                
+                    <i class="material-icons sidebar-material-icons">question_answer</i>
+                
+                留言板
+            </a>
+        </li>
+        
+    
+
+      <!-- rss -->
+    
+        <li id="sidebar-first-li">
+            <a href="/atom.xml" target="_blank">
+                
+                    <i class="material-icons sidebar-material-icons">cast_connected</i>
+                
+                RSS订阅
+            </a>
+        </li>
+        
+            <li class="divider"></li>
+        
+    
+
+    <!-- Article Number  -->
+    
+        <li>
+            <a href="/archives">
+                文章总数
+                <span class="sidebar-badge">40</span>
+            </a>
+        </li>
+        
+    
+</ul>
+
+
+        <!-- Sidebar Footer -->
+        <!--
+I'm glad you use this theme, the development is no so easy, I hope you can keep the copyright, I will thank you so much.
+If you still want to delete the copyrights, could you still retain the first one? Which namely "Theme Material"
+It will not impact the appearance and can give developers a lot of support :)
+
+很高兴您使用并喜欢该主题，开发不易 十分谢谢与希望您可以保留一下版权声明。
+如果您仍然想删除的话 能否只保留第一项呢？即 "Theme Material"
+它不会影响美观并可以给开发者很大的支持和动力。 :)
+-->
+
+<!-- Sidebar Divider -->
+
+
+<!-- Theme Material -->
+
+
+<!-- Help & Support -->
+<!--
+
+-->
+
+<!-- Feedback -->
+<!--
+
+-->
+
+<!-- About Theme -->
+<!--
+
+-->
+
+    </div>
+
+    <!-- Sidebar Image -->
+    
+
+</aside>
+
+                    
+
+                    
+                        <!-- Footer Top Button -->
+                        <div class="toTop-wrap">
+    <a href="#top" class="toTop">
+        <i class="material-icons footer_top-i">expand_less</i>
+    </a>
+</div>
+
+                    
+
+                    
+ 
+  <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+   <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+ 
+
+
+                    <!--Footer-->
+<footer class="mdl-mini-footer" id="bottom">
+    
+        <!-- Paradox Footer Left Section -->
+        <div class="mdl-mini-footer--left-section sns-list">
+    <!-- Twitter -->
+    
+
+    <!-- Facebook -->
+    
+        <a href="https://www.facebook.com/renburugu" target="_blank">
+            <button class="mdl-mini-footer--social-btn social-btn" style="background-image: url(/img/footer/footer_ico-facebook.svg);">
+                <span class="visuallyhidden">Facebook</span>
+            </button><!--
+     --></a>
+    
+
+    <!-- Google + -->
+    
+
+    <!-- Weibo -->
+    
+
+    <!-- Instagram -->
+    
+
+    <!-- Tumblr -->
+    
+
+    <!-- Github -->
+    
+        <a href="https://github.com/wangyu1997" target="_blank">
+            <button class="mdl-mini-footer--social-btn social-btn" style="background-image: url(/img/footer/footer_ico-github.svg);">
+                <span class="visuallyhidden">Github</span>
+            </button><!--
+     --></a>
+    
+
+    <!-- LinkedIn -->
+    
+
+    <!-- Zhihu -->
+    
+
+    <!-- Bilibili -->
+    
+
+    <!-- Telegram -->
+    
+</div>
+
+
+        <!--Copyright-->
+        <div id="copyright">
+            Copyright&nbsp;©&nbsp;
+            <script type="text/javascript">
+                var fd = new Date();
+                document.write(fd.getFullYear());
+            </script>
+            &nbsp;人不如故
+        </div>
+
+        <!-- Paradox Footer Right Section -->
+
+        <!--
+        I am glad you use this theme, the development is no so easy, I hope you can keep the copyright.
+        It will not impact the appearance and can give developers a lot of support :)
+
+        很高兴您使用该主题，开发不易，希望您可以保留一下版权声明。
+        它不会影响美观并可以给开发者很大的支持。 :)
+        -->
+
+        <div class="mdl-mini-footer--right-section">
+            <div>
+                <div class="footer-develop-div">Follow me on - <a href="https://www.facebook.com/renburugu" target="_blank" class="footer-develop-a">FaceTime</a></div>
+                <div class="footer-develop-div">Fork me on - <a href="https://github.com/wangyu1997" target="_blank" class="footer-develop-a">GitHub</a></div>
+            </div>
+        </div>
+    
+</footer>
+
+
+                    <!-- Import File -->
+
+    <script src="/js/lazyload.min.js"></script>
+    <script src="/js/js.min.js"></script>
+
+
+
+    <script src="/js/nprogress.js"></script>
+
+
+<script type="text/javascript">
+    NProgress.configure({
+        showSpinner: true
+    });
+    NProgress.start();
+    $('#nprogress .bar').css({
+        'background': '#29d'
+    });
+    $('#nprogress .peg').css({
+        'box-shadow': '0 0 10px #29d, 0 0 15px #29d'
+    });
+    $('#nprogress .spinner-icon').css({
+        'border-top-color': '#29d',
+        'border-left-color': '#29d'
+    });
+    setTimeout(function() {
+        NProgress.done();
+        $('.fade').removeClass('out');
+    }, 800);
+</script>
+
+
+
+    
+        <script src="/js/smoothscroll.js"></script>
+    
+
+
+
+
+
+    <!-- Busuanzi -->
+    <script src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+
+    <!-- 使用 DISQUS js 代码 -->
+    <script id="dsq-count-scr" src="//https-wangyu1997-github-io.disqus.com/count.js" async></script>
+
+
+
+
+
+<!-- Window Load-->
+<script>
+    $(window).load(function() {
+        // Post_Toc parent position fixed
+        $('.post-toc-wrap').parent('.mdl-menu__container').css('position', 'fixed');
+    });
+</script>
+
+<!-- MathJax Load-->
+
+<script>
+    <!-- Offer LazyLoad -->
+    queue.offer(function(){
+        $('.lazy').lazyload({
+            effect : 'show'
+        });
+    });
+
+    <!-- Start Queue -->
+    $(document).ready(function(){
+        setTimeout(function(){
+            setInterval(function(){
+                queue.execNext();
+            },200);
+        },3000);
+    });
+</script>
+
+                </main>
+            </div>
+        </body>
+    
+</html>

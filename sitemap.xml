@@ -4,7 +4,14 @@
   <url>
     <loc>https://wangyu1997.github.io/2017/11/02/Spring/web%E9%A1%B9%E7%9B%AE%E4%B8%AD%E4%BD%BF%E7%94%A8hibernate/</loc>
     
-    <lastmod>2017-11-03T10:36:09.000Z</lastmod>
+    <lastmod>2017-11-03T10:37:38.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangyu1997.github.io/2017/11/03/Spring/Hibernate%E4%BD%BF%E7%94%A8Log4j%E6%97%A5%E5%BF%97%E8%AE%B0%E5%BD%95/</loc>
+    
+    <lastmod>2017-11-03T10:36:51.000Z</lastmod>
     
   </url>
   
@@ -366,13 +373,6 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-basic.js</loc>
-    
-    <lastmod>2017-01-13T03:58:20.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://wangyu1997.github.io/assets/prettify/lang-cbm.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
@@ -394,7 +394,7 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-css.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-dart.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
@@ -423,6 +423,13 @@
   
   <url>
     <loc>https://wangyu1997.github.io/assets/prettify/lang-erlang.js</loc>
+    
+    <lastmod>2017-01-13T03:58:20.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-agc.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
@@ -527,7 +534,7 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-agc.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-apollo.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
@@ -751,14 +758,14 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-dart.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-css.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-apollo.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-basic.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     

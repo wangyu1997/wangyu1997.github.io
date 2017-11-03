@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://wangyu1997.github.io/"/>
-  <updated>2017-11-03T10:32:52.000Z</updated>
+  <updated>2017-11-03T10:36:09.000Z</updated>
   <id>https://wangyu1997.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="https://wangyu1997.github.io/2017/11/02/Spring/web%E9%A1%B9%E7%9B%AE%E4%B8%AD%E4%BD%BF%E7%94%A8hibernate/"/>
     <id>https://wangyu1997.github.io/2017/11/02/Spring/web项目中使用hibernate/</id>
     <published>2017-11-02T08:51:11.000Z</published>
-    <updated>2017-11-03T10:32:52.000Z</updated>
+    <updated>2017-11-03T10:36:09.000Z</updated>
     
     <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><h2 id="web项目中使用Hibernate"><a href="#web项目中使用Hibernate" class="headerlink" title="web项目中使用Hibernate"></a>web项目中使用Hibernate</h2><blockquote>
 <p>首先创建一个gradle项目 web-application-with-hibernate, 导入依赖</p>
@@ -33,24 +33,23 @@ compile group: &#39;mysql&#39;, name: &#39;mysql-connector-java&#39;, version: &
 </code></pre><blockquote>
 <p>创建一个用户注册的静态页面 index.jsp</p>
 </blockquote>
-<pre class=" language-jsp"><code class="language-jsp"><%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-    <title>注册表单</title>
-</head>
-<body>
-<form action="" method="post">
-    <h2>用户注册表</h2>
-    <hr>
-    Name:<input type="text" name="name"/><br>
-    <br>Password: <input type="password" name="password"/><br>
-    <br>Email: <input type="email" name="email"/><br>
-    <br><input type="submit" value="注册"/>
-</form>
-</body>
-</html>
-</code></pre>
-<blockquote>
+<pre><code>&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;注册表单&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;form action=&quot;&quot; method=&quot;post&quot;&gt;
+    &lt;h2&gt;用户注册表&lt;/h2&gt;
+    &lt;hr&gt;
+    Name:&lt;input type=&quot;text&quot; name=&quot;name&quot;/&gt;&lt;br&gt;
+    &lt;br&gt;Password: &lt;input type=&quot;password&quot; name=&quot;password&quot;/&gt;&lt;br&gt;
+    &lt;br&gt;Email: &lt;input type=&quot;email&quot; name=&quot;email&quot;/&gt;&lt;br&gt;
+    &lt;br&gt;&lt;input type=&quot;submit&quot; value=&quot;注册&quot;/&gt;
+&lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><blockquote>
 <p>创建一个User实体类用来存储信息</p>
 </blockquote>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">package</span> com<span class="token punctuation">.</span>demo<span class="token punctuation">.</span>Model<span class="token punctuation">;</span>

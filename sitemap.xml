@@ -2,16 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://wangyu1997.github.io/2017/10/25/Spring/Hibernate/</loc>
+    <loc>https://wangyu1997.github.io/2017/11/02/Spring/web%E9%A1%B9%E7%9B%AE%E4%B8%AD%E4%BD%BF%E7%94%A8hibernate/</loc>
     
-    <lastmod>2017-11-03T10:33:28.000Z</lastmod>
+    <lastmod>2017-11-03T10:36:09.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/2017/11/02/Spring/web%E9%A1%B9%E7%9B%AE%E4%B8%AD%E4%BD%BF%E7%94%A8hibernate/</loc>
+    <loc>https://wangyu1997.github.io/2017/10/25/Spring/Hibernate/</loc>
     
-    <lastmod>2017-11-03T10:32:52.000Z</lastmod>
+    <lastmod>2017-11-03T10:33:28.000Z</lastmod>
     
   </url>
   
@@ -513,14 +513,14 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-lua.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-lsp.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-lsp.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-lua.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
@@ -709,14 +709,14 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-yaml.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-xquery.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-xquery.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-yaml.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     

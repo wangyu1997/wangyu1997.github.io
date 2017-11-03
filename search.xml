@@ -16,24 +16,23 @@ compile group: &#39;mysql&#39;, name: &#39;mysql-connector-java&#39;, version: &
 </code></pre><blockquote>
 <p>创建一个用户注册的静态页面 index.jsp</p>
 </blockquote>
-<pre class=" language-jsp"><code class="language-jsp"><%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-    <title>注册表单</title>
-</head>
-<body>
-<form action="" method="post">
-    <h2>用户注册表</h2>
-    <hr>
-    Name:<input type="text" name="name"/><br>
-    <br>Password: <input type="password" name="password"/><br>
-    <br>Email: <input type="email" name="email"/><br>
-    <br><input type="submit" value="注册"/>
-</form>
-</body>
-</html>
-</code></pre>
-<blockquote>
+<pre><code>&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;注册表单&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;form action=&quot;&quot; method=&quot;post&quot;&gt;
+    &lt;h2&gt;用户注册表&lt;/h2&gt;
+    &lt;hr&gt;
+    Name:&lt;input type=&quot;text&quot; name=&quot;name&quot;/&gt;&lt;br&gt;
+    &lt;br&gt;Password: &lt;input type=&quot;password&quot; name=&quot;password&quot;/&gt;&lt;br&gt;
+    &lt;br&gt;Email: &lt;input type=&quot;email&quot; name=&quot;email&quot;/&gt;&lt;br&gt;
+    &lt;br&gt;&lt;input type=&quot;submit&quot; value=&quot;注册&quot;/&gt;
+&lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><blockquote>
 <p>创建一个User实体类用来存储信息</p>
 </blockquote>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">package</span> com<span class="token punctuation">.</span>demo<span class="token punctuation">.</span>Model<span class="token punctuation">;</span>
@@ -9658,67 +9657,6 @@ uploadManager.put(data, key, ...)
     </entry>
     
     <entry>
-      <title><![CDATA[UIPopoverPresentationController]]></title>
-      <url>/2017/06/12/iOS/UIPopoverPresentationController/</url>
-      <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a>
-<p>UIPopoverPresentationController 是 iOS8 后新增的，相当于pad端的UIPopOverController，以后我们也可以在iPhone上使用popOver啦。自己写了一个小demo，大概了熟悉了一下用法。后面有开发需求时会详细补充。<br>首先要知道一点是，我们并不需要创建一个UIPopoverPresentationController，他相当于UIViewController的属性，因此我们只需要创建UIViewController即可。<br>举个例子：假设我们要在 ViewController窗体弹窗，弹窗为FirstViewController（kind of UIViewController）我们用两种方式来实现<br>1、在self.view上创建一个button，给button添加弹窗事件；<br>2、在导航栏添加barButtonItem，给其添加弹窗时间。<br>弹窗事件：</p>
-<pre class=" language-swift"><code class="language-swift"><span class="token number">1</span>、button
-<span class="token punctuation">[</span>objc<span class="token punctuation">]</span> view plain copy
-<span class="token operator">-</span> <span class="token punctuation">(</span>void<span class="token punctuation">)</span>buttonClick  
-<span class="token punctuation">{</span>  
-    <span class="token builtin">FirstViewController</span> <span class="token operator">*</span>firstVC <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token builtin">FirstViewController</span> alloc<span class="token punctuation">]</span> <span class="token keyword">init</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  
-    firstVC<span class="token punctuation">.</span>modalPresentationStyle <span class="token operator">=</span> <span class="token builtin">UIModalPresentationPopover</span><span class="token punctuation">;</span>  
-    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>sourceView <span class="token operator">=</span> popOverButton<span class="token punctuation">;</span>  <span class="token comment" spellcheck="true">//rect参数是以view的左上角为坐标原点（0，0）  </span>
-    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>sourceRect <span class="token operator">=</span> popOverButton<span class="token punctuation">.</span>bounds<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//指定箭头所指区域的矩形框范围（位置和尺寸），以view的左上角为坐标原点  </span>
-    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>permittedArrowDirections <span class="token operator">=</span> <span class="token builtin">UIPopoverArrowDirectionUp</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//箭头方向  </span>
-    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>delegate <span class="token operator">=</span> <span class="token keyword">self</span><span class="token punctuation">;</span>  
-    firstVC<span class="token punctuation">.</span>preferredContentSize <span class="token operator">=</span> <span class="token function">CGSizeMake</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">,</span> <span class="token number">200</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
-    <span class="token punctuation">[</span><span class="token keyword">self</span> presentViewController<span class="token punctuation">:</span>firstVC animated<span class="token punctuation">:</span><span class="token constant">YES</span> completion<span class="token punctuation">:</span><span class="token constant">nil</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  
-<span class="token punctuation">}</span>  
-
-<span class="token number">2</span>、barButtonItem
-<span class="token punctuation">[</span>objc<span class="token punctuation">]</span> view plain copy
-<span class="token operator">-</span> <span class="token punctuation">(</span>void<span class="token punctuation">)</span>rightBarButtonItemClick  
-<span class="token punctuation">{</span>  
-    <span class="token builtin">FirstViewController</span> <span class="token operator">*</span>firstVC <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token builtin">FirstViewController</span> alloc<span class="token punctuation">]</span><span class="token keyword">init</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  
-    firstVC<span class="token punctuation">.</span>modalPresentationStyle <span class="token operator">=</span> <span class="token builtin">UIModalPresentationPopover</span><span class="token punctuation">;</span>  
-    <span class="token comment" spellcheck="true">/** 
-     *  由于导航上的控件没有指定frame，无法设置sourceView和sourceRect，用下面的。 
-     */</span>  
-    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>barButtonItem <span class="token operator">=</span> <span class="token keyword">self</span><span class="token punctuation">.</span>navigationItem<span class="token punctuation">.</span>rightBarButtonItem<span class="token punctuation">;</span>  
-    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>permittedArrowDirections <span class="token operator">=</span> <span class="token builtin">UIPopoverArrowDirectionUp</span><span class="token punctuation">;</span>  
-    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>delegate <span class="token operator">=</span> <span class="token keyword">self</span><span class="token punctuation">;</span>  
-    firstVC<span class="token punctuation">.</span>preferredContentSize <span class="token operator">=</span> <span class="token function">CGSizeMake</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">,</span> <span class="token number">200</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
-    <span class="token punctuation">[</span><span class="token keyword">self</span> presentViewController<span class="token punctuation">:</span>firstVC animated<span class="token punctuation">:</span><span class="token constant">YES</span> completion<span class="token punctuation">:</span><span class="token constant">nil</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  
-<span class="token comment" spellcheck="true">//    firstVC.popoverPresentationController.passthroughViews = nil;  </span>
-<span class="token punctuation">}</span>  
-注意几点：
-<span class="token number">1</span>、遵守代理：<span class="token builtin">UIPopoverPresentationControllerDelegate</span>
-<span class="token number">2</span>、在phone端必须要适配设备，要设置下面代理方法：
-<span class="token punctuation">[</span>objc<span class="token punctuation">]</span> view plain copy
-<span class="token comment" spellcheck="true">/* For iOS8.0, the only supported adaptive presentation styles are UIModalPresentationFullScreen and UIModalPresentationOverFullScreen. */</span>  
-<span class="token operator">-</span> <span class="token punctuation">(</span><span class="token builtin">UIModalPresentationStyle</span><span class="token punctuation">)</span>adaptivePresentationStyleForPresentationController<span class="token punctuation">:</span><span class="token punctuation">(</span><span class="token builtin">UIPresentationController</span> <span class="token operator">*</span><span class="token punctuation">)</span>controller<span class="token punctuation">;</span>  
-<span class="token operator">-</span>
-</code></pre>
-<p>iPhone下默认是UIModalPresentationFullScreen，需要手动设置为UIModalPresentationNone，否则，是普通的present全屏显示，没有弹窗效果。iPad不需要。<br>3、其他设置根据需求翻相关文档即可。<br>demo：<a href="https://github.com/Lynnll/UIPopOverLearning.git" target="_blank" rel="external">https://github.com/Lynnll/UIPopOverLearning.git</a></p>
-]]></content>
-      
-        <categories>
-            
-            <category> iOS </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> popover </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
       <title><![CDATA[Alamofire 4.0 Migration Guide]]></title>
       <url>/2017/06/12/iOS/Alamofire/</url>
       <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
@@ -10460,6 +10398,67 @@ open <span class="token keyword">class</span> <span class="token class-name">Str
         <tags>
             
             <tag> Alamofire </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[UIPopoverPresentationController]]></title>
+      <url>/2017/06/12/iOS/UIPopoverPresentationController/</url>
+      <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a>
+<p>UIPopoverPresentationController 是 iOS8 后新增的，相当于pad端的UIPopOverController，以后我们也可以在iPhone上使用popOver啦。自己写了一个小demo，大概了熟悉了一下用法。后面有开发需求时会详细补充。<br>首先要知道一点是，我们并不需要创建一个UIPopoverPresentationController，他相当于UIViewController的属性，因此我们只需要创建UIViewController即可。<br>举个例子：假设我们要在 ViewController窗体弹窗，弹窗为FirstViewController（kind of UIViewController）我们用两种方式来实现<br>1、在self.view上创建一个button，给button添加弹窗事件；<br>2、在导航栏添加barButtonItem，给其添加弹窗时间。<br>弹窗事件：</p>
+<pre class=" language-swift"><code class="language-swift"><span class="token number">1</span>、button
+<span class="token punctuation">[</span>objc<span class="token punctuation">]</span> view plain copy
+<span class="token operator">-</span> <span class="token punctuation">(</span>void<span class="token punctuation">)</span>buttonClick  
+<span class="token punctuation">{</span>  
+    <span class="token builtin">FirstViewController</span> <span class="token operator">*</span>firstVC <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token builtin">FirstViewController</span> alloc<span class="token punctuation">]</span> <span class="token keyword">init</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  
+    firstVC<span class="token punctuation">.</span>modalPresentationStyle <span class="token operator">=</span> <span class="token builtin">UIModalPresentationPopover</span><span class="token punctuation">;</span>  
+    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>sourceView <span class="token operator">=</span> popOverButton<span class="token punctuation">;</span>  <span class="token comment" spellcheck="true">//rect参数是以view的左上角为坐标原点（0，0）  </span>
+    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>sourceRect <span class="token operator">=</span> popOverButton<span class="token punctuation">.</span>bounds<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//指定箭头所指区域的矩形框范围（位置和尺寸），以view的左上角为坐标原点  </span>
+    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>permittedArrowDirections <span class="token operator">=</span> <span class="token builtin">UIPopoverArrowDirectionUp</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//箭头方向  </span>
+    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>delegate <span class="token operator">=</span> <span class="token keyword">self</span><span class="token punctuation">;</span>  
+    firstVC<span class="token punctuation">.</span>preferredContentSize <span class="token operator">=</span> <span class="token function">CGSizeMake</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">,</span> <span class="token number">200</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
+    <span class="token punctuation">[</span><span class="token keyword">self</span> presentViewController<span class="token punctuation">:</span>firstVC animated<span class="token punctuation">:</span><span class="token constant">YES</span> completion<span class="token punctuation">:</span><span class="token constant">nil</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  
+<span class="token punctuation">}</span>  
+
+<span class="token number">2</span>、barButtonItem
+<span class="token punctuation">[</span>objc<span class="token punctuation">]</span> view plain copy
+<span class="token operator">-</span> <span class="token punctuation">(</span>void<span class="token punctuation">)</span>rightBarButtonItemClick  
+<span class="token punctuation">{</span>  
+    <span class="token builtin">FirstViewController</span> <span class="token operator">*</span>firstVC <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token builtin">FirstViewController</span> alloc<span class="token punctuation">]</span><span class="token keyword">init</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  
+    firstVC<span class="token punctuation">.</span>modalPresentationStyle <span class="token operator">=</span> <span class="token builtin">UIModalPresentationPopover</span><span class="token punctuation">;</span>  
+    <span class="token comment" spellcheck="true">/** 
+     *  由于导航上的控件没有指定frame，无法设置sourceView和sourceRect，用下面的。 
+     */</span>  
+    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>barButtonItem <span class="token operator">=</span> <span class="token keyword">self</span><span class="token punctuation">.</span>navigationItem<span class="token punctuation">.</span>rightBarButtonItem<span class="token punctuation">;</span>  
+    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>permittedArrowDirections <span class="token operator">=</span> <span class="token builtin">UIPopoverArrowDirectionUp</span><span class="token punctuation">;</span>  
+    firstVC<span class="token punctuation">.</span>popoverPresentationController<span class="token punctuation">.</span>delegate <span class="token operator">=</span> <span class="token keyword">self</span><span class="token punctuation">;</span>  
+    firstVC<span class="token punctuation">.</span>preferredContentSize <span class="token operator">=</span> <span class="token function">CGSizeMake</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">,</span> <span class="token number">200</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
+    <span class="token punctuation">[</span><span class="token keyword">self</span> presentViewController<span class="token punctuation">:</span>firstVC animated<span class="token punctuation">:</span><span class="token constant">YES</span> completion<span class="token punctuation">:</span><span class="token constant">nil</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  
+<span class="token comment" spellcheck="true">//    firstVC.popoverPresentationController.passthroughViews = nil;  </span>
+<span class="token punctuation">}</span>  
+注意几点：
+<span class="token number">1</span>、遵守代理：<span class="token builtin">UIPopoverPresentationControllerDelegate</span>
+<span class="token number">2</span>、在phone端必须要适配设备，要设置下面代理方法：
+<span class="token punctuation">[</span>objc<span class="token punctuation">]</span> view plain copy
+<span class="token comment" spellcheck="true">/* For iOS8.0, the only supported adaptive presentation styles are UIModalPresentationFullScreen and UIModalPresentationOverFullScreen. */</span>  
+<span class="token operator">-</span> <span class="token punctuation">(</span><span class="token builtin">UIModalPresentationStyle</span><span class="token punctuation">)</span>adaptivePresentationStyleForPresentationController<span class="token punctuation">:</span><span class="token punctuation">(</span><span class="token builtin">UIPresentationController</span> <span class="token operator">*</span><span class="token punctuation">)</span>controller<span class="token punctuation">;</span>  
+<span class="token operator">-</span>
+</code></pre>
+<p>iPhone下默认是UIModalPresentationFullScreen，需要手动设置为UIModalPresentationNone，否则，是普通的present全屏显示，没有弹窗效果。iPad不需要。<br>3、其他设置根据需求翻相关文档即可。<br>demo：<a href="https://github.com/Lynnll/UIPopOverLearning.git" target="_blank" rel="external">https://github.com/Lynnll/UIPopOverLearning.git</a></p>
+]]></content>
+      
+        <categories>
+            
+            <category> iOS </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> popover </tag>
             
         </tags>
         

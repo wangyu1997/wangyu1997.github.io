@@ -269,7 +269,7 @@
     </button>
 
     <ul class="post-toc-wrap mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="post-toc-trigger-btn" style="max-height:80vh; overflow-y:scroll;">
-        <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#web项目中使用Hibernate"><span class="post-toc-number">1.</span> <span class="post-toc-text">web项目中使用Hibernate</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#undefined"><span class="post-toc-number">2.</span> <span class="post-toc-text">用户注册表</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#hibernate生成器类"><span class="post-toc-number">3.</span> <span class="post-toc-text">hibernate生成器类</span></a></li></ol>
+        <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#web项目中使用Hibernate"><span class="post-toc-number">1.</span> <span class="post-toc-text">web项目中使用Hibernate</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#hibernate生成器类"><span class="post-toc-number">2.</span> <span class="post-toc-text">hibernate生成器类</span></a></li></ol>
 
         <!--
         <li class="mdl-menu__item">
@@ -445,24 +445,23 @@ compile group: &#39;mysql&#39;, name: &#39;mysql-connector-java&#39;, version: &
 </code></pre><blockquote>
 <p>创建一个用户注册的静态页面 index.jsp</p>
 </blockquote>
-<pre class=" language-jsp"><code class="language-jsp"><%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-    <title>注册表单</title>
-<link rel="stylesheet" href="/css/prism-dark.css" type="text/css"></head>
-<body>
-<form action="" method="post">
-    <h2>用户注册表</h2>
-    <hr>
-    Name:<input type="text" name="name"/><br>
-    <br>Password: <input type="password" name="password"/><br>
-    <br>Email: <input type="email" name="email"/><br>
-    <br><input type="submit" value="注册"/>
-</form>
-</body>
-</html>
-</code></pre>
-<blockquote>
+<pre><code>&lt;%@ page contentType=&quot;text/html;charset=UTF-8&quot; language=&quot;java&quot; %&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;注册表单&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;form action=&quot;&quot; method=&quot;post&quot;&gt;
+    &lt;h2&gt;用户注册表&lt;/h2&gt;
+    &lt;hr&gt;
+    Name:&lt;input type=&quot;text&quot; name=&quot;name&quot;/&gt;&lt;br&gt;
+    &lt;br&gt;Password: &lt;input type=&quot;password&quot; name=&quot;password&quot;/&gt;&lt;br&gt;
+    &lt;br&gt;Email: &lt;input type=&quot;email&quot; name=&quot;email&quot;/&gt;&lt;br&gt;
+    &lt;br&gt;&lt;input type=&quot;submit&quot; value=&quot;注册&quot;/&gt;
+&lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre><blockquote>
 <p>创建一个User实体类用来存储信息</p>
 </blockquote>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">package</span> com<span class="token punctuation">.</span>demo<span class="token punctuation">.</span>Model<span class="token punctuation">;</span>

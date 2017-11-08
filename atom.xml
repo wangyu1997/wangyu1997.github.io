@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://wangyu1997.github.io/"/>
-  <updated>2017-11-03T10:36:51.000Z</updated>
+  <updated>2017-11-08T13:52:02.000Z</updated>
   <id>https://wangyu1997.github.io/</id>
   
   <author>
@@ -16,13 +16,148 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title></title>
-    <link href="https://wangyu1997.github.io/2017/11/03/Spring/Hibernate%E4%BD%BF%E7%94%A8Log4j%E6%97%A5%E5%BF%97%E8%AE%B0%E5%BD%95/"/>
-    <id>https://wangyu1997.github.io/2017/11/03/Spring/Hibernate使用Log4j日志记录/</id>
-    <published>2017-11-03T10:36:51.000Z</published>
-    <updated>2017-11-03T10:36:51.000Z</updated>
+    <title>java8方法引用</title>
+    <link href="https://wangyu1997.github.io/2017/11/08/JAVA/java8%20%E6%96%B9%E6%B3%95%E5%BC%95%E7%94%A8/"/>
+    <id>https://wangyu1997.github.io/2017/11/08/JAVA/java8 方法引用/</id>
+    <published>2017-11-08T13:38:11.000Z</published>
+    <updated>2017-11-08T13:52:02.000Z</updated>
     
-    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p># </p>
+    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>形如 <code>ClassName::methodName</code> 或者 <code>objectName::methodName</code> 的表达式，我们把它叫做方法引用（Method Reference）。可能你现在还理解不了，但是编译器足够聪明，或许你可以看看编译器是如何根据 “晦涩难懂” 的 Method Reference 来推断你的意图的。 </p>
+<h2 id="方法引用的种类"><a href="#方法引用的种类" class="headerlink" title="方法引用的种类"></a>方法引用的种类</h2><p>方法引用有四种，分别是： </p>
+<ul>
+<li>指向静态方法的引用</li>
+<li>指向某个对象的实例方法的引用</li>
+<li>指向某个类型的实例方法的引用</li>
+<li>指向构造方法的引用</li>
+</ul>
+<p>下面通过一些代码示例来和大家分享一下这四种引用使用场景，先定义一个 <code>Person</code> 类，后面我们会用到它： </p>
+<pre><code>public class Person {
+    private String name;
+
+    private String getName() {
+        return name;
+    }
+
+    public static int compareName(Person a, Person b) {
+        return a.getName().compareTo(b.name);
+    }
+}
+</code></pre><h3 id="指向静态方法的引用"><a href="#指向静态方法的引用" class="headerlink" title="指向静态方法的引用"></a>指向静态方法的引用</h3><p>形式：<code>ContainingClass:staticMethodName</code></p>
+<p>如果要想实现一群人按名字排序，一般你会这么做： </p>
+<pre><code>Arrays.sort(personArray, new Comparator() {
+    @Override
+    public int compare(Person a, Person b) {
+        return a.getName().compareTo(b.getName());
+    }
+});
+</code></pre><p>第二个参数很复杂，但是目的却很简单：实现 <code>Comparator</code> 的一个比较方法。我们自然会想——相信很多程序员都会这么想：有没有一种方法能够既简单明了又能无歧义的表达我们的意图？当然有，Java 8 引入的 lambda 表达式便很好的简化了我们的代码，瞧： </p>
+<pre><code>Array.sort(personArray, (a, b) -&gt; {
+    return a.getName().compareTo(b.getName());
+});
+</code></pre><p><code>(a, b)</code> 是 lambda 表达式的参数列表，箭头后的是方法体。编译器已经被训练得足够聪明：它知道 <code>(a, b)</code> 就是代表着要比较的两个 <code>Person</code> 对象。它在脑海里构想出了这个 lambda 表达式的 “原型”： </p>
+<pre><code>new Comparator() {
+    @Override
+    public int compare(Person a, Person b) {
+        return a.getName().compareTo(b.getName());
+    }
+}
+</code></pre><p>机智的编译器从简化的代码中推断出了 <code>Comparator</code> 对象的 “原型”。但是程序员并不满足：还能不能进一步简化？当然可以，在不造成歧义的前提下可以无限地简化一个语法。我们注意到，<code>Person</code> 类有一个静态方法可以用来实现两个对象的比较，于是引入 <strong>指向静态方法的引用</strong>： </p>
+<pre><code>Arrays.sort(personArray, Person::compareName);
+</code></pre><p><code>Person.compareName()</code> 方法有两个 <code>Person</code> 类型的参数，一个 <code>int</code> 类型的返回值，所以 <code>Person::compareName</code> 这个方法引用拥有两个 <code>Person</code> 类型的不确定量（在这里指的就是 <code>compareName()</code> 的两个参数；文章末尾有关于不确定量的具体解释）和一个 <code>int</code> 类型的返回值。而 <code>Comparator</code> 中待实现的方法 <code>compare()</code> 也有两个 <code>Person</code> 类型的参数和一个 <code>int</code> 的返回值。方法引用和 <code>Comparator</code> 中要实现的方法有足够的相似度，因此编译器将 <code>Person::compareName</code> 的不确定量和返回值与 <code>compare()</code> 的参数和返回值对应了起来，由此推断出我们的意图是： </p>
+<pre><code>Arrays.sort(personArray, new Comparator() {
+    @Override
+    public int compare(Person a, Person b) {
+        return Person.compareName(a, b);
+    }
+})
+</code></pre><p>编译器成功地识别了程序员的意图。但是编译器的聪明程度也是有限的，假如方法引用所对应的静态方法返回值不是 <code>int</code> 而是 <code>boolean</code>，那么编译器无法将该方法引用还原为一个 <code>Comparator</code> 对象，因为它并不知道该返回什么 <code>int</code> 值。幸亏我们提供的静态方法引用有 <code>int</code> 类型的返回值，编译器还原时就可以把它返回。 </p>
+<h3 id="指向某个对象的实例方法的引用"><a href="#指向某个对象的实例方法的引用" class="headerlink" title="指向某个对象的实例方法的引用"></a>指向某个对象的实例方法的引用</h3><p>形式：<code>containingObject::instanceMethodName</code></p>
+<p>有一个比较器，它可以比较多种对象： </p>
+<pre><code>public class Comparator() {
+    public int comarePerson(Person a, Person b) {
+        return a.getName().compareTo(b.getName());
+    }
+
+    public int compareDog(Dog a, Dog b) {
+        return a.getName().compareTo(b.getName());
+    }
+
+    ......
+}
+</code></pre><p>上面的 <code>Dog</code> 类和 <code>Person</code> 类结构相似，所以代码就省略了。现在我们要根据一群狗的名字给它们排序，我们同样使用方法引用（当然，你依旧可以用 lambda 表达式），但是这次是 <strong>指向某个对象的实例方法的引用</strong>： </p>
+<pre><code>Comparator aComparator = new Comparator(); // 实例化一个比较器
+// aComparator::compareDog 是指向实例对象 aComparetor 的实例方法
+// compareDog() 的方法引用
+Arrays.sort(dogs, aComparator::compareDog); 
+</code></pre><p><code>compareDog()</code> 方法的两个参数是 <code>Dog</code> 类型，返回值为 <code>int</code>，也就是说 <code>aComparator::compareDog</code> 有两个 <code>Dog</code> 类型的不确定量和一个 int 类型的返回值。而 <code>Comparator</code> 中的 <code>compare()</code> 方法也是接受两个 <code>Dog</code> 对象，返回一个 <code>int</code> 值。根据这些线索编译器足够推断出我们的意图： </p>
+<pre><code>Arrays.sort(dogs, new Comparator() {
+    @Override
+    public int compare(Dog a, Dog b) {
+        return aComparator.compareDog(a, b);
+    }
+});
+</code></pre><h3 id="指向某个类型的实例方法的引用"><a href="#指向某个类型的实例方法的引用" class="headerlink" title="指向某个类型的实例方法的引用"></a>指向某个类型的实例方法的引用</h3><p>形式：<code>ContainingClass::instanceMethodName</code></p>
+<pre><code>Stream.of(&quot;A&quot;, &quot;is&quot;, &quot;a&quot;, &quot;dog&quot;).reduce(&quot;&quot;, new BinaryOperator() {
+    @Override
+    public String apply(String a, String b) {
+        return a.toUpperCase() + b.toUpperCase();
+    }
+});
+</code></pre><p><code>reduce()</code> 方法是把某类型对象的集合降解为一个对象，过程是两两合并。它的第一个参数为初始值，第二个参数是一个接口，用来定义两两合并的具体策略。如果你暂时不懂 <code>Stream</code> 以及它的 <code>reduce()</code> 方法也没关系，我们只关注它的第二个参数。我们实现 <code>BinaryOperator</code> 接口的方法是把两个字符串变成大写后连接起来。代码看起来很臃肿，但是没有办法，我们没有合适的方法引用来将它简化（现有方法中没有能够将两个字符串先转换成大写然后连接的，当然你可以自己实现一个这样的方法，但没必要，因为这样会使得代码更加复杂），顶多可以转化成 lambda 表达式： </p>
+<pre><code>Stream.of(&quot;A&quot;, &quot;is&quot;, &quot;a&quot;, &quot;dog&quot;).reduce(&quot;&quot;, (a, b) -&gt; {
+        return a.toUpperCase() + b.toUpperCase();
+    }
+});
+</code></pre><p>但是如果两两合并的方式是直接将两个字符串连接的话，情况就不同了。我们可以用 <code>String::concat</code> 这个 <strong>指向某个类型的实例方法的引用</strong> 来使代码更简洁： </p>
+<pre><code>Stream.of(&quot;A&quot;, &quot;is&quot;, &quot;a&quot;, &quot;dog&quot;).reduce(&quot;&quot;, String::concat);
+</code></pre><p>编译器看看这行代码，愣了一下，不知道如何转化。还好，我们的编译器足够聪明，眼珠一转分析了下：我们要实现的方法有两个 <code>String</code> 的参数，一个 <code>String</code> 类型的返回值，而 <code>String::concat</code> 也有两个 <code>String</code> 类型的不确定量和一个 <code>String</code> 类型的返回值，其中一个不确定量是由于 <code>concat()</code> 这个方法是实例方法导致的，因为它必须通过一个 <code>String</code> 实例来调用；另一个不确定量为 <code>concat()</code> 方法的参数，它接受一个 <code>String</code> 类型的参数。以上信息足够编译器来推断我们的意图：程序员一定是想把两个参数和 <code>String::concat</code> 的两个不确定量对应起来，一个作为 <code>concat()</code> 方法调用的接收者，一个作为 <code>concat()</code> 方法的参数。这样一来上面的代码就转化成这样了： </p>
+<pre><code>Stream.of(&quot;A&quot;, &quot;is&quot;, &quot;a&quot;, &quot;dog&quot;).reduce(&quot;&quot;, new BinaryOperator() {
+    @Override
+    public String apply(String a, String b) {
+        return a.concat(b);
+    }
+});
+</code></pre><p>Wonderful ！程序员正是这么想的。有心的程序员可能会发出疑问：根据编译器的推断思路，对于任意一个方法引用，是不是只要它有两个 <code>String</code> 类型的不确定量和一个 <code>String</code> 类型返回值（当然类型要为 <code>String</code>）就可以作为参数传入 <code>reduce()</code> 了呢？于是程序员想了个方法来测试： </p>
+<pre><code>Stream.of(&quot;A&quot;, &quot;is&quot;, &quot;a&quot;, &quot;dog&quot;).reduce(&quot;&quot;, Test::test);
+
+public class Test {
+    public static String test(String a, String b) {
+        return a.concat(b);
+    }
+}
+</code></pre><p>程序员在 IDE 中写下上面的代码后，编译器没有错误提示 =&gt; 编译后通过 =&gt; 猜想正确。原因是 <code>Test</code> 的 <code>test()</code> 是一个静态方法，它有两个 <code>String</code> 类型的参数，一个 <code>String</code> 类型的返回值，也就是说 <code>Test::test</code> 有两个 <code>String</code> 类型的不确定量和一个 <code>String</code> 类型的返回值，因此编译器推断出程序员的意图是： </p>
+<pre><code>Stream.of(&quot;A&quot;, &quot;is&quot;, &quot;a&quot;, &quot;dog&quot;).reduce(&quot;&quot;, new BinaryOperator() {
+    @Override
+    public String apply(String a, String b) {
+        return Test.test(a, b);
+    }
+});
+</code></pre><h3 id="指向构造方法的引用"><a href="#指向构造方法的引用" class="headerlink" title="指向构造方法的引用"></a>指向构造方法的引用</h3><p>形式：<code>ClassName::new</code></p>
+<pre><code>Stream.of(&quot;A&quot;, &quot;is&quot;, &quot;a&quot;, &quot;dog&quot;).toArray(new IntFunction&lt;String[]&gt;() {
+     @Override
+     public String[] apply(int value) {
+         return null; 
+     }
+});
+</code></pre><p><code>toArray()</code> 方法的作用是把数据流转换成一个数组，它接收的参数是一个 <code>IntFunction</code> 的接口实现对象。该接口有一个待实现的方法 <code>apply()</code>，它有一个 <code>int</code> 型的参数和一个 <code>String[]</code> 类型的返回值。我们依旧可以用方法引用来代替它，但这次我们用的是 <strong>指向构造方法的引用</strong>： </p>
+<pre><code>Stream.of(&quot;A&quot;, &quot;is&quot;, &quot;a&quot;, &quot;dog&quot;).toArray(String[]::new);
+</code></pre><p>指向构造方法的引用可能较其他方法引用难理解一点，但是编译器却很机智的猜测到了程序员的意图：<code>String[]::new</code> 这个 指向构造方法的引用 有一个 <code>int</code> 类型的不确定量，即数组的长度；有一个 String[] 类型的返回值（构造方法不会有返回值，但是指向构造方法的引用却返回了一个该类型的实例）。因此编译器这样还原此方法引用： </p>
+<pre><code>Stream.of(&quot;A&quot;, &quot;is&quot;, &quot;a&quot;, &quot;dog&quot;).toArray(new IntFunction&lt;String[]&gt;() {
+    @Override
+    public String[] apply(int value) {
+        return new String[value];
+    }
+})
+</code></pre><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>其实，JVM 本身并不支持指向方法引用，过去不支持，现在也不支持。Java 8 对方法引用的支持知识编译器层面的支持，虚拟机执行引擎并不了解方法引用。编译器遇到方法引用的时候，会像上面那样自动推断出程序员的意图，将方法引用还原成 <strong>接口实现对象</strong>，或者更形象地说，就是把方法引用设法包装成一个接口实现对象，这样虚拟机就可以无差别地执行字节码文件而不需要管什么是方法引用了。 </p>
+<p>需要注意的是，方法引用是用来简化接口实现代码的，并且凡是能够用方法引用来简化的接口，都有这样的特征：有且只有一个待实现的方法。这种接口在 Java 中有个专门的名称： <strong>函数式接口</strong>。当你用试图用方法引用替代一个非函数式接口时，会有这样的错误提示： xxx is not a functional interface。 </p>
+<p>文章中很多地方提到过 <strong>不确定量</strong> 这个名词，这个名词并非官方的，而是我为了更好地说明问题而引入的，它的意思是： <strong>方法引用在转换成接口实现对象的过程中需要确定的变量</strong>。如 <strong>方法引用所对应方法的接受者</strong>（ <strong>指向静态方法的引用</strong> 和 <strong>指向某个对象的实例方法的引用</strong> 没有该不确定量，因为前者不需要接受者，而后者接受者已经确定），以及 <strong>方法引用所对应方法的参数</strong> 都属于 <strong>不确定量</strong>。方法引用的 <strong>不确定量</strong> 以及返回值需要和接口中的待实现方法的参数和返回值对应起来，这样编译器才能成功将其还原。 </p>
+<h2 id="感谢阅读"><a href="#感谢阅读" class="headerlink" title="感谢阅读"></a>感谢阅读</h2><p>写这篇文章的目的是让大家对方法引用有一个更好的理解，同时也作为个人的学习记录，但由于理解和水平有限，差错在所难免，还请大家不吝赐教。最后，感谢大家的阅读。 </p>
+<p><strong>参考文章:</strong><br><a href="http://docs.oracle.com/javase/tutorial/java/javaOO/methodreferences.html" target="_blank" rel="external">Method References</a><br><a href="http://stackoverflow.com/questions/20001427/double-colon-operator-in-java-8" target="_blank" rel="external">:: (double colon) operator in Java 8</a></p>
+<hr>
+<ul>
+<li><a href="http://liwenkun.me/2017/03/09/android-hot-fix/" title="动态加载应用之简单热更新" target="_blank" rel="external">Previous<br>动态加载应用之简单热更新</a></li>
+<li><a href="http://liwenkun.me/2017/05/30/operating-system-conclusion/" title="操作系统原理总结" target="_blank" rel="external">Next<br>操作系统原理总结</a></li>
+</ul>
 ]]></content>
     
     <summary type="html">
@@ -31,6 +166,38 @@
     
     </summary>
     
+      <category term="Java" scheme="https://wangyu1997.github.io/categories/Java/"/>
+    
+    
+      <category term="java8" scheme="https://wangyu1997.github.io/tags/java8/"/>
+    
+      <category term="lambda" scheme="https://wangyu1997.github.io/tags/lambda/"/>
+    
+      <category term="reference" scheme="https://wangyu1997.github.io/tags/reference/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>hibernat中使用二级缓存</title>
+    <link href="https://wangyu1997.github.io/2017/11/03/Spring/Hibernate%E4%BD%BF%E7%94%A8%E4%BA%8C%E7%BA%A7%E7%BC%93%E5%AD%98/"/>
+    <id>https://wangyu1997.github.io/2017/11/03/Spring/Hibernate使用二级缓存/</id>
+    <published>2017-11-03T10:38:11.000Z</published>
+    <updated>2017-11-03T10:51:33.000Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><h2 id="hibernate使用二级缓存"><a href="#hibernate使用二级缓存" class="headerlink" title="hibernate使用二级缓存"></a>hibernate使用二级缓存</h2>]]></content>
+    
+    <summary type="html">
+    
+      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
+    
+    </summary>
+    
+      <category term="Spring" scheme="https://wangyu1997.github.io/categories/Spring/"/>
+    
+    
+      <category term="Hibernate" scheme="https://wangyu1997.github.io/tags/Hibernate/"/>
+    
+      <category term="cache" scheme="https://wangyu1997.github.io/tags/cache/"/>
     
   </entry>
   
@@ -513,91 +680,6 @@ compile group: &#39;mysql&#39;, name: &#39;mysql-connector-java&#39;, version: &
   </entry>
   
   <entry>
-    <title>计算机系统概论</title>
-    <link href="https://wangyu1997.github.io/2017/10/24/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%AE%BA/"/>
-    <id>https://wangyu1997.github.io/2017/10/24/计算机组成原理/计算机系统概论/</id>
-    <published>2017-10-24T14:43:11.000Z</published>
-    <updated>2017-10-24T15:39:57.000Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>物联网：把感应器嵌入和装备到电网、铁路、桥梁、隧道、公路、建筑、供水系统、大坝、油气管道等各种物体中，并且被普遍连接，形成所谓的“物联网”，然后将“物联网”与现有的互联网整合起来，实现人类社会与无力系统的整合，形成智慧地球</p>
-<a id="more"></a>      
-<h2 id="计算机系统简介"><a href="#计算机系统简介" class="headerlink" title="计算机系统简介"></a>计算机系统简介</h2><p>计算机系统分为硬件和软件</p>
-<p>硬件：计算机的实体，如主机、外设等</p>
-<p>软件：由具有各类特殊功能的信息（程序）组成</p>
-<ul>
-<li><p>分类：系统软件、应用软件</p>
-<p> 系统软件： 用来管理整个计算机系统</p>
-<pre><code> e.g. : 语言处理程序、操作系统、服务性程序、数据库管理系统、网络软件
-</code></pre><p> 应用软件： 按任务需要编织成的各种程序</p>
-</li>
-</ul>
-<h2 id="计算机系统的层次结构"><a href="#计算机系统的层次结构" class="headerlink" title="计算机系统的层次结构"></a>计算机系统的层次结构</h2><p>层次结构：</p>
-<p><img src="http://oq5d32gij.bkt.clouddn.com/15088579483898.jpg" alt=""></p>
-<p>系统复杂性管理的方法：</p>
-<blockquote>
-<p>抽象：隐藏系统中不重要的细节</p>
-</blockquote>
-<p>从语言的角度划分层次</p>
-<pre><code>微指令系统  微程序机器M0
-              |
-              |
-机器语言    实际机器M1
-              |
-              |
-操作系统    虚拟机器
-              |
-              |
-汇编语言    虚拟机器M2
-              |
-              |
-高级语言    虚拟机器M3
-</code></pre><p>高级语言执行的过程</p>
-<pre><code>虚拟机器M4      用编译程序翻译成汇编语言程序
-    |
-    |
-虚拟机器M3      用汇编语言程序翻译成机器语言程序
-    |
-    |
-虚拟机器M2      用机器语言解释操作系统
-    |
-==============软硬件分界线=========
-    |
-实际机器M1      用微指令解释机器指令
-    |
-    |
-微程序机器M0     由硬件直接执行微指令
-</code></pre><p>软硬件对于功能的实现逻辑上等价</p>
-<ul>
-<li><p>硬件实现：造价贵</p>
-</li>
-<li><p>软件实现：软件体系庞大 实现复杂</p>
-</li>
-</ul>
-<p>计算机组成与计算机体系结构从研究内容上的区别：</p>
-<blockquote>
-<p>计算机体系结构：程序员所见到的计算机系统的属性概念性的结构与功能特性(机器语言程序员)=&gt;有无乘法指令</p>
-<p>计算机组成：实现计算机体系结构所体现的属性(具体指令的实现)=&gt;如何实现乘法指令</p>
-</blockquote>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;物联网：把感应器嵌入和装备到电网、铁路、桥梁、隧道、公路、建筑、供水系统、大坝、油气管道等各种物体中，并且被普遍连接，形成所谓的“物联网”，然后将“物联网”与现有的互联网整合起来，实现人类社会与无力系统的整合，形成智慧地球&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="组成原理" scheme="https://wangyu1997.github.io/categories/%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/"/>
-    
-    
-      <category term="概论" scheme="https://wangyu1997.github.io/tags/%E6%A6%82%E8%AE%BA/"/>
-    
-      <category term="计算机体系结构" scheme="https://wangyu1997.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/"/>
-    
-      <category term="计算机组成" scheme="https://wangyu1997.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90/"/>
-    
-  </entry>
-  
-  <entry>
     <title>计算机网络基本概念</title>
     <link href="https://wangyu1997.github.io/2017/10/24/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E8%B7%AF/%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/"/>
     <id>https://wangyu1997.github.io/2017/10/24/计算机网路/基本概念/</id>
@@ -709,6 +791,91 @@ compile group: &#39;mysql&#39;, name: &#39;mysql-connector-java&#39;, version: &
       <category term="基本概念" scheme="https://wangyu1997.github.io/tags/%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/"/>
     
       <category term="网络协议" scheme="https://wangyu1997.github.io/tags/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>计算机系统概论</title>
+    <link href="https://wangyu1997.github.io/2017/10/24/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%AE%BA/"/>
+    <id>https://wangyu1997.github.io/2017/10/24/计算机组成原理/计算机系统概论/</id>
+    <published>2017-10-24T14:43:11.000Z</published>
+    <updated>2017-10-24T15:39:57.000Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>物联网：把感应器嵌入和装备到电网、铁路、桥梁、隧道、公路、建筑、供水系统、大坝、油气管道等各种物体中，并且被普遍连接，形成所谓的“物联网”，然后将“物联网”与现有的互联网整合起来，实现人类社会与无力系统的整合，形成智慧地球</p>
+<a id="more"></a>      
+<h2 id="计算机系统简介"><a href="#计算机系统简介" class="headerlink" title="计算机系统简介"></a>计算机系统简介</h2><p>计算机系统分为硬件和软件</p>
+<p>硬件：计算机的实体，如主机、外设等</p>
+<p>软件：由具有各类特殊功能的信息（程序）组成</p>
+<ul>
+<li><p>分类：系统软件、应用软件</p>
+<p> 系统软件： 用来管理整个计算机系统</p>
+<pre><code> e.g. : 语言处理程序、操作系统、服务性程序、数据库管理系统、网络软件
+</code></pre><p> 应用软件： 按任务需要编织成的各种程序</p>
+</li>
+</ul>
+<h2 id="计算机系统的层次结构"><a href="#计算机系统的层次结构" class="headerlink" title="计算机系统的层次结构"></a>计算机系统的层次结构</h2><p>层次结构：</p>
+<p><img src="http://oq5d32gij.bkt.clouddn.com/15088579483898.jpg" alt=""></p>
+<p>系统复杂性管理的方法：</p>
+<blockquote>
+<p>抽象：隐藏系统中不重要的细节</p>
+</blockquote>
+<p>从语言的角度划分层次</p>
+<pre><code>微指令系统  微程序机器M0
+              |
+              |
+机器语言    实际机器M1
+              |
+              |
+操作系统    虚拟机器
+              |
+              |
+汇编语言    虚拟机器M2
+              |
+              |
+高级语言    虚拟机器M3
+</code></pre><p>高级语言执行的过程</p>
+<pre><code>虚拟机器M4      用编译程序翻译成汇编语言程序
+    |
+    |
+虚拟机器M3      用汇编语言程序翻译成机器语言程序
+    |
+    |
+虚拟机器M2      用机器语言解释操作系统
+    |
+==============软硬件分界线=========
+    |
+实际机器M1      用微指令解释机器指令
+    |
+    |
+微程序机器M0     由硬件直接执行微指令
+</code></pre><p>软硬件对于功能的实现逻辑上等价</p>
+<ul>
+<li><p>硬件实现：造价贵</p>
+</li>
+<li><p>软件实现：软件体系庞大 实现复杂</p>
+</li>
+</ul>
+<p>计算机组成与计算机体系结构从研究内容上的区别：</p>
+<blockquote>
+<p>计算机体系结构：程序员所见到的计算机系统的属性概念性的结构与功能特性(机器语言程序员)=&gt;有无乘法指令</p>
+<p>计算机组成：实现计算机体系结构所体现的属性(具体指令的实现)=&gt;如何实现乘法指令</p>
+</blockquote>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;物联网：把感应器嵌入和装备到电网、铁路、桥梁、隧道、公路、建筑、供水系统、大坝、油气管道等各种物体中，并且被普遍连接，形成所谓的“物联网”，然后将“物联网”与现有的互联网整合起来，实现人类社会与无力系统的整合，形成智慧地球&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="组成原理" scheme="https://wangyu1997.github.io/categories/%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/"/>
+    
+    
+      <category term="概论" scheme="https://wangyu1997.github.io/tags/%E6%A6%82%E8%AE%BA/"/>
+    
+      <category term="计算机体系结构" scheme="https://wangyu1997.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/"/>
+    
+      <category term="计算机组成" scheme="https://wangyu1997.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90/"/>
     
   </entry>
   
@@ -3274,6 +3441,160 @@ helper.generateOutput();
   </entry>
   
   <entry>
+    <title>Groovy读取yaml和properties文件</title>
+    <link href="https://wangyu1997.github.io/2017/10/10/JavaWeb/Groovy%E8%AF%BB%E5%8F%96yaml%E5%92%8Cproperties%E6%96%87%E4%BB%B6/"/>
+    <id>https://wangyu1997.github.io/2017/10/10/JavaWeb/Groovy读取yaml和properties文件/</id>
+    <published>2017-10-10T02:43:11.000Z</published>
+    <updated>2017-10-24T06:36:53.000Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
+<p>Java 可以使用 <code>PropertiesConfiguration</code> 来读取 properties 属性文件，Spring 4.3 后还支持了 <code>Yaml 格式的属性文件</code></p>
+<ul>
+<li>PropertiesConfiguration: 读取时可以自动进行类型转换，可以给定默认值</li>
+<li>Yaml 格式的属性文件: 可以使用树形结构，方便分组，比 <code>.properties</code> 属性文件更灵活，但是以普通的 <code>java.util.Properties</code> 来读取</li>
+</ul>
+<h1 id="Gradle-依赖"><a href="#Gradle-依赖" class="headerlink" title="Gradle 依赖"></a>Gradle 依赖</h1><pre><code>compile &#39;org.springframework:spring-context:4.3.0.RELEASE&#39;
+
+compile &#39;org.yaml:snakeyaml:1.17&#39;
+
+compile &#39;commons-configuration:commons-configuration:1.10&#39;
+
+testCompile &#39;org.springframework:spring-test:4.3.0.RELEASE&#39;
+
+testCompile &#39;junit:junit:4.12&#39;
+</code></pre><h1 id="属性文件"><a href="#属性文件" class="headerlink" title="属性文件"></a>属性文件</h1><blockquote>
+<p>config.properties </p>
+</blockquote>
+<pre><code>username=Dr. Alice 
+
+age=22 
+
+config.yml
+</code></pre><p>#mysql </p>
+<pre><code>mysql: 
+
+    jdbc: 
+
+        url: jdbc:mysql://localhost:3306 
+
+        dirverClass: com.mysql.jdbc.Driver 
+
+        username: root 
+
+        password: root 
+
+        username: Ritchie Yu 
+</code></pre><h1 id="Spring-Bean-配置文件"><a href="#Spring-Bean-配置文件" class="headerlink" title="Spring Bean 配置文件"></a>Spring Bean 配置文件</h1><blockquote>
+<p>spring-beans-config.xml </p>
+</blockquote>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+
+xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+
+xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+
+http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;
+
+&lt;bean id=&quot;yamlProperties&quot; class=&quot;org.springframework.beans.factory.config.YamlPropertiesFactoryBean&quot;&gt;
+
+&lt;property name=&quot;resources&quot;&gt;
+
+&lt;list&gt;
+
+&lt;value&gt;classpath:config.yml&lt;/value&gt;
+
+&lt;/list&gt;
+
+&lt;/property&gt;
+
+&lt;/bean&gt;
+
+&lt;bean id=&quot;propertiesConfig&quot; class=&quot;org.apache.commons.configuration.PropertiesConfiguration&quot;&gt;
+
+&lt;constructor-arg value=&quot;config.properties&quot;/&gt;
+
+&lt;/bean&gt;
+
+&lt;/beans&gt;
+</code></pre><h1 id="测试案例"><a href="#测试案例" class="headerlink" title="测试案例"></a>测试案例</h1><pre><code>import org.apache.commons.configuration.PropertiesConfiguration; 
+
+import org.junit.runner.RunWith; 
+
+import org.junit.Test; 
+
+import org.springframework.test.context.ContextConfiguration; 
+
+import org.springframework.test.context.junit4.SpringRunner; 
+
+import javax.annotation.Resource; 
+
+import java.util.Properties; 
+
+@RunWith(SpringRunner.class) 
+
+@ContextConfiguration({&quot;classpath:spring-beans-config.xml&quot;}) 
+
+public class TestYamlPropertiesAndPropertiesConfig { 
+
+@Resource(name = &quot;yamlProperties&quot;) 
+
+private Properties yamlProperties; 
+
+@Resource(name = &quot;propertiesConfig&quot;) 
+
+private PropertiesConfiguration propertiesConfig; 
+
+@Test
+
+public void testYamlProperties() { 
+
+System.out.println(yamlProperties.getProperty(&quot;mysql.jdbc.url&quot;)); 
+
+System.out.println(yamlProperties.getProperty(&quot;username&quot;)); 
+
+} 
+
+@Test
+
+public void testPropertiesConfig() { 
+
+System.out.println(propertiesConfig.getString(&quot;username&quot;)); 
+
+System.out.println(propertiesConfig.getInteger(&quot;age&quot;, 0)); 
+
+} 
+
+} 
+</code></pre><p>输出: </p>
+<pre><code>Dr. Alice 
+
+22 
+
+jdbc:mysql://localhost:3306 
+
+Ritchie Yu 
+</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
+    
+    </summary>
+    
+      <category term="JavaWeb" scheme="https://wangyu1997.github.io/categories/JavaWeb/"/>
+    
+    
+      <category term="gradle" scheme="https://wangyu1997.github.io/tags/gradle/"/>
+    
+      <category term="groovy" scheme="https://wangyu1997.github.io/tags/groovy/"/>
+    
+      <category term="yaml" scheme="https://wangyu1997.github.io/tags/yaml/"/>
+    
+  </entry>
+  
+  <entry>
     <title>MyBatis最详细配置</title>
     <link href="https://wangyu1997.github.io/2017/10/10/JavaWeb/MyBatis%E6%9C%80%E8%AF%A6%E7%BB%86%E9%85%8D%E7%BD%AE/"/>
     <id>https://wangyu1997.github.io/2017/10/10/JavaWeb/MyBatis最详细配置/</id>
@@ -3577,165 +3898,11 @@ helper.generateOutput();
       <category term="JavaWeb" scheme="https://wangyu1997.github.io/categories/JavaWeb/"/>
     
     
+      <category term="gradle" scheme="https://wangyu1997.github.io/tags/gradle/"/>
+    
       <category term="javaweb" scheme="https://wangyu1997.github.io/tags/javaweb/"/>
     
-      <category term="gradle" scheme="https://wangyu1997.github.io/tags/gradle/"/>
-    
       <category term="mybatis" scheme="https://wangyu1997.github.io/tags/mybatis/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Groovy读取yaml和properties文件</title>
-    <link href="https://wangyu1997.github.io/2017/10/10/JavaWeb/Groovy%E8%AF%BB%E5%8F%96yaml%E5%92%8Cproperties%E6%96%87%E4%BB%B6/"/>
-    <id>https://wangyu1997.github.io/2017/10/10/JavaWeb/Groovy读取yaml和properties文件/</id>
-    <published>2017-10-10T02:43:11.000Z</published>
-    <updated>2017-10-24T06:36:53.000Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
-<p>Java 可以使用 <code>PropertiesConfiguration</code> 来读取 properties 属性文件，Spring 4.3 后还支持了 <code>Yaml 格式的属性文件</code></p>
-<ul>
-<li>PropertiesConfiguration: 读取时可以自动进行类型转换，可以给定默认值</li>
-<li>Yaml 格式的属性文件: 可以使用树形结构，方便分组，比 <code>.properties</code> 属性文件更灵活，但是以普通的 <code>java.util.Properties</code> 来读取</li>
-</ul>
-<h1 id="Gradle-依赖"><a href="#Gradle-依赖" class="headerlink" title="Gradle 依赖"></a>Gradle 依赖</h1><pre><code>compile &#39;org.springframework:spring-context:4.3.0.RELEASE&#39;
-
-compile &#39;org.yaml:snakeyaml:1.17&#39;
-
-compile &#39;commons-configuration:commons-configuration:1.10&#39;
-
-testCompile &#39;org.springframework:spring-test:4.3.0.RELEASE&#39;
-
-testCompile &#39;junit:junit:4.12&#39;
-</code></pre><h1 id="属性文件"><a href="#属性文件" class="headerlink" title="属性文件"></a>属性文件</h1><blockquote>
-<p>config.properties </p>
-</blockquote>
-<pre><code>username=Dr. Alice 
-
-age=22 
-
-config.yml
-</code></pre><p>#mysql </p>
-<pre><code>mysql: 
-
-    jdbc: 
-
-        url: jdbc:mysql://localhost:3306 
-
-        dirverClass: com.mysql.jdbc.Driver 
-
-        username: root 
-
-        password: root 
-
-        username: Ritchie Yu 
-</code></pre><h1 id="Spring-Bean-配置文件"><a href="#Spring-Bean-配置文件" class="headerlink" title="Spring Bean 配置文件"></a>Spring Bean 配置文件</h1><blockquote>
-<p>spring-beans-config.xml </p>
-</blockquote>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-
-&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
-
-xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-
-xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
-
-http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;
-
-&lt;bean id=&quot;yamlProperties&quot; class=&quot;org.springframework.beans.factory.config.YamlPropertiesFactoryBean&quot;&gt;
-
-&lt;property name=&quot;resources&quot;&gt;
-
-&lt;list&gt;
-
-&lt;value&gt;classpath:config.yml&lt;/value&gt;
-
-&lt;/list&gt;
-
-&lt;/property&gt;
-
-&lt;/bean&gt;
-
-&lt;bean id=&quot;propertiesConfig&quot; class=&quot;org.apache.commons.configuration.PropertiesConfiguration&quot;&gt;
-
-&lt;constructor-arg value=&quot;config.properties&quot;/&gt;
-
-&lt;/bean&gt;
-
-&lt;/beans&gt;
-</code></pre><h1 id="测试案例"><a href="#测试案例" class="headerlink" title="测试案例"></a>测试案例</h1><pre><code>import org.apache.commons.configuration.PropertiesConfiguration; 
-
-import org.junit.runner.RunWith; 
-
-import org.junit.Test; 
-
-import org.springframework.test.context.ContextConfiguration; 
-
-import org.springframework.test.context.junit4.SpringRunner; 
-
-import javax.annotation.Resource; 
-
-import java.util.Properties; 
-
-@RunWith(SpringRunner.class) 
-
-@ContextConfiguration({&quot;classpath:spring-beans-config.xml&quot;}) 
-
-public class TestYamlPropertiesAndPropertiesConfig { 
-
-@Resource(name = &quot;yamlProperties&quot;) 
-
-private Properties yamlProperties; 
-
-@Resource(name = &quot;propertiesConfig&quot;) 
-
-private PropertiesConfiguration propertiesConfig; 
-
-@Test
-
-public void testYamlProperties() { 
-
-System.out.println(yamlProperties.getProperty(&quot;mysql.jdbc.url&quot;)); 
-
-System.out.println(yamlProperties.getProperty(&quot;username&quot;)); 
-
-} 
-
-@Test
-
-public void testPropertiesConfig() { 
-
-System.out.println(propertiesConfig.getString(&quot;username&quot;)); 
-
-System.out.println(propertiesConfig.getInteger(&quot;age&quot;, 0)); 
-
-} 
-
-} 
-</code></pre><p>输出: </p>
-<pre><code>Dr. Alice 
-
-22 
-
-jdbc:mysql://localhost:3306 
-
-Ritchie Yu 
-</code></pre>]]></content>
-    
-    <summary type="html">
-    
-      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
-    
-    </summary>
-    
-      <category term="JavaWeb" scheme="https://wangyu1997.github.io/categories/JavaWeb/"/>
-    
-    
-      <category term="gradle" scheme="https://wangyu1997.github.io/tags/gradle/"/>
-    
-      <category term="groovy" scheme="https://wangyu1997.github.io/tags/groovy/"/>
-    
-      <category term="yaml" scheme="https://wangyu1997.github.io/tags/yaml/"/>
     
   </entry>
   
@@ -3986,9 +4153,9 @@ task mybatisGenerate &lt;&lt; {
       <category term="JavaWeb" scheme="https://wangyu1997.github.io/categories/JavaWeb/"/>
     
     
-      <category term="javaweb" scheme="https://wangyu1997.github.io/tags/javaweb/"/>
-    
       <category term="gradle" scheme="https://wangyu1997.github.io/tags/gradle/"/>
+    
+      <category term="javaweb" scheme="https://wangyu1997.github.io/tags/javaweb/"/>
     
       <category term="mybatis" scheme="https://wangyu1997.github.io/tags/mybatis/"/>
     
@@ -4177,161 +4344,6 @@ task mybatisGenerate &lt;&lt; {
       <category term="boxing" scheme="https://wangyu1997.github.io/tags/boxing/"/>
     
       <category term="flexing box" scheme="https://wangyu1997.github.io/tags/flexing-box/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Vue轮播解决方案--BetterScroll</title>
-    <link href="https://wangyu1997.github.io/2017/10/03/VueJs/BetterScroll/"/>
-    <id>https://wangyu1997.github.io/2017/10/03/VueJs/BetterScroll/</id>
-    <published>2017-10-02T17:43:11.000Z</published>
-    <updated>2017-10-24T07:13:58.000Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
-<p>From: <a href="https://wangyu1997.github.io/2017/10/03/VueJs/BetterScroll/">https://wangyu1997.github.io/2017/10/03/VueJs/BetterScroll/</a></p>
-<p>inspired by iscroll, and it has a better scroll perfermance <a href="https://link.juejin.im?target=https%3A%2F%2Fustbhuangyi.github.io%2Fbetter-scroll%2F" target="_blank" rel="external">ustbhuangyi.github.io/better-scro…</a></p>
-<h2 id="立即使用"><a href="#立即使用" class="headerlink" title="立即使用"></a>立即使用</h2><pre><code>&lt;body&gt;
-  &lt;div id=&quot;wrapper&quot;&gt;
-    &lt;ul&gt;
-           &lt;li&gt;...&lt;/li&gt;
-           &lt;li&gt;...&lt;/li&gt;
-           ...
-    &lt;/ul&gt;
-  &lt;/div&gt;
-&lt;script type=&quot;text/javascript&quot; src=&quot;better-scroll.js&quot;&gt;&lt;/script&gt;
-&lt;script type=&quot;text/javascript&quot;&gt;
-  new BScroll(document.getElementById(&#39;wrapper&#39;));
-&lt;/script&gt;
-&lt;/body&gt;
-</code></pre><p>搞定 ! </p>
-<h2 id="通过npm引入"><a href="#通过npm引入" class="headerlink" title="通过npm引入"></a>通过npm引入</h2><p>安装better-scroll </p>
-<pre><code>npm install better-scroll
-</code></pre><p>引入better-scroll </p>
-<pre><code>import BScroll from &#39;better-scroll&#39;
-</code></pre><blockquote>
-<p>如果不支持import, 请使用 </p>
-</blockquote>
-<pre><code>var BScroll = require(&#39;better-scroll&#39;)
-</code></pre><h2 id="DEMO"><a href="#DEMO" class="headerlink" title="DEMO"></a>DEMO</h2><p>better-scroll 的源码是基于 Webpack 构建的 </p>
-<p>首先，clone项目源码 </p>
-<pre><code>git clone https://github.com/ustbhuangyi/better-scroll.git
-</code></pre><p>安装依赖 </p>
-<pre><code>cd better-scroll
-npm install
-</code></pre><p>测试demo页 </p>
-<pre><code>npm run dev
-</code></pre><p>打开浏览器访问如下地址, 查看效果 </p>
-<blockquote>
-<p>localhost:9090 </p>
-</blockquote>
-<h2 id="Options-参数"><a href="#Options-参数" class="headerlink" title="Options 参数"></a>Options 参数</h2><p>Example: </p>
-<pre><code>let scroll = new BScroll(document.getElementById(&#39;wrapper&#39;), {
-  startX: 0,
-  startY: 0
-})
-</code></pre><p>Options List: </p>
-<ul>
-<li>startX: <code>0</code> 开始的X轴位置</li>
-<li>startY: <code>0</code> 开始的Y轴位置</li>
-<li>scrollY: <code>true</code> 滚动方向为 Y 轴</li>
-<li>scrollX: ‘true’ 滚动方向为 X 轴</li>
-<li>click: <code>true</code> 是否派发click事件</li>
-<li>directionLockThreshold: <code>5</code></li>
-<li>momentum: <code>true</code> 当快速滑动时是否开启滑动惯性</li>
-<li>bounce: <code>true</code> 是否启用回弹动画效果</li>
-<li>selectedIndex: <code>0</code> wheel 为 true 时有效，表示被选中的 wheel 索引</li>
-<li>rotate: <code>25</code> wheel 为 true 时有效，表示被选中的 wheel 每一层的旋转角度</li>
-<li>wheel: <code>false</code> 该属性是给 picker 组件使用的，普通的列表滚动不需要配置</li>
-<li>snap: <code>false</code> 该属性是给 slider 组件使用的，普通的列表滚动不需要配置</li>
-<li>snapLoop: <code>false</code> 是否可以无缝循环轮播</li>
-<li>snapThreshold: <code>0.1</code> 用手指滑动时页面可切换的阈值，大于这个阈值可以滑动的下一页</li>
-<li>snapSpeed: <code>400</code>, 轮播图切换的动画时间</li>
-<li>swipeTime: <code>2500</code> swipe 持续时间</li>
-<li>bounceTime: <code>700</code> 弹力动画持续的毫秒数</li>
-<li>adjustTime: <code>400</code> wheel 为 true 有用，调整停留位置的时间</li>
-<li>swipeBounceTime: <code>1200</code> swipe 回弹 时间</li>
-<li>deceleration: <code>0.001</code> 滚动动量减速越大越快，建议不大于0.01</li>
-<li>momentumLimitTime: <code>300</code> 符合惯性拖动的最大时间</li>
-<li>momentumLimitDistance: <code>15</code> 符合惯性拖动的最小拖动距离</li>
-<li>resizePolling: <code>60</code> 重新调整窗口大小时，重新计算better-scroll的时间间隔</li>
-<li>preventDefault: <code>true</code> 是否阻止默认事件</li>
-<li>preventDefaultException: <code>{ tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT)$/ }</code> 阻止默认事件的例外配置</li>
-<li>HWCompositing: <code>true</code> 是否启用硬件加速</li>
-<li>useTransition: <code>true</code> 是否使用CSS3的Transition属性</li>
-<li>useTransform: <code>true</code> 是否使用CSS3的Transform属性</li>
-<li>probeType: <code>1</code> 会截流,只有在滚动结束的时候派发一个 scroll 事件。<code>2</code>在手指 move 的时候也会实时派发 scroll 事件，不会截流。 <code>3</code>除了手指 move 的时候派发scroll事件，在 swipe（手指迅速滑动一小段距离）的情况下，列表会有一个长距离的滚动动画，这个滚动的动画过程中也会实时派发滚动事件</li>
-</ul>
-<h2 id="Events-事件"><a href="#Events-事件" class="headerlink" title="Events 事件"></a>Events 事件</h2><p>Example: </p>
-<pre><code>let scroll = new BScroll(document.getElementById(&#39;wrapper&#39;),{
-   probeType: 3
-})
-
-scroll.on(&#39;scroll&#39;, (pos) =&gt; {
-  console.log(pos.x + &#39;~&#39; + pos.y)
-  ...
-})
-</code></pre><p>Events 列表 </p>
-<ul>
-<li>beforeScrollStart - 滚动开始之前触发</li>
-<li>scrollStart - 滚动开始时触发</li>
-<li>scroll - 滚动时触发</li>
-<li>scrollCancel - 取消滚动时触发</li>
-<li>scrollEnd - 滚动结束时触发</li>
-<li>touchend - 手指移开屏幕时触发</li>
-<li>flick - 轻拂时触发</li>
-<li>refresh - 当 better-scroll 刷新时触发</li>
-<li>destroy - 销毁 better-scroll 实例时触发</li>
-</ul>
-<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><ul>
-<li>scrollTo(x, y, time, easing)</li>
-</ul>
-<p>滚动到某个位置，x,y 代表坐标，time 表示动画时间，easing 表示缓动函数 </p>
-<p>Example: </p>
-<pre><code>let scroll = new BScroll(document.getElementById(&#39;wrapper&#39;))
-scroll.scrollTo(0, 500)
-...
-</code></pre><ul>
-<li>scrollToElement(el, time, offsetX, offsetY, easing)</li>
-</ul>
-<p>滚动到某个元素，el（必填）表示 dom 元素，time 表示动画时间，offsetX 和 offsetY 表示坐标偏移量，easing 表示缓动函数 </p>
-<ul>
-<li>refresh()</li>
-</ul>
-<p>强制 scroll 重新计算，当 better-scroll 中的元素发生变化的时候调用此方法。 </p>
-<ul>
-<li>getCurrentPage()</li>
-</ul>
-<p>当 snap 为 true 时，获取滚动的当前页，返回的对象结构为 {x, y, pageX, pageY}，其中 x,y 代表滚动横向和纵向的位置；pageX，pageY 表示横向和纵向的页面索引 </p>
-<ul>
-<li>goToPage(x, y, time, easing)</li>
-</ul>
-<p>当 snap 为 true，滚动到对应的页面，x 表示横向页面索引，y 表示纵向页面索引， time 表示动画，easing 表示缓动函数 </p>
-<ul>
-<li>enable()</li>
-</ul>
-<p>启用 better-scroll，默认开启 </p>
-<ul>
-<li>disable()</li>
-</ul>
-<p>禁用 better-scroll </p>
-<ul>
-<li>destroy()</li>
-</ul>
-<p>销毁 better-scroll，解绑事件 </p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
-    
-    </summary>
-    
-      <category term="VueJs" scheme="https://wangyu1997.github.io/categories/VueJs/"/>
-    
-    
-      <category term="better scroll" scheme="https://wangyu1997.github.io/tags/better-scroll/"/>
-    
-      <category term="vue" scheme="https://wangyu1997.github.io/tags/vue/"/>
     
   </entry>
   
@@ -5139,6 +5151,161 @@ div {
       <category term="loader" scheme="https://wangyu1997.github.io/tags/loader/"/>
     
       <category term="stylus" scheme="https://wangyu1997.github.io/tags/stylus/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Vue轮播解决方案--BetterScroll</title>
+    <link href="https://wangyu1997.github.io/2017/10/03/VueJs/BetterScroll/"/>
+    <id>https://wangyu1997.github.io/2017/10/03/VueJs/BetterScroll/</id>
+    <published>2017-10-02T17:43:11.000Z</published>
+    <updated>2017-10-24T07:13:58.000Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
+<p>From: <a href="https://wangyu1997.github.io/2017/10/03/VueJs/BetterScroll/">https://wangyu1997.github.io/2017/10/03/VueJs/BetterScroll/</a></p>
+<p>inspired by iscroll, and it has a better scroll perfermance <a href="https://link.juejin.im?target=https%3A%2F%2Fustbhuangyi.github.io%2Fbetter-scroll%2F" target="_blank" rel="external">ustbhuangyi.github.io/better-scro…</a></p>
+<h2 id="立即使用"><a href="#立即使用" class="headerlink" title="立即使用"></a>立即使用</h2><pre><code>&lt;body&gt;
+  &lt;div id=&quot;wrapper&quot;&gt;
+    &lt;ul&gt;
+           &lt;li&gt;...&lt;/li&gt;
+           &lt;li&gt;...&lt;/li&gt;
+           ...
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;better-scroll.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+  new BScroll(document.getElementById(&#39;wrapper&#39;));
+&lt;/script&gt;
+&lt;/body&gt;
+</code></pre><p>搞定 ! </p>
+<h2 id="通过npm引入"><a href="#通过npm引入" class="headerlink" title="通过npm引入"></a>通过npm引入</h2><p>安装better-scroll </p>
+<pre><code>npm install better-scroll
+</code></pre><p>引入better-scroll </p>
+<pre><code>import BScroll from &#39;better-scroll&#39;
+</code></pre><blockquote>
+<p>如果不支持import, 请使用 </p>
+</blockquote>
+<pre><code>var BScroll = require(&#39;better-scroll&#39;)
+</code></pre><h2 id="DEMO"><a href="#DEMO" class="headerlink" title="DEMO"></a>DEMO</h2><p>better-scroll 的源码是基于 Webpack 构建的 </p>
+<p>首先，clone项目源码 </p>
+<pre><code>git clone https://github.com/ustbhuangyi/better-scroll.git
+</code></pre><p>安装依赖 </p>
+<pre><code>cd better-scroll
+npm install
+</code></pre><p>测试demo页 </p>
+<pre><code>npm run dev
+</code></pre><p>打开浏览器访问如下地址, 查看效果 </p>
+<blockquote>
+<p>localhost:9090 </p>
+</blockquote>
+<h2 id="Options-参数"><a href="#Options-参数" class="headerlink" title="Options 参数"></a>Options 参数</h2><p>Example: </p>
+<pre><code>let scroll = new BScroll(document.getElementById(&#39;wrapper&#39;), {
+  startX: 0,
+  startY: 0
+})
+</code></pre><p>Options List: </p>
+<ul>
+<li>startX: <code>0</code> 开始的X轴位置</li>
+<li>startY: <code>0</code> 开始的Y轴位置</li>
+<li>scrollY: <code>true</code> 滚动方向为 Y 轴</li>
+<li>scrollX: ‘true’ 滚动方向为 X 轴</li>
+<li>click: <code>true</code> 是否派发click事件</li>
+<li>directionLockThreshold: <code>5</code></li>
+<li>momentum: <code>true</code> 当快速滑动时是否开启滑动惯性</li>
+<li>bounce: <code>true</code> 是否启用回弹动画效果</li>
+<li>selectedIndex: <code>0</code> wheel 为 true 时有效，表示被选中的 wheel 索引</li>
+<li>rotate: <code>25</code> wheel 为 true 时有效，表示被选中的 wheel 每一层的旋转角度</li>
+<li>wheel: <code>false</code> 该属性是给 picker 组件使用的，普通的列表滚动不需要配置</li>
+<li>snap: <code>false</code> 该属性是给 slider 组件使用的，普通的列表滚动不需要配置</li>
+<li>snapLoop: <code>false</code> 是否可以无缝循环轮播</li>
+<li>snapThreshold: <code>0.1</code> 用手指滑动时页面可切换的阈值，大于这个阈值可以滑动的下一页</li>
+<li>snapSpeed: <code>400</code>, 轮播图切换的动画时间</li>
+<li>swipeTime: <code>2500</code> swipe 持续时间</li>
+<li>bounceTime: <code>700</code> 弹力动画持续的毫秒数</li>
+<li>adjustTime: <code>400</code> wheel 为 true 有用，调整停留位置的时间</li>
+<li>swipeBounceTime: <code>1200</code> swipe 回弹 时间</li>
+<li>deceleration: <code>0.001</code> 滚动动量减速越大越快，建议不大于0.01</li>
+<li>momentumLimitTime: <code>300</code> 符合惯性拖动的最大时间</li>
+<li>momentumLimitDistance: <code>15</code> 符合惯性拖动的最小拖动距离</li>
+<li>resizePolling: <code>60</code> 重新调整窗口大小时，重新计算better-scroll的时间间隔</li>
+<li>preventDefault: <code>true</code> 是否阻止默认事件</li>
+<li>preventDefaultException: <code>{ tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT)$/ }</code> 阻止默认事件的例外配置</li>
+<li>HWCompositing: <code>true</code> 是否启用硬件加速</li>
+<li>useTransition: <code>true</code> 是否使用CSS3的Transition属性</li>
+<li>useTransform: <code>true</code> 是否使用CSS3的Transform属性</li>
+<li>probeType: <code>1</code> 会截流,只有在滚动结束的时候派发一个 scroll 事件。<code>2</code>在手指 move 的时候也会实时派发 scroll 事件，不会截流。 <code>3</code>除了手指 move 的时候派发scroll事件，在 swipe（手指迅速滑动一小段距离）的情况下，列表会有一个长距离的滚动动画，这个滚动的动画过程中也会实时派发滚动事件</li>
+</ul>
+<h2 id="Events-事件"><a href="#Events-事件" class="headerlink" title="Events 事件"></a>Events 事件</h2><p>Example: </p>
+<pre><code>let scroll = new BScroll(document.getElementById(&#39;wrapper&#39;),{
+   probeType: 3
+})
+
+scroll.on(&#39;scroll&#39;, (pos) =&gt; {
+  console.log(pos.x + &#39;~&#39; + pos.y)
+  ...
+})
+</code></pre><p>Events 列表 </p>
+<ul>
+<li>beforeScrollStart - 滚动开始之前触发</li>
+<li>scrollStart - 滚动开始时触发</li>
+<li>scroll - 滚动时触发</li>
+<li>scrollCancel - 取消滚动时触发</li>
+<li>scrollEnd - 滚动结束时触发</li>
+<li>touchend - 手指移开屏幕时触发</li>
+<li>flick - 轻拂时触发</li>
+<li>refresh - 当 better-scroll 刷新时触发</li>
+<li>destroy - 销毁 better-scroll 实例时触发</li>
+</ul>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><ul>
+<li>scrollTo(x, y, time, easing)</li>
+</ul>
+<p>滚动到某个位置，x,y 代表坐标，time 表示动画时间，easing 表示缓动函数 </p>
+<p>Example: </p>
+<pre><code>let scroll = new BScroll(document.getElementById(&#39;wrapper&#39;))
+scroll.scrollTo(0, 500)
+...
+</code></pre><ul>
+<li>scrollToElement(el, time, offsetX, offsetY, easing)</li>
+</ul>
+<p>滚动到某个元素，el（必填）表示 dom 元素，time 表示动画时间，offsetX 和 offsetY 表示坐标偏移量，easing 表示缓动函数 </p>
+<ul>
+<li>refresh()</li>
+</ul>
+<p>强制 scroll 重新计算，当 better-scroll 中的元素发生变化的时候调用此方法。 </p>
+<ul>
+<li>getCurrentPage()</li>
+</ul>
+<p>当 snap 为 true 时，获取滚动的当前页，返回的对象结构为 {x, y, pageX, pageY}，其中 x,y 代表滚动横向和纵向的位置；pageX，pageY 表示横向和纵向的页面索引 </p>
+<ul>
+<li>goToPage(x, y, time, easing)</li>
+</ul>
+<p>当 snap 为 true，滚动到对应的页面，x 表示横向页面索引，y 表示纵向页面索引， time 表示动画，easing 表示缓动函数 </p>
+<ul>
+<li>enable()</li>
+</ul>
+<p>启用 better-scroll，默认开启 </p>
+<ul>
+<li>disable()</li>
+</ul>
+<p>禁用 better-scroll </p>
+<ul>
+<li>destroy()</li>
+</ul>
+<p>销毁 better-scroll，解绑事件 </p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
+    
+    </summary>
+    
+      <category term="VueJs" scheme="https://wangyu1997.github.io/categories/VueJs/"/>
+    
+    
+      <category term="better scroll" scheme="https://wangyu1997.github.io/tags/better-scroll/"/>
+    
+      <category term="vue" scheme="https://wangyu1997.github.io/tags/vue/"/>
     
   </entry>
   
@@ -6457,246 +6624,6 @@ public class AdviseDefine {
       <category term="javaweb" scheme="https://wangyu1997.github.io/tags/javaweb/"/>
     
       <category term="Spring" scheme="https://wangyu1997.github.io/tags/Spring/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>axios使用教程</title>
-    <link href="https://wangyu1997.github.io/2017/09/28/VueJs/axios%E6%95%99%E7%A8%8B/"/>
-    <id>https://wangyu1997.github.io/2017/09/28/VueJs/axios教程/</id>
-    <published>2017-09-27T17:43:11.000Z</published>
-    <updated>2017-10-24T07:13:53.000Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
-<h2 id="一、安装"><a href="#一、安装" class="headerlink" title="一、安装"></a>一、安装</h2><p>1、 利用npm安装<code>npm install axios --save</code><br>2、 利用bower安装<code>bower install axios --save</code><br>3、 直接利用cdn引入<code>&lt;script src=&quot;https://unpkg.com/axios/dist/axios.min.js&quot;&gt;&lt;/script&gt;</code></p>
-<h2 id="二、例子"><a href="#二、例子" class="headerlink" title="二、例子"></a>二、例子</h2><p>1、 发送一个<code>GET</code>请求 </p>
-<pre><code>//通过给定的ID来发送请求
-axios.get(&#39;/user?ID=12345&#39;)
-  .then(function(response){
-    console.log(response);
-  })
-  .catch(function(err){
-    console.log(err);
-  });
-//以上请求也可以通过这种方式来发送
-axios.get(&#39;/user&#39;,{
-  params:{
-    ID:12345
-  }
-})
-.then(function(response){
-  console.log(response);
-})
-.catch(function(err){
-  console.log(err);
-});
-</code></pre><p>2、 发送一个<code>POST</code>请求 </p>
-<pre><code>axios.post(&#39;/user&#39;,{
-  firstName:&#39;Fred&#39;,
-  lastName:&#39;Flintstone&#39;
-})
-.then(function(res){
-  console.log(res);
-})
-.catch(function(err){
-  console.log(err);
-});
-</code></pre><p>3、 一次性并发多个请求 </p>
-<pre><code>function getUserAccount(){
-  return axios.get(&#39;/user/12345&#39;);
-}
-function getUserPermissions(){
-  return axios.get(&#39;/user/12345/permissions&#39;);
-}
-axios.all([getUserAccount(),getUserPermissions()])
-  .then(axios.spread(function(acct,perms){
-    //当这两个请求都完成的时候会触发这个函数，两个参数分别代表返回的结果
-  }))
-</code></pre><h2 id="三、axios的API"><a href="#三、axios的API" class="headerlink" title="三、axios的API"></a>三、axios的API</h2><h4 id="（一）-axios可以通过配置（config）来发送请求"><a href="#（一）-axios可以通过配置（config）来发送请求" class="headerlink" title="（一） axios可以通过配置（config）来发送请求"></a>（一） axios可以通过配置（<code>config</code>）来发送请求</h4><p>1、 <code>axios(config)</code></p>
-<pre><code>//发送一个`POST`请求
-axios({
-    method:&quot;POST&quot;,
-    url:&#39;/user/12345&#39;,
-    data:{
-        firstName:&quot;Fred&quot;,
-        lastName:&quot;Flintstone&quot;
-    }
-});
-</code></pre><p>2、 <code>axios(url[,config])</code></p>
-<pre><code>//发送一个`GET`请求（默认的请求方式）
-axios(&#39;/user/12345&#39;);
-</code></pre><h4 id="（二）、-请求方式的别名，这里对所有已经支持的请求方式都提供了方便的别名"><a href="#（二）、-请求方式的别名，这里对所有已经支持的请求方式都提供了方便的别名" class="headerlink" title="（二）、 请求方式的别名，这里对所有已经支持的请求方式都提供了方便的别名"></a>（二）、 请求方式的别名，这里对所有已经支持的请求方式都提供了方便的别名</h4><pre><code>axios.request(config);
-
-axios.get(url[,config]);
-
-axios.delete(url[,config]);
-
-axios.head(url[,config]);
-
-axios.post(url[,data[,config]]);
-
-axios.put(url[,data[,config]])
-
-axios.patch(url[,data[,config]])
-</code></pre><ul>
-<li>注意：当我们在使用别名方法的时候，<code>url,method,data</code>这几个参数不需要在配置中声明</li>
-</ul>
-<h4 id="（三）、-并发请求（concurrency）-即是帮助处理并发请求的辅助函数"><a href="#（三）、-并发请求（concurrency）-即是帮助处理并发请求的辅助函数" class="headerlink" title="（三）、 并发请求（concurrency）,即是帮助处理并发请求的辅助函数"></a>（三）、 并发请求（concurrency）,即是帮助处理并发请求的辅助函数</h4><pre><code>//iterable是一个可以迭代的参数如数组等
-axios.all(iterable)
-//callback要等到所有请求都完成才会执行
-axios.spread(callback)
-</code></pre><h4 id="（四）、创建一个axios实例，并且可以自定义其配置"><a href="#（四）、创建一个axios实例，并且可以自定义其配置" class="headerlink" title="（四）、创建一个axios实例，并且可以自定义其配置"></a>（四）、创建一个<code>axios</code>实例，并且可以自定义其配置</h4><p>1、 <code>axios.create([config])</code></p>
-<pre><code>var instance = axios.create({
-  baseURL:&quot;https://some-domain.com/api/&quot;,
-  timeout:1000,
-  headers: {&#39;X-Custom-Header&#39;:&#39;foobar&#39;}
-});
-</code></pre><p>2、 实例的方法 </p>
-<ul>
-<li><p>一下是实例方法，注意已经定义的配置将和利用create创建的实例的配置合并</p>
-<p>axios#request(config)</p>
-<p>axios#get(url[,config])</p>
-<p>axios#delete(url[,config])</p>
-<p>axios#head(url[,config])</p>
-<p>axios#post(url[,data[,config]])</p>
-<p>axios#put(url[,data[,config]])</p>
-<p>axios#patch(url[,data[,config]])</p>
-</li>
-</ul>
-<h2 id="四、请求的配置（request-config）"><a href="#四、请求的配置（request-config）" class="headerlink" title="四、请求的配置（request config）"></a>四、请求的配置（request config）</h2><ul>
-<li><p>以下就是请求的配置选项，只有<code>url</code>选项是必须的，如果<code>method</code>选项未定义，那么它默认是以<code>GET</code>的方式发出请求</p>
-<p>{<br>  //<code>url</code>是请求的服务器地址<br>  url:’/user’,<br>  //<code>method</code>是请求资源的方式<br>  method:’get’//default<br>  //如果<code>url</code>不是绝对地址，那么<code>baseURL</code>将会加到<code>url</code>的前面<br>  //当<code>url</code>是相对地址的时候，设置<code>baseURL</code>会非常的方便<br>  baseURL:’<a href="https://some-domain.com/api/" target="_blank" rel="external">https://some-domain.com/api/</a>‘,<br>  //<code>transformRequest</code>选项允许我们在请求发送到服务器之前对请求的数据做出一些改动<br>  //该选项只适用于以下请求方式：<code>put/post/patch</code><br>  //数组里面的最后一个函数必须返回一个字符串、-一个<code>ArrayBuffer</code>或者<code>Stream</code><br>  transformRequest:[function(data){</p>
-<pre><code>//在这里根据自己的需求改变数据
-return data;
-</code></pre><p>  }],<br>  //<code>transformResponse</code>选项允许我们在数据传送到<code>then/catch</code>方法之前对数据进行改动<br>  transformResponse:[function(data){</p>
-<pre><code>//在这里根据自己的需求改变数据
-return data;
-</code></pre><p>  }],<br>  //<code>headers</code>选项是需要被发送的自定义请求头信息<br>  headers: {‘X-Requested-With’:’XMLHttpRequest’},<br>  //<code>params</code>选项是要随请求一起发送的请求参数—-一般链接在URL后面<br>  //他的类型必须是一个纯对象或者是URLSearchParams对象<br>  params: {</p>
-<pre><code>ID:12345
-</code></pre><p>  },<br>  //<code>paramsSerializer</code>是一个可选的函数，起作用是让参数（params）序列化<br>  //例如(<a href="https://www.npmjs.com/package/qs,http://api.jquery.com/jquery.param" target="_blank" rel="external">https://www.npmjs.com/package/qs,http://api.jquery.com/jquery.param</a>)<br>  paramsSerializer: function(params){</p>
-<pre><code>return Qs.stringify(params,{arrayFormat:&#39;brackets&#39;})
-</code></pre><p>  },<br>  //<code>data</code>选项是作为一个请求体而需要被发送的数据<br>  //该选项只适用于方法：<code>put/post/patch</code><br>  //当没有设置<code>transformRequest</code>选项时dada必须是以下几种类型之一<br>  //string/plain/object/ArrayBuffer/ArrayBufferView/URLSearchParams<br>  //仅仅浏览器：FormData/File/Bold<br>  //仅node:Stream<br>  data {</p>
-<pre><code>firstName:&quot;Fred&quot;
-</code></pre><p>  },<br>  //<code>timeout</code>选项定义了请求发出的延迟毫秒数<br>  //如果请求花费的时间超过延迟的时间，那么请求会被终止</p>
-<p>  timeout:1000,<br>  //<code>withCredentails</code>选项表明了是否是跨域请求</p>
-<p>  withCredentials:false,//default<br>  //<code>adapter</code>适配器选项允许自定义处理请求，这会使得测试变得方便<br>  //返回一个promise,并提供验证返回<br>  adapter: function(config){</p>
-<pre><code>/*..........*/
-</code></pre><p>  },<br>  //<code>auth</code>表明HTTP基础的认证应该被使用，并提供证书<br>  //这会设置一个authorization头（header）,并覆盖你在header设置的Authorization头信息<br>  auth: {</p>
-<pre><code>username:&quot;zhangsan&quot;,
-password: &quot;s00sdkf&quot;
-</code></pre><p>  },<br>  //返回数据的格式<br>  //其可选项是arraybuffer,blob,document,json,text,stream<br>  responseType:’json’,//default<br>  //<br>  xsrfCookieName: ‘XSRF-TOKEN’,//default<br>  xsrfHeaderName:’X-XSRF-TOKEN’,//default<br>  //<code>onUploadProgress</code>上传进度事件<br>  onUploadProgress:function(progressEvent){</p>
-<pre><code>//下载进度的事件
-</code></pre><p>onDownloadProgress:function(progressEvent){<br>}<br>  },<br>  //相应内容的最大值<br>  maxContentLength:2000,<br>  //<code>validateStatus</code>定义了是否根据http相应状态码，来resolve或者reject promise<br>  //如果<code>validateStatus</code>返回true(或者设置为<code>null</code>或者<code>undefined</code>),那么promise的状态将会是resolved,否则其状态就是rejected<br>  validateStatus:function(status){</p>
-<pre><code>return status &gt;= 200 &amp;&amp; status &lt;300;//default
-</code></pre><p>  },<br>  //<code>maxRedirects</code>定义了在nodejs中重定向的最大数量<br>  maxRedirects: 5,//default<br>  //<code>httpAgent/httpsAgent</code>定义了当发送http/https请求要用到的自定义代理<br>  //keeyAlive在选项中没有被默认激活<br>  httpAgent: new http.Agent({keeyAlive:true}),<br>  httpsAgent: new https.Agent({keeyAlive:true}),<br>  //proxy定义了主机名字和端口号，<br>  //<code>auth</code>表明http基本认证应该与proxy代理链接，并提供证书<br>  //这将会设置一个<code>Proxy-Authorization</code> header,并且会覆盖掉已经存在的<code>Proxy-Authorization</code>  header<br>  proxy: {</p>
-<pre><code>host:&#39;127.0.0.1&#39;,
-port: 9000,
-auth: {
-  username:&#39;skda&#39;,
-  password:&#39;radsd&#39;
-}
-</code></pre><p>  },<br>  //<code>cancelToken</code>定义了一个用于取消请求的cancel token<br>  //详见cancelation部分<br>  cancelToken: new cancelToken(function(cancel){</p>
-<p>  })<br>}</p>
-</li>
-</ul>
-<h2 id="五、请求返回的内容"><a href="#五、请求返回的内容" class="headerlink" title="五、请求返回的内容"></a>五、请求返回的内容</h2><pre><code>{
-
-  data:{},
-  status:200,
-  //从服务器返回的http状态文本
-  statusText:&#39;OK&#39;,
-  //响应头信息
-  headers: {},
-  //`config`是在请求的时候的一些配置信息
-  config: {}
-}
-</code></pre><ul>
-<li><p>你可以这样来获取响应信息</p>
-<p>axios.get(‘/user/12345’)<br>  .then(function(res){</p>
-<pre><code>console.log(res.data);
-console.log(res.status);
-console.log(res.statusText);
-console.log(res.headers);
-console.log(res.config);
-</code></pre><p>  })</p>
-</li>
-</ul>
-<h2 id="六、默认配置"><a href="#六、默认配置" class="headerlink" title="六、默认配置"></a>六、默认配置</h2><ul>
-<li>你可以设置默认配置，对所有请求都有效</li>
-</ul>
-<p>1、 全局默认配置 </p>
-<pre><code>axios.defaults.baseURL = &#39;http://api.exmple.com&#39;;
-axios.defaults.headers.common[&#39;Authorization&#39;] = AUTH_TOKEN;
-axios.defaults.headers.post[&#39;content-Type&#39;] = &#39;appliction/x-www-form-urlencoded&#39;;
-</code></pre><p>2、 自定义的实例默认设置 </p>
-<pre><code>//当创建实例的时候配置默认配置
-var instance = axios.create({
-    baseURL: &#39;https://api.example.com&#39;
-});
-
-//当实例创建时候修改配置
-instance.defaults.headers.common[&quot;Authorization&quot;] = AUTH_TOKEN;
-</code></pre><p>3、 配置中的有优先级 </p>
-<ul>
-<li><p>config配置将会以优先级别来合并，顺序是lib/defauts.js中的默认配置，然后是实例中的默认配置，最后是请求中的config参数的配置，越往后等级越高，后面的会覆盖前面的例子。</p>
-<p>//创建一个实例的时候会使用libray目录中的默认配置<br>//在这里timeout配置的值为0，来自于libray的默认值<br>var instance = axios.create();<br>//回覆盖掉library的默认值<br>//现在所有的请求都要等2.5S之后才会发出<br>instance.defaults.timeout = 2500;<br>//这里的timeout回覆盖之前的2.5S变成5s<br>instance.get(‘/longRequest’,{<br>  timeout: 5000<br>});</p>
-</li>
-</ul>
-<h2 id="七、拦截器"><a href="#七、拦截器" class="headerlink" title="七、拦截器"></a>七、拦截器</h2><ul>
-<li><p>你可以在请求、响应在到达<code>then/catch</code>之前拦截他们</p>
-<p>//添加一个请求拦截器<br>axios.interceptors.request.use(function(config){<br>  //在请求发出之前进行一些操作<br>  return config;<br>},function(err){<br>  //Do something with request error<br>  return Promise.reject(error);<br>});<br>//添加一个响应拦截器<br>axios.interceptors.response.use(function(res){<br>  //在这里对返回的数据进行处理<br>  return res;<br>},function(err){<br>  //Do something with response error<br>  return Promise.reject(error);<br>})</p>
-</li>
-</ul>
-<p>2、取消拦截器 </p>
-<pre><code>var myInterceptor = axios.interceptor.request.use(function(){/*....*/});
-axios.interceptors.request.eject(myInterceptor);
-</code></pre><p>3、 给自定义的axios实例添加拦截器 </p>
-<pre><code>var instance = axios.create();
-instance.interceptors.request.use(function(){})
-</code></pre><h2 id="八、错误处理"><a href="#八、错误处理" class="headerlink" title="八、错误处理"></a>八、错误处理</h2><pre><code>axios.get(&#39;/user/12345&#39;)
-  .catch(function(error){
-    if(error.response){
-      //请求已经发出，但是服务器响应返回的状态吗不在2xx的范围内
-      console.log(error.response.data);
-      console.log(error.response.status);
-      console.log(error.response.header);
-    }else {
-      //一些错误是在设置请求的时候触发
-      console.log(&#39;Error&#39;,error.message);
-    }
-    console.log(error.config);
-  });
-</code></pre><h2 id="九、取消"><a href="#九、取消" class="headerlink" title="九、取消"></a>九、取消</h2><ul>
-<li>你可以通过一个<code>cancel token</code>来取消一个请求</li>
-</ul>
-<ol>
-<li><p>你可以通过<code>CancelToken.source</code>工厂函数来创建一个<code>cancel token</code></p>
-<p>var CancelToken = axios.CancelToken;<br>var source = CancelToken.source();</p>
-<p>axios.get(‘/user/12345’,{<br> cancelToken: source.token<br>}).catch(function(thrown){<br> if(axios.isCancel(thrown)){<br>   console.log(‘Request canceled’,thrown.message);<br> }else {<br>   //handle error<br> }<br>});</p>
-<p>//取消请求（信息的参数可以设置的）<br>source.cance(“操作被用户取消”);</p>
-</li>
-</ol>
-<ol>
-<li><p>你可以给cancelToken构造函数传递一个executor function来创建一个cancel token:</p>
-<p>var cancelToken = axios.CancelToken;<br>var cance;<br>axios.get(‘/user/12345’,{<br> cancelToken: new CancelToken(function(c){<br>   //这个executor函数接受一个cancel function作为参数<br>   cancel = c;<br> })<br>})<br>//取消请求<br>cancel();</p>
-</li>
-</ol>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
-    
-    </summary>
-    
-      <category term="VueJs" scheme="https://wangyu1997.github.io/categories/VueJs/"/>
-    
-    
-      <category term="axios" scheme="https://wangyu1997.github.io/tags/axios/"/>
-    
-      <category term="fronted" scheme="https://wangyu1997.github.io/tags/fronted/"/>
-    
-      <category term="vuejs" scheme="https://wangyu1997.github.io/tags/vuejs/"/>
     
   </entry>
   

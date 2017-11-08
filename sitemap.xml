@@ -2,16 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://wangyu1997.github.io/2017/11/02/Spring/web%E9%A1%B9%E7%9B%AE%E4%B8%AD%E4%BD%BF%E7%94%A8hibernate/</loc>
+    <loc>https://wangyu1997.github.io/2017/11/08/JAVA/java8%20%E6%96%B9%E6%B3%95%E5%BC%95%E7%94%A8/</loc>
     
-    <lastmod>2017-11-03T10:37:38.000Z</lastmod>
+    <lastmod>2017-11-08T13:52:02.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/2017/11/03/Spring/Hibernate%E4%BD%BF%E7%94%A8Log4j%E6%97%A5%E5%BF%97%E8%AE%B0%E5%BD%95/</loc>
+    <loc>https://wangyu1997.github.io/2017/11/03/Spring/Hibernate%E4%BD%BF%E7%94%A8%E4%BA%8C%E7%BA%A7%E7%BC%93%E5%AD%98/</loc>
     
-    <lastmod>2017-11-03T10:36:51.000Z</lastmod>
+    <lastmod>2017-11-03T10:51:33.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangyu1997.github.io/2017/11/02/Spring/web%E9%A1%B9%E7%9B%AE%E4%B8%AD%E4%BD%BF%E7%94%A8hibernate/</loc>
+    
+    <lastmod>2017-11-03T10:37:38.000Z</lastmod>
     
   </url>
   
@@ -373,6 +380,13 @@
   </url>
   
   <url>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-basic.js</loc>
+    
+    <lastmod>2017-01-13T03:58:20.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://wangyu1997.github.io/assets/prettify/lang-cbm.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
@@ -394,14 +408,14 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-dart.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-css.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-aea.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-dart.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
@@ -423,13 +437,6 @@
   
   <url>
     <loc>https://wangyu1997.github.io/assets/prettify/lang-erlang.js</loc>
-    
-    <lastmod>2017-01-13T03:58:20.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-agc.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
@@ -499,7 +506,7 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-llvm.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-aea.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
@@ -534,7 +541,7 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-apollo.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-matlab.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
@@ -660,13 +667,6 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-tcl.js</loc>
-    
-    <lastmod>2017-01-13T03:58:20.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://wangyu1997.github.io/assets/prettify/lang-tex.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
@@ -703,6 +703,13 @@
   
   <url>
     <loc>https://wangyu1997.github.io/assets/prettify/lang-wiki.js</loc>
+    
+    <lastmod>2017-01-13T03:58:20.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-tcl.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
@@ -758,14 +765,14 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-css.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-agc.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-basic.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-apollo.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     
@@ -800,7 +807,7 @@
   </url>
   
   <url>
-    <loc>https://wangyu1997.github.io/assets/prettify/lang-matlab.js</loc>
+    <loc>https://wangyu1997.github.io/assets/prettify/lang-llvm.js</loc>
     
     <lastmod>2017-01-13T03:58:20.000Z</lastmod>
     

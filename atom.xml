@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://wangyu1997.github.io/"/>
-  <updated>2017-11-08T13:52:02.000Z</updated>
+  <updated>2017-11-08T14:22:38.000Z</updated>
   <id>https://wangyu1997.github.io/</id>
   
   <author>
@@ -14,6 +14,457 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Java8中的streams API详解</title>
+    <link href="https://wangyu1997.github.io/2017/11/08/JAVA/Java8%E4%B8%AD%E7%9A%84Streams%20API/"/>
+    <id>https://wangyu1997.github.io/2017/11/08/JAVA/Java8中的Streams API/</id>
+    <published>2017-11-08T14:38:11.000Z</published>
+    <updated>2017-11-08T14:22:38.000Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>Streams 的背景，以及 Java 8 中的使用详解 </p>
+<h2 id="为什么需要-Stream"><a href="#为什么需要-Stream" class="headerlink" title="为什么需要 Stream"></a>为什么需要 Stream</h2><p>Stream 作为 Java 8 的一大亮点，它与 java.io 包里的 InputStream 和 OutputStream 是完全不同的概念。它也不同于 StAX 对 XML 解析的 Stream，也不是 Amazon Kinesis 对大数据实时处理的 Stream。Java 8 中的 Stream 是对集合（Collection）对象功能的增强，它专注于对集合对象进行各种非常便利、高效的聚合操作（aggregate operation），或者大批量数据操作 (bulk data operation)。Stream API 借助于同样新出现的 Lambda 表达式，极大的提高编程效率和程序可读性。同时它提供串行和并行两种模式进行汇聚操作，并发模式能够充分利用多核处理器的优势，使用 fork/join 并行方式来拆分任务和加速处理过程。通常编写并行代码很难而且容易出错, 但使用 Stream API 无需编写一行多线程的代码，就可以很方便地写出高性能的并发程序。所以说，Java 8 中首次出现的 java.util.stream 是一个函数式语言+多核时代综合影响的产物。 </p>
+<h3 id="什么是聚合操作"><a href="#什么是聚合操作" class="headerlink" title="什么是聚合操作"></a>什么是聚合操作</h3><p>在传统的 J2EE 应用中，Java 代码经常不得不依赖于关系型数据库的聚合操作来完成诸如： </p>
+<ul>
+<li>客户每月平均消费金额</li>
+<li>最昂贵的在售商品</li>
+<li>本周完成的有效订单（排除了无效的）</li>
+<li>取十个数据样本作为首页推荐</li>
+</ul>
+<p>这类的操作。 </p>
+<p>但在当今这个数据大爆炸的时代，在数据来源多样化、数据海量化的今天，很多时候不得不脱离 RDBMS，或者以底层返回的数据为基础进行更上层的数据统计。而 Java 的集合 API 中，仅仅有极少量的辅助型方法，更多的时候是程序员需要用 Iterator 来遍历集合，完成相关的聚合应用逻辑。这是一种远不够高效、笨拙的方法。在 Java 7 中，如果要发现 type 为 grocery 的所有交易，然后返回以交易值降序排序好的交易 ID 集合，我们需要这样写： </p>
+<h5 id="清单-1-Java-7-的排序、取值实现"><a href="#清单-1-Java-7-的排序、取值实现" class="headerlink" title="清单 1. Java 7 的排序、取值实现"></a>清单 1. Java 7 的排序、取值实现</h5><pre><code>List&lt;Transaction&gt; groceryTransactions = new Arraylist&lt;&gt;();
+for(Transaction t: transactions){
+ if(t.getType() == Transaction.GROCERY){
+ groceryTransactions.add(t);
+ }
+}
+Collections.sort(groceryTransactions, new Comparator(){
+ public int compare(Transaction t1, Transaction t2){
+ return t2.getValue().compareTo(t1.getValue());
+ }
+});
+List&lt;Integer&gt; transactionIds = new ArrayList&lt;&gt;();
+for(Transaction t: groceryTransactions){
+ transactionsIds.add(t.getId());
+}
+</code></pre><p>而在 Java 8 使用 Stream，代码更加简洁易读；而且使用并发模式，程序执行速度更快。 </p>
+<h5 id="清单-2-Java-8-的排序、取值实现"><a href="#清单-2-Java-8-的排序、取值实现" class="headerlink" title="清单 2. Java 8 的排序、取值实现"></a>清单 2. Java 8 的排序、取值实现</h5><pre><code>List&lt;Integer&gt; transactionsIds = transactions.parallelStream().
+ filter(t -&gt; t.getType() == Transaction.GROCERY).
+ sorted(comparing(Transaction::getValue).reversed()).
+ map(Transaction::getId).
+ collect(toList());
+</code></pre><h2 id="Stream-总览"><a href="#Stream-总览" class="headerlink" title="Stream 总览"></a>Stream 总览</h2><h3 id="什么是流"><a href="#什么是流" class="headerlink" title="什么是流"></a>什么是流</h3><p>Stream 不是集合元素，它不是数据结构并不保存数据，它是有关算法和计算的，它更像一个高级版本的 Iterator。原始版本的 Iterator，用户只能显式地一个一个遍历元素并对其执行某些操作；高级版本的 Stream，用户只要给出需要对其包含的元素执行什么操作，比如 “过滤掉长度大于 10 的字符串”、“获取每个字符串的首字母”等，Stream 会隐式地在内部进行遍历，做出相应的数据转换。 </p>
+<p>Stream 就如同一个迭代器（Iterator），单向，不可往复，数据只能遍历一次，遍历过一次后即用尽了，就好比流水从面前流过，一去不复返。 </p>
+<p>而和迭代器又不同的是，Stream 可以并行化操作，迭代器只能命令式地、串行化操作。顾名思义，当使用串行方式去遍历时，每个 item 读完后再读下一个 item。而使用并行去遍历时，数据会被分成多个段，其中每一个都在不同的线程中处理，然后将结果一起输出。Stream 的并行操作依赖于 Java7 中引入的 Fork/Join 框架（JSR166y）来拆分任务和加速处理过程。Java 的并行 API 演变历程基本如下： </p>
+<ol>
+<li>1.0-1.4 中的 java.lang.Thread</li>
+<li>5.0 中的 java.util.concurrent</li>
+<li>6.0 中的 Phasers 等</li>
+<li>7.0 中的 Fork/Join 框架</li>
+<li>8.0 中的 Lambda</li>
+</ol>
+<p>Stream 的另外一大特点是，数据源本身可以是无限的。 </p>
+<h3 id="流的构成"><a href="#流的构成" class="headerlink" title="流的构成"></a>流的构成</h3><p>当我们使用一个流的时候，通常包括三个基本步骤： </p>
+<p>获取一个数据源（source）→ 数据转换→执行操作获取想要的结果，每次转换原有 Stream 对象不改变，返回一个新的 Stream 对象（可以有多次转换），这就允许对其操作可以像链条一样排列，变成一个管道，如下图所示。 </p>
+<h5 id="图-1-流管道-Stream-Pipeline-的构成"><a href="#图-1-流管道-Stream-Pipeline-的构成" class="headerlink" title="图 1. 流管道 (Stream Pipeline) 的构成"></a>图 1. 流管道 (Stream Pipeline) 的构成</h5><p><img src="http://oq5d32gij.bkt.clouddn.com/15101508417650.png" alt=""></p>
+<p>有多种方式生成 Stream Source： </p>
+<ul>
+<li>从 Collection 和数组</li>
+<li><ul>
+<li>Collection.stream()</li>
+<li>Collection.parallelStream()</li>
+<li>Arrays.stream(T array) or Stream.of()<br>从 BufferedReader</li>
+<li>java.io.BufferedReader.lines()</li>
+</ul>
+</li>
+<li>静态工厂</li>
+<li>java.util.stream.IntStream.range()</li>
+<li>java.nio.file.Files.walk()</li>
+<li>自己构建</li>
+<li><ul>
+<li>java.util.Spliterator<br>其它</li>
+<li>Random.ints()</li>
+<li>BitSet.stream()</li>
+<li>Pattern.splitAsStream(java.lang.CharSequence)</li>
+<li>JarFile.stream()</li>
+</ul>
+</li>
+</ul>
+<p>流的操作类型分为两种： </p>
+<ul>
+<li><strong>Intermediate</strong>：一个流可以后面跟随零个或多个 intermediate 操作。其目的主要是打开流，做出某种程度的数据映射/过滤，然后返回一个新的流，交给下一个操作使用。这类操作都是惰性化的（lazy），就是说，仅仅调用到这类方法，并没有真正开始流的遍历。</li>
+<li><strong>Terminal</strong>：一个流只能有一个 terminal 操作，当这个操作执行后，流就被使用“光”了，无法再被操作。所以这必定是流的最后一个操作。Terminal 操作的执行，才会真正开始流的遍历，并且会生成一个结果，或者一个 side effect。</li>
+</ul>
+<p>在对于一个 Stream 进行多次转换操作 (Intermediate 操作)，每次都对 Stream 的每个元素进行转换，而且是执行多次，这样时间复杂度就是 N（转换次数）个 for 循环里把所有操作都做掉的总和吗？其实不是这样的，转换操作都是 lazy 的，多个转换操作只会在 Terminal 操作的时候融合起来，一次循环完成。我们可以这样简单的理解，Stream 里有个操作函数的集合，每次转换操作就是把转换函数放入这个集合中，在 Terminal 操作的时候循环 Stream 对应的集合，然后对每个元素执行所有的函数。 </p>
+<p>还有一种操作被称为 <strong>short-circuiting</strong>。用以指： </p>
+<ul>
+<li>对于一个 intermediate 操作，如果它接受的是一个无限大（infinite/unbounded）的 Stream，但返回一个有限的新 Stream。</li>
+<li>对于一个 terminal 操作，如果它接受的是一个无限大的 Stream，但能在有限的时间计算出结果。</li>
+</ul>
+<p>当操作一个无限大的 Stream，而又希望在有限时间内完成操作，则在管道内拥有一个 short-circuiting 操作是必要非充分条件。 </p>
+<h5 id="清单-3-一个流操作的示例"><a href="#清单-3-一个流操作的示例" class="headerlink" title="清单 3. 一个流操作的示例"></a>清单 3. 一个流操作的示例</h5><pre><code>int sum = widgets.stream()
+.filter(w -&gt; w.getColor() == RED)
+ .mapToInt(w -&gt; w.getWeight())
+ .sum();
+</code></pre><p>stream() 获取当前小物件的 source，filter 和 mapToInt 为 intermediate 操作，进行数据筛选和转换，最后一个 sum() 为 terminal 操作，对符合条件的全部小物件作重量求和。 </p>
+<h2 id="流的使用详解"><a href="#流的使用详解" class="headerlink" title="流的使用详解"></a>流的使用详解</h2><p>简单说，对 Stream 的使用就是实现一个 filter-map-reduce 过程，产生一个最终结果，或者导致一个副作用（side effect）。 </p>
+<h3 id="流的构造与转换"><a href="#流的构造与转换" class="headerlink" title="流的构造与转换"></a>流的构造与转换</h3><p>下面提供最常见的几种构造 Stream 的样例。 </p>
+<h5 id="清单-4-构造流的几种常见方法"><a href="#清单-4-构造流的几种常见方法" class="headerlink" title="清单 4. 构造流的几种常见方法"></a>清单 4. 构造流的几种常见方法</h5><pre><code>// 1. Individual values
+Stream stream = Stream.of(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;);
+// 2. Arrays
+String [] strArray = new String[] {&quot;a&quot;, &quot;b&quot;, &quot;c&quot;};
+stream = Stream.of(strArray);
+stream = Arrays.stream(strArray);
+// 3. Collections
+List&lt;String&gt; list = Arrays.asList(strArray);
+stream = list.stream();
+</code></pre><p>需要注意的是，对于基本数值型，目前有三种对应的包装类型 Stream： </p>
+<p>IntStream、LongStream、DoubleStream。当然我们也可以用 Stream<integer>、Stream<long> &gt;、Stream<double>，但是 boxing 和 unboxing 会很耗时，所以特别为这三种基本数值型提供了对应的 Stream。 </double></long></integer></p>
+<p>Java 8 中还没有提供其它数值型 Stream，因为这将导致扩增的内容较多。而常规的数值型聚合运算可以通过上面三种 Stream 进行。 </p>
+<h5 id="清单-5-数值流的构造"><a href="#清单-5-数值流的构造" class="headerlink" title="清单 5. 数值流的构造"></a>清单 5. 数值流的构造</h5><pre><code>IntStream.of(new int[]{1, 2, 3}).forEach(System.out::println);
+IntStream.range(1, 3).forEach(System.out::println);
+IntStream.rangeClosed(1, 3).forEach(System.out::println);
+</code></pre><h5 id="清单-6-流转换为其它数据结构"><a href="#清单-6-流转换为其它数据结构" class="headerlink" title="清单 6. 流转换为其它数据结构"></a>清单 6. 流转换为其它数据结构</h5><pre><code>// 1. Array
+String[] strArray1 = stream.toArray(String[]::new);
+// 2. Collection
+List&lt;String&gt; list1 = stream.collect(Collectors.toList());
+List&lt;String&gt; list2 = stream.collect(Collectors.toCollection(ArrayList::new));
+Set set1 = stream.collect(Collectors.toSet());
+Stack stack1 = stream.collect(Collectors.toCollection(Stack::new));
+// 3. String
+String str = stream.collect(Collectors.joining()).toString();
+</code></pre><p>一个 Stream 只可以使用一次，上面的代码为了简洁而重复使用了数次。 </p>
+<h3 id="流的操作"><a href="#流的操作" class="headerlink" title="流的操作"></a>流的操作</h3><p>接下来，当把一个数据结构包装成 Stream 后，就要开始对里面的元素进行各类操作了。常见的操作可以归类如下。 </p>
+<ul>
+<li>Intermediate：</li>
+</ul>
+<p>map (mapToInt, flatMap 等)、 filter、 distinct、 sorted、 peek、 limit、 skip、 parallel、 sequential、 unordered </p>
+<ul>
+<li>Terminal：</li>
+</ul>
+<p>forEach、 forEachOrdered、 toArray、 reduce、 collect、 min、 max、 count、 anyMatch、 allMatch、 noneMatch、 findFirst、 findAny、 iterator </p>
+<ul>
+<li>Short-circuiting：</li>
+</ul>
+<p>anyMatch、 allMatch、 noneMatch、 findFirst、 findAny、 limit </p>
+<p>我们下面看一下 Stream 的比较典型用法。 </p>
+<p><strong>map/flatMap</strong></p>
+<p>我们先来看 map。如果你熟悉 scala 这类函数式语言，对这个方法应该很了解，它的作用就是把 input Stream 的每一个元素，映射成 output Stream 的另外一个元素。 </p>
+<h5 id="清单-7-转换大写"><a href="#清单-7-转换大写" class="headerlink" title="清单 7. 转换大写"></a>清单 7. 转换大写</h5><pre><code>List&lt;String&gt; output = wordList.stream().
+map(String::toUpperCase).
+collect(Collectors.toList());
+</code></pre><p>这段代码把所有的单词转换为大写。 </p>
+<h5 id="清单-8-平方数"><a href="#清单-8-平方数" class="headerlink" title="清单 8. 平方数"></a>清单 8. 平方数</h5><pre><code>List&lt;Integer&gt; nums = Arrays.asList(1, 2, 3, 4);
+List&lt;Integer&gt; squareNums = nums.stream().
+map(n -&gt; n * n).
+collect(Collectors.toList());
+</code></pre><p>这段代码生成一个整数 list 的平方数 {1, 4, 9, 16}。 </p>
+<p>从上面例子可以看出，map 生成的是个 1:1 映射，每个输入元素，都按照规则转换成为另外一个元素。还有一些场景，是一对多映射关系的，这时需要 flatMap。 </p>
+<h5 id="清单-9-一对多"><a href="#清单-9-一对多" class="headerlink" title="清单 9. 一对多"></a>清单 9. 一对多</h5><pre><code>Stream&lt;List&lt;Integer&gt;&gt; inputStream = Stream.of(
+ Arrays.asList(1),
+ Arrays.asList(2, 3),
+ Arrays.asList(4, 5, 6)
+ );
+Stream&lt;Integer&gt; outputStream = inputStream.
+flatMap((childList) -&gt; childList.stream());
+</code></pre><p>flatMap 把 input Stream 中的层级结构扁平化，就是将最底层元素抽出来放到一起，最终 output 的新 Stream 里面已经没有 List 了，都是直接的数字。 </p>
+<p><strong>filter</strong></p>
+<p>filter 对原始 Stream 进行某项测试，通过测试的元素被留下来生成一个新 Stream。 </p>
+<h5 id="清单-10-留下偶数"><a href="#清单-10-留下偶数" class="headerlink" title="清单 10. 留下偶数"></a>清单 10. 留下偶数</h5><pre><code>Integer[] sixNums = {1, 2, 3, 4, 5, 6};
+Integer[] evens =
+Stream.of(sixNums).filter(n -&gt; n%2 == 0).toArray(Integer[]::new);
+</code></pre><p>经过条件“被 2 整除”的 filter，剩下的数字为 {2, 4, 6}。 </p>
+<h5 id="清单-11-把单词挑出来"><a href="#清单-11-把单词挑出来" class="headerlink" title="清单 11. 把单词挑出来"></a>清单 11. 把单词挑出来</h5><pre><code>List&lt;String&gt; output = reader.lines().
+ flatMap(line -&gt; Stream.of(line.split(REGEXP))).
+ filter(word -&gt; word.length() &gt; 0).
+ collect(Collectors.toList());
+</code></pre><p>这段代码首先把每行的单词用 flatMap 整理到新的 Stream，然后保留长度不为 0 的，就是整篇文章中的全部单词了。 </p>
+<p><strong>forEach</strong></p>
+<p>forEach 方法接收一个 Lambda 表达式，然后在 Stream 的每一个元素上执行该表达式。 </p>
+<h5 id="清单-12-打印姓名（forEach-和-pre-java8-的对比）"><a href="#清单-12-打印姓名（forEach-和-pre-java8-的对比）" class="headerlink" title="清单 12. 打印姓名（forEach 和 pre-java8 的对比）"></a>清单 12. 打印姓名（forEach 和 pre-java8 的对比）</h5><pre><code>// Java 8
+roster.stream()
+ .filter(p -&gt; p.getGender() == Person.Sex.MALE)
+ .forEach(p -&gt; System.out.println(p.getName()));
+// Pre-Java 8
+for (Person p : roster) {
+ if (p.getGender() == Person.Sex.MALE) {
+ System.out.println(p.getName());
+ }
+}
+</code></pre><p>对一个人员集合遍历，找出男性并打印姓名。可以看出来，forEach 是为 Lambda 而设计的，保持了最紧凑的风格。而且 Lambda 表达式本身是可以重用的，非常方便。当需要为多核系统优化时，可以 parallelStream().forEach()，只是此时原有元素的次序没法保证，并行的情况下将改变串行时操作的行为，此时 forEach 本身的实现不需要调整，而 Java8 以前的 for 循环 code 可能需要加入额外的多线程逻辑。 </p>
+<p>但一般认为，forEach 和常规 for 循环的差异不涉及到性能，它们仅仅是函数式风格与传统 Java 风格的差别。 </p>
+<p>另外一点需要注意，forEach 是 terminal 操作，因此它执行后，Stream 的元素就被“消费”掉了，你无法对一个 Stream 进行两次 terminal 运算。下面的代码是错误的： </p>
+<pre><code>     stream.forEach(element -&gt; doOneThing(element));
+     stream.forEach(element -&gt; doAnotherThing(element));
+</code></pre><p>相反，具有相似功能的 intermediate 操作 peek 可以达到上述目的。如下是出现在该 api javadoc 上的一个示例。 </p>
+<h5 id="清单-13-peek-对每个元素执行操作并返回一个新的-Stream"><a href="#清单-13-peek-对每个元素执行操作并返回一个新的-Stream" class="headerlink" title="清单 13. peek 对每个元素执行操作并返回一个新的 Stream"></a>清单 13. peek 对每个元素执行操作并返回一个新的 Stream</h5><pre><code>Stream.of(&quot;one&quot;, &quot;two&quot;, &quot;three&quot;, &quot;four&quot;)
+ .filter(e -&gt; e.length() &gt; 3)
+ .peek(e -&gt; System.out.println(&quot;Filtered value: &quot; + e))
+ .map(String::toUpperCase)
+ .peek(e -&gt; System.out.println(&quot;Mapped value: &quot; + e))
+ .collect(Collectors.toList());
+</code></pre><p>forEach 不能修改自己包含的本地变量值，也不能用 break/return 之类的关键字提前结束循环。 </p>
+<p><strong>findFirst</strong></p>
+<p>这是一个 termimal 兼 short-circuiting 操作，它总是返回 Stream 的第一个元素，或者空。 </p>
+<p>这里比较重点的是它的返回值类型：Optional。这也是一个模仿 Scala 语言中的概念，作为一个容器，它可能含有某值，或者不包含。使用它的目的是尽可能避免 NullPointerException。 </p>
+<h5 id="清单-14-Optional-的两个用例"><a href="#清单-14-Optional-的两个用例" class="headerlink" title="清单 14. Optional 的两个用例"></a>清单 14. Optional 的两个用例</h5><pre><code>String strA = &quot; abcd &quot;, strB = null;
+print(strA);
+print(&quot;&quot;);
+print(strB);
+getLength(strA);
+getLength(&quot;&quot;);
+getLength(strB);
+public static void print(String text) {
+ // Java 8
+ Optional.ofNullable(text).ifPresent(System.out::println);
+ // Pre-Java 8
+ if (text != null) {
+ System.out.println(text);
+ }
+ }
+public static int getLength(String text) {
+ // Java 8
+return Optional.ofNullable(text).map(String::length).orElse(-1);
+ // Pre-Java 8
+// return if (text != null) ? text.length() : -1;
+ };
+</code></pre><p>在更复杂的 if (xx != null) 的情况中，使用 Optional 代码的可读性更好，而且它提供的是编译时检查，能极大的降低 NPE 这种 Runtime Exception 对程序的影响，或者迫使程序员更早的在编码阶段处理空值问题，而不是留到运行时再发现和调试。 </p>
+<p>Stream 中的 findAny、max/min、reduce 等方法等返回 Optional 值。还有例如 IntStream.average() 返回 OptionalDouble 等等。 </p>
+<p><strong>reduce</strong></p>
+<p>这个方法的主要作用是把 Stream 元素组合起来。它提供一个起始值（种子），然后依照运算规则（BinaryOperator），和前面 Stream 的第一个、第二个、第 n 个元素组合。从这个意义上说，字符串拼接、数值的 sum、min、max、average 都是特殊的 reduce。例如 Stream 的 sum 就相当于 </p>
+<p>Integer sum = integers.reduce(0, (a, b) -&gt; a+b); 或 </p>
+<p>Integer sum = integers.reduce(0, Integer::sum); </p>
+<p>也有没有起始值的情况，这时会把 Stream 的前面两个元素组合起来，返回的是 Optional。 </p>
+<h5 id="清单-15-reduce-的用例"><a href="#清单-15-reduce-的用例" class="headerlink" title="清单 15. reduce 的用例"></a>清单 15. reduce 的用例</h5><pre><code>// 字符串连接，concat = &quot;ABCD&quot;
+String concat = Stream.of(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;, &quot;D&quot;).reduce(&quot;&quot;, String::concat); 
+// 求最小值，minValue = -3.0
+double minValue = Stream.of(-1.5, 1.0, -3.0, -2.0).reduce(Double.MAX_VALUE, Double::min); 
+// 求和，sumValue = 10, 有起始值
+int sumValue = Stream.of(1, 2, 3, 4).reduce(0, Integer::sum);
+// 求和，sumValue = 10, 无起始值
+sumValue = Stream.of(1, 2, 3, 4).reduce(Integer::sum).get();
+// 过滤，字符串连接，concat = &quot;ace&quot;
+concat = Stream.of(&quot;a&quot;, &quot;B&quot;, &quot;c&quot;, &quot;D&quot;, &quot;e&quot;, &quot;F&quot;).
+ filter(x -&gt; x.compareTo(&quot;Z&quot;) &gt; 0).
+ reduce(&quot;&quot;, String::concat);
+</code></pre><p>上面代码例如第一个示例的 reduce()，第一个参数（空白字符）即为起始值，第二个参数（String::concat）为 BinaryOperator。这类有起始值的 reduce() 都返回具体的对象。而对于第四个示例没有起始值的 reduce()，由于可能没有足够的元素，返回的是 Optional，请留意这个区别。 </p>
+<p><strong>limit/skip</strong></p>
+<p>limit 返回 Stream 的前面 n 个元素；skip 则是扔掉前 n 个元素（它是由一个叫 subStream 的方法改名而来）。 </p>
+<h5 id="清单-16-limit-和-skip-对运行次数的影响"><a href="#清单-16-limit-和-skip-对运行次数的影响" class="headerlink" title="清单 16. limit 和 skip 对运行次数的影响"></a>清单 16. limit 和 skip 对运行次数的影响</h5><pre><code>public void testLimitAndSkip() {
+ List&lt;Person&gt; persons = new ArrayList();
+ for (int i = 1; i &lt;= 10000; i++) {
+ Person person = new Person(i, &quot;name&quot; + i);
+ persons.add(person);
+ }
+List&lt;String&gt; personList2 = persons.stream().
+map(Person::getName).limit(10).skip(3).collect(Collectors.toList());
+ System.out.println(personList2);
+}
+private class Person {
+ public int no;
+ private String name;
+ public Person (int no, String name) {
+ this.no = no;
+ this.name = name;
+ }
+ public String getName() {
+ System.out.println(name);
+ return name;
+ }
+}
+</code></pre><p>输出结果为： </p>
+<pre><code>name1
+name2
+name3
+name4
+name5
+name6
+name7
+name8
+name9
+name10
+[name4, name5, name6, name7, name8, name9, name10]
+</code></pre><p>这是一个有 10，000 个元素的 Stream，但在 short-circuiting 操作 limit 和 skip 的作用下，管道中 map 操作指定的 getName() 方法的执行次数为 limit 所限定的 10 次，而最终返回结果在跳过前 3 个元素后只有后面 7 个返回。 </p>
+<p>有一种情况是 limit/skip 无法达到 short-circuiting 目的的，就是把它们放在 Stream 的排序操作后，原因跟 sorted 这个 intermediate 操作有关：此时系统并不知道 Stream 排序后的次序如何，所以 sorted 中的操作看上去就像完全没有被 limit 或者 skip 一样。 </p>
+<h5 id="清单-17-limit-和-skip-对-sorted-后的运行次数无影响"><a href="#清单-17-limit-和-skip-对-sorted-后的运行次数无影响" class="headerlink" title="清单 17. limit 和 skip 对 sorted 后的运行次数无影响"></a>清单 17. limit 和 skip 对 sorted 后的运行次数无影响</h5><pre><code>List&lt;Person&gt; persons = new ArrayList();
+ for (int i = 1; i &lt;= 5; i++) {
+ Person person = new Person(i, &quot;name&quot; + i);
+ persons.add(person);
+ }
+List&lt;Person&gt; personList2 = persons.stream().sorted((p1, p2) -&gt; 
+p1.getName().compareTo(p2.getName())).limit(2).collect(Collectors.toList());
+System.out.println(personList2);
+</code></pre><p>上面的示例对清单 13 做了微调，首先对 5 个元素的 Stream 排序，然后进行 limit 操作。输出结果为： </p>
+<pre><code> name2
+name1
+name3
+name2
+name4
+name3
+name5
+name4
+[stream.StreamDW$Person@816f27d, stream.StreamDW$Person@87aac27]
+</code></pre><p>即虽然最后的返回元素数量是 2，但整个管道中的 sorted 表达式执行次数没有像前面例子相应减少。 </p>
+<p>最后有一点需要注意的是，对一个 parallel 的 Steam 管道来说，如果其元素是有序的，那么 limit 操作的成本会比较大，因为它的返回对象必须是前 n 个也有一样次序的元素。取而代之的策略是取消元素间的次序，或者不要用 parallel Stream。 </p>
+<p><strong>sorted</strong></p>
+<p>对 Stream 的排序通过 sorted 进行，它比数组的排序更强之处在于你可以首先对 Stream 进行各类 map、filter、limit、skip 甚至 distinct 来减少元素数量后，再排序，这能帮助程序明显缩短执行时间。我们对清单 14 进行优化： </p>
+<h5 id="清单-18-优化：排序前进行-limit-和-skip"><a href="#清单-18-优化：排序前进行-limit-和-skip" class="headerlink" title="清单 18. 优化：排序前进行 limit 和 skip"></a>清单 18. 优化：排序前进行 limit 和 skip</h5><pre><code>List&lt;Person&gt; persons = new ArrayList();
+ for (int i = 1; i &lt;= 5; i++) {
+ Person person = new Person(i, &quot;name&quot; + i);
+ persons.add(person);
+ }
+List&lt;Person&gt; personList2 = persons.stream().limit(2).sorted((p1, p2) -&gt; p1.getName().compareTo(p2.getName())).collect(Collectors.toList());
+System.out.println(personList2);
+</code></pre><p>结果会简单很多： </p>
+<pre><code>name2
+name1
+[stream.StreamDW$Person@6ce253f1, stream.StreamDW$Person@53d8d10a]
+</code></pre><p>当然，这种优化是有 business logic 上的局限性的：即不要求排序后再取值。 </p>
+<p><strong>min/max/distinct</strong></p>
+<p>min 和 max 的功能也可以通过对 Stream 元素先排序，再 findFirst 来实现，但前者的性能会更好，为 O(n)，而 sorted 的成本是 O(n log n)。同时它们作为特殊的 reduce 方法被独立出来也是因为求最大最小值是很常见的操作。 </p>
+<h5 id="清单-19-找出最长一行的长度"><a href="#清单-19-找出最长一行的长度" class="headerlink" title="清单 19. 找出最长一行的长度"></a>清单 19. 找出最长一行的长度</h5><pre><code>BufferedReader br = new BufferedReader(new FileReader(&quot;c:\\SUService.log&quot;));
+int longest = br.lines().
+ mapToInt(String::length).
+ max().
+ getAsInt();
+br.close();
+System.out.println(longest);
+</code></pre><p>下面的例子则使用 distinct 来找出不重复的单词。 </p>
+<h5 id="清单-20-找出全文的单词，转小写，并排序"><a href="#清单-20-找出全文的单词，转小写，并排序" class="headerlink" title="清单 20. 找出全文的单词，转小写，并排序"></a>清单 20. 找出全文的单词，转小写，并排序</h5><pre><code>List&lt;String&gt; words = br.lines().
+ flatMap(line -&gt; Stream.of(line.split(&quot; &quot;))).
+ filter(word -&gt; word.length() &gt; 0).
+ map(String::toLowerCase).
+ distinct().
+ sorted().
+ collect(Collectors.toList());
+br.close();
+System.out.println(words);
+</code></pre><p><strong>Match</strong></p>
+<p>Stream 有三个 match 方法，从语义上说： </p>
+<ul>
+<li>allMatch：Stream 中全部元素符合传入的 predicate，返回 true</li>
+<li>anyMatch：Stream 中只要有一个元素符合传入的 predicate，返回 true</li>
+<li>noneMatch：Stream 中没有一个元素符合传入的 predicate，返回 true</li>
+</ul>
+<p>它们都不是要遍历全部元素才能返回结果。例如 allMatch 只要一个元素不满足条件，就 skip 剩下的所有元素，返回 false。对清单 13 中的 Person 类稍做修改，加入一个 age 属性和 getAge 方法。 </p>
+<h5 id="清单-21-使用-Match"><a href="#清单-21-使用-Match" class="headerlink" title="清单 21. 使用 Match"></a>清单 21. 使用 Match</h5><pre><code>List&lt;Person&gt; persons = new ArrayList();
+persons.add(new Person(1, &quot;name&quot; + 1, 10));
+persons.add(new Person(2, &quot;name&quot; + 2, 21));
+persons.add(new Person(3, &quot;name&quot; + 3, 34));
+persons.add(new Person(4, &quot;name&quot; + 4, 6));
+persons.add(new Person(5, &quot;name&quot; + 5, 55));
+boolean isAllAdult = persons.stream().
+ allMatch(p -&gt; p.getAge() &gt; 18);
+System.out.println(&quot;All are adult? &quot; + isAllAdult);
+boolean isThereAnyChild = persons.stream().
+ anyMatch(p -&gt; p.getAge() &lt; 12);
+System.out.println(&quot;Any child? &quot; + isThereAnyChild);
+</code></pre><p>输出结果： </p>
+<pre><code> All are adult? false
+ Any child? true
+</code></pre><h3 id="进阶：自己生成流"><a href="#进阶：自己生成流" class="headerlink" title="进阶：自己生成流"></a>进阶：自己生成流</h3><p><strong>Stream.generate</strong></p>
+<p>通过实现 Supplier 接口，你可以自己来控制流的生成。这种情形通常用于随机数、常量的 Stream，或者需要前后元素间维持着某种状态信息的 Stream。把 Supplier 实例传递给 Stream.generate() 生成的 Stream，默认是串行（相对 parallel 而言）但无序的（相对 ordered 而言）。由于它是无限的，在管道中，必须利用 limit 之类的操作限制 Stream 大小。 </p>
+<h5 id="清单-22-生成-10-个随机整数"><a href="#清单-22-生成-10-个随机整数" class="headerlink" title="清单 22. 生成 10 个随机整数"></a>清单 22. 生成 10 个随机整数</h5><pre><code>Random seed = new Random();
+Supplier&lt;Integer&gt; random = seed::nextInt;
+Stream.generate(random).limit(10).forEach(System.out::println);
+//Another way
+IntStream.generate(() -&gt; (int) (System.nanoTime() % 100)).
+limit(10).forEach(System.out::println);
+</code></pre><p>Stream.generate() 还接受自己实现的 Supplier。例如在构造海量测试数据的时候，用某种自动的规则给每一个变量赋值；或者依据公式计算 Stream 的每个元素值。这些都是维持状态信息的情形。 </p>
+<h5 id="清单-23-自实现-Supplier"><a href="#清单-23-自实现-Supplier" class="headerlink" title="清单 23. 自实现 Supplier"></a>清单 23. 自实现 Supplier</h5><pre><code>Stream.generate(new PersonSupplier()).
+limit(10).
+forEach(p -&gt; System.out.println(p.getName() + &quot;, &quot; + p.getAge()));
+private class PersonSupplier implements Supplier&lt;Person&gt; {
+ private int index = 0;
+ private Random random = new Random();
+ @Override
+ public Person get() {
+ return new Person(index++, &quot;StormTestUser&quot; + index, random.nextInt(100));
+ }
+}
+</code></pre><p>输出结果： </p>
+<pre><code> StormTestUser1, 9
+StormTestUser2, 12
+StormTestUser3, 88
+StormTestUser4, 51
+StormTestUser5, 22
+StormTestUser6, 28
+StormTestUser7, 81
+StormTestUser8, 51
+StormTestUser9, 4
+StormTestUser10, 76
+</code></pre><p><strong>Stream.iterate</strong></p>
+<p>iterate 跟 reduce 操作很像，接受一个种子值，和一个 UnaryOperator（例如 f）。然后种子值成为 Stream 的第一个元素，f(seed) 为第二个，f(f(seed)) 第三个，以此类推。 </p>
+<p><strong>清单 24. 生成一个等差数列</strong></p>
+<pre><code>     Stream.iterate(0, n -&gt; n + 3).limit(10). forEach(x -&gt; System.out.print(x + &quot; &quot;));.
+</code></pre><p>输出结果： </p>
+<pre><code>     0 3 6 9 12 15 18 21 24 27
+</code></pre><p>与 Stream.generate 相仿，在 iterate 时候管道必须有 limit 这样的操作来限制 Stream 大小。 </p>
+<h3 id="进阶：用-Collectors-来进行-reduction-操作"><a href="#进阶：用-Collectors-来进行-reduction-操作" class="headerlink" title="进阶：用 Collectors 来进行 reduction 操作"></a>进阶：用 Collectors 来进行 reduction 操作</h3><p>java.util.stream.Collectors 类的主要作用就是辅助进行各类有用的 reduction 操作，例如转变输出为 Collection，把 Stream 元素进行归组。 </p>
+<p><strong>groupingBy/partitioningBy</strong></p>
+<h5 id="清单-25-按照年龄归组"><a href="#清单-25-按照年龄归组" class="headerlink" title="清单 25. 按照年龄归组"></a>清单 25. 按照年龄归组</h5><pre><code>Map&lt;Integer, List&lt;Person&gt;&gt; personGroups = Stream.generate(new PersonSupplier()).
+ limit(100).
+ collect(Collectors.groupingBy(Person::getAge));
+Iterator it = personGroups.entrySet().iterator();
+while (it.hasNext()) {
+ Map.Entry&lt;Integer, List&lt;Person&gt;&gt; persons = (Map.Entry) it.next();
+ System.out.println(&quot;Age &quot; + persons.getKey() + &quot; = &quot; + persons.getValue().size());
+}
+</code></pre><p>上面的 code，首先生成 100 人的信息，然后按照年龄归组，相同年龄的人放到同一个 list 中，可以看到如下的输出： </p>
+<pre><code>Age 0 = 2
+Age 1 = 2
+Age 5 = 2
+Age 8 = 1
+Age 9 = 1
+Age 11 = 2
+……
+</code></pre><h5 id="清单-26-按照未成年人和成年人归组"><a href="#清单-26-按照未成年人和成年人归组" class="headerlink" title="清单 26. 按照未成年人和成年人归组"></a>清单 26. 按照未成年人和成年人归组</h5><pre><code>Map&lt;Boolean, List&lt;Person&gt;&gt; children = Stream.generate(new PersonSupplier()).
+ limit(100).
+ collect(Collectors.partitioningBy(p -&gt; p.getAge() &lt; 18));
+System.out.println(&quot;Children number: &quot; + children.get(true).size());
+System.out.println(&quot;Adult number: &quot; + children.get(false).size());
+</code></pre><p>输出结果： </p>
+<pre><code>     Children number: 23 
+     Adult number: 77
+</code></pre><p>在使用条件“年龄小于 18”进行分组后可以看到，不到 18 岁的未成年人是一组，成年人是另外一组。partitioningBy 其实是一种特殊的 groupingBy，它依照条件测试的是否两种结果来构造返回的数据结构，get(true) 和 get(false) 能即为全部的元素对象。 </p>
+<h2 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h2><p>总之，Stream 的特性可以归纳为： </p>
+<ul>
+<li>不是数据结构</li>
+<li>它没有内部存储，它只是用操作管道从 source（数据结构、数组、generator function、IO channel）抓取数据。</li>
+<li>它也绝不修改自己所封装的底层数据结构的数据。例如 Stream 的 filter 操作会产生一个不包含被过滤元素的新 Stream，而不是从 source 删除那些元素。</li>
+<li>所有 Stream 的操作必须以 lambda 表达式为参数</li>
+<li>不支持索引访问</li>
+<li>你可以请求第一个元素，但无法请求第二个，第三个，或最后一个。不过请参阅下一项。</li>
+<li>很容易生成数组或者 List</li>
+<li>惰性化</li>
+<li>很多 Stream 操作是向后延迟的，一直到它弄清楚了最后需要多少数据才会开始。</li>
+<li>Intermediate 操作永远是惰性化的。</li>
+<li>并行能力</li>
+<li>当一个 Stream 是并行化的，就不需要再写多线程代码，所有对它的操作会自动并行进行的。</li>
+<li>可以是无限的<ul>
+<li>集合有固定大小，Stream 则不必。limit(n) 和 findFirst() 这类的 short-circuiting 操作可以对无限的 Stream 进行运算并很快完成。</li>
+</ul>
+</li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
+    
+    </summary>
+    
+      <category term="Java" scheme="https://wangyu1997.github.io/categories/Java/"/>
+    
+    
+      <category term="java8" scheme="https://wangyu1997.github.io/tags/java8/"/>
+    
+      <category term="lambda" scheme="https://wangyu1997.github.io/tags/lambda/"/>
+    
+      <category term="steams" scheme="https://wangyu1997.github.io/tags/steams/"/>
+    
+  </entry>
   
   <entry>
     <title>java8方法引用</title>
@@ -680,6 +1131,91 @@ compile group: &#39;mysql&#39;, name: &#39;mysql-connector-java&#39;, version: &
   </entry>
   
   <entry>
+    <title>计算机系统概论</title>
+    <link href="https://wangyu1997.github.io/2017/10/24/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%AE%BA/"/>
+    <id>https://wangyu1997.github.io/2017/10/24/计算机组成原理/计算机系统概论/</id>
+    <published>2017-10-24T14:43:11.000Z</published>
+    <updated>2017-10-24T15:39:57.000Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>物联网：把感应器嵌入和装备到电网、铁路、桥梁、隧道、公路、建筑、供水系统、大坝、油气管道等各种物体中，并且被普遍连接，形成所谓的“物联网”，然后将“物联网”与现有的互联网整合起来，实现人类社会与无力系统的整合，形成智慧地球</p>
+<a id="more"></a>      
+<h2 id="计算机系统简介"><a href="#计算机系统简介" class="headerlink" title="计算机系统简介"></a>计算机系统简介</h2><p>计算机系统分为硬件和软件</p>
+<p>硬件：计算机的实体，如主机、外设等</p>
+<p>软件：由具有各类特殊功能的信息（程序）组成</p>
+<ul>
+<li><p>分类：系统软件、应用软件</p>
+<p> 系统软件： 用来管理整个计算机系统</p>
+<pre><code> e.g. : 语言处理程序、操作系统、服务性程序、数据库管理系统、网络软件
+</code></pre><p> 应用软件： 按任务需要编织成的各种程序</p>
+</li>
+</ul>
+<h2 id="计算机系统的层次结构"><a href="#计算机系统的层次结构" class="headerlink" title="计算机系统的层次结构"></a>计算机系统的层次结构</h2><p>层次结构：</p>
+<p><img src="http://oq5d32gij.bkt.clouddn.com/15088579483898.jpg" alt=""></p>
+<p>系统复杂性管理的方法：</p>
+<blockquote>
+<p>抽象：隐藏系统中不重要的细节</p>
+</blockquote>
+<p>从语言的角度划分层次</p>
+<pre><code>微指令系统  微程序机器M0
+              |
+              |
+机器语言    实际机器M1
+              |
+              |
+操作系统    虚拟机器
+              |
+              |
+汇编语言    虚拟机器M2
+              |
+              |
+高级语言    虚拟机器M3
+</code></pre><p>高级语言执行的过程</p>
+<pre><code>虚拟机器M4      用编译程序翻译成汇编语言程序
+    |
+    |
+虚拟机器M3      用汇编语言程序翻译成机器语言程序
+    |
+    |
+虚拟机器M2      用机器语言解释操作系统
+    |
+==============软硬件分界线=========
+    |
+实际机器M1      用微指令解释机器指令
+    |
+    |
+微程序机器M0     由硬件直接执行微指令
+</code></pre><p>软硬件对于功能的实现逻辑上等价</p>
+<ul>
+<li><p>硬件实现：造价贵</p>
+</li>
+<li><p>软件实现：软件体系庞大 实现复杂</p>
+</li>
+</ul>
+<p>计算机组成与计算机体系结构从研究内容上的区别：</p>
+<blockquote>
+<p>计算机体系结构：程序员所见到的计算机系统的属性概念性的结构与功能特性(机器语言程序员)=&gt;有无乘法指令</p>
+<p>计算机组成：实现计算机体系结构所体现的属性(具体指令的实现)=&gt;如何实现乘法指令</p>
+</blockquote>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;物联网：把感应器嵌入和装备到电网、铁路、桥梁、隧道、公路、建筑、供水系统、大坝、油气管道等各种物体中，并且被普遍连接，形成所谓的“物联网”，然后将“物联网”与现有的互联网整合起来，实现人类社会与无力系统的整合，形成智慧地球&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="组成原理" scheme="https://wangyu1997.github.io/categories/%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/"/>
+    
+    
+      <category term="概论" scheme="https://wangyu1997.github.io/tags/%E6%A6%82%E8%AE%BA/"/>
+    
+      <category term="计算机体系结构" scheme="https://wangyu1997.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/"/>
+    
+      <category term="计算机组成" scheme="https://wangyu1997.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90/"/>
+    
+  </entry>
+  
+  <entry>
     <title>计算机网络基本概念</title>
     <link href="https://wangyu1997.github.io/2017/10/24/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E8%B7%AF/%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/"/>
     <id>https://wangyu1997.github.io/2017/10/24/计算机网路/基本概念/</id>
@@ -791,91 +1327,6 @@ compile group: &#39;mysql&#39;, name: &#39;mysql-connector-java&#39;, version: &
       <category term="基本概念" scheme="https://wangyu1997.github.io/tags/%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/"/>
     
       <category term="网络协议" scheme="https://wangyu1997.github.io/tags/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>计算机系统概论</title>
-    <link href="https://wangyu1997.github.io/2017/10/24/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%AE%BA/"/>
-    <id>https://wangyu1997.github.io/2017/10/24/计算机组成原理/计算机系统概论/</id>
-    <published>2017-10-24T14:43:11.000Z</published>
-    <updated>2017-10-24T15:39:57.000Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>物联网：把感应器嵌入和装备到电网、铁路、桥梁、隧道、公路、建筑、供水系统、大坝、油气管道等各种物体中，并且被普遍连接，形成所谓的“物联网”，然后将“物联网”与现有的互联网整合起来，实现人类社会与无力系统的整合，形成智慧地球</p>
-<a id="more"></a>      
-<h2 id="计算机系统简介"><a href="#计算机系统简介" class="headerlink" title="计算机系统简介"></a>计算机系统简介</h2><p>计算机系统分为硬件和软件</p>
-<p>硬件：计算机的实体，如主机、外设等</p>
-<p>软件：由具有各类特殊功能的信息（程序）组成</p>
-<ul>
-<li><p>分类：系统软件、应用软件</p>
-<p> 系统软件： 用来管理整个计算机系统</p>
-<pre><code> e.g. : 语言处理程序、操作系统、服务性程序、数据库管理系统、网络软件
-</code></pre><p> 应用软件： 按任务需要编织成的各种程序</p>
-</li>
-</ul>
-<h2 id="计算机系统的层次结构"><a href="#计算机系统的层次结构" class="headerlink" title="计算机系统的层次结构"></a>计算机系统的层次结构</h2><p>层次结构：</p>
-<p><img src="http://oq5d32gij.bkt.clouddn.com/15088579483898.jpg" alt=""></p>
-<p>系统复杂性管理的方法：</p>
-<blockquote>
-<p>抽象：隐藏系统中不重要的细节</p>
-</blockquote>
-<p>从语言的角度划分层次</p>
-<pre><code>微指令系统  微程序机器M0
-              |
-              |
-机器语言    实际机器M1
-              |
-              |
-操作系统    虚拟机器
-              |
-              |
-汇编语言    虚拟机器M2
-              |
-              |
-高级语言    虚拟机器M3
-</code></pre><p>高级语言执行的过程</p>
-<pre><code>虚拟机器M4      用编译程序翻译成汇编语言程序
-    |
-    |
-虚拟机器M3      用汇编语言程序翻译成机器语言程序
-    |
-    |
-虚拟机器M2      用机器语言解释操作系统
-    |
-==============软硬件分界线=========
-    |
-实际机器M1      用微指令解释机器指令
-    |
-    |
-微程序机器M0     由硬件直接执行微指令
-</code></pre><p>软硬件对于功能的实现逻辑上等价</p>
-<ul>
-<li><p>硬件实现：造价贵</p>
-</li>
-<li><p>软件实现：软件体系庞大 实现复杂</p>
-</li>
-</ul>
-<p>计算机组成与计算机体系结构从研究内容上的区别：</p>
-<blockquote>
-<p>计算机体系结构：程序员所见到的计算机系统的属性概念性的结构与功能特性(机器语言程序员)=&gt;有无乘法指令</p>
-<p>计算机组成：实现计算机体系结构所体现的属性(具体指令的实现)=&gt;如何实现乘法指令</p>
-</blockquote>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;物联网：把感应器嵌入和装备到电网、铁路、桥梁、隧道、公路、建筑、供水系统、大坝、油气管道等各种物体中，并且被普遍连接，形成所谓的“物联网”，然后将“物联网”与现有的互联网整合起来，实现人类社会与无力系统的整合，形成智慧地球&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="组成原理" scheme="https://wangyu1997.github.io/categories/%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/"/>
-    
-    
-      <category term="概论" scheme="https://wangyu1997.github.io/tags/%E6%A6%82%E8%AE%BA/"/>
-    
-      <category term="计算机体系结构" scheme="https://wangyu1997.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/"/>
-    
-      <category term="计算机组成" scheme="https://wangyu1997.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90/"/>
     
   </entry>
   
@@ -3441,160 +3892,6 @@ helper.generateOutput();
   </entry>
   
   <entry>
-    <title>Groovy读取yaml和properties文件</title>
-    <link href="https://wangyu1997.github.io/2017/10/10/JavaWeb/Groovy%E8%AF%BB%E5%8F%96yaml%E5%92%8Cproperties%E6%96%87%E4%BB%B6/"/>
-    <id>https://wangyu1997.github.io/2017/10/10/JavaWeb/Groovy读取yaml和properties文件/</id>
-    <published>2017-10-10T02:43:11.000Z</published>
-    <updated>2017-10-24T06:36:53.000Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
-<p>Java 可以使用 <code>PropertiesConfiguration</code> 来读取 properties 属性文件，Spring 4.3 后还支持了 <code>Yaml 格式的属性文件</code></p>
-<ul>
-<li>PropertiesConfiguration: 读取时可以自动进行类型转换，可以给定默认值</li>
-<li>Yaml 格式的属性文件: 可以使用树形结构，方便分组，比 <code>.properties</code> 属性文件更灵活，但是以普通的 <code>java.util.Properties</code> 来读取</li>
-</ul>
-<h1 id="Gradle-依赖"><a href="#Gradle-依赖" class="headerlink" title="Gradle 依赖"></a>Gradle 依赖</h1><pre><code>compile &#39;org.springframework:spring-context:4.3.0.RELEASE&#39;
-
-compile &#39;org.yaml:snakeyaml:1.17&#39;
-
-compile &#39;commons-configuration:commons-configuration:1.10&#39;
-
-testCompile &#39;org.springframework:spring-test:4.3.0.RELEASE&#39;
-
-testCompile &#39;junit:junit:4.12&#39;
-</code></pre><h1 id="属性文件"><a href="#属性文件" class="headerlink" title="属性文件"></a>属性文件</h1><blockquote>
-<p>config.properties </p>
-</blockquote>
-<pre><code>username=Dr. Alice 
-
-age=22 
-
-config.yml
-</code></pre><p>#mysql </p>
-<pre><code>mysql: 
-
-    jdbc: 
-
-        url: jdbc:mysql://localhost:3306 
-
-        dirverClass: com.mysql.jdbc.Driver 
-
-        username: root 
-
-        password: root 
-
-        username: Ritchie Yu 
-</code></pre><h1 id="Spring-Bean-配置文件"><a href="#Spring-Bean-配置文件" class="headerlink" title="Spring Bean 配置文件"></a>Spring Bean 配置文件</h1><blockquote>
-<p>spring-beans-config.xml </p>
-</blockquote>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-
-&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
-
-xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-
-xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
-
-http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;
-
-&lt;bean id=&quot;yamlProperties&quot; class=&quot;org.springframework.beans.factory.config.YamlPropertiesFactoryBean&quot;&gt;
-
-&lt;property name=&quot;resources&quot;&gt;
-
-&lt;list&gt;
-
-&lt;value&gt;classpath:config.yml&lt;/value&gt;
-
-&lt;/list&gt;
-
-&lt;/property&gt;
-
-&lt;/bean&gt;
-
-&lt;bean id=&quot;propertiesConfig&quot; class=&quot;org.apache.commons.configuration.PropertiesConfiguration&quot;&gt;
-
-&lt;constructor-arg value=&quot;config.properties&quot;/&gt;
-
-&lt;/bean&gt;
-
-&lt;/beans&gt;
-</code></pre><h1 id="测试案例"><a href="#测试案例" class="headerlink" title="测试案例"></a>测试案例</h1><pre><code>import org.apache.commons.configuration.PropertiesConfiguration; 
-
-import org.junit.runner.RunWith; 
-
-import org.junit.Test; 
-
-import org.springframework.test.context.ContextConfiguration; 
-
-import org.springframework.test.context.junit4.SpringRunner; 
-
-import javax.annotation.Resource; 
-
-import java.util.Properties; 
-
-@RunWith(SpringRunner.class) 
-
-@ContextConfiguration({&quot;classpath:spring-beans-config.xml&quot;}) 
-
-public class TestYamlPropertiesAndPropertiesConfig { 
-
-@Resource(name = &quot;yamlProperties&quot;) 
-
-private Properties yamlProperties; 
-
-@Resource(name = &quot;propertiesConfig&quot;) 
-
-private PropertiesConfiguration propertiesConfig; 
-
-@Test
-
-public void testYamlProperties() { 
-
-System.out.println(yamlProperties.getProperty(&quot;mysql.jdbc.url&quot;)); 
-
-System.out.println(yamlProperties.getProperty(&quot;username&quot;)); 
-
-} 
-
-@Test
-
-public void testPropertiesConfig() { 
-
-System.out.println(propertiesConfig.getString(&quot;username&quot;)); 
-
-System.out.println(propertiesConfig.getInteger(&quot;age&quot;, 0)); 
-
-} 
-
-} 
-</code></pre><p>输出: </p>
-<pre><code>Dr. Alice 
-
-22 
-
-jdbc:mysql://localhost:3306 
-
-Ritchie Yu 
-</code></pre>]]></content>
-    
-    <summary type="html">
-    
-      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
-    
-    </summary>
-    
-      <category term="JavaWeb" scheme="https://wangyu1997.github.io/categories/JavaWeb/"/>
-    
-    
-      <category term="gradle" scheme="https://wangyu1997.github.io/tags/gradle/"/>
-    
-      <category term="groovy" scheme="https://wangyu1997.github.io/tags/groovy/"/>
-    
-      <category term="yaml" scheme="https://wangyu1997.github.io/tags/yaml/"/>
-    
-  </entry>
-  
-  <entry>
     <title>MyBatis最详细配置</title>
     <link href="https://wangyu1997.github.io/2017/10/10/JavaWeb/MyBatis%E6%9C%80%E8%AF%A6%E7%BB%86%E9%85%8D%E7%BD%AE/"/>
     <id>https://wangyu1997.github.io/2017/10/10/JavaWeb/MyBatis最详细配置/</id>
@@ -3898,11 +4195,165 @@ Ritchie Yu
       <category term="JavaWeb" scheme="https://wangyu1997.github.io/categories/JavaWeb/"/>
     
     
-      <category term="gradle" scheme="https://wangyu1997.github.io/tags/gradle/"/>
-    
       <category term="javaweb" scheme="https://wangyu1997.github.io/tags/javaweb/"/>
     
+      <category term="gradle" scheme="https://wangyu1997.github.io/tags/gradle/"/>
+    
       <category term="mybatis" scheme="https://wangyu1997.github.io/tags/mybatis/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Groovy读取yaml和properties文件</title>
+    <link href="https://wangyu1997.github.io/2017/10/10/JavaWeb/Groovy%E8%AF%BB%E5%8F%96yaml%E5%92%8Cproperties%E6%96%87%E4%BB%B6/"/>
+    <id>https://wangyu1997.github.io/2017/10/10/JavaWeb/Groovy读取yaml和properties文件/</id>
+    <published>2017-10-10T02:43:11.000Z</published>
+    <updated>2017-10-24T06:36:53.000Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
+<p>Java 可以使用 <code>PropertiesConfiguration</code> 来读取 properties 属性文件，Spring 4.3 后还支持了 <code>Yaml 格式的属性文件</code></p>
+<ul>
+<li>PropertiesConfiguration: 读取时可以自动进行类型转换，可以给定默认值</li>
+<li>Yaml 格式的属性文件: 可以使用树形结构，方便分组，比 <code>.properties</code> 属性文件更灵活，但是以普通的 <code>java.util.Properties</code> 来读取</li>
+</ul>
+<h1 id="Gradle-依赖"><a href="#Gradle-依赖" class="headerlink" title="Gradle 依赖"></a>Gradle 依赖</h1><pre><code>compile &#39;org.springframework:spring-context:4.3.0.RELEASE&#39;
+
+compile &#39;org.yaml:snakeyaml:1.17&#39;
+
+compile &#39;commons-configuration:commons-configuration:1.10&#39;
+
+testCompile &#39;org.springframework:spring-test:4.3.0.RELEASE&#39;
+
+testCompile &#39;junit:junit:4.12&#39;
+</code></pre><h1 id="属性文件"><a href="#属性文件" class="headerlink" title="属性文件"></a>属性文件</h1><blockquote>
+<p>config.properties </p>
+</blockquote>
+<pre><code>username=Dr. Alice 
+
+age=22 
+
+config.yml
+</code></pre><p>#mysql </p>
+<pre><code>mysql: 
+
+    jdbc: 
+
+        url: jdbc:mysql://localhost:3306 
+
+        dirverClass: com.mysql.jdbc.Driver 
+
+        username: root 
+
+        password: root 
+
+        username: Ritchie Yu 
+</code></pre><h1 id="Spring-Bean-配置文件"><a href="#Spring-Bean-配置文件" class="headerlink" title="Spring Bean 配置文件"></a>Spring Bean 配置文件</h1><blockquote>
+<p>spring-beans-config.xml </p>
+</blockquote>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+
+xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+
+xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+
+http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;
+
+&lt;bean id=&quot;yamlProperties&quot; class=&quot;org.springframework.beans.factory.config.YamlPropertiesFactoryBean&quot;&gt;
+
+&lt;property name=&quot;resources&quot;&gt;
+
+&lt;list&gt;
+
+&lt;value&gt;classpath:config.yml&lt;/value&gt;
+
+&lt;/list&gt;
+
+&lt;/property&gt;
+
+&lt;/bean&gt;
+
+&lt;bean id=&quot;propertiesConfig&quot; class=&quot;org.apache.commons.configuration.PropertiesConfiguration&quot;&gt;
+
+&lt;constructor-arg value=&quot;config.properties&quot;/&gt;
+
+&lt;/bean&gt;
+
+&lt;/beans&gt;
+</code></pre><h1 id="测试案例"><a href="#测试案例" class="headerlink" title="测试案例"></a>测试案例</h1><pre><code>import org.apache.commons.configuration.PropertiesConfiguration; 
+
+import org.junit.runner.RunWith; 
+
+import org.junit.Test; 
+
+import org.springframework.test.context.ContextConfiguration; 
+
+import org.springframework.test.context.junit4.SpringRunner; 
+
+import javax.annotation.Resource; 
+
+import java.util.Properties; 
+
+@RunWith(SpringRunner.class) 
+
+@ContextConfiguration({&quot;classpath:spring-beans-config.xml&quot;}) 
+
+public class TestYamlPropertiesAndPropertiesConfig { 
+
+@Resource(name = &quot;yamlProperties&quot;) 
+
+private Properties yamlProperties; 
+
+@Resource(name = &quot;propertiesConfig&quot;) 
+
+private PropertiesConfiguration propertiesConfig; 
+
+@Test
+
+public void testYamlProperties() { 
+
+System.out.println(yamlProperties.getProperty(&quot;mysql.jdbc.url&quot;)); 
+
+System.out.println(yamlProperties.getProperty(&quot;username&quot;)); 
+
+} 
+
+@Test
+
+public void testPropertiesConfig() { 
+
+System.out.println(propertiesConfig.getString(&quot;username&quot;)); 
+
+System.out.println(propertiesConfig.getInteger(&quot;age&quot;, 0)); 
+
+} 
+
+} 
+</code></pre><p>输出: </p>
+<pre><code>Dr. Alice 
+
+22 
+
+jdbc:mysql://localhost:3306 
+
+Ritchie Yu 
+</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
+    
+    </summary>
+    
+      <category term="JavaWeb" scheme="https://wangyu1997.github.io/categories/JavaWeb/"/>
+    
+    
+      <category term="gradle" scheme="https://wangyu1997.github.io/tags/gradle/"/>
+    
+      <category term="groovy" scheme="https://wangyu1997.github.io/tags/groovy/"/>
+    
+      <category term="yaml" scheme="https://wangyu1997.github.io/tags/yaml/"/>
     
   </entry>
   
@@ -4153,9 +4604,9 @@ task mybatisGenerate &lt;&lt; {
       <category term="JavaWeb" scheme="https://wangyu1997.github.io/categories/JavaWeb/"/>
     
     
-      <category term="gradle" scheme="https://wangyu1997.github.io/tags/gradle/"/>
-    
       <category term="javaweb" scheme="https://wangyu1997.github.io/tags/javaweb/"/>
+    
+      <category term="gradle" scheme="https://wangyu1997.github.io/tags/gradle/"/>
     
       <category term="mybatis" scheme="https://wangyu1997.github.io/tags/mybatis/"/>
     
@@ -6364,251 +6815,6 @@ public class SomeService {
 <h4 id="完整源码-2"><a href="#完整源码-2" class="headerlink" title="完整源码"></a>完整源码</h4><p><a href="https://github.com/yongshun/some_java_code/tree/master/SpringAOPDemo/src/main/java/com/xys/demo3" target="_blank" rel="external">方法耗时统计</a></p>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>通过上面的几个简单例子, 我们对 <code>Spring AOP</code> 的使用应该有了一个更为深入的了解了. 其实 Spring AOP 的使用的地方不止这些, 例如 Spring 的 <code>声明式事务</code> 就是在 AOP 之上构建的. 读者朋友也可以根据自己的实际业务场景, 合理使用 Spring AOP, 发挥它的强大功能! </p>
 <h2 id="End"><a href="#End" class="headerlink" title="End."></a>End.</h2>]]></content>
-    
-    <summary type="html">
-    
-      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
-    
-    </summary>
-    
-      <category term="JavaWeb" scheme="https://wangyu1997.github.io/categories/JavaWeb/"/>
-    
-    
-      <category term="AOP" scheme="https://wangyu1997.github.io/tags/AOP/"/>
-    
-      <category term="javaweb" scheme="https://wangyu1997.github.io/tags/javaweb/"/>
-    
-      <category term="Spring" scheme="https://wangyu1997.github.io/tags/Spring/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>AOP编程详解</title>
-    <link href="https://wangyu1997.github.io/2017/10/01/JavaWeb/AOP%E7%BC%96%E7%A8%8B%E8%AF%A6%E8%A7%A3/"/>
-    <id>https://wangyu1997.github.io/2017/10/01/JavaWeb/AOP编程详解/</id>
-    <published>2017-10-01T02:43:11.000Z</published>
-    <updated>2017-10-24T06:29:21.000Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
-<h2 id="基本知识"><a href="#基本知识" class="headerlink" title="基本知识"></a>基本知识</h2><p>其实, 接触了这么久的 AOP, 我感觉, AOP 给人难以理解的一个关键点是它的概念比较多, 而且坑爹的是, 这些概念经过了中文翻译后, 变得面目全非, 相同的一个术语, 在不同的翻译下, 含义总有着各种莫名其妙的差别. 鉴于此, 我在本章的开头, 着重为为大家介绍一个 Spring AOP 的各项术语的基本含义. 为了术语传达的准确性, 我在接下来的叙述中, 能使用英文术语的地方, 尽量使用英文. </p>
-<h3 id="什么是-AOP"><a href="#什么是-AOP" class="headerlink" title="什么是 AOP"></a>什么是 AOP</h3><p>AOP(Aspect-Oriented Programming), 即 <strong>面向切面编程</strong>, 它与 OOP( Object-Oriented Programming, 面向对象编程) 相辅相成, 提供了与 OOP 不同的抽象软件结构的视角.<br>在 OOP 中, 我们以类(class)作为我们的基本单元, 而 AOP 中的基本单元是 <strong>Aspect(切面)</strong></p>
-<h3 id="术语"><a href="#术语" class="headerlink" title="术语"></a>术语</h3><h4 id="Aspect-切面"><a href="#Aspect-切面" class="headerlink" title="Aspect(切面)"></a>Aspect(切面)</h4><p><code>aspect</code> 由 <code>pointcount</code> 和 <code>advice</code> 组成, 它既包含了横切逻辑的定义, 也包括了连接点的定义. Spring AOP就是负责实施切面的框架, 它将切面所定义的横切逻辑织入到切面所指定的连接点中.<br>AOP的工作重心在于如何将增强织入目标对象的连接点上, 这里包含两个工作: </p>
-<ol>
-<li><p>如何通过 pointcut 和 advice 定位到特定的 joinpoint 上 </p>
-</li>
-<li><p>如何在 advice 中编写切面代码. </p>
-</li>
-</ol>
-<p><strong>可以简单地认为, 使用 @Aspect 注解的类就是切面.</strong></p>
-<h4 id="advice-增强"><a href="#advice-增强" class="headerlink" title="advice(增强)"></a>advice(增强)</h4><p>由 aspect 添加到特定的 join point(即满足 point cut 规则的 join point) 的一段代码.<br>许多 AOP框架, 包括 Spring AOP, 会将 advice 模拟为一个拦截器(interceptor), 并且在 join point 上维护多个 advice, 进行层层拦截.<br>例如 HTTP 鉴权的实现, 我们可以为每个使用 RequestMapping 标注的方法织入 advice, 当 HTTP 请求到来时, 首先进入到 advice 代码中, 在这里我们可以分析这个 HTTP 请求是否有相应的权限, 如果有, 则执行 Controller, 如果没有, 则抛出异常. 这里的 advice 就扮演着鉴权拦截器的角色了. </p>
-<h4 id="连接点-join-point"><a href="#连接点-join-point" class="headerlink" title="连接点(join point)"></a>连接点(join point)</h4><blockquote>
-<p>a point during the execution of a program, such as the execution of a method or the handling of an exception. In Spring AOP, a join point always represents a method execution. </p>
-</blockquote>
-<p>程序运行中的一些时间点, 例如一个方法的执行, 或者是一个异常的处理.<br><code>在 Spring AOP 中, join point 总是方法的执行点, 即只有方法连接点.</code></p>
-<h4 id="切点-point-cut"><a href="#切点-point-cut" class="headerlink" title="切点(point cut)"></a>切点(point cut)</h4><p>匹配 join point 的谓词(a predicate that matches join points).<br>Advice 是和特定的 point cut 关联的, 并且在 point cut 相匹配的 join point 中执行.<br><code>在 Spring 中, 所有的方法都可以认为是 joinpoint, 但是我们并不希望在所有的方法上都添加 Advice, 而 pointcut 的作用就是提供一组规则(使用 AspectJ pointcut expression language 来描述) 来匹配joinpoint, 给满足规则的 joinpoint 添加 Advice.</code></p>
-<h4 id="关于join-point-和-point-cut-的区别"><a href="#关于join-point-和-point-cut-的区别" class="headerlink" title="关于join point 和 point cut 的区别"></a>关于join point 和 point cut 的区别</h4><p>在 Spring AOP 中, 所有的方法执行都是 join point. 而 point cut 是一个描述信息, 它修饰的是 join point, 通过 point cut, 我们就可以确定哪些 join point 可以被织入 Advice. 因此 join point 和 point cut 本质上就是两个不同纬度上的东西.<br><code>advice 是在 join point 上执行的, 而 point cut 规定了哪些 join point 可以执行哪些 advice</code></p>
-<h4 id="introduction"><a href="#introduction" class="headerlink" title="introduction"></a>introduction</h4><p>为一个类型添加额外的方法或字段. Spring AOP 允许我们为 <code>目标对象</code> 引入新的接口(和对应的实现). 例如我们可以使用 introduction 来为一个 bean 实现 IsModified 接口, 并以此来简化 caching 的实现. </p>
-<h4 id="目标对象-Target"><a href="#目标对象-Target" class="headerlink" title="目标对象(Target)"></a>目标对象(Target)</h4><p>织入 advice 的目标对象. 目标对象也被称为 <code>advised object</code>.<br><code>因为 Spring AOP 使用运行时代理的方式来实现 aspect, 因此 adviced object 总是一个代理对象(proxied object)</code><br><code>注意, adviced object 指的不是原来的类, 而是织入 advice 后所产生的代理类.</code></p>
-<h4 id="AOP-proxy"><a href="#AOP-proxy" class="headerlink" title="AOP proxy"></a>AOP proxy</h4><p>一个类被 AOP 织入 advice, 就会产生一个结果类, 它是融合了原类和增强逻辑的代理类.<br>在 Spring AOP 中, 一个 AOP 代理是一个 JDK 动态代理对象或 CGLIB 代理对象. </p>
-<h4 id="织入-Weaving"><a href="#织入-Weaving" class="headerlink" title="织入(Weaving)"></a>织入(Weaving)</h4><p>将 aspect 和其他对象连接起来, 并创建 adviced object 的过程.<br>根据不同的实现技术, AOP织入有三种方式: </p>
-<ul>
-<li><p>编译器织入, 这要求有特殊的Java编译器. </p>
-</li>
-<li><p>类装载期织入, 这需要有特殊的类装载器. </p>
-</li>
-<li><p>动态代理织入, 在运行期为目标类添加增强(Advice)生成子类的方式.<br>Spring 采用动态代理织入, 而AspectJ采用编译器织入和类装载期织入. </p>
-</li>
-</ul>
-<h3 id="advice-的类型"><a href="#advice-的类型" class="headerlink" title="advice 的类型"></a>advice 的类型</h3><ul>
-<li><p>before advice, 在 join point 前被执行的 advice. 虽然 before advice 是在 join point 前被执行, 但是它并不能够阻止 join point 的执行, 除非发生了异常(即我们在 before advice 代码中, 不能人为地决定是否继续执行 join point 中的代码) </p>
-</li>
-<li><p>after return advice, 在一个 join point 正常返回后执行的 advice </p>
-</li>
-<li><p>after throwing advice, 当一个 join point 抛出异常后执行的 advice </p>
-</li>
-<li><p>after(final) advice, 无论一个 join point 是正常退出还是发生了异常, 都会被执行的 advice. </p>
-</li>
-<li><p>around advice, 在 join point 前和 joint point 退出后都执行的 advice. 这个是最常用的 advice. </p>
-</li>
-</ul>
-<h3 id="关于-AOP-Proxy"><a href="#关于-AOP-Proxy" class="headerlink" title="关于 AOP Proxy"></a>关于 AOP Proxy</h3><p>Spring AOP 默认使用标准的 JDK 动态代理(dynamic proxy)技术来实现 AOP 代理, 通过它, 我们可以为任意的接口实现代理.<br><code>如果需要为一个类实现代理, 那么可以使用 CGLIB 代理.</code> 当一个业务逻辑对象没有实现接口时, 那么Spring AOP 就默认使用 CGLIB 来作为 AOP 代理了. 即如果我们需要为一个方法织入 advice, 但是这个方法不是一个接口所提供的方法, 则此时 Spring AOP 会使用 CGLIB 来实现动态代理. 鉴于此, Spring AOP 建议基于接口编程, 对接口进行 AOP 而不是类. </p>
-<h2 id="彻底理解-aspect-join-point-point-cut-advice"><a href="#彻底理解-aspect-join-point-point-cut-advice" class="headerlink" title="彻底理解 aspect, join point, point cut, advice"></a>彻底理解 aspect, join point, point cut, advice</h2><p>看完了上面的理论部分知识, 我相信还是会有不少朋友感觉到 AOP 的概念还是很模糊, 对 AOP 中的各种概念理解的还不是很透彻. 其实这很正常, 因为 AOP 中的概念是在是太多了, 我当时也是花了老大劲才梳理清楚的.<br>下面我以一个简单的例子来比喻一下 AOP 中 aspect, jointpoint, pointcut 与 advice 之间的关系. </p>
-<p>让我们来假设一下, 从前有一个叫爪哇的小县城, 在一个月黑风高的晚上, 这个县城中发生了命案. 作案的凶手十分狡猾, 现场没有留下什么有价值的线索. 不过万幸的是, 刚从隔壁回来的老王恰好在这时候无意中发现了凶手行凶的过程, 但是由于天色已晚, 加上凶手蒙着面, 老王并没有看清凶手的面目, 只知道凶手是个男性, 身高约七尺五寸. 爪哇县的县令根据老王的描述, 对守门的士兵下命令说: 凡是发现有身高七尺五寸的男性, 都要抓过来审问. 士兵当然不敢违背县令的命令, 只好把进出城的所有符合条件的人都抓了起来. </p>
-<p>来让我们看一下上面的一个小故事和 AOP 到底有什么对应关系.<br>首先我们知道, 在 Spring AOP 中 join point 指代的是所有方法的执行点, 而 point cut 是一个描述信息, 它修饰的是 join point, 通过 point cut, 我们就可以确定哪些 join point 可以被织入 Advice. 对应到我们在上面举的例子, 我们可以做一个简单的类比, join point 就相当于 <strong>爪哇的小县城里的百姓</strong>, point cut 就相当于 <strong>老王所做的指控, 即凶手是个男性, 身高约七尺五寸</strong>, 而 advice 则是施加在符合老王所描述的嫌疑人的动作: <strong>抓过来审问</strong>.<br>为什么可以这样类比呢? </p>
-<ul>
-<li><p>join point –&gt; 爪哇的小县城里的百姓: 因为根据定义, join point 是所有可能被织入 advice 的候选的点, 在 Spring AOP中, 则可以认为所有方法执行点都是 join point. 而在我们上面的例子中, 命案发生在小县城中, 按理说在此县城中的所有人都有可能是嫌疑人. </p>
-</li>
-<li><p>point cut –&gt; 男性, 身高约七尺五寸: 我们知道, 所有的方法(joint point) 都可以织入 advice, 但是我们并不希望在所有方法上都织入 advice, 而 pointcut 的作用就是提供一组规则来匹配joinpoint, 给满足规则的 joinpoint 添加 advice. 同理, 对于县令来说, 他再昏庸, 也知道不能把县城中的所有百姓都抓起来审问, 而是根据<code>凶手是个男性, 身高约七尺五寸</code>, 把符合条件的人抓起来. 在这里 <code>凶手是个男性, 身高约七尺五寸</code> 就是一个修饰谓语, 它限定了凶手的范围, 满足此修饰规则的百姓都是嫌疑人, 都需要抓起来审问. </p>
-</li>
-<li><p>advice –&gt; 抓过来审问, advice 是一个动作, 即一段 Java 代码, 这段 Java 代码是作用于 point cut 所限定的那些 join point 上的. 同理, 对比到我们的例子中, <code>抓过来审问</code> 这个动作就是对作用于那些满足 <code>男性, 身高约七尺五寸</code> 的<code>爪哇的小县城里的百姓</code>. </p>
-</li>
-<li><p>aspect: aspect 是 point cut 与 advice 的组合, 因此在这里我们就可以类比: <strong>“根据老王的线索, 凡是发现有身高七尺五寸的男性, 都要抓过来审问”</strong> 这一整个动作可以被认为是一个 aspect. </p>
-</li>
-</ul>
-<hr>
-<p>或则我们也可以从语法的角度来简单类比一下. 我们在学英语时, 经常会接触什么 <code>定语</code>, <code>被动句</code> 之类的概念, 那么可以做一个不严谨的类比, 即 <code>joinpoint</code> 可以认为是一个 <code>宾语</code>, 而 <code>pointcut</code> 则可以类比为修饰 <code>joinpoint</code> 的定语, 那么整个 <code>aspect</code> 就可以描述为: <code>满足 pointcut 规则的 joinpoint 会被添加相应的 advice 操作.</code></p>
-<h2 id="AspectJ-支持"><a href="#AspectJ-支持" class="headerlink" title="@AspectJ 支持"></a>@AspectJ 支持</h2><p><strong>@AspectJ</strong> 是一种使用 Java 注解来实现 AOP 的编码风格.<br>@AspectJ 风格的 AOP 是 AspectJ Project 在 AspectJ 5 中引入的, 并且 Spring 也支持@AspectJ 的 AOP 风格. </p>
-<h3 id="使能-AspectJ-支持"><a href="#使能-AspectJ-支持" class="headerlink" title="使能 @AspectJ 支持"></a>使能 @AspectJ 支持</h3><p>@AspectJ 可以以 XML 的方式或以注解的方式来使能, 并且不论以哪种方式使能@ASpectJ, 我们都必须保证 aspectjweaver.jar 在 classpath 中. </p>
-<h4 id="使用-Java-Configuration-方式使能-AspectJ"><a href="#使用-Java-Configuration-方式使能-AspectJ" class="headerlink" title="使用 Java Configuration 方式使能@AspectJ"></a>使用 Java Configuration 方式使能@AspectJ</h4><pre><code>@Configuration
-@EnableAspectJAutoProxy
-public class AppConfig {
-}
-</code></pre><h4 id="使用-XML-方式使能-AspectJ"><a href="#使用-XML-方式使能-AspectJ" class="headerlink" title="使用 XML 方式使能@AspectJ"></a>使用 XML 方式使能@AspectJ</h4><pre><code>&lt;aop:aspectj-autoproxy/&gt;
-</code></pre><h3 id="定义-aspect-切面"><a href="#定义-aspect-切面" class="headerlink" title="定义 aspect(切面)"></a>定义 aspect(切面)</h3><p>当使用注解 <strong>@Aspect</strong> 标注一个 Bean 后, 那么 Spring 框架会自动收集这些 Bean, 并添加到 Spring AOP 中, 例如: </p>
-<pre><code>@Component
-@Aspect
-public class MyTest {
-}
-</code></pre><p><code>注意, 仅仅使用@Aspect 注解, 并不能将一个 Java 对象转换为 Bean, 因此我们还需要使用类似 @Component 之类的注解.</code><br><code>注意, 如果一个 类被@Aspect 标注, 则这个类就不能是其他 aspect 的 **advised object** 了, 因为使用 @Aspect 后, 这个类就会被排除在 auto-proxying 机制之外.</code></p>
-<h3 id="声明-pointcut"><a href="#声明-pointcut" class="headerlink" title="声明 pointcut"></a>声明 pointcut</h3><p>一个 pointcut 的声明由两部分组成: </p>
-<ul>
-<li><p>一个方法签名, 包括方法名和相关参数 </p>
-</li>
-<li><p>一个 pointcut 表达式, 用来指定哪些方法执行是我们感兴趣的(即因此可以织入 advice). </p>
-</li>
-</ul>
-<p>在@AspectJ 风格的 AOP 中, 我们使用一个方法来描述 pointcut, 即: </p>
-<pre><code>@Pointcut(&quot;execution(* com.xys.service.UserService.*(..))&quot;) // 切点表达式
-private void dataAccessOperation() {} // 切点前面
-</code></pre><p><code>这个方法必须无返回值.</code><br><code>这个方法本身就是 pointcut signature, pointcut 表达式使用@Pointcut 注解指定.</code><br>上面我们简单地定义了一个 pointcut, 这个 pointcut 所描述的是: 匹配所有在包 <strong>com.xys.service.UserService</strong> 下的所有方法的执行. </p>
-<h4 id="切点标志符-designator"><a href="#切点标志符-designator" class="headerlink" title="切点标志符(designator)"></a>切点标志符(designator)</h4><p>AspectJ5 的切点表达式由标志符(designator)和操作参数组成. 如 “execution( _greetTo(..))” 的切点表达式, <strong>execution</strong> 就是 标志符, 而圆括号里的_ greetTo(..) 就是操作参数 </p>
-<h5 id="execution"><a href="#execution" class="headerlink" title="execution"></a>execution</h5><p>匹配 join point 的执行, 例如 “execution(* hello(..))” 表示匹配所有目标类中的 hello() 方法. 这个是最基本的 pointcut 标志符. </p>
-<h5 id="within"><a href="#within" class="headerlink" title="within"></a>within</h5><p>匹配特定包下的所有 join point, 例如 <code>within(com.xys.*)</code> 表示 com.xys 包中的所有连接点, 即包中的所有类的所有方法. 而 <code>within(com.xys.service.*Service)</code> 表示在 com.xys.service 包中所有以 Service 结尾的类的所有的连接点. </p>
-<h5 id="this-与-target"><a href="#this-与-target" class="headerlink" title="this 与 target"></a>this 与 target</h5><p>this 的作用是匹配一个 bean, 这个 bean(Spring AOP proxy) 是一个给定类型的实例(instance of). 而 target 匹配的是一个目标对象(target object, 即需要织入 advice 的原始的类), 此对象是一个给定类型的实例(instance of). </p>
-<h5 id="bean"><a href="#bean" class="headerlink" title="bean"></a>bean</h5><p>匹配 bean 名字为指定值的 bean 下的所有方法, 例如: </p>
-<pre><code>bean(*Service) // 匹配名字后缀为 Service 的 bean 下的所有方法
-bean(myService) // 匹配名字为 myService 的 bean 下的所有方法
-</code></pre><h5 id="args"><a href="#args" class="headerlink" title="args"></a>args</h5><p>匹配参数满足要求的的方法.<br>例如: </p>
-<pre><code>@Pointcut(&quot;within(com.xys.demo2.*)&quot;)
-public void pointcut2() {
-}
-
-@Before(value = &quot;pointcut2()  &amp;&amp;  args(name)&quot;)
-public void doSomething(String name) {
-    logger.info(&quot;---page: {}---&quot;, name);
-}
-
-@Service
-public class NormalService {
-    private Logger logger = LoggerFactory.getLogger(getClass());
-
-    public void someMethod() {
-        logger.info(&quot;---NormalService: someMethod invoked---&quot;);
-    }
-
-
-    public String test(String name) {
-        logger.info(&quot;---NormalService: test invoked---&quot;);
-        return &quot;服务一切正常&quot;;
-    }
-}
-</code></pre><p>当 NormalService.test 执行时, 则 advice <code>doSomething</code> 就会执行, test 方法的参数 name 就会传递到 <code>doSomething</code> 中. </p>
-<p>常用例子: </p>
-<pre><code>// 匹配只有一个参数 name 的方法
-@Before(value = &quot;aspectMethod()  &amp;&amp;  args(name)&quot;)
-public void doSomething(String name) {
-}
-
-// 匹配第一个参数为 name 的方法
-@Before(value = &quot;aspectMethod()  &amp;&amp;  args(name, ..)&quot;)
-public void doSomething(String name) {
-}
-
-// 匹配第二个参数为 name 的方法
-Before(value = &quot;aspectMethod()  &amp;&amp;  args(*, name, ..)&quot;)
-public void doSomething(String name) {
-}
-</code></pre><h5 id="annotation"><a href="#annotation" class="headerlink" title="@annotation"></a>@annotation</h5><p>匹配由指定注解所标注的方法, 例如: </p>
-<pre><code>@Pointcut(&quot;@annotation(com.xys.demo1.AuthChecker)&quot;)
-public void pointcut() {
-}
-</code></pre><p>则匹配由注解 <code>AuthChecker</code> 所标注的方法. </p>
-<h4 id="常见的切点表达式"><a href="#常见的切点表达式" class="headerlink" title="常见的切点表达式"></a>常见的切点表达式</h4><h5 id="匹配方法签名"><a href="#匹配方法签名" class="headerlink" title="匹配方法签名"></a>匹配方法签名</h5><pre><code>// 匹配指定包中的所有的方法
-execution(* com.xys.service.*(..))
-
-// 匹配当前包中的指定类的所有方法
-execution(* UserService.*(..))
-
-// 匹配指定包中的所有 public 方法
-execution(public * com.xys.service.*(..))
-
-// 匹配指定包中的所有 public 方法, 并且返回值是 int 类型的方法
-execution(public int com.xys.service.*(..))
-
-// 匹配指定包中的所有 public 方法, 并且第一个参数是 String, 返回值是 int 类型的方法
-execution(public int com.xys.service.*(String name, ..))
-</code></pre><h5 id="匹配类型签名"><a href="#匹配类型签名" class="headerlink" title="匹配类型签名"></a>匹配类型签名</h5><pre><code>// 匹配指定包中的所有的方法, 但不包括子包
-within(com.xys.service.*)
-
-// 匹配指定包中的所有的方法, 包括子包
-within(com.xys.service..*)
-
-// 匹配当前包中的指定类中的方法
-within(UserService)
-
-
-// 匹配一个接口的所有实现类中的实现的方法
-within(UserDao+)
-</code></pre><h5 id="匹配-Bean-名字"><a href="#匹配-Bean-名字" class="headerlink" title="匹配 Bean 名字"></a>匹配 Bean 名字</h5><pre><code>// 匹配以指定名字结尾的 Bean 中的所有方法
-bean(*Service)
-</code></pre><h5 id="切点表达式组合"><a href="#切点表达式组合" class="headerlink" title="切点表达式组合"></a>切点表达式组合</h5><pre><code>// 匹配以 Service 或 ServiceImpl 结尾的 bean
-bean(*Service || *ServiceImpl)
-
-// 匹配名字以 Service 结尾, 并且在包 com.xys.service 中的 bean
-bean(*Service) &amp;&amp; within(com.xys.service.*)
-</code></pre><h3 id="声明-advice"><a href="#声明-advice" class="headerlink" title="声明 advice"></a>声明 advice</h3><p>advice 是和一个 pointcut 表达式关联在一起的, 并且会在匹配的 join point 的方法执行的前/后/周围 运行. <code>pointcut 表达式可以是简单的一个 pointcut 名字的引用, 或者是完整的 pointcut 表达式</code>.<br>下面我们以几个简单的 advice 为例子, 来看一下一个 advice 是如何声明的. </p>
-<h4 id="Before-advice"><a href="#Before-advice" class="headerlink" title="Before advice"></a>Before advice</h4><pre><code>/**
- * @author xiongyongshun
- * @version 1.0
- * @created 16/9/9 13:13
- */
-@Component
-@Aspect
-public class BeforeAspectTest {
-    // 定义一个 Pointcut, 使用 切点表达式函数 来描述对哪些 Join point 使用 advise.
-    @Pointcut(&quot;execution(* com.xys.service.UserService.*(..))&quot;)
-    public void dataAccessOperation() {
-    }
-}
-
-@Component
-@Aspect
-public class AdviseDefine {
-    // 定义 advise
-    @Before(&quot;com.xys.aspect.PointcutDefine.dataAccessOperation()&quot;)
-    public void doBeforeAccessCheck(JoinPoint joinPoint) {
-        System.out.println(&quot;*****Before advise, method: &quot; + joinPoint.getSignature().toShortString() + &quot; *****&quot;);
-    }
-}
-</code></pre><p>这里, <strong>@Before</strong> 引用了一个 pointcut, 即 “com.xys.aspect.PointcutDefine.dataAccessOperation()” 是一个 pointcut 的名字.<br>如果我们在 advice 在内置 pointcut, 则可以: </p>
-<pre><code>@Component
-@Aspect
-public class AdviseDefine {
-    // 将 pointcut 和 advice 同时定义
-    @Before(&quot;within(com.xys.service..*)&quot;)
-    public void doAccessCheck(JoinPoint joinPoint) {
-        System.out.println(&quot;*****doAccessCheck, Before advise, method: &quot; + joinPoint.getSignature().toShortString() + &quot; *****&quot;);
-    }
-}
-</code></pre><h4 id="around-advice"><a href="#around-advice" class="headerlink" title="around advice"></a>around advice</h4><p>around advice 比较特别, 它可以在一个方法的之前之前和之后添加不同的操作, 并且甚至可以决定何时, 如何, 是否调用匹配到的方法. </p>
-<pre><code>@Component
-@Aspect
-public class AdviseDefine {
-    // 定义 advise
-    @Around(&quot;com.xys.aspect.PointcutDefine.dataAccessOperation()&quot;)
-    public Object doAroundAccessCheck(ProceedingJoinPoint pjp) throws Throwable {
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
-        // 开始
-        Object retVal = pjp.proceed();
-        stopWatch.stop();
-        // 结束
-        System.out.println(&quot;invoke method: &quot; + pjp.getSignature().getName() + &quot;, elapsed time: &quot; + stopWatch.getTotalTimeMillis());
-        return retVal;
-    }
-}
-</code></pre><p>around advice 和前面的 before advice 差不多, 只是我们把注解 <strong>@Before</strong> 改为了 <strong>@Around</strong> 了. </p>
-]]></content>
     
     <summary type="html">
     

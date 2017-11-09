@@ -11,7 +11,7 @@
     
     <title>
         
-            计算机系统概论 | 
+            ThreadLocal是什么 | 
         
         人不如故
     </title>
@@ -39,7 +39,7 @@
     <meta name="theme-color" content="#000">
     <meta name="author" content="人不如故">
     <meta name="description" content="世间一场大梦，人生几度秋凉。">
-    <meta name="keywords" content="null,概论,计算机体系结构,计算机组成">
+    <meta name="keywords" content="null,java8,lambda,ThreadLocal">
 
     <!-- Favicons -->
     <link rel="icon shortcut" type="image/ico" href="/img/favicon.png">
@@ -65,9 +65,9 @@
     <!-- The Open Graph protocol -->
     <meta property="og:url" content="https://wangyu1997.github.io">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="计算机系统概论 | 人不如故">
+    <meta property="og:title" content="ThreadLocal是什么 | 人不如故">
     <meta property="og:description" content="世间一场大梦，人生几度秋凉。">
-    <meta property="og:article:tag" content="概论"> <meta property="og:article:tag" content="计算机体系结构"> <meta property="og:article:tag" content="计算机组成"> 
+    <meta property="og:article:tag" content="java8"> <meta property="og:article:tag" content="lambda"> <meta property="og:article:tag" content="ThreadLocal"> 
 
     <!--[if lte IE 9]>
         <link rel="stylesheet" href="/css/ie-blocker.css">
@@ -269,7 +269,7 @@
     </button>
 
     <ul class="post-toc-wrap mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="post-toc-trigger-btn" style="max-height:80vh; overflow-y:scroll;">
-        <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#计算机系统简介"><span class="post-toc-number">1.</span> <span class="post-toc-text">计算机系统简介</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#计算机系统的层次结构"><span class="post-toc-number">2.</span> <span class="post-toc-text">计算机系统的层次结构</span></a></li></ol>
+        
 
         <!--
         <li class="mdl-menu__item">
@@ -294,10 +294,10 @@
     <!-- Paradox Post Header -->
     
         <!-- Custom Thumbnail -->
-        <div class="post_thumbnail-custom mdl-card__media mdl-color-text--grey-50" style="background-image:url(http://oq5d32gij.bkt.clouddn.com/15088595623416.png)">
+        <div class="post_thumbnail-custom mdl-card__media mdl-color-text--grey-50" style="background-image:url(http://oq5d32gij.bkt.clouddn.com/15101490251625.png)">
     
             <p class="article-headline-p">
-                计算机系统概论
+                ThreadLocal是什么
             </p>
         </div>
 
@@ -316,7 +316,7 @@
     <!-- Author Name & Date -->
     <div>
         <strong>人不如故</strong>
-        <span>10月 24, 2017</span>
+        <span>11月 09, 2017</span>
     </div>
 
     <div class="section-spacer"></div>
@@ -337,7 +337,7 @@
         </button>
         <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-qrcode-button">
             <li class="mdl-menu__item">在其它设备中阅读本文章</li>
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQ4AAAEOCAAAAABd2qZ5AAADgUlEQVR42u3aQW7jQAwEQP//08nVgBG5SQ5tISidFo430pQODMl+/LiergcCHDhw4MCBAwcOHDhuzPGIr9fvP39y/dPXz/98uJfvXN9xchYcOHDgwLHHUX3EvyASggl9j+kNNw4cOHDgWOO4fqyklFZB8+KaA+VnwYEDBw4cd+C4LpnXBThvAqvlHAcOHDhw/G+O/KdJU9ejxIEDBw4cd+BIWqxTC6Tq4XtFfX1WigMHDhw4DgUa7vzvL+Q7cODAgQPH+Ko+RLXl67WUzbPgwIEDB46jHNUhYD7+m4cbeiGJfHGFAwcOHDg2OKpLnVNlsreImhdmHDhw4MDxGY689ZqvhXocG5ELHDhw4MCxx5EHF3rRtAlo8mdBfkccOHDgwPEtjnnbVi2NVfrJ2BEHDhw4cGxz9Ape3rxVH71aUHuvEwcOHDhwbHBE/6EVaEh+5+SbvTUVDhw4cOD4DEfSOE3WVGfDCtXXWRgO4sCBAweOMUf1qElpLI/n4mJfbTijV4sDBw4cOD7Oka+m8vavN2TshfDePD8OHDhw4FjgmCxvqsO4pFXrraOSAowDBw4cOLY5qsO1PPRQDcklRXSyMDu2hcOBAwcOHMVpWG+9dCrEVl045fQ4cODAgeO7HHkcrXz7+MDJ7znwYnDgwIEDxzJH3qTllDlWdfCXrMQOb+Fw4MCBA0drzzIpk5NIRC++MCn/OHDgwIFjgyP/ZFJEk3FhUrBPxSlw4MCBA8cGRz6My+MFvUOeHUQWngcHDhw4cCxzTNqqXmQhL8+TdVSz0OLAgQMHjhZHNdw2iRRUQwy9iN6o0OLAgQMHjgHH/MbzWEOPeBKSwIEDBw4cexy9pVG1AOePmLSCeQhj1MLhwIEDB44WR9Lw5GU1HztWgw69gF30OnHgwIEDx1GO+YhwUm6T8lltCMsvAwcOHDhwHOXICZJP8mNX4xR5kC5faOHAgQMHjg2O6nXg9oOwXTVg18x34MCBAweOAUe1aPUOPymx1QJcRseBAwcOHAscG4uiamN2atiHAwcOHDjuw9GLoPW+P2nbJn8ovAk04MCBAweOL3H02rak6Zo0kNd3KSQHceDAgQPHBzmqYbje0LAanutF63DgwIEDxzbH5DCnYg3JkarfeXM6HDhw4MCxwFENNEwasI1inDOt5Dtw4MCBA4cLBw4cOHDgwIEDBw4c971+AQbW6BlmFv38AAAAAElFTkSuQmCC">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPYAAAD2CAAAAADAeSUUAAAC4UlEQVR42u3aS3LcMAwFwLn/pZ0DTI3yHjhOJLK1crlkCs0NjM/r58jnhY2NjY2NjY2NjX1L9it+oqPf3r8+5/3N95+vv5LHjI2Njb03O8Fch3sNyy8uv9w6ZmxsbOwD2J8An95Jkkqe6tpv5TFjY2NjY+cFQ34pSYGRFy3Y2NjY2DN2fs7KCe23sLGxsU9mJw2a69Qy+6u2sPkPvTRsbGzs27Pzoel9fv6n821sbGzsG7NnQ9YkjeWBtg2mYeTY2NjYm7JXgkvCnZU6SRKtR8vY2NjYW7PXF2jylDYb5bbjZGxsbOxz2FFjfVQ2rKz+tIVQdK3Y2NjYm7L/8u972SpqT26HwfllYWNjY5/GnrVs2hS1kupWosLGxsbem72eVOqSoGwe5SlqON/GxsbG3oL9rfWafGCQL3fm496iFMHGxsbeiJ18fla65O3+9hK/XIFhY2NjP5y98k//bCSclC5JSqsLG2xsbOxN2bPRaZKiZsua6y2nYucUGxsbeyN2PoKdhZiHvtLGWqrAsLGxsR/LzgNt1x9nw+CVQcXSVAQbGxv7sewkRc1GtrOU08aTXwc2Njb2OexZIfEqn7q5Xw4w6gSGjY2N/Vh2m8baQNcXN9vUVTeVsLGxsR/Obls2OSYvadrCI1kPWhr0YmNjYz+W3Q5xZ0XF7P1ZcwobGxv7HPZspabFr6SlvKVVJDBsbGzs7dg5NX+/LW/yZZ364rCxsbGPYc/KgLaomJ25NPrFxsbGPoDdrtqsv/8bC0AfrwkbGxt7U3b7tB/LE0+bkNp4sLGxsXdlt0kib9CvlBmzwfBwvo2NjY29BXvlk/mH89Fy21r6lfEANjY29gPZ7Uh15frydNg2lb4wHsDGxsY+jJ2nltnvk9iixSNsbGxs7PjzbZJrm1n5CdjY2NinsfMSIoflBUabtOpIsLGxsbdmr6xRfjc55Qua7fnY2NjYu7LPebCxsbGxsbGxsbFv8/wBGqdJS0sONPIAAAAASUVORK5CYII=">
         </ul>
     
 
@@ -349,7 +349,7 @@
     </button>
     <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-viewtags-button">
         <li class="mdl-menu__item">
-        <a class="post_tag-link" href="/tags/概论/">概论</a></li><li class="mdl-menu__item"><a class="post_tag-link" href="/tags/计算机体系结构/">计算机体系结构</a></li><li class="mdl-menu__item"><a class="post_tag-link" href="/tags/计算机组成/">计算机组成</a>
+        <a class="post_tag-link" href="/tags/ThreadLocal/">ThreadLocal</a></li><li class="mdl-menu__item"><a class="post_tag-link" href="/tags/java8/">java8</a></li><li class="mdl-menu__item"><a class="post_tag-link" href="/tags/lambda/">lambda</a>
     </ul>
     
 
@@ -376,7 +376,7 @@
 
     <!-- Share Weibo -->
     
-        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=计算机系统概论&url=https://wangyu1997.github.io//2017/10/24/计算机组成原理/计算机系统概论/index.html&pic=&searchPic=false&style=simple" target="_blank">
+        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=ThreadLocal是什么&url=https://wangyu1997.github.io//2017/11/09/JAVA/ThreadLocal是什么/index.html&pic=&searchPic=false&style=simple" target="_blank">
             <li class="mdl-menu__item">
                 分享到微博
             </li>
@@ -385,7 +385,7 @@
 
     <!-- Share Twitter -->
     
-        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=计算机系统概论&url=https://wangyu1997.github.io//2017/10/24/计算机组成原理/计算机系统概论/index.html&via=人不如故" target="_blank">
+        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=ThreadLocal是什么&url=https://wangyu1997.github.io//2017/11/09/JAVA/ThreadLocal是什么/index.html&via=人不如故" target="_blank">
             <li class="mdl-menu__item">
                 分享到 Twitter
             </li>
@@ -394,7 +394,7 @@
 
     <!-- Share Facebook -->
     
-        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=https://wangyu1997.github.io//2017/10/24/计算机组成原理/计算机系统概论/index.html" target="_blank">
+        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=https://wangyu1997.github.io//2017/11/09/JAVA/ThreadLocal是什么/index.html" target="_blank">
             <li class="mdl-menu__item">
                 分享到 Facebook
             </li>
@@ -403,7 +403,7 @@
 
     <!-- Share Google+ -->
     
-        <a class="post_share-link" href="https://plus.google.com/share?url=https://wangyu1997.github.io//2017/10/24/计算机组成原理/计算机系统概论/index.html" target="_blank">
+        <a class="post_share-link" href="https://plus.google.com/share?url=https://wangyu1997.github.io//2017/11/09/JAVA/ThreadLocal是什么/index.html" target="_blank">
             <li class="mdl-menu__item">
                 分享到 Google+
             </li>
@@ -415,7 +415,7 @@
 
     <!-- Share QQ -->
     
-        <a class="post_share-link" href="http://connect.qq.com/widget/shareqq/index.html?site=人不如故&title=计算机系统概论&summary=世间一场大梦，人生几度秋凉。&pics=https://wangyu1997.github.io/img/favicon.png&url=https://wangyu1997.github.io/2017/10/24/计算机组成原理/计算机系统概论/index.html" target="_blank">
+        <a class="post_share-link" href="http://connect.qq.com/widget/shareqq/index.html?site=人不如故&title=ThreadLocal是什么&summary=世间一场大梦，人生几度秋凉。&pics=https://wangyu1997.github.io/img/favicon.png&url=https://wangyu1997.github.io/2017/11/09/JAVA/ThreadLocal是什么/index.html" target="_blank">
             <li class="mdl-menu__item">
                 分享到 QQ
             </li>
@@ -434,65 +434,254 @@
                 <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
    
     
-            <link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>物联网：把感应器嵌入和装备到电网、铁路、桥梁、隧道、公路、建筑、供水系统、大坝、油气管道等各种物体中，并且被普遍连接，形成所谓的“物联网”，然后将“物联网”与现有的互联网整合起来，实现人类社会与无力系统的整合，形成智慧地球</p>
-<a id="more"></a>      
-<h2 id="计算机系统简介"><a href="#计算机系统简介" class="headerlink" title="计算机系统简介"></a>计算机系统简介</h2><p>计算机系统分为硬件和软件</p>
-<p>硬件：计算机的实体，如主机、外设等</p>
-<p>软件：由具有各类特殊功能的信息（程序）组成</p>
+            <link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p><strong>ThreadLocal是什么</strong></p>
+<p>早在JDK 1.2的版本中就提供java.lang.ThreadLocal，ThreadLocal为解决多线程程序的并发问题提供了一种新的思路。使用这个工具类可以很简洁地编写出优美的多线程程序。 </p>
+<p>ThreadLocal很容易让人望文生义，想当然地认为是一个“本地线程”。其实，ThreadLocal并不是一个Thread，而是Thread的局部变量，也许把它命名为ThreadLocalVariable更容易让人理解一些。 </p>
+<p>当使用ThreadLocal维护变量时，ThreadLocal为每个使用该变量的线程提供独立的变量副本，所以每一个线程都可以独立地改变自己的副本，而不会影响其它线程所对应的副本。 </p>
+<p>从线程的角度看，目标变量就象是线程的本地变量，这也是类名中“Local”所要表达的意思。 </p>
+<p>线程局部变量并不是Java的新发明，很多语言（如IBM IBM XL FORTRAN）在语法层面就提供线程局部变量。在Java中没有提供在语言级支持，而是变相地通过ThreadLocal的类提供支持。 </p>
+<p>所以，在Java中编写线程局部变量的代码相对来说要笨拙一些，因此造成线程局部变量没有在Java开发者中得到很好的普及。 </p>
+<p>ThreadLocal的接口方法 </p>
+<p>ThreadLocal类接口很简单，只有4个方法，我们先来了解一下： </p>
 <ul>
-<li><p>分类：系统软件、应用软件</p>
-<p> 系统软件： 用来管理整个计算机系统</p>
-<pre><code> e.g. : 语言处理程序、操作系统、服务性程序、数据库管理系统、网络软件
-</code></pre><p> 应用软件： 按任务需要编织成的各种程序</p>
-</li>
+<li>void set(Object value)</li>
 </ul>
-<h2 id="计算机系统的层次结构"><a href="#计算机系统的层次结构" class="headerlink" title="计算机系统的层次结构"></a>计算机系统的层次结构</h2><p>层次结构：</p>
-<p><img src="http://oq5d32gij.bkt.clouddn.com/15088579483898.jpg" alt=""></p>
-<p>系统复杂性管理的方法：</p>
-<blockquote>
-<p>抽象：隐藏系统中不重要的细节</p>
-</blockquote>
-<p>从语言的角度划分层次</p>
-<pre><code>微指令系统  微程序机器M0
-              |
-              |
-机器语言    实际机器M1
-              |
-              |
-操作系统    虚拟机器
-              |
-              |
-汇编语言    虚拟机器M2
-              |
-              |
-高级语言    虚拟机器M3
-</code></pre><p>高级语言执行的过程</p>
-<pre><code>虚拟机器M4      用编译程序翻译成汇编语言程序
-    |
-    |
-虚拟机器M3      用汇编语言程序翻译成机器语言程序
-    |
-    |
-虚拟机器M2      用机器语言解释操作系统
-    |
-==============软硬件分界线=========
-    |
-实际机器M1      用微指令解释机器指令
-    |
-    |
-微程序机器M0     由硬件直接执行微指令
-</code></pre><p>软硬件对于功能的实现逻辑上等价</p>
+<p>设置当前线程的线程局部变量的值。 </p>
 <ul>
-<li><p>硬件实现：造价贵</p>
-</li>
-<li><p>软件实现：软件体系庞大 实现复杂</p>
-</li>
+<li>public Object get()</li>
 </ul>
-<p>计算机组成与计算机体系结构从研究内容上的区别：</p>
-<blockquote>
-<p>计算机体系结构：程序员所见到的计算机系统的属性概念性的结构与功能特性(机器语言程序员)=&gt;有无乘法指令</p>
-<p>计算机组成：实现计算机体系结构所体现的属性(具体指令的实现)=&gt;如何实现乘法指令</p>
-</blockquote>
+<p>该方法返回当前线程所对应的线程局部变量。 </p>
+<ul>
+<li>public void remove()</li>
+</ul>
+<p>将当前线程局部变量的值删除，目的是为了减少内存的占用，该方法是JDK 5.0新增的方法。需要指出的是，当线程结束后，对应该线程的局部变量将自动被垃圾回收，所以显式调用该方法清除线程的局部变量并不是必须的操作，但它可以加快内存回收的速度。 </p>
+<ul>
+<li>protected Object initialValue()</li>
+</ul>
+<p>返回该线程局部变量的初始值，该方法是一个protected的方法，显然是为了让子类覆盖而设计的。这个方法是一个延迟调用方法，在线程第1次调用get()或set(Object)时才执行，并且仅执行1次。ThreadLocal中的缺省实现直接返回一个null。 </p>
+<p>值得一提的是，在JDK5.0中，ThreadLocal已经支持泛型，该类的类名已经变为ThreadLocal<t>。API方法也相应进行了调整，新版本的API方法分别是void set(T value)、T get()以及T initialValue()。 </t></p>
+<p>ThreadLocal是如何做到为每一个线程维护变量的副本的呢？其实实现的思路很简单：在ThreadLocal类中有一个Map，用于存储每一个线程的变量副本，Map中元素的键为线程对象，而值对应线程的变量副本。我们自己就可以提供一个简单的实现版本： </p>
+<p>代码清单1 SimpleThreadLocal </p>
+<pre><code>public class SimpleThreadLocal { 
+
+private Map valueMap = Collections.synchronizedMap(new HashMap()); 
+
+public void set(Object newValue) { 
+
+valueMap.put(**Thread.currentThread(), newValue**);**①键为线程对象，值为本线程的变量副本**
+
+} 
+
+public Object get() { 
+
+Thread currentThread = Thread.currentThread(); 
+
+Object o = valueMap.get(currentThread);**②返回本线程对应的变量**
+
+if (o == null &amp;&amp; !valueMap.containsKey(currentThread)) {**③如果在Map中不存在，放到Map**
+
+**中保存起来。**
+
+o = initialValue(); 
+
+valueMap.put(currentThread, o); 
+
+} 
+
+return o; 
+
+} 
+
+public void remove() { 
+
+valueMap.remove(Thread.currentThread()); 
+
+} 
+
+public Object initialValue() { 
+
+return null; 
+
+} 
+
+} 
+</code></pre><p>虽然代码清单9‑3这个ThreadLocal实现版本显得比较幼稚，但它和JDK所提供的ThreadLocal类在实现思路上是相近的。 </p>
+<pre><code>一个TheadLocal实例 
+
+下面，我们通过一个具体的实例了解一下ThreadLocal的具体使用方法。 
+
+代码清单2 SequenceNumber 
+
+package com.baobaotao.basic; 
+
+public class SequenceNumber { 
+
+**①****通过匿名内部类覆盖****ThreadLocal****的****initialValue()****方法，指定初始值**
+
+private static ThreadLocal&lt;Integer&gt; seqNum = new **ThreadLocal&lt;Integer&gt;**(){ 
+
+public Integer initialValue(){ 
+
+return 0; 
+
+} 
+
+}; 
+
+**②****获取下一个序列值**
+
+public int getNextNum(){ 
+
+seqNum.set(seqNum.get()+1); 
+
+return seqNum.get(); 
+
+} 
+
+public static void main(String[] args) 
+
+{ 
+
+SequenceNumber **sn** = new SequenceNumber(); 
+
+**③** **3****个线程共享****sn****，各自产生序列号**
+
+TestClient t1 = new TestClient(**sn**); 
+
+TestClient t2 = new TestClient(**sn**); 
+
+TestClient t3 = new TestClient(**sn**); 
+
+t1.start(); 
+
+t2.start(); 
+
+t3.start(); 
+
+} 
+
+private static class TestClient extends Thread 
+
+{ 
+
+private SequenceNumber sn; 
+
+public TestClient(SequenceNumber sn) { 
+
+this.sn = sn; 
+
+} 
+
+public void run() 
+
+{ 
+
+for (int i = 0; i &lt; 3; i++) {**④每个线程打出****3****个序列值**
+
+System.out.println(&quot;thread[&quot;+Thread.currentThread().getName()+ 
+
+&quot;] sn[&quot;+**sn.getNextNum()**+&quot;]&quot;); 
+
+} 
+
+} 
+
+} 
+
+} 
+</code></pre><p>通常我们通过匿名内部类的方式定义ThreadLocal的子类，提供初始的变量值，如例子中①处所示。TestClient线程产生一组序列号，在③处，我们生成3个TestClient，它们共享同一个SequenceNumber实例。运行以上代码，在控制台上输出以下的结果： </p>
+<pre><code>thread[Thread-2] sn[1] 
+
+thread[Thread-0] sn[1] 
+
+thread[Thread-1] sn[1] 
+
+thread[Thread-2] sn[2] 
+
+thread[Thread-0] sn[2] 
+
+thread[Thread-1] sn[2] 
+
+thread[Thread-2] sn[3] 
+
+thread[Thread-0] sn[3] 
+
+thread[Thread-1] sn[3] 
+</code></pre><p>考察输出的结果信息，我们发现每个线程所产生的序号虽然都共享同一个SequenceNumber实例，但它们并没有发生相互干扰的情况，而是各自产生独立的序列号，这是因为我们通过ThreadLocal为每一个线程提供了单独的副本。 </p>
+<p>Thread同步机制的比较 </p>
+<p>ThreadLocal和线程同步机制相比有什么优势呢？ThreadLocal和线程同步机制都是为了解决多线程中相同变量的访问冲突问题。 </p>
+<p>在同步机制中，通过对象的锁机制保证同一时间只有一个线程访问变量。这时该变量是多个线程共享的，使用同步机制要求程序慎密地分析什么时候对变量进行读写，什么时候需要锁定某个对象，什么时候释放对象锁等繁杂的问题，程序设计和编写难度相对较大。 </p>
+<p>而ThreadLocal则从另一个角度来解决多线程的并发访问。ThreadLocal会为每一个线程提供一个独立的变量副本，从而隔离了多个线程对数据的访问冲突。因为每一个线程都拥有自己的变量副本，从而也就没有必要对该变量进行同步了。ThreadLocal提供了线程安全的共享对象，在编写多线程代码时，可以把不安全的变量封装进ThreadLocal。 </p>
+<p>由于ThreadLocal中可以持有任何类型的对象，低版本JDK所提供的get()返回的是Object对象，需要强制类型转换。但JDK 5.0通过泛型很好的解决了这个问题，在一定程度地简化ThreadLocal的使用，代码清单 9 2就使用了JDK 5.0新的ThreadLocal<t>版本。 </t></p>
+<p>概括起来说，对于多线程资源共享的问题，同步机制采用了“以时间换空间”的方式，而ThreadLocal采用了“以空间换时间”的方式。前者仅提供一份变量，让不同的线程排队访问，而后者为每一个线程都提供了一份变量，因此可以同时访问而互不影响。 </p>
+<p>Spring使用ThreadLocal解决线程安全问题 </p>
+<p>我们知道在一般情况下，只有无状态的Bean才可以在多线程环境下共享，在Spring中，绝大部分Bean都可以声明为singleton作用域。就是因为Spring对一些Bean（如RequestContextHolder、TransactionSynchronizationManager、LocaleContextHolder等）中非线程安全状态采用ThreadLocal进行处理，让它们也成为线程安全的状态，因为有状态的Bean就可以在多线程中共享了。 </p>
+<p>一般的Web应用划分为展现层、服务层和持久层三个层次，在不同的层中编写对应的逻辑，下层通过接口向上层开放功能调用。在一般情况下，从接收请求到返回响应所经过的所有程序调用都同属于一个线程，如图9‑2所示： </p>
+<p><img src="http://img.zdnet.com.cn/0/438/liOsRM8PmNF4U.gif" alt="通通透透理解ThreadLocal" title="通通透透理解ThreadLocal"></p>
+<p>图1同一线程贯通三层 </p>
+<p>这样你就可以根据需要，将一些非线程安全的变量以ThreadLocal存放，在同一次请求响应的调用线程中，所有关联的对象引用到的都是同一个变量。 </p>
+<p>下面的实例能够体现Spring对有状态Bean的改造思路： </p>
+<p>代码清单3 TopicDao：非线程安全 </p>
+<pre><code>public class TopicDao { 
+
+private Connection conn;**①****一个非线程安全的变量**
+
+public void addTopic(){ 
+
+Statement stat = conn.createStatement();**②****引用非线程安全变量**
+
+… 
+
+} 
+
+} 
+</code></pre><p>由于①处的conn是成员变量，因为addTopic()方法是非线程安全的，必须在使用时创建一个新TopicDao实例（非singleton）。下面使用ThreadLocal对conn这个非线程安全的“状态”进行改造： </p>
+<p>代码清单4 TopicDao：线程安全 </p>
+<pre><code>import java.sql.Connection; 
+
+import java.sql.Statement; 
+
+public class TopicDao { 
+
+**①使用ThreadLocal保存Connection变量**
+
+private static **ThreadLocal&lt;Connection&gt;** connThreadLocal = new ThreadLocal&lt;Connection&gt;(); 
+
+public static Connection getConnection(){ 
+
+**②如果connThreadLocal没有本线程对应的Connection创建一个新的Connection，**
+
+**并将其保存到线程本地变量中。**
+
+if (connThreadLocal.get() == null) { 
+
+Connection conn = ConnectionManager.getConnection(); 
+
+connThreadLocal.set(conn); 
+
+return conn; 
+
+}else{ 
+
+return connThreadLocal.get();**③直接返回线程本地变量**
+
+} 
+
+} 
+
+public void addTopic() { 
+
+**④从ThreadLocal中获取线程对应的Connection**
+
+Statement stat = getConnection().createStatement(); 
+
+} 
+
+} 
+</code></pre><p>不同的线程在使用TopicDao时，先判断connThreadLocal.get()是否是null，如果是null，则说明当前线程还没有对应的Connection对象，这时创建一个Connection对象并添加到本地线程变量中；如果不为null，则说明当前的线程已经拥有了Connection对象，直接使用就可以了。这样，就保证了不同的线程使用线程相关的Connection，而不会使用其它线程的Connection。因此，这个TopicDao就可以做到singleton共享了。 </p>
+<p>当然，这个例子本身很粗糙，将Connection的ThreadLocal直接放在DAO只能做到本DAO的多个方法共享Connection时不发生线程安全问题，但无法和其它DAO共用同一个Connection，要做到同一事务多DAO共享同一Connection，必须在一个共同的外部类使用ThreadLocal保存Connection。 </p>
+<p><strong>小结</strong></p>
+<p>ThreadLocal是解决线程安全问题一个很好的思路，它通过为每个线程提供一个独立的变量副本解决了变量并发访问的冲突问题。在很多情况下，ThreadLocal比直接使用synchronized同步机制解决线程安全问题更简单，更方便，且结果程序拥有更高的并发性。 </p>
 
            
          <style type="text/css">
@@ -726,8 +915,8 @@ pre{
         <div id="disqus_thread"></div>
 <script>
     var disqus_config = function () {
-        this.page.url = 'https://wangyu1997.github.io/2017/10/24/计算机组成原理/计算机系统概论/';  // Replace PAGE_URL with your page's canonical URL variable
-        this.page.identifier = 'https://wangyu1997.github.io/2017/10/24/计算机组成原理/计算机系统概论/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        this.page.url = 'https://wangyu1997.github.io/2017/11/09/JAVA/ThreadLocal是什么/';  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'https://wangyu1997.github.io/2017/11/09/JAVA/ThreadLocal是什么/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
     };
     queue.offer(function() {
             (function() { // DON'T EDIT BELOW THIS LINE
@@ -758,21 +947,13 @@ pre{
             <nav class="material-nav mdl-color-text--grey-50 mdl-cell mdl-cell--12-col">
     <!-- Prev Nav -->
     
-        <a href="/2017/10/25/Spring/Hibernate/" id="post_nav-newer" class="prev-content">
-            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
-                <i class="material-icons">arrow_back</i>
-            </button>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            新篇
-        </a>
-    
 
     <!-- Section Spacer -->
     <div class="section-spacer"></div>
 
     <!-- Next Nav -->
     
-        <a href="/2017/10/24/计算机网路/基本概念/" id="post_nav-older" class="next-content">
+        <a href="/2017/11/08/JAVA/Java8中的Streams API/" id="post_nav-older" class="next-content">
             旧篇
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">

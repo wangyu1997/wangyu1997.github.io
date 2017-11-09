@@ -435,6 +435,7 @@
    
     
             <link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>Streams 的背景，以及 Java 8 中的使用详解 </p>
+<a id="more"></a>
 <h2 id="为什么需要-Stream"><a href="#为什么需要-Stream" class="headerlink" title="为什么需要 Stream"></a>为什么需要 Stream</h2><p>Stream 作为 Java 8 的一大亮点，它与 java.io 包里的 InputStream 和 OutputStream 是完全不同的概念。它也不同于 StAX 对 XML 解析的 Stream，也不是 Amazon Kinesis 对大数据实时处理的 Stream。Java 8 中的 Stream 是对集合（Collection）对象功能的增强，它专注于对集合对象进行各种非常便利、高效的聚合操作（aggregate operation），或者大批量数据操作 (bulk data operation)。Stream API 借助于同样新出现的 Lambda 表达式，极大的提高编程效率和程序可读性。同时它提供串行和并行两种模式进行汇聚操作，并发模式能够充分利用多核处理器的优势，使用 fork/join 并行方式来拆分任务和加速处理过程。通常编写并行代码很难而且容易出错, 但使用 Stream API 无需编写一行多线程的代码，就可以很方便地写出高性能的并发程序。所以说，Java 8 中首次出现的 java.util.stream 是一个函数式语言+多核时代综合影响的产物。 </p>
 <h3 id="什么是聚合操作"><a href="#什么是聚合操作" class="headerlink" title="什么是聚合操作"></a>什么是聚合操作</h3><p>在传统的 J2EE 应用中，Java 代码经常不得不依赖于关系型数据库的聚合操作来完成诸如： </p>
 <ul>
@@ -1124,6 +1125,14 @@ pre{
             <nav class="material-nav mdl-color-text--grey-50 mdl-cell mdl-cell--12-col">
     <!-- Prev Nav -->
     
+        <a href="/2017/11/09/JAVA/ThreadLocal是什么/" id="post_nav-newer" class="prev-content">
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_back</i>
+            </button>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            新篇
+        </a>
+    
 
     <!-- Section Spacer -->
     <div class="section-spacer"></div>
@@ -1236,7 +1245,7 @@ pre{
             </a>
             <ul class="dropdown-menu">
                 <li>
-                <a class="sidebar_archives-link" href="/categories/Android/">Android<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/categories/Java/">Java<span class="sidebar_archives-count">2</span></a></li><li><a class="sidebar_archives-link" href="/categories/JavaWeb/">JavaWeb<span class="sidebar_archives-count">7</span></a></li><li><a class="sidebar_archives-link" href="/categories/Python/">Python<span class="sidebar_archives-count">5</span></a></li><li><a class="sidebar_archives-link" href="/categories/Spring/">Spring<span class="sidebar_archives-count">8</span></a></li><li><a class="sidebar_archives-link" href="/categories/VueJs/">VueJs<span class="sidebar_archives-count">5</span></a></li><li><a class="sidebar_archives-link" href="/categories/iOS/">iOS<span class="sidebar_archives-count">6</span></a></li><li><a class="sidebar_archives-link" href="/categories/machine-learning/">machine learning<span class="sidebar_archives-count">2</span></a></li><li><a class="sidebar_archives-link" href="/categories/操作系统/">操作系统<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/categories/杂记/">杂记<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/categories/组成原理/">组成原理<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/categories/计算机网络/">计算机网络<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/categories/那些年倒腾过的服务器/">那些年倒腾过的服务器<span class="sidebar_archives-count">3</span></a>
+                <a class="sidebar_archives-link" href="/categories/Android/">Android<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/categories/Java/">Java<span class="sidebar_archives-count">3</span></a></li><li><a class="sidebar_archives-link" href="/categories/JavaWeb/">JavaWeb<span class="sidebar_archives-count">7</span></a></li><li><a class="sidebar_archives-link" href="/categories/Python/">Python<span class="sidebar_archives-count">5</span></a></li><li><a class="sidebar_archives-link" href="/categories/Spring/">Spring<span class="sidebar_archives-count">8</span></a></li><li><a class="sidebar_archives-link" href="/categories/VueJs/">VueJs<span class="sidebar_archives-count">5</span></a></li><li><a class="sidebar_archives-link" href="/categories/iOS/">iOS<span class="sidebar_archives-count">6</span></a></li><li><a class="sidebar_archives-link" href="/categories/machine-learning/">machine learning<span class="sidebar_archives-count">2</span></a></li><li><a class="sidebar_archives-link" href="/categories/操作系统/">操作系统<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/categories/杂记/">杂记<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/categories/组成原理/">组成原理<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/categories/计算机网络/">计算机网络<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/categories/那些年倒腾过的服务器/">那些年倒腾过的服务器<span class="sidebar_archives-count">3</span></a>
             </ul>
         </li>
         
@@ -1277,7 +1286,7 @@ pre{
             </a>
             <ul class="dropdown-menu">
             <li>
-                <a class="sidebar_archives-link" href="/archives/2017/11/">十一月 2017<span class="sidebar_archives-count">4</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/10/">十月 2017<span class="sidebar_archives-count">17</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/09/">九月 2017<span class="sidebar_archives-count">3</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/08/">八月 2017<span class="sidebar_archives-count">2</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/07/">七月 2017<span class="sidebar_archives-count">7</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/06/">六月 2017<span class="sidebar_archives-count">7</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/05/">五月 2017<span class="sidebar_archives-count">3</span></a>
+                <a class="sidebar_archives-link" href="/archives/2017/11/">十一月 2017<span class="sidebar_archives-count">5</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/10/">十月 2017<span class="sidebar_archives-count">17</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/09/">九月 2017<span class="sidebar_archives-count">3</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/08/">八月 2017<span class="sidebar_archives-count">2</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/07/">七月 2017<span class="sidebar_archives-count">7</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/06/">六月 2017<span class="sidebar_archives-count">7</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/05/">五月 2017<span class="sidebar_archives-count">3</span></a>
             </ul>
         </li>
         
@@ -1329,7 +1338,7 @@ pre{
         <li>
             <a href="/archives">
                 文章总数
-                <span class="sidebar-badge">43</span>
+                <span class="sidebar-badge">44</span>
             </a>
         </li>
         

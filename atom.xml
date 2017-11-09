@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://wangyu1997.github.io/"/>
-  <updated>2017-11-08T14:22:38.000Z</updated>
+  <updated>2017-11-09T01:56:25.000Z</updated>
   <id>https://wangyu1997.github.io/</id>
   
   <author>
@@ -16,13 +16,288 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>ThreadLocal是什么</title>
+    <link href="https://wangyu1997.github.io/2017/11/09/JAVA/ThreadLocal%E6%98%AF%E4%BB%80%E4%B9%88/"/>
+    <id>https://wangyu1997.github.io/2017/11/09/JAVA/ThreadLocal是什么/</id>
+    <published>2017-11-09T13:38:11.000Z</published>
+    <updated>2017-11-09T01:56:25.000Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p><strong>ThreadLocal是什么</strong></p>
+<p>早在JDK 1.2的版本中就提供java.lang.ThreadLocal，ThreadLocal为解决多线程程序的并发问题提供了一种新的思路。使用这个工具类可以很简洁地编写出优美的多线程程序。 </p>
+<p>ThreadLocal很容易让人望文生义，想当然地认为是一个“本地线程”。其实，ThreadLocal并不是一个Thread，而是Thread的局部变量，也许把它命名为ThreadLocalVariable更容易让人理解一些。 </p>
+<p>当使用ThreadLocal维护变量时，ThreadLocal为每个使用该变量的线程提供独立的变量副本，所以每一个线程都可以独立地改变自己的副本，而不会影响其它线程所对应的副本。 </p>
+<p>从线程的角度看，目标变量就象是线程的本地变量，这也是类名中“Local”所要表达的意思。 </p>
+<p>线程局部变量并不是Java的新发明，很多语言（如IBM IBM XL FORTRAN）在语法层面就提供线程局部变量。在Java中没有提供在语言级支持，而是变相地通过ThreadLocal的类提供支持。 </p>
+<p>所以，在Java中编写线程局部变量的代码相对来说要笨拙一些，因此造成线程局部变量没有在Java开发者中得到很好的普及。 </p>
+<p>ThreadLocal的接口方法 </p>
+<p>ThreadLocal类接口很简单，只有4个方法，我们先来了解一下： </p>
+<ul>
+<li>void set(Object value)</li>
+</ul>
+<p>设置当前线程的线程局部变量的值。 </p>
+<ul>
+<li>public Object get()</li>
+</ul>
+<p>该方法返回当前线程所对应的线程局部变量。 </p>
+<ul>
+<li>public void remove()</li>
+</ul>
+<p>将当前线程局部变量的值删除，目的是为了减少内存的占用，该方法是JDK 5.0新增的方法。需要指出的是，当线程结束后，对应该线程的局部变量将自动被垃圾回收，所以显式调用该方法清除线程的局部变量并不是必须的操作，但它可以加快内存回收的速度。 </p>
+<ul>
+<li>protected Object initialValue()</li>
+</ul>
+<p>返回该线程局部变量的初始值，该方法是一个protected的方法，显然是为了让子类覆盖而设计的。这个方法是一个延迟调用方法，在线程第1次调用get()或set(Object)时才执行，并且仅执行1次。ThreadLocal中的缺省实现直接返回一个null。 </p>
+<p>值得一提的是，在JDK5.0中，ThreadLocal已经支持泛型，该类的类名已经变为ThreadLocal<t>。API方法也相应进行了调整，新版本的API方法分别是void set(T value)、T get()以及T initialValue()。 </t></p>
+<p>ThreadLocal是如何做到为每一个线程维护变量的副本的呢？其实实现的思路很简单：在ThreadLocal类中有一个Map，用于存储每一个线程的变量副本，Map中元素的键为线程对象，而值对应线程的变量副本。我们自己就可以提供一个简单的实现版本： </p>
+<p>代码清单1 SimpleThreadLocal </p>
+<pre><code>public class SimpleThreadLocal { 
+
+private Map valueMap = Collections.synchronizedMap(new HashMap()); 
+
+public void set(Object newValue) { 
+
+valueMap.put(**Thread.currentThread(), newValue**);**①键为线程对象，值为本线程的变量副本**
+
+} 
+
+public Object get() { 
+
+Thread currentThread = Thread.currentThread(); 
+
+Object o = valueMap.get(currentThread);**②返回本线程对应的变量**
+
+if (o == null &amp;&amp; !valueMap.containsKey(currentThread)) {**③如果在Map中不存在，放到Map**
+
+**中保存起来。**
+
+o = initialValue(); 
+
+valueMap.put(currentThread, o); 
+
+} 
+
+return o; 
+
+} 
+
+public void remove() { 
+
+valueMap.remove(Thread.currentThread()); 
+
+} 
+
+public Object initialValue() { 
+
+return null; 
+
+} 
+
+} 
+</code></pre><p>虽然代码清单9‑3这个ThreadLocal实现版本显得比较幼稚，但它和JDK所提供的ThreadLocal类在实现思路上是相近的。 </p>
+<pre><code>一个TheadLocal实例 
+
+下面，我们通过一个具体的实例了解一下ThreadLocal的具体使用方法。 
+
+代码清单2 SequenceNumber 
+
+package com.baobaotao.basic; 
+
+public class SequenceNumber { 
+
+**①****通过匿名内部类覆盖****ThreadLocal****的****initialValue()****方法，指定初始值**
+
+private static ThreadLocal&lt;Integer&gt; seqNum = new **ThreadLocal&lt;Integer&gt;**(){ 
+
+public Integer initialValue(){ 
+
+return 0; 
+
+} 
+
+}; 
+
+**②****获取下一个序列值**
+
+public int getNextNum(){ 
+
+seqNum.set(seqNum.get()+1); 
+
+return seqNum.get(); 
+
+} 
+
+public static void main(String[] args) 
+
+{ 
+
+SequenceNumber **sn** = new SequenceNumber(); 
+
+**③** **3****个线程共享****sn****，各自产生序列号**
+
+TestClient t1 = new TestClient(**sn**); 
+
+TestClient t2 = new TestClient(**sn**); 
+
+TestClient t3 = new TestClient(**sn**); 
+
+t1.start(); 
+
+t2.start(); 
+
+t3.start(); 
+
+} 
+
+private static class TestClient extends Thread 
+
+{ 
+
+private SequenceNumber sn; 
+
+public TestClient(SequenceNumber sn) { 
+
+this.sn = sn; 
+
+} 
+
+public void run() 
+
+{ 
+
+for (int i = 0; i &lt; 3; i++) {**④每个线程打出****3****个序列值**
+
+System.out.println(&quot;thread[&quot;+Thread.currentThread().getName()+ 
+
+&quot;] sn[&quot;+**sn.getNextNum()**+&quot;]&quot;); 
+
+} 
+
+} 
+
+} 
+
+} 
+</code></pre><p>通常我们通过匿名内部类的方式定义ThreadLocal的子类，提供初始的变量值，如例子中①处所示。TestClient线程产生一组序列号，在③处，我们生成3个TestClient，它们共享同一个SequenceNumber实例。运行以上代码，在控制台上输出以下的结果： </p>
+<pre><code>thread[Thread-2] sn[1] 
+
+thread[Thread-0] sn[1] 
+
+thread[Thread-1] sn[1] 
+
+thread[Thread-2] sn[2] 
+
+thread[Thread-0] sn[2] 
+
+thread[Thread-1] sn[2] 
+
+thread[Thread-2] sn[3] 
+
+thread[Thread-0] sn[3] 
+
+thread[Thread-1] sn[3] 
+</code></pre><p>考察输出的结果信息，我们发现每个线程所产生的序号虽然都共享同一个SequenceNumber实例，但它们并没有发生相互干扰的情况，而是各自产生独立的序列号，这是因为我们通过ThreadLocal为每一个线程提供了单独的副本。 </p>
+<p>Thread同步机制的比较 </p>
+<p>ThreadLocal和线程同步机制相比有什么优势呢？ThreadLocal和线程同步机制都是为了解决多线程中相同变量的访问冲突问题。 </p>
+<p>在同步机制中，通过对象的锁机制保证同一时间只有一个线程访问变量。这时该变量是多个线程共享的，使用同步机制要求程序慎密地分析什么时候对变量进行读写，什么时候需要锁定某个对象，什么时候释放对象锁等繁杂的问题，程序设计和编写难度相对较大。 </p>
+<p>而ThreadLocal则从另一个角度来解决多线程的并发访问。ThreadLocal会为每一个线程提供一个独立的变量副本，从而隔离了多个线程对数据的访问冲突。因为每一个线程都拥有自己的变量副本，从而也就没有必要对该变量进行同步了。ThreadLocal提供了线程安全的共享对象，在编写多线程代码时，可以把不安全的变量封装进ThreadLocal。 </p>
+<p>由于ThreadLocal中可以持有任何类型的对象，低版本JDK所提供的get()返回的是Object对象，需要强制类型转换。但JDK 5.0通过泛型很好的解决了这个问题，在一定程度地简化ThreadLocal的使用，代码清单 9 2就使用了JDK 5.0新的ThreadLocal<t>版本。 </t></p>
+<p>概括起来说，对于多线程资源共享的问题，同步机制采用了“以时间换空间”的方式，而ThreadLocal采用了“以空间换时间”的方式。前者仅提供一份变量，让不同的线程排队访问，而后者为每一个线程都提供了一份变量，因此可以同时访问而互不影响。 </p>
+<p>Spring使用ThreadLocal解决线程安全问题 </p>
+<p>我们知道在一般情况下，只有无状态的Bean才可以在多线程环境下共享，在Spring中，绝大部分Bean都可以声明为singleton作用域。就是因为Spring对一些Bean（如RequestContextHolder、TransactionSynchronizationManager、LocaleContextHolder等）中非线程安全状态采用ThreadLocal进行处理，让它们也成为线程安全的状态，因为有状态的Bean就可以在多线程中共享了。 </p>
+<p>一般的Web应用划分为展现层、服务层和持久层三个层次，在不同的层中编写对应的逻辑，下层通过接口向上层开放功能调用。在一般情况下，从接收请求到返回响应所经过的所有程序调用都同属于一个线程，如图9‑2所示： </p>
+<p><img src="http://img.zdnet.com.cn/0/438/liOsRM8PmNF4U.gif" alt="通通透透理解ThreadLocal" title="通通透透理解ThreadLocal"></p>
+<p>图1同一线程贯通三层 </p>
+<p>这样你就可以根据需要，将一些非线程安全的变量以ThreadLocal存放，在同一次请求响应的调用线程中，所有关联的对象引用到的都是同一个变量。 </p>
+<p>下面的实例能够体现Spring对有状态Bean的改造思路： </p>
+<p>代码清单3 TopicDao：非线程安全 </p>
+<pre><code>public class TopicDao { 
+
+private Connection conn;**①****一个非线程安全的变量**
+
+public void addTopic(){ 
+
+Statement stat = conn.createStatement();**②****引用非线程安全变量**
+
+… 
+
+} 
+
+} 
+</code></pre><p>由于①处的conn是成员变量，因为addTopic()方法是非线程安全的，必须在使用时创建一个新TopicDao实例（非singleton）。下面使用ThreadLocal对conn这个非线程安全的“状态”进行改造： </p>
+<p>代码清单4 TopicDao：线程安全 </p>
+<pre><code>import java.sql.Connection; 
+
+import java.sql.Statement; 
+
+public class TopicDao { 
+
+**①使用ThreadLocal保存Connection变量**
+
+private static **ThreadLocal&lt;Connection&gt;** connThreadLocal = new ThreadLocal&lt;Connection&gt;(); 
+
+public static Connection getConnection(){ 
+
+**②如果connThreadLocal没有本线程对应的Connection创建一个新的Connection，**
+
+**并将其保存到线程本地变量中。**
+
+if (connThreadLocal.get() == null) { 
+
+Connection conn = ConnectionManager.getConnection(); 
+
+connThreadLocal.set(conn); 
+
+return conn; 
+
+}else{ 
+
+return connThreadLocal.get();**③直接返回线程本地变量**
+
+} 
+
+} 
+
+public void addTopic() { 
+
+**④从ThreadLocal中获取线程对应的Connection**
+
+Statement stat = getConnection().createStatement(); 
+
+} 
+
+} 
+</code></pre><p>不同的线程在使用TopicDao时，先判断connThreadLocal.get()是否是null，如果是null，则说明当前线程还没有对应的Connection对象，这时创建一个Connection对象并添加到本地线程变量中；如果不为null，则说明当前的线程已经拥有了Connection对象，直接使用就可以了。这样，就保证了不同的线程使用线程相关的Connection，而不会使用其它线程的Connection。因此，这个TopicDao就可以做到singleton共享了。 </p>
+<p>当然，这个例子本身很粗糙，将Connection的ThreadLocal直接放在DAO只能做到本DAO的多个方法共享Connection时不发生线程安全问题，但无法和其它DAO共用同一个Connection，要做到同一事务多DAO共享同一Connection，必须在一个共同的外部类使用ThreadLocal保存Connection。 </p>
+<p><strong>小结</strong></p>
+<p>ThreadLocal是解决线程安全问题一个很好的思路，它通过为每个线程提供一个独立的变量副本解决了变量并发访问的冲突问题。在很多情况下，ThreadLocal比直接使用synchronized同步机制解决线程安全问题更简单，更方便，且结果程序拥有更高的并发性。 </p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
+    
+    </summary>
+    
+      <category term="Java" scheme="https://wangyu1997.github.io/categories/Java/"/>
+    
+    
+      <category term="java8" scheme="https://wangyu1997.github.io/tags/java8/"/>
+    
+      <category term="lambda" scheme="https://wangyu1997.github.io/tags/lambda/"/>
+    
+      <category term="ThreadLocal" scheme="https://wangyu1997.github.io/tags/ThreadLocal/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Java8中的streams API详解</title>
     <link href="https://wangyu1997.github.io/2017/11/08/JAVA/Java8%E4%B8%AD%E7%9A%84Streams%20API/"/>
     <id>https://wangyu1997.github.io/2017/11/08/JAVA/Java8中的Streams API/</id>
     <published>2017-11-08T14:38:11.000Z</published>
-    <updated>2017-11-08T14:22:38.000Z</updated>
+    <updated>2017-11-09T01:55:56.000Z</updated>
     
     <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>Streams 的背景，以及 Java 8 中的使用详解 </p>
+<a id="more"></a>
 <h2 id="为什么需要-Stream"><a href="#为什么需要-Stream" class="headerlink" title="为什么需要 Stream"></a>为什么需要 Stream</h2><p>Stream 作为 Java 8 的一大亮点，它与 java.io 包里的 InputStream 和 OutputStream 是完全不同的概念。它也不同于 StAX 对 XML 解析的 Stream，也不是 Amazon Kinesis 对大数据实时处理的 Stream。Java 8 中的 Stream 是对集合（Collection）对象功能的增强，它专注于对集合对象进行各种非常便利、高效的聚合操作（aggregate operation），或者大批量数据操作 (bulk data operation)。Stream API 借助于同样新出现的 Lambda 表达式，极大的提高编程效率和程序可读性。同时它提供串行和并行两种模式进行汇聚操作，并发模式能够充分利用多核处理器的优势，使用 fork/join 并行方式来拆分任务和加速处理过程。通常编写并行代码很难而且容易出错, 但使用 Stream API 无需编写一行多线程的代码，就可以很方便地写出高性能的并发程序。所以说，Java 8 中首次出现的 java.util.stream 是一个函数式语言+多核时代综合影响的产物。 </p>
 <h3 id="什么是聚合操作"><a href="#什么是聚合操作" class="headerlink" title="什么是聚合操作"></a>什么是聚合操作</h3><p>在传统的 J2EE 应用中，Java 代码经常不得不依赖于关系型数据库的聚合操作来完成诸如： </p>
 <ul>
@@ -451,7 +726,7 @@ System.out.println(&quot;Adult number: &quot; + children.get(false).size());
     
     <summary type="html">
     
-      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
+      &lt;p&gt;Streams 的背景，以及 Java 8 中的使用详解 &lt;/p&gt;
     
     </summary>
     
@@ -471,9 +746,10 @@ System.out.println(&quot;Adult number: &quot; + children.get(false).size());
     <link href="https://wangyu1997.github.io/2017/11/08/JAVA/java8%20%E6%96%B9%E6%B3%95%E5%BC%95%E7%94%A8/"/>
     <id>https://wangyu1997.github.io/2017/11/08/JAVA/java8 方法引用/</id>
     <published>2017-11-08T13:38:11.000Z</published>
-    <updated>2017-11-08T13:52:02.000Z</updated>
+    <updated>2017-11-09T01:56:04.000Z</updated>
     
-    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>形如 <code>ClassName::methodName</code> 或者 <code>objectName::methodName</code> 的表达式，我们把它叫做方法引用（Method Reference）。可能你现在还理解不了，但是编译器足够聪明，或许你可以看看编译器是如何根据 “晦涩难懂” 的 Method Reference 来推断你的意图的。 </p>
+    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>形如 <code>ClassName::methodName</code> 或者 <code>objectName::methodName</code> 的表达式，我们把它叫做方法引用（Method Reference）。可能你现在还理解不了，但是编译器足够聪明，或许你可以看看编译器是如何根据 “晦涩难懂” 的 Method Reference 来推断你的意图的。</p>
+<a id="more"></a>
 <h2 id="方法引用的种类"><a href="#方法引用的种类" class="headerlink" title="方法引用的种类"></a>方法引用的种类</h2><p>方法引用有四种，分别是： </p>
 <ul>
 <li>指向静态方法的引用</li>
@@ -613,7 +889,7 @@ public class Test {
     
     <summary type="html">
     
-      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
+      &lt;p&gt;形如 &lt;code&gt;ClassName::methodName&lt;/code&gt; 或者 &lt;code&gt;objectName::methodName&lt;/code&gt; 的表达式，我们把它叫做方法引用（Method Reference）。可能你现在还理解不了，但是编译器足够聪明，或许你可以看看编译器是如何根据 “晦涩难懂” 的 Method Reference 来推断你的意图的。&lt;/p&gt;
     
     </summary>
     
@@ -3892,6 +4168,160 @@ helper.generateOutput();
   </entry>
   
   <entry>
+    <title>Groovy读取yaml和properties文件</title>
+    <link href="https://wangyu1997.github.io/2017/10/10/JavaWeb/Groovy%E8%AF%BB%E5%8F%96yaml%E5%92%8Cproperties%E6%96%87%E4%BB%B6/"/>
+    <id>https://wangyu1997.github.io/2017/10/10/JavaWeb/Groovy读取yaml和properties文件/</id>
+    <published>2017-10-10T02:43:11.000Z</published>
+    <updated>2017-10-24T06:36:53.000Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
+<p>Java 可以使用 <code>PropertiesConfiguration</code> 来读取 properties 属性文件，Spring 4.3 后还支持了 <code>Yaml 格式的属性文件</code></p>
+<ul>
+<li>PropertiesConfiguration: 读取时可以自动进行类型转换，可以给定默认值</li>
+<li>Yaml 格式的属性文件: 可以使用树形结构，方便分组，比 <code>.properties</code> 属性文件更灵活，但是以普通的 <code>java.util.Properties</code> 来读取</li>
+</ul>
+<h1 id="Gradle-依赖"><a href="#Gradle-依赖" class="headerlink" title="Gradle 依赖"></a>Gradle 依赖</h1><pre><code>compile &#39;org.springframework:spring-context:4.3.0.RELEASE&#39;
+
+compile &#39;org.yaml:snakeyaml:1.17&#39;
+
+compile &#39;commons-configuration:commons-configuration:1.10&#39;
+
+testCompile &#39;org.springframework:spring-test:4.3.0.RELEASE&#39;
+
+testCompile &#39;junit:junit:4.12&#39;
+</code></pre><h1 id="属性文件"><a href="#属性文件" class="headerlink" title="属性文件"></a>属性文件</h1><blockquote>
+<p>config.properties </p>
+</blockquote>
+<pre><code>username=Dr. Alice 
+
+age=22 
+
+config.yml
+</code></pre><p>#mysql </p>
+<pre><code>mysql: 
+
+    jdbc: 
+
+        url: jdbc:mysql://localhost:3306 
+
+        dirverClass: com.mysql.jdbc.Driver 
+
+        username: root 
+
+        password: root 
+
+        username: Ritchie Yu 
+</code></pre><h1 id="Spring-Bean-配置文件"><a href="#Spring-Bean-配置文件" class="headerlink" title="Spring Bean 配置文件"></a>Spring Bean 配置文件</h1><blockquote>
+<p>spring-beans-config.xml </p>
+</blockquote>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+
+xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+
+xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+
+http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;
+
+&lt;bean id=&quot;yamlProperties&quot; class=&quot;org.springframework.beans.factory.config.YamlPropertiesFactoryBean&quot;&gt;
+
+&lt;property name=&quot;resources&quot;&gt;
+
+&lt;list&gt;
+
+&lt;value&gt;classpath:config.yml&lt;/value&gt;
+
+&lt;/list&gt;
+
+&lt;/property&gt;
+
+&lt;/bean&gt;
+
+&lt;bean id=&quot;propertiesConfig&quot; class=&quot;org.apache.commons.configuration.PropertiesConfiguration&quot;&gt;
+
+&lt;constructor-arg value=&quot;config.properties&quot;/&gt;
+
+&lt;/bean&gt;
+
+&lt;/beans&gt;
+</code></pre><h1 id="测试案例"><a href="#测试案例" class="headerlink" title="测试案例"></a>测试案例</h1><pre><code>import org.apache.commons.configuration.PropertiesConfiguration; 
+
+import org.junit.runner.RunWith; 
+
+import org.junit.Test; 
+
+import org.springframework.test.context.ContextConfiguration; 
+
+import org.springframework.test.context.junit4.SpringRunner; 
+
+import javax.annotation.Resource; 
+
+import java.util.Properties; 
+
+@RunWith(SpringRunner.class) 
+
+@ContextConfiguration({&quot;classpath:spring-beans-config.xml&quot;}) 
+
+public class TestYamlPropertiesAndPropertiesConfig { 
+
+@Resource(name = &quot;yamlProperties&quot;) 
+
+private Properties yamlProperties; 
+
+@Resource(name = &quot;propertiesConfig&quot;) 
+
+private PropertiesConfiguration propertiesConfig; 
+
+@Test
+
+public void testYamlProperties() { 
+
+System.out.println(yamlProperties.getProperty(&quot;mysql.jdbc.url&quot;)); 
+
+System.out.println(yamlProperties.getProperty(&quot;username&quot;)); 
+
+} 
+
+@Test
+
+public void testPropertiesConfig() { 
+
+System.out.println(propertiesConfig.getString(&quot;username&quot;)); 
+
+System.out.println(propertiesConfig.getInteger(&quot;age&quot;, 0)); 
+
+} 
+
+} 
+</code></pre><p>输出: </p>
+<pre><code>Dr. Alice 
+
+22 
+
+jdbc:mysql://localhost:3306 
+
+Ritchie Yu 
+</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
+    
+    </summary>
+    
+      <category term="JavaWeb" scheme="https://wangyu1997.github.io/categories/JavaWeb/"/>
+    
+    
+      <category term="gradle" scheme="https://wangyu1997.github.io/tags/gradle/"/>
+    
+      <category term="groovy" scheme="https://wangyu1997.github.io/tags/groovy/"/>
+    
+      <category term="yaml" scheme="https://wangyu1997.github.io/tags/yaml/"/>
+    
+  </entry>
+  
+  <entry>
     <title>MyBatis最详细配置</title>
     <link href="https://wangyu1997.github.io/2017/10/10/JavaWeb/MyBatis%E6%9C%80%E8%AF%A6%E7%BB%86%E9%85%8D%E7%BD%AE/"/>
     <id>https://wangyu1997.github.io/2017/10/10/JavaWeb/MyBatis最详细配置/</id>
@@ -4200,160 +4630,6 @@ helper.generateOutput();
       <category term="gradle" scheme="https://wangyu1997.github.io/tags/gradle/"/>
     
       <category term="mybatis" scheme="https://wangyu1997.github.io/tags/mybatis/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Groovy读取yaml和properties文件</title>
-    <link href="https://wangyu1997.github.io/2017/10/10/JavaWeb/Groovy%E8%AF%BB%E5%8F%96yaml%E5%92%8Cproperties%E6%96%87%E4%BB%B6/"/>
-    <id>https://wangyu1997.github.io/2017/10/10/JavaWeb/Groovy读取yaml和properties文件/</id>
-    <published>2017-10-10T02:43:11.000Z</published>
-    <updated>2017-10-24T06:36:53.000Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
-<p>Java 可以使用 <code>PropertiesConfiguration</code> 来读取 properties 属性文件，Spring 4.3 后还支持了 <code>Yaml 格式的属性文件</code></p>
-<ul>
-<li>PropertiesConfiguration: 读取时可以自动进行类型转换，可以给定默认值</li>
-<li>Yaml 格式的属性文件: 可以使用树形结构，方便分组，比 <code>.properties</code> 属性文件更灵活，但是以普通的 <code>java.util.Properties</code> 来读取</li>
-</ul>
-<h1 id="Gradle-依赖"><a href="#Gradle-依赖" class="headerlink" title="Gradle 依赖"></a>Gradle 依赖</h1><pre><code>compile &#39;org.springframework:spring-context:4.3.0.RELEASE&#39;
-
-compile &#39;org.yaml:snakeyaml:1.17&#39;
-
-compile &#39;commons-configuration:commons-configuration:1.10&#39;
-
-testCompile &#39;org.springframework:spring-test:4.3.0.RELEASE&#39;
-
-testCompile &#39;junit:junit:4.12&#39;
-</code></pre><h1 id="属性文件"><a href="#属性文件" class="headerlink" title="属性文件"></a>属性文件</h1><blockquote>
-<p>config.properties </p>
-</blockquote>
-<pre><code>username=Dr. Alice 
-
-age=22 
-
-config.yml
-</code></pre><p>#mysql </p>
-<pre><code>mysql: 
-
-    jdbc: 
-
-        url: jdbc:mysql://localhost:3306 
-
-        dirverClass: com.mysql.jdbc.Driver 
-
-        username: root 
-
-        password: root 
-
-        username: Ritchie Yu 
-</code></pre><h1 id="Spring-Bean-配置文件"><a href="#Spring-Bean-配置文件" class="headerlink" title="Spring Bean 配置文件"></a>Spring Bean 配置文件</h1><blockquote>
-<p>spring-beans-config.xml </p>
-</blockquote>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
-
-&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
-
-xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
-
-xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
-
-http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;
-
-&lt;bean id=&quot;yamlProperties&quot; class=&quot;org.springframework.beans.factory.config.YamlPropertiesFactoryBean&quot;&gt;
-
-&lt;property name=&quot;resources&quot;&gt;
-
-&lt;list&gt;
-
-&lt;value&gt;classpath:config.yml&lt;/value&gt;
-
-&lt;/list&gt;
-
-&lt;/property&gt;
-
-&lt;/bean&gt;
-
-&lt;bean id=&quot;propertiesConfig&quot; class=&quot;org.apache.commons.configuration.PropertiesConfiguration&quot;&gt;
-
-&lt;constructor-arg value=&quot;config.properties&quot;/&gt;
-
-&lt;/bean&gt;
-
-&lt;/beans&gt;
-</code></pre><h1 id="测试案例"><a href="#测试案例" class="headerlink" title="测试案例"></a>测试案例</h1><pre><code>import org.apache.commons.configuration.PropertiesConfiguration; 
-
-import org.junit.runner.RunWith; 
-
-import org.junit.Test; 
-
-import org.springframework.test.context.ContextConfiguration; 
-
-import org.springframework.test.context.junit4.SpringRunner; 
-
-import javax.annotation.Resource; 
-
-import java.util.Properties; 
-
-@RunWith(SpringRunner.class) 
-
-@ContextConfiguration({&quot;classpath:spring-beans-config.xml&quot;}) 
-
-public class TestYamlPropertiesAndPropertiesConfig { 
-
-@Resource(name = &quot;yamlProperties&quot;) 
-
-private Properties yamlProperties; 
-
-@Resource(name = &quot;propertiesConfig&quot;) 
-
-private PropertiesConfiguration propertiesConfig; 
-
-@Test
-
-public void testYamlProperties() { 
-
-System.out.println(yamlProperties.getProperty(&quot;mysql.jdbc.url&quot;)); 
-
-System.out.println(yamlProperties.getProperty(&quot;username&quot;)); 
-
-} 
-
-@Test
-
-public void testPropertiesConfig() { 
-
-System.out.println(propertiesConfig.getString(&quot;username&quot;)); 
-
-System.out.println(propertiesConfig.getInteger(&quot;age&quot;, 0)); 
-
-} 
-
-} 
-</code></pre><p>输出: </p>
-<pre><code>Dr. Alice 
-
-22 
-
-jdbc:mysql://localhost:3306 
-
-Ritchie Yu 
-</code></pre>]]></content>
-    
-    <summary type="html">
-    
-      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
-    
-    </summary>
-    
-      <category term="JavaWeb" scheme="https://wangyu1997.github.io/categories/JavaWeb/"/>
-    
-    
-      <category term="gradle" scheme="https://wangyu1997.github.io/tags/gradle/"/>
-    
-      <category term="groovy" scheme="https://wangyu1997.github.io/tags/groovy/"/>
-    
-      <category term="yaml" scheme="https://wangyu1997.github.io/tags/yaml/"/>
     
   </entry>
   
@@ -4795,6 +5071,161 @@ task mybatisGenerate &lt;&lt; {
       <category term="boxing" scheme="https://wangyu1997.github.io/tags/boxing/"/>
     
       <category term="flexing box" scheme="https://wangyu1997.github.io/tags/flexing-box/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Vue轮播解决方案--BetterScroll</title>
+    <link href="https://wangyu1997.github.io/2017/10/03/VueJs/BetterScroll/"/>
+    <id>https://wangyu1997.github.io/2017/10/03/VueJs/BetterScroll/</id>
+    <published>2017-10-02T17:43:11.000Z</published>
+    <updated>2017-10-24T07:13:58.000Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
+<p>From: <a href="https://wangyu1997.github.io/2017/10/03/VueJs/BetterScroll/">https://wangyu1997.github.io/2017/10/03/VueJs/BetterScroll/</a></p>
+<p>inspired by iscroll, and it has a better scroll perfermance <a href="https://link.juejin.im?target=https%3A%2F%2Fustbhuangyi.github.io%2Fbetter-scroll%2F" target="_blank" rel="external">ustbhuangyi.github.io/better-scro…</a></p>
+<h2 id="立即使用"><a href="#立即使用" class="headerlink" title="立即使用"></a>立即使用</h2><pre><code>&lt;body&gt;
+  &lt;div id=&quot;wrapper&quot;&gt;
+    &lt;ul&gt;
+           &lt;li&gt;...&lt;/li&gt;
+           &lt;li&gt;...&lt;/li&gt;
+           ...
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;better-scroll.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+  new BScroll(document.getElementById(&#39;wrapper&#39;));
+&lt;/script&gt;
+&lt;/body&gt;
+</code></pre><p>搞定 ! </p>
+<h2 id="通过npm引入"><a href="#通过npm引入" class="headerlink" title="通过npm引入"></a>通过npm引入</h2><p>安装better-scroll </p>
+<pre><code>npm install better-scroll
+</code></pre><p>引入better-scroll </p>
+<pre><code>import BScroll from &#39;better-scroll&#39;
+</code></pre><blockquote>
+<p>如果不支持import, 请使用 </p>
+</blockquote>
+<pre><code>var BScroll = require(&#39;better-scroll&#39;)
+</code></pre><h2 id="DEMO"><a href="#DEMO" class="headerlink" title="DEMO"></a>DEMO</h2><p>better-scroll 的源码是基于 Webpack 构建的 </p>
+<p>首先，clone项目源码 </p>
+<pre><code>git clone https://github.com/ustbhuangyi/better-scroll.git
+</code></pre><p>安装依赖 </p>
+<pre><code>cd better-scroll
+npm install
+</code></pre><p>测试demo页 </p>
+<pre><code>npm run dev
+</code></pre><p>打开浏览器访问如下地址, 查看效果 </p>
+<blockquote>
+<p>localhost:9090 </p>
+</blockquote>
+<h2 id="Options-参数"><a href="#Options-参数" class="headerlink" title="Options 参数"></a>Options 参数</h2><p>Example: </p>
+<pre><code>let scroll = new BScroll(document.getElementById(&#39;wrapper&#39;), {
+  startX: 0,
+  startY: 0
+})
+</code></pre><p>Options List: </p>
+<ul>
+<li>startX: <code>0</code> 开始的X轴位置</li>
+<li>startY: <code>0</code> 开始的Y轴位置</li>
+<li>scrollY: <code>true</code> 滚动方向为 Y 轴</li>
+<li>scrollX: ‘true’ 滚动方向为 X 轴</li>
+<li>click: <code>true</code> 是否派发click事件</li>
+<li>directionLockThreshold: <code>5</code></li>
+<li>momentum: <code>true</code> 当快速滑动时是否开启滑动惯性</li>
+<li>bounce: <code>true</code> 是否启用回弹动画效果</li>
+<li>selectedIndex: <code>0</code> wheel 为 true 时有效，表示被选中的 wheel 索引</li>
+<li>rotate: <code>25</code> wheel 为 true 时有效，表示被选中的 wheel 每一层的旋转角度</li>
+<li>wheel: <code>false</code> 该属性是给 picker 组件使用的，普通的列表滚动不需要配置</li>
+<li>snap: <code>false</code> 该属性是给 slider 组件使用的，普通的列表滚动不需要配置</li>
+<li>snapLoop: <code>false</code> 是否可以无缝循环轮播</li>
+<li>snapThreshold: <code>0.1</code> 用手指滑动时页面可切换的阈值，大于这个阈值可以滑动的下一页</li>
+<li>snapSpeed: <code>400</code>, 轮播图切换的动画时间</li>
+<li>swipeTime: <code>2500</code> swipe 持续时间</li>
+<li>bounceTime: <code>700</code> 弹力动画持续的毫秒数</li>
+<li>adjustTime: <code>400</code> wheel 为 true 有用，调整停留位置的时间</li>
+<li>swipeBounceTime: <code>1200</code> swipe 回弹 时间</li>
+<li>deceleration: <code>0.001</code> 滚动动量减速越大越快，建议不大于0.01</li>
+<li>momentumLimitTime: <code>300</code> 符合惯性拖动的最大时间</li>
+<li>momentumLimitDistance: <code>15</code> 符合惯性拖动的最小拖动距离</li>
+<li>resizePolling: <code>60</code> 重新调整窗口大小时，重新计算better-scroll的时间间隔</li>
+<li>preventDefault: <code>true</code> 是否阻止默认事件</li>
+<li>preventDefaultException: <code>{ tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT)$/ }</code> 阻止默认事件的例外配置</li>
+<li>HWCompositing: <code>true</code> 是否启用硬件加速</li>
+<li>useTransition: <code>true</code> 是否使用CSS3的Transition属性</li>
+<li>useTransform: <code>true</code> 是否使用CSS3的Transform属性</li>
+<li>probeType: <code>1</code> 会截流,只有在滚动结束的时候派发一个 scroll 事件。<code>2</code>在手指 move 的时候也会实时派发 scroll 事件，不会截流。 <code>3</code>除了手指 move 的时候派发scroll事件，在 swipe（手指迅速滑动一小段距离）的情况下，列表会有一个长距离的滚动动画，这个滚动的动画过程中也会实时派发滚动事件</li>
+</ul>
+<h2 id="Events-事件"><a href="#Events-事件" class="headerlink" title="Events 事件"></a>Events 事件</h2><p>Example: </p>
+<pre><code>let scroll = new BScroll(document.getElementById(&#39;wrapper&#39;),{
+   probeType: 3
+})
+
+scroll.on(&#39;scroll&#39;, (pos) =&gt; {
+  console.log(pos.x + &#39;~&#39; + pos.y)
+  ...
+})
+</code></pre><p>Events 列表 </p>
+<ul>
+<li>beforeScrollStart - 滚动开始之前触发</li>
+<li>scrollStart - 滚动开始时触发</li>
+<li>scroll - 滚动时触发</li>
+<li>scrollCancel - 取消滚动时触发</li>
+<li>scrollEnd - 滚动结束时触发</li>
+<li>touchend - 手指移开屏幕时触发</li>
+<li>flick - 轻拂时触发</li>
+<li>refresh - 当 better-scroll 刷新时触发</li>
+<li>destroy - 销毁 better-scroll 实例时触发</li>
+</ul>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><ul>
+<li>scrollTo(x, y, time, easing)</li>
+</ul>
+<p>滚动到某个位置，x,y 代表坐标，time 表示动画时间，easing 表示缓动函数 </p>
+<p>Example: </p>
+<pre><code>let scroll = new BScroll(document.getElementById(&#39;wrapper&#39;))
+scroll.scrollTo(0, 500)
+...
+</code></pre><ul>
+<li>scrollToElement(el, time, offsetX, offsetY, easing)</li>
+</ul>
+<p>滚动到某个元素，el（必填）表示 dom 元素，time 表示动画时间，offsetX 和 offsetY 表示坐标偏移量，easing 表示缓动函数 </p>
+<ul>
+<li>refresh()</li>
+</ul>
+<p>强制 scroll 重新计算，当 better-scroll 中的元素发生变化的时候调用此方法。 </p>
+<ul>
+<li>getCurrentPage()</li>
+</ul>
+<p>当 snap 为 true 时，获取滚动的当前页，返回的对象结构为 {x, y, pageX, pageY}，其中 x,y 代表滚动横向和纵向的位置；pageX，pageY 表示横向和纵向的页面索引 </p>
+<ul>
+<li>goToPage(x, y, time, easing)</li>
+</ul>
+<p>当 snap 为 true，滚动到对应的页面，x 表示横向页面索引，y 表示纵向页面索引， time 表示动画，easing 表示缓动函数 </p>
+<ul>
+<li>enable()</li>
+</ul>
+<p>启用 better-scroll，默认开启 </p>
+<ul>
+<li>disable()</li>
+</ul>
+<p>禁用 better-scroll </p>
+<ul>
+<li>destroy()</li>
+</ul>
+<p>销毁 better-scroll，解绑事件 </p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
+    
+    </summary>
+    
+      <category term="VueJs" scheme="https://wangyu1997.github.io/categories/VueJs/"/>
+    
+    
+      <category term="better scroll" scheme="https://wangyu1997.github.io/tags/better-scroll/"/>
+    
+      <category term="vue" scheme="https://wangyu1997.github.io/tags/vue/"/>
     
   </entry>
   
@@ -5606,161 +6037,6 @@ div {
   </entry>
   
   <entry>
-    <title>Vue轮播解决方案--BetterScroll</title>
-    <link href="https://wangyu1997.github.io/2017/10/03/VueJs/BetterScroll/"/>
-    <id>https://wangyu1997.github.io/2017/10/03/VueJs/BetterScroll/</id>
-    <published>2017-10-02T17:43:11.000Z</published>
-    <updated>2017-10-24T07:13:58.000Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
-<p>From: <a href="https://wangyu1997.github.io/2017/10/03/VueJs/BetterScroll/">https://wangyu1997.github.io/2017/10/03/VueJs/BetterScroll/</a></p>
-<p>inspired by iscroll, and it has a better scroll perfermance <a href="https://link.juejin.im?target=https%3A%2F%2Fustbhuangyi.github.io%2Fbetter-scroll%2F" target="_blank" rel="external">ustbhuangyi.github.io/better-scro…</a></p>
-<h2 id="立即使用"><a href="#立即使用" class="headerlink" title="立即使用"></a>立即使用</h2><pre><code>&lt;body&gt;
-  &lt;div id=&quot;wrapper&quot;&gt;
-    &lt;ul&gt;
-           &lt;li&gt;...&lt;/li&gt;
-           &lt;li&gt;...&lt;/li&gt;
-           ...
-    &lt;/ul&gt;
-  &lt;/div&gt;
-&lt;script type=&quot;text/javascript&quot; src=&quot;better-scroll.js&quot;&gt;&lt;/script&gt;
-&lt;script type=&quot;text/javascript&quot;&gt;
-  new BScroll(document.getElementById(&#39;wrapper&#39;));
-&lt;/script&gt;
-&lt;/body&gt;
-</code></pre><p>搞定 ! </p>
-<h2 id="通过npm引入"><a href="#通过npm引入" class="headerlink" title="通过npm引入"></a>通过npm引入</h2><p>安装better-scroll </p>
-<pre><code>npm install better-scroll
-</code></pre><p>引入better-scroll </p>
-<pre><code>import BScroll from &#39;better-scroll&#39;
-</code></pre><blockquote>
-<p>如果不支持import, 请使用 </p>
-</blockquote>
-<pre><code>var BScroll = require(&#39;better-scroll&#39;)
-</code></pre><h2 id="DEMO"><a href="#DEMO" class="headerlink" title="DEMO"></a>DEMO</h2><p>better-scroll 的源码是基于 Webpack 构建的 </p>
-<p>首先，clone项目源码 </p>
-<pre><code>git clone https://github.com/ustbhuangyi/better-scroll.git
-</code></pre><p>安装依赖 </p>
-<pre><code>cd better-scroll
-npm install
-</code></pre><p>测试demo页 </p>
-<pre><code>npm run dev
-</code></pre><p>打开浏览器访问如下地址, 查看效果 </p>
-<blockquote>
-<p>localhost:9090 </p>
-</blockquote>
-<h2 id="Options-参数"><a href="#Options-参数" class="headerlink" title="Options 参数"></a>Options 参数</h2><p>Example: </p>
-<pre><code>let scroll = new BScroll(document.getElementById(&#39;wrapper&#39;), {
-  startX: 0,
-  startY: 0
-})
-</code></pre><p>Options List: </p>
-<ul>
-<li>startX: <code>0</code> 开始的X轴位置</li>
-<li>startY: <code>0</code> 开始的Y轴位置</li>
-<li>scrollY: <code>true</code> 滚动方向为 Y 轴</li>
-<li>scrollX: ‘true’ 滚动方向为 X 轴</li>
-<li>click: <code>true</code> 是否派发click事件</li>
-<li>directionLockThreshold: <code>5</code></li>
-<li>momentum: <code>true</code> 当快速滑动时是否开启滑动惯性</li>
-<li>bounce: <code>true</code> 是否启用回弹动画效果</li>
-<li>selectedIndex: <code>0</code> wheel 为 true 时有效，表示被选中的 wheel 索引</li>
-<li>rotate: <code>25</code> wheel 为 true 时有效，表示被选中的 wheel 每一层的旋转角度</li>
-<li>wheel: <code>false</code> 该属性是给 picker 组件使用的，普通的列表滚动不需要配置</li>
-<li>snap: <code>false</code> 该属性是给 slider 组件使用的，普通的列表滚动不需要配置</li>
-<li>snapLoop: <code>false</code> 是否可以无缝循环轮播</li>
-<li>snapThreshold: <code>0.1</code> 用手指滑动时页面可切换的阈值，大于这个阈值可以滑动的下一页</li>
-<li>snapSpeed: <code>400</code>, 轮播图切换的动画时间</li>
-<li>swipeTime: <code>2500</code> swipe 持续时间</li>
-<li>bounceTime: <code>700</code> 弹力动画持续的毫秒数</li>
-<li>adjustTime: <code>400</code> wheel 为 true 有用，调整停留位置的时间</li>
-<li>swipeBounceTime: <code>1200</code> swipe 回弹 时间</li>
-<li>deceleration: <code>0.001</code> 滚动动量减速越大越快，建议不大于0.01</li>
-<li>momentumLimitTime: <code>300</code> 符合惯性拖动的最大时间</li>
-<li>momentumLimitDistance: <code>15</code> 符合惯性拖动的最小拖动距离</li>
-<li>resizePolling: <code>60</code> 重新调整窗口大小时，重新计算better-scroll的时间间隔</li>
-<li>preventDefault: <code>true</code> 是否阻止默认事件</li>
-<li>preventDefaultException: <code>{ tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT)$/ }</code> 阻止默认事件的例外配置</li>
-<li>HWCompositing: <code>true</code> 是否启用硬件加速</li>
-<li>useTransition: <code>true</code> 是否使用CSS3的Transition属性</li>
-<li>useTransform: <code>true</code> 是否使用CSS3的Transform属性</li>
-<li>probeType: <code>1</code> 会截流,只有在滚动结束的时候派发一个 scroll 事件。<code>2</code>在手指 move 的时候也会实时派发 scroll 事件，不会截流。 <code>3</code>除了手指 move 的时候派发scroll事件，在 swipe（手指迅速滑动一小段距离）的情况下，列表会有一个长距离的滚动动画，这个滚动的动画过程中也会实时派发滚动事件</li>
-</ul>
-<h2 id="Events-事件"><a href="#Events-事件" class="headerlink" title="Events 事件"></a>Events 事件</h2><p>Example: </p>
-<pre><code>let scroll = new BScroll(document.getElementById(&#39;wrapper&#39;),{
-   probeType: 3
-})
-
-scroll.on(&#39;scroll&#39;, (pos) =&gt; {
-  console.log(pos.x + &#39;~&#39; + pos.y)
-  ...
-})
-</code></pre><p>Events 列表 </p>
-<ul>
-<li>beforeScrollStart - 滚动开始之前触发</li>
-<li>scrollStart - 滚动开始时触发</li>
-<li>scroll - 滚动时触发</li>
-<li>scrollCancel - 取消滚动时触发</li>
-<li>scrollEnd - 滚动结束时触发</li>
-<li>touchend - 手指移开屏幕时触发</li>
-<li>flick - 轻拂时触发</li>
-<li>refresh - 当 better-scroll 刷新时触发</li>
-<li>destroy - 销毁 better-scroll 实例时触发</li>
-</ul>
-<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><ul>
-<li>scrollTo(x, y, time, easing)</li>
-</ul>
-<p>滚动到某个位置，x,y 代表坐标，time 表示动画时间，easing 表示缓动函数 </p>
-<p>Example: </p>
-<pre><code>let scroll = new BScroll(document.getElementById(&#39;wrapper&#39;))
-scroll.scrollTo(0, 500)
-...
-</code></pre><ul>
-<li>scrollToElement(el, time, offsetX, offsetY, easing)</li>
-</ul>
-<p>滚动到某个元素，el（必填）表示 dom 元素，time 表示动画时间，offsetX 和 offsetY 表示坐标偏移量，easing 表示缓动函数 </p>
-<ul>
-<li>refresh()</li>
-</ul>
-<p>强制 scroll 重新计算，当 better-scroll 中的元素发生变化的时候调用此方法。 </p>
-<ul>
-<li>getCurrentPage()</li>
-</ul>
-<p>当 snap 为 true 时，获取滚动的当前页，返回的对象结构为 {x, y, pageX, pageY}，其中 x,y 代表滚动横向和纵向的位置；pageX，pageY 表示横向和纵向的页面索引 </p>
-<ul>
-<li>goToPage(x, y, time, easing)</li>
-</ul>
-<p>当 snap 为 true，滚动到对应的页面，x 表示横向页面索引，y 表示纵向页面索引， time 表示动画，easing 表示缓动函数 </p>
-<ul>
-<li>enable()</li>
-</ul>
-<p>启用 better-scroll，默认开启 </p>
-<ul>
-<li>disable()</li>
-</ul>
-<p>禁用 better-scroll </p>
-<ul>
-<li>destroy()</li>
-</ul>
-<p>销毁 better-scroll，解绑事件 </p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
-    
-    </summary>
-    
-      <category term="VueJs" scheme="https://wangyu1997.github.io/categories/VueJs/"/>
-    
-    
-      <category term="better scroll" scheme="https://wangyu1997.github.io/tags/better-scroll/"/>
-    
-      <category term="vue" scheme="https://wangyu1997.github.io/tags/vue/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Vue实战</title>
     <link href="https://wangyu1997.github.io/2017/10/02/VueJs/Vue%E5%AE%9E%E6%88%98/"/>
     <id>https://wangyu1997.github.io/2017/10/02/VueJs/Vue实战/</id>
@@ -6506,330 +6782,6 @@ getAllMoney(){
       <category term="vue" scheme="https://wangyu1997.github.io/tags/vue/"/>
     
       <category term="实战" scheme="https://wangyu1997.github.io/tags/%E5%AE%9E%E6%88%98/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>AOP实战</title>
-    <link href="https://wangyu1997.github.io/2017/10/01/JavaWeb/AOP%E5%AE%9E%E6%88%98/"/>
-    <id>https://wangyu1997.github.io/2017/10/01/JavaWeb/AOP实战/</id>
-    <published>2017-10-01T02:43:11.000Z</published>
-    <updated>2017-10-24T06:31:06.000Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
-<p>接上一小节<a href="https://wangyu1997.github.io/2017/10/01/JavaWeb/AOP%E7%BC%96%E7%A8%8B%E8%AF%A6%E8%A7%A3/">彻底征服 Spring AOP 之 理论篇</a></p>
-<h2 id="Spring-AOP-实战"><a href="#Spring-AOP-实战" class="headerlink" title="Spring AOP 实战"></a>Spring AOP 实战</h2><p>看了上面这么多的理论知识, 不知道大家有没有觉得枯燥哈. 不过不要急, 俗话说理论是实践的基础, 对 Spring AOP 有了基本的理论认识后, 我们来看一下下面几个具体的例子吧.<br>下面的几个例子是我在工作中所遇见的比较常用的 Spring AOP 的使用场景, 我精简了很多有干扰我们学习的注意力的细枝末节, 以力求整个例子的简洁性. </p>
-<p>下面几个 Demo 的源码都可以在我的 <a href="https://github.com/yongshun/some_java_code" target="_blank" rel="external">Github</a> 上下载到. </p>
-<h3 id="HTTP-接口鉴权"><a href="#HTTP-接口鉴权" class="headerlink" title="HTTP 接口鉴权"></a>HTTP 接口鉴权</h3><p>首先让我们来想象一下如下场景: 我们需要提供的 HTTP RESTful 服务, 这个服务会提供一些比较敏感的信息, 因此对于某些接口的调用会进行调用方权限的校验, 而某些不太敏感的接口则不设置权限, 或所需要的权限比较低(例如某些监控接口, 服务状态接口等).<br>实现这样的需求的方法有很多, 例如我们可以在每个 HTTP 接口方法中对服务请求的调用方进行权限的检查, 当调用方权限不符时, 方法返回错误. 当然这样做并无不可, 不过如果我们的 api 接口很多, 每个接口都进行这样的判断, 无疑有很多冗余的代码, 并且很有可能有某个粗心的家伙忘记了对调用者的权限进行验证, 这样就会造成潜在的 bug.<br>那么除了上面的所说的方法外, 还有没有别的比较优雅的方式来实现呢? 当然有啦, 不然我在这啰嗦半天干嘛呢, 它就是我们今天的主角: <code>AOP</code>. </p>
-<p>让我们来提炼一下我们的需求: </p>
-<ol>
-<li><p>可以定制地为某些指定的 HTTP RESTful api 提供权限验证功能. </p>
-</li>
-<li><p>当调用方的权限不符时, 返回错误. </p>
-</li>
-</ol>
-<p>根据上面所提出的需求, 我们可以进行如下设计: </p>
-<ol>
-<li><p>提供一个特殊的注解 <code>AuthChecker</code>, 这个是一个方法注解, 有此注解所标注的 Controller 需要进行调用方权限的认证. </p>
-</li>
-<li><p>利用 Spring AOP, 以 <strong>@annotation</strong> 切点标志符来匹配有注解 <code>AuthChecker</code> 所标注的 joinpoint. </p>
-</li>
-<li><p>在 advice 中, 简单地检查调用者请求中的 Cookie 中是否有我们指定的 token, 如果有, 则认为此调用者权限合法, 允许调用, 反之权限不合法, 范围错误. </p>
-</li>
-</ol>
-<p>根据上面的设计, 我们来看一下具体的源码吧.<br>首先是 <code>AuthChecker</code> 注解的定义:<br><strong>AuthChecker.java:</strong></p>
-<pre><code>@Target(ElementType.METHOD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface AuthChecker {
-}
-</code></pre><p><code>AuthChecker</code> 注解是一个方法注解, 它用于注解 RequestMapping 方法. </p>
-<p>有了注解的定义, 那我们再来看一下 aspect 的实现吧:<br><strong>HttpAopAdviseDefine.java:</strong></p>
-<pre><code>@Component
-@Aspect
-public class HttpAopAdviseDefine {
-
-    // 定义一个 Pointcut, 使用 切点表达式函数 来描述对哪些 Join point 使用 advise.
-    @Pointcut(&quot;@annotation(com.xys.demo1.AuthChecker)&quot;)
-    public void pointcut() {
-    }
-
-    // 定义 advise
-    @Around(&quot;pointcut()&quot;)
-    public Object checkAuth(ProceedingJoinPoint joinPoint) throws Throwable {
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
-                .getRequest();
-
-        // 检查用户所传递的 token 是否合法
-        String token = getUserToken(request);
-        if (!token.equalsIgnoreCase(&quot;123456&quot;)) {
-            return &quot;错误, 权限不合法!&quot;;
-        }
-
-        return joinPoint.proceed();
-    }
-
-    private String getUserToken(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies == null) {
-            return &quot;&quot;;
-        }
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equalsIgnoreCase(&quot;user_token&quot;)) {
-                return cookie.getValue();
-            }
-        }
-        return &quot;&quot;;
-    }
-}
-</code></pre><p>在这个 aspect 中, 我们首先定义了一个 pointcut, 以 <strong>@annotation</strong> 切点标志符来匹配有注解 <code>AuthChecker</code> 所标注的 joinpoint, 即: </p>
-<pre><code>// 定义一个 Pointcut, 使用 切点表达式函数 来描述对哪些 Join point 使用 advise.
-@Pointcut(&quot;@annotation(com.xys.demo1.AuthChecker)&quot;)
-public void pointcut() {
-}
-</code></pre><p>然后再定义一个 advice: </p>
-<pre><code>// 定义 advise
-@Around(&quot;pointcut()&quot;)
-public Object checkAuth(ProceedingJoinPoint joinPoint) throws Throwable {
-    HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
-            .getRequest();
-
-    // 检查用户所传递的 token 是否合法
-    String token = getUserToken(request);
-    if (!token.equalsIgnoreCase(&quot;123456&quot;)) {
-        return &quot;错误, 权限不合法!&quot;;
-    }
-
-    return joinPoint.proceed();
-}
-</code></pre><p>当被 <code>AuthChecker</code> 注解所标注的方法调用前, 会执行我们的这个 advice, 而这个 advice 的处理逻辑很简单, 即从 HTTP 请求中获取名为 <code>user_token</code> 的 cookie 的值, 如果它的值是 <code>123456</code>, 则我们认为此 HTTP 请求合法, 进而调用 <code>joinPoint.proceed()</code> 将 HTTP 请求转交给相应的控制器处理; 而如果<code>user_token</code> cookie 的值不是 <code>123456</code>, 或为空, 则认为此 HTTP 请求非法, 返回错误. </p>
-<p>接下来我们来写一个模拟的 HTTP 接口:<br><strong>DemoController.java:</strong></p>
-<pre><code>@RestController
-public class DemoController {
-    @RequestMapping(&quot;/aop/http/alive&quot;)
-    public String alive() {
-        return &quot;服务一切正常&quot;;
-    }
-
-    @AuthChecker
-    @RequestMapping(&quot;/aop/http/user_info&quot;)
-    public String callSomeInterface() {
-        return &quot;调用了 user_info 接口.&quot;;
-    }
-}
-</code></pre><p>注意到上面我们提供了两个 HTTP 接口, 其中 接口 <strong>/aop/http/alive</strong> 是没有 <code>AuthChecker</code> 标注的, 而 <strong>/aop/http/user_info</strong> 接口则用到了 <code>@AuthChecker</code> 标注. 那么自然地, 当请求了 <strong>/aop/http/user_info</strong> 接口时, 就会触发我们所设置的权限校验逻辑. </p>
-<p>接下来我们来验证一下, 我们所实现的功能是否有效吧.<br>首先在 Postman 中, 调用 <strong>/aop/http/alive</strong> 接口, 请求头中不加任何参数: </p>
-<p>可以看到, 我们的 HTTP 请求完全没问题. </p>
-<p>那么再来看一下请求 <strong>/aop/http/user_info</strong> 接口会怎样呢: </p>
-<p>当我们请求 <strong>/aop/http/user_info</strong> 接口时, 服务返回一个权限异常的错误, 为什么会这样呢? 自然就是我们的权限认证系统起了作为: 当一个方法被调用并且这个方法有 <code>AuthChecker</code> 标注时, 那么首先会执行到我们的 <code>around advice</code>, 在这个 advice 中, 我们会校验 HTTP 请求的 cookie 字段中是否有携带 <code>user_token</code> 字段时, 如果没有, 则返回权限错误.<br>那么为了能够正常地调用 <strong>/aop/http/user_info</strong> 接口, 我们可以在 Cookie 中添加 <strong>user_token=123456</strong>, 这样我们可以愉快的玩耍了: </p>
-<blockquote>
-<p><code>注意</code>, Postman 默认是不支持 Cookie 的, 所以为了实现添加 Cookie 的功能, 我们需要安装 Postman 的 <code>interceptor</code> 插件. 安装方法可以看<a href="https://www.getpostman.com/docs/interceptor_cookies" target="_blank" rel="external">官网的文章</a></p>
-</blockquote>
-<h4 id="完整源码"><a href="#完整源码" class="headerlink" title="完整源码"></a>完整源码</h4><p><a href="https://github.com/yongshun/some_java_code/tree/master/SpringAOPDemo/src/main/java/com/xys/demo1" target="_blank" rel="external">HTTP 接口鉴权</a></p>
-<h3 id="方法调用日志"><a href="#方法调用日志" class="headerlink" title="方法调用日志"></a>方法调用日志</h3><p>第二个 AOP 实例是记录一个方法调用的log. 这应该是一个很常见的功能了.<br>首先假设我们有如下需求: </p>
-<ol>
-<li><p>某个服务下的方法的调用需要有 log: 记录调用的参数以及返回结果. </p>
-</li>
-<li><p>当方法调用出异常时, 有特殊处理, 例如打印异常 log, 报警等. </p>
-</li>
-</ol>
-<p>根据上面的需求, 我们可以使用 before advice 来在调用方法前打印调用的参数, 使用 after returning advice 在方法返回打印返回的结果. 而当方法调用失败后, 可以使用 after throwing advice 来做相应的处理.<br>那么我们来看一下 aspect 的实现: </p>
-<pre><code>@Component
-@Aspect
-public class LogAopAdviseDefine {
-    private Logger logger = LoggerFactory.getLogger(getClass());
-
-    // 定义一个 Pointcut, 使用 切点表达式函数 来描述对哪些 Join point 使用 advise.
-    @Pointcut(&quot;within(NeedLogService)&quot;)
-    public void pointcut() {
-    }
-
-    // 定义 advise
-    @Before(&quot;pointcut()&quot;)
-    public void logMethodInvokeParam(JoinPoint joinPoint) {
-        logger.info(&quot;---Before method {} invoke, param: {}---&quot;, joinPoint.getSignature().toShortString(), joinPoint.getArgs());
-    }
-
-    @AfterReturning(pointcut = &quot;pointcut()&quot;, returning = &quot;retVal&quot;)
-    public void logMethodInvokeResult(JoinPoint joinPoint, Object retVal) {
-        logger.info(&quot;---After method {} invoke, result: {}---&quot;, joinPoint.getSignature().toShortString(), joinPoint.getArgs());
-    }
-
-    @AfterThrowing(pointcut = &quot;pointcut()&quot;, throwing = &quot;exception&quot;)
-    public void logMethodInvokeException(JoinPoint joinPoint, Exception exception) {
-        logger.info(&quot;---method {} invoke exception: {}---&quot;, joinPoint.getSignature().toShortString(), exception.getMessage());
-    }
-}
-</code></pre><p>第一步, 自然是定义一个 <code>pointcut</code>, 以 <strong>within</strong> 切点标志符来匹配类 <code>NeedLogService</code> 下的所有 joinpoint, 即: </p>
-<pre><code>@Pointcut(&quot;within(NeedLogService)&quot;)
-public void pointcut() {
-}
-</code></pre><p>接下来根据我们前面的设计, 我们分别定义了三个 advice, 第一个是一个 before advice: </p>
-<pre><code>@Before(&quot;pointcut()&quot;)
-public void logMethodInvokeParam(JoinPoint joinPoint) {
-    logger.info(&quot;---Before method {} invoke, param: {}---&quot;, joinPoint.getSignature().toShortString(), joinPoint.getArgs());
-}
-</code></pre><p>它在一个符合要求的 joinpoint 方法调用前执行, 打印调用的方法名和调用的参数. </p>
-<p>第二个是 after return advice: </p>
-<pre><code>@AfterReturning(pointcut = &quot;pointcut()&quot;, returning = &quot;retVal&quot;)
-public void logMethodInvokeResult(JoinPoint joinPoint, Object retVal) {
-    logger.info(&quot;---After method {} invoke, result: {}---&quot;, joinPoint.getSignature().toShortString(), joinPoint.getArgs());
-}
-</code></pre><p>这个 advice 会在方法调用成功后打印出方法名还反的参数. </p>
-<p>最后一个是 after throw advice: </p>
-<pre><code>@AfterThrowing(pointcut = &quot;pointcut()&quot;, throwing = &quot;exception&quot;)
-public void logMethodInvokeException(JoinPoint joinPoint, Exception exception) {
-    logger.info(&quot;---method {} invoke exception: {}---&quot;, joinPoint.getSignature().toShortString(), exception.getMessage());
-}
-</code></pre><p>这个 advice 会在指定的 joinpoint 抛出异常时执行, 打印异常的信息. </p>
-<p>接下来我们再写两个 Service 类:<br><strong>NeedLogService.java:</strong></p>
-<pre><code>@Service
-public class NeedLogService {
-    private Logger logger = LoggerFactory.getLogger(getClass());
-    private Random random = new Random(System.currentTimeMillis());
-
-    public int logMethod(String someParam) {
-        logger.info(&quot;---NeedLogService: logMethod invoked, param: {}---&quot;, someParam);
-        return random.nextInt();
-    }
-
-    public void exceptionMethod() throws Exception {
-        logger.info(&quot;---NeedLogService: exceptionMethod invoked---&quot;);
-        throw new Exception(&quot;Something bad happened!&quot;);
-    }
-}
-</code></pre><p><strong>NormalService.java:</strong></p>
-<pre><code>@Service
-public class NormalService {
-    private Logger logger = LoggerFactory.getLogger(getClass());
-
-    public void someMethod() {
-        logger.info(&quot;---NormalService: someMethod invoked---&quot;);
-    }
-}
-</code></pre><p>根据我们 pointcut 的规则, 类 NeedLogService 下的所有方法都会被织入 advice, 而类 NormalService 则不会. </p>
-<p>最后我们分别调用这几个方法: </p>
-<pre><code>@PostConstruct
-public void test() {
-    needLogService.logMethod(&quot;xys&quot;);
-    try {
-        needLogService.exceptionMethod();
-    } catch (Exception e) {
-        // Ignore
-    }
-    normalService.someMethod();
-}
-</code></pre><p>我们可以看到有如下输出: </p>
-<pre><code>---Before method NeedLogService.logMethod(..) invoke, param: [xys]---
----NeedLogService: logMethod invoked, param: xys---
----After method NeedLogService.logMethod(..) invoke, result: [xys]---
-
----Before method NeedLogService.exceptionMethod() invoke, param: []---
----NeedLogService: exceptionMethod invoked---
----method NeedLogService.exceptionMethod() invoke exception: Something bad happened!---
-
----NormalService: someMethod invoked---
-</code></pre><p>根据 log, 我们知道, NeedLogService.logMethod 执行的前后确实有 advice 执行了, 并且在 NeedLogService.exceptionMethod 抛出异常后, <code>logMethodInvokeException</code> 这个 advice 也被执行了. 而由于 pointcut 的匹配规则, 在 <code>NormalService</code> 类中的方法则不会织入 advice. </p>
-<h4 id="完整源码-1"><a href="#完整源码-1" class="headerlink" title="完整源码"></a>完整源码</h4><p><a href="https://github.com/yongshun/some_java_code/tree/master/SpringAOPDemo/src/main/java/com/xys/demo2" target="_blank" rel="external">方法调用日志</a></p>
-<h3 id="方法耗时统计"><a href="#方法耗时统计" class="headerlink" title="方法耗时统计"></a>方法耗时统计</h3><p>作为程序员, 我们都知道服务监控对于一个服务能够长期稳定运行的重要性, 因此很多公司都有自己内部的监控报警系统, 或者是使用一些开源的系统, 例如小米的 Falcon 监控系统. </p>
-<p>那么在程序监控中, AOP 有哪些用武之地呢? 我们来假想一下如下场景: </p>
-<blockquote>
-<p>有一天, leader 对小王说, “小王啊, 你负责的那个服务不太稳定啊, 经常有超时发生! 你有对这些服务接口进行过耗时统计吗?”<br>耗时统计? 小王嘀咕了, 小声的回答到: “还没有加呢.”<br>leader: “你看着办吧, 我明天要看到各个时段的服务接口调用的耗时分布!”<br>小王这就犯难了, 虽然说计算一个方法的调用耗时并不是一个很难的事情, 但是整个服务有二十来个接口呢, 一个一个地添加统计代码, 那还不是要累死人了.<br>看着同事一个一个都下班回家了, 小王眉头更加紧了. 不过此时小王灵机一动: “噫, 有了!”.<br>小王想到了一个好方法, 立即动手, 吭哧吭哧地几分钟就搞定了. </p>
-</blockquote>
-<p>那么小王的解决方法是什么呢? 自然是我们的主角 <code>AOP</code> 啦. </p>
-<p>首先让我们来提炼一下需求: </p>
-<ol>
-<li><p>为服务中的每个方法调用进行调用耗时记录. </p>
-</li>
-<li><p>将方法调用的时间戳, 方法名, 调用耗时上报到监控平台 </p>
-</li>
-</ol>
-<p>有了需求, 自然设计实现就很简单了. 首先我们可以使用 around advice, 然后在方法调用前, 记录一下开始时间, 然后在方法调用结束后, 记录结束时间, 它们的时间差就是方法的调用耗时. </p>
-<p>我们来看一下具体的 aspect 实现: </p>
-<p><strong>ExpiredAopAdviseDefine.java:</strong></p>
-<pre><code>@Component
-@Aspect
-public class ExpiredAopAdviseDefine {
-    private Logger logger = LoggerFactory.getLogger(getClass());
-
-    // 定义一个 Pointcut, 使用 切点表达式函数 来描述对哪些 Join point 使用 advise.
-    @Pointcut(&quot;within(SomeService)&quot;)
-    public void pointcut() {
-    }
-
-    // 定义 advise
-    // 定义 advise
-    @Around(&quot;pointcut()&quot;)
-    public Object methodInvokeExpiredTime(ProceedingJoinPoint pjp) throws Throwable {
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
-        // 开始
-        Object retVal = pjp.proceed();
-        stopWatch.stop();
-        // 结束
-
-        // 上报到公司监控平台
-        reportToMonitorSystem(pjp.getSignature().toShortString(), stopWatch.getTotalTimeMillis());
-
-        return retVal;
-    }
-
-
-    public void reportToMonitorSystem(String methodName, long expiredTime) {
-        logger.info(&quot;---method {} invoked, expired time: {} ms---&quot;, methodName, expiredTime);
-        //
-    }
-}
-</code></pre><p>aspect 一开始定义了一个 <code>pointcut</code>, 匹配 <code>SomeService</code> 类下的所有的方法.<br>接着呢, 定义了一个 around advice: </p>
-<pre><code>@Around(&quot;pointcut()&quot;)
-public Object methodInvokeExpiredTime(ProceedingJoinPoint pjp) throws Throwable {
-    StopWatch stopWatch = new StopWatch();
-    stopWatch.start();
-    // 开始
-    Object retVal = pjp.proceed();
-    stopWatch.stop();
-    // 结束
-
-    // 上报到公司监控平台
-    reportToMonitorSystem(pjp.getSignature().toShortString(), stopWatch.getTotalTimeMillis());
-
-    return retVal;
-}
-</code></pre><p>advice 中的代码也很简单, 它使用了 Spring 提供的 StopWatch 来统计一段代码的执行时间. 首先我们先调用 <strong>stopWatch.start()</strong> 开始计时, 然后通过 <code>pjp.proceed()</code> 来调用我们实际的服务方法, 当调用结束后, 通过 <strong>stopWatch.stop()</strong> 来结束计时. </p>
-<p>接着我们来写一个简单的服务, 这个服务提供一个 <strong>someMethod</strong> 方法用于模拟一个耗时的方法调用:<br><strong>SomeService.java:</strong></p>
-<pre><code>@Service
-public class SomeService {
-    private Logger logger = LoggerFactory.getLogger(getClass());
-    private Random random = new Random(System.currentTimeMillis());
-
-    public void someMethod() {
-        logger.info(&quot;---SomeService: someMethod invoked---&quot;);
-        try {
-            // 模拟耗时任务
-            Thread.sleep(random.nextInt(500));
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-}
-</code></pre><p>这样当 <code>SomeService</code> 类下的方法调用时, 我们所提供的 advice 就会被执行, 因此就可以自动地为我们统计此方法的调用耗时, 并自动上报到监控系统中了.<br>看到 <code>AOP</code> 的威力了吧, 我们这里仅仅使用了寥寥数语就把一个需求完美地解决了, 并且还与原来的业务逻辑完全解耦, 扩展及其方便. </p>
-<h4 id="完整源码-2"><a href="#完整源码-2" class="headerlink" title="完整源码"></a>完整源码</h4><p><a href="https://github.com/yongshun/some_java_code/tree/master/SpringAOPDemo/src/main/java/com/xys/demo3" target="_blank" rel="external">方法耗时统计</a></p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>通过上面的几个简单例子, 我们对 <code>Spring AOP</code> 的使用应该有了一个更为深入的了解了. 其实 Spring AOP 的使用的地方不止这些, 例如 Spring 的 <code>声明式事务</code> 就是在 AOP 之上构建的. 读者朋友也可以根据自己的实际业务场景, 合理使用 Spring AOP, 发挥它的强大功能! </p>
-<h2 id="End"><a href="#End" class="headerlink" title="End."></a>End.</h2>]]></content>
-    
-    <summary type="html">
-    
-      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
-    
-    </summary>
-    
-      <category term="JavaWeb" scheme="https://wangyu1997.github.io/categories/JavaWeb/"/>
-    
-    
-      <category term="AOP" scheme="https://wangyu1997.github.io/tags/AOP/"/>
-    
-      <category term="javaweb" scheme="https://wangyu1997.github.io/tags/javaweb/"/>
-    
-      <category term="Spring" scheme="https://wangyu1997.github.io/tags/Spring/"/>
     
   </entry>
   

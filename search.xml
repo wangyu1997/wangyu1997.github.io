@@ -3,6 +3,134 @@
   
     
     <entry>
+      <title><![CDATA[在 Telegram 收发微信消息]]></title>
+      <url>/2017/11/12/%E9%82%A3%E4%BA%9B%E5%B9%B4%E5%80%92%E8%85%BE%E8%BF%87%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%99%A8/%E5%9C%A8%20Telegram%20%E6%94%B6%E5%8F%91%E5%BE%AE%E4%BF%A1%E6%B6%88%E6%81%AF/</url>
+      <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><blockquote>
+<p>本教程是对于<a href="http://link.zhihu.com/?target=https%3A//blog.1a23.com/2017/01/09/EFB-How-to-Send-and-Receive-Messages-from-WeChat-on-Telegram-zh-CN/" target="_blank" rel="external">原文</a>的一些修改。 </p>
+</blockquote>
+<p>开发代号 EH Forwarder Bot（简称 EFB）是一个可扩展的聊天平台隧道框架，基于 Python 3。目前已内置了 Telegram 主端 (Master Channel) 和微信从端 (Slave Channel)，用来在 Telegram 收发微信消息。其他从端开发已在计划之中。同时 EFB 也配备了详尽的文档，欢迎有兴趣的朋友们开发自己的主端或从端，来支持更多的平台。EFB 在 GitHub 中开放了源代码，并且在 Read The Docs 平台上发布的开发文档（英文，en-US）。 </p>
+<p>本文主要介绍了如何在一个虚拟服务器 (VPS) 中安装并配置 EFB、Telegram 主端和微信从端，以及如何使用 Telegram 主端来收发微信消息。 </p>
+<h2 id="0x01-用料"><a href="#0x01-用料" class="headerlink" title="0x01: 用料"></a>0x01: 用料</h2><p>本教程面向具有一定背景知识的进阶用户，如有疑问，请您先在互联网上搜索（推荐 <a href="http://link.zhihu.com/?target=https%3A//google.com/" target="_blank" rel="external">Google</a>），若仍未解决、欢迎在 <a href="http://link.zhihu.com/?target=https%3A//telegram.me/efbsupport" target="_blank" rel="external">EFB Telegram 支持群组</a>留言。 </p>
+<p>在开始之前，请准备： </p>
+<ul>
+<li>一台能使用 SSH 终端的设备。 </li>
+</ul>
+<p>Windows 推荐使用 Putty，Android 用户推荐使用 JuiceSSH </p>
+<ul>
+<li><p>Telegram 账号一枚 </p>
+</li>
+<li><p>可用的科学上网方式 若干 </p>
+</li>
+<li><p>墙外 VPS 一枚 </p>
+</li>
+</ul>
+<p>没有 VPS 的可以尝试一下 Vultr 日本，速度还不错，顺带可以搭梯子。<a href="http://link.zhihu.com/?target=http%3A//www.vultr.com/%3Fref%3D6951220-3B" target="_blank" rel="external">新用户赠送 $20 链接</a></p>
+<p>首先通过 SSH 客户端连接到你的 VPS。 </p>
+<h2 id="0x021-安装-Python-与非-Python-依赖"><a href="#0x021-安装-Python-与非-Python-依赖" class="headerlink" title="0x021: 安装 Python 与非 Python 依赖"></a>0x021: 安装 Python 与非 Python 依赖</h2><p>输入以下指令。 </p>
+<p>注：以下安装的部分软件包可能已经预安装在你的系统中。但请注意将已安装的 Python 3 版本升级到 3.5 或以上。  </p>
+<pre><code># apt-get install python3-pip python3-dev python3-setuptools
+# apt-get install libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.5-dev tk8.5-dev
+# apt-get install libmagic-dev ffmpeg
+# 在 Ubuntu/mint 中安装的依赖
+  yaourt -S  python opus ffmpeg python-pip git
+# 在 Arch Linux 中安装的依赖
+# 类似于 Debian sid / CentOS 这种老旧系统可能需要自己编译 ffmpeg
+# 可使用类似于 screenfetch 类似的工具查看当前的系统版本
+</code></pre><h2 id="0x023-下载源码并安装-Python-依赖"><a href="#0x023-下载源码并安装-Python-依赖" class="headerlink" title="0x023: 下载源码并安装 Python 依赖"></a>0x023: 下载源码并安装 Python 依赖</h2><pre><code>git clone https://github.com/blueset/ehForwarderBot.git
+cd ehForwarderBot
+pip3 install -r requirements.txt
+</code></pre><p>接下来就是进行各种必要的配置和初始化的步骤了。 </p>
+<h2 id="0x030-创建-Telegram-Bot"><a href="#0x030-创建-Telegram-Bot" class="headerlink" title="0x030: 创建 Telegram Bot"></a>0x030: 创建 Telegram Bot</h2><p>Telegram Bot 是 EFB（Telegram 主端）的出口，也是呈献给用户的渠道。我们在这里使用了 Telegram 官方的 Bot API，以最大化利用 Telegram Bot 所提供的各种便利功能。 </p>
+<p>要创建一个新的 Bot，要先向 @BotFather 发起会话。发送指令 /newbot 以启动向导。期间，你需要指定这个 Bot 的名称与用户名（用户名必须以 bot 结尾）。完毕之后 @BotFather 会提供给你一个密钥（Token），妥善保存这个密钥。请注意，为保护您的隐私及信息安全，请不要向任何人提供你的 Bot 用户名及密钥，这可能导致聊天信息泄露等各种风险。 </p>
+<p>接下来还要对刚刚启用的 Bot 进行进一步的配置：允许 Bot 读取非指令信息、允许将 Bot 添加进群组、以及提供指令列表。 </p>
+<p>发送 /setprivacy 到 @BotFather，选择刚刚创建好的 Bot 用户名，然后选择 “Disable”.<br>发送 /setjoingroups 到 @BotFather，选择刚刚创建好的 Bot 用户名，然后选择 “Enable”.<br>发送 /setcommands 到 @BotFather，选择刚刚创建好的 Bot 用户名，然后发送如下内容： </p>
+<pre><code>link - 将会话绑定到 Telegram 群组
+chat - 生成会话头
+recog - 回复语音消息以进行识别
+extra - 获取更多功能
+</code></pre><p>然后还需要获取你自己的 Telegram ID，ID 应显示为一串数字。获取你自己的 ID 有很多方式，你可以选择任意一种。下面介绍两种可能的方式。 </p>
+<ul>
+<li>Plus Messenger </li>
+</ul>
+<p>如果你使用了 Plus Messenger 作为你的 Telegram 客户端，你可以直接打开你自己的资料页，在「自己」下面会显示你的 ID。 </p>
+<ul>
+<li>通过 Bot 查询 </li>
+</ul>
+<p>很多现存的 Bot 也提供了 ID 查询服务，直接向其发送特定的指令即可获得自己的数字 ID。在这里介绍一些接触过的。<br>@get_id_bot 发送 /start<br>@mokubot 发送 /whoami<br>@GroupButler_Bot 发送 /id<br>@jackbot 发送 /me<br>@userinfobot 发送任意文字<br>@orzdigbot 发送 /user<br>留存你的 Telegram ID 以便后续使用。 </p>
+<p>0x031: 配置 EFB 和 Telegram 主端<br>这差不多就是安装过程的最后一步了。首先创建存储用文件夹并赋予其权限。回到 VPS 上 ehForwarderBot 目录。（不出意外的话你应该还在这个目录） </p>
+<pre><code>mkdir storage
+chmod 777 storage
+</code></pre><p>然后复制并编辑配置文件。 </p>
+<pre><code>cp config.sample.py config.py
+editor config.py
+# 其中 editor 是你所喜欢的文本编辑器，比如 vim 则 vim config.py
+</code></pre><p>在配置文件中，token 后引号里面的内容替换为你之前获得的 Bot 密钥，admins 后方括号里面填入你自己的 Telegram ID。后面的 6 行是用来配置语音转文字功能的，不是必要功能，目前可以删除各行。如果有兴趣启用该功能的，请到各平台申请 API keys。详情请参见文档 的「ETM」章节。 </p>
+<p>注意<br>配置文件 (config.py) 是一个 Python 文件。Python 文件有着严格的格式要求。在编辑该文档的时候请全程使用英文输入模式，并避免更改缩进。每一个括号和引号都应该在适当的地方合上。错误的格式会导致 EFB 运行失败。<br>本文件使用 4 个空格作为一个缩进级别并避免使用 Tab 字符。<br>编辑好的结果应类似如下内容。token 和 admins 字段有所不同。 </p>
+<pre><code># ##############################
+#  Configs for EH Forwarder Bot
+# ##############################
+#
+#  Basic settings
+# ----------------
+#
+# Master/Slave Channels
+#
+# Master channel:
+# The channel that is mainly used to view/manage messages
+# from slave channels.
+# Currently only 1 master channel is supported.
+#
+# Slave channels:
+# Channels that are hosted on the server and being delivered
+# to and from the master channel.
+# You may have more than 1 slave channel.
+#
+master_channel = &#39;plugins.eh_telegram_master&#39;, &#39;TelegramChannel&#39;
+slave_channels = [(&#39;plugins.eh_wechat_slave&#39;, &#39;WeChatChannel&#39;)]
+#
+#  Plugin specific settings
+# --------------------------
+# Plugin specific settings should be written below in the format of:
+# `channel_name = {&quot;key1&quot;: &quot;value1&quot;, &quot;key2&quot;: &quot;value2&quot;}`
+# Please refer to docs of individual plugin for details
+#
+eh_telegram_master = {
+    &quot;token&quot;: &quot;12345678:QWFPGJLUYarstdheioZXCVBKM&quot;,
+    &quot;admins&quot;: [123456789]
+}
+</code></pre><p>到目前为止，EFB 的配置工作已经完成。现在我们只需要启动它，登陆微信就大功告成了。大多数时候，启动微信需要扫描屏幕上的二维码进行授权。这时需要你的 SSH 客户端字体缩小到适当的大小以完整显示整个二维码。 </p>
+<p>python3 daemon.py start<br>扫描完成之后，手机上会显示「网页微信已登录」，这是因为 EFB 微信从端使用了网页版微信的接口。当终端显示：Start auto replying. 时，即代表登陆成功，这时候就可以按下 Ctrl + C 来隐藏输出了。 </p>
+<p>0x05: 使用 EFB Telegram 主端<br>现在，在 Telegram 里面搜索你之前指定的 Bot 用户名，点击 Start（开始）即可开始与微信互通消息了。 </p>
+<p>在最初，所有来自微信的消息都会通过 Bot 直接发送给你，要回复其中的任意一条消息，你需要在 Telegram 中选中那条消息，选择 Reply（回复），再输入消息内容。 </p>
+<p>如果需要向新联系人发送消息，只需发送 /chat 指令，选择一个会话。之后这条消息就会变成一个「会话头」，回复这条消息就可以向指定的联系人或群组发送消息。 </p>
+<p>当消息过多时，来自不同会话的消息会使 Telegram 上面的会话混乱不堪。EFB 支持将来自指定会话的消息分流到一个 Telegram 群组中。 </p>
+<p>在 Telegram 中新建一个空群组，并将你的 Bot 加入到这个群组中。<br>（如果找不到自己的 Bot，请尝试在桌面版中创建，并在添加成员时搜索 Bot 的用户名）<br>回到 Bot 会话，发送 /link，选择一个会话，并点击 “Link”<br>在弹出的列表中选择刚刚创建的空群组即可<br>在绑定会话中，你可以像普通聊天一样直接发送消息。也可以通过指定回复的形式来 @ 其他人。 </p>
+<p>注意<br>虽然 Telegram 群组中的所有人可以看到会话全文，但是只有配置文件 (config.py) 中指定的管理员 (admins) 能够以你的名义发送消息到微信。EFB 支持设置多个管理员，但只有第一个管理员（按照输入排序）能够接收到所有消息，而且这有可能造成不必要的隐私问题，敬请注意。<br>以上就是 EFB Telegram 主端的基础用法。关于其他的功能（语音转文字、微信附加功能等）请参见文档 的「ETM」章节。 </p>
+<p>Q: EFB 微信从端稳定吗？<br>只要保持微信手机版网络连接长期稳定，根据上游项目 ItChat 的统计，可长达数个月不掉线。 </p>
+<p>Q: EFB 微信从端支持哪些类型的消息？<br>A: EFB 微信从端理论上支持所有网页版微信支持的消息类型。即： </p>
+<p>微信→Telegram：文字、图片、视频、分享链接、表情、文档、位置、语音、名片、好友请求、系统通知<br>Telegram→微信：文字、图片、表情（以图片发送）、视频<br>所以说，不支持红包、支付、朋友圈、转账、语音通话、视频聊天等网页版不支持的消息类型。 </p>
+<p>Q: 有些表情收不到<br>由于微信网页版的限制，部分受版权保护的表情包不能显示出来，故亦不能转发到 Telegram。 </p>
+<p>Q: 偶尔会丢消息怎么办？<br>这个是 Python 3 urllib3 的长时间网络连接出现的问题。上游项目 python-telegram-bot 已在着手解决这个问题。预计在近期（2017 年 1 月）修复。 </p>
+]]></content>
+      
+        <categories>
+            
+            <category> VueJs </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> telegram </tag>
+            
+            <tag> wechat </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[ThreadLocal是什么]]></title>
       <url>/2017/11/09/JAVA/ThreadLocal%E6%98%AF%E4%BB%80%E4%B9%88/</url>
       <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p><strong>ThreadLocal是什么</strong></p>
@@ -1382,89 +1510,6 @@ compile group: &#39;mysql&#39;, name: &#39;mysql-connector-java&#39;, version: &
     </entry>
     
     <entry>
-      <title><![CDATA[计算机系统概论]]></title>
-      <url>/2017/10/24/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%AE%BA/</url>
-      <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>物联网：把感应器嵌入和装备到电网、铁路、桥梁、隧道、公路、建筑、供水系统、大坝、油气管道等各种物体中，并且被普遍连接，形成所谓的“物联网”，然后将“物联网”与现有的互联网整合起来，实现人类社会与无力系统的整合，形成智慧地球</p>
-<a id="more"></a>      
-<h2 id="计算机系统简介"><a href="#计算机系统简介" class="headerlink" title="计算机系统简介"></a>计算机系统简介</h2><p>计算机系统分为硬件和软件</p>
-<p>硬件：计算机的实体，如主机、外设等</p>
-<p>软件：由具有各类特殊功能的信息（程序）组成</p>
-<ul>
-<li><p>分类：系统软件、应用软件</p>
-<p> 系统软件： 用来管理整个计算机系统</p>
-<pre><code> e.g. : 语言处理程序、操作系统、服务性程序、数据库管理系统、网络软件
-</code></pre><p> 应用软件： 按任务需要编织成的各种程序</p>
-</li>
-</ul>
-<h2 id="计算机系统的层次结构"><a href="#计算机系统的层次结构" class="headerlink" title="计算机系统的层次结构"></a>计算机系统的层次结构</h2><p>层次结构：</p>
-<p><img src="http://oq5d32gij.bkt.clouddn.com/15088579483898.jpg" alt=""></p>
-<p>系统复杂性管理的方法：</p>
-<blockquote>
-<p>抽象：隐藏系统中不重要的细节</p>
-</blockquote>
-<p>从语言的角度划分层次</p>
-<pre><code>微指令系统  微程序机器M0
-              |
-              |
-机器语言    实际机器M1
-              |
-              |
-操作系统    虚拟机器
-              |
-              |
-汇编语言    虚拟机器M2
-              |
-              |
-高级语言    虚拟机器M3
-</code></pre><p>高级语言执行的过程</p>
-<pre><code>虚拟机器M4      用编译程序翻译成汇编语言程序
-    |
-    |
-虚拟机器M3      用汇编语言程序翻译成机器语言程序
-    |
-    |
-虚拟机器M2      用机器语言解释操作系统
-    |
-==============软硬件分界线=========
-    |
-实际机器M1      用微指令解释机器指令
-    |
-    |
-微程序机器M0     由硬件直接执行微指令
-</code></pre><p>软硬件对于功能的实现逻辑上等价</p>
-<ul>
-<li><p>硬件实现：造价贵</p>
-</li>
-<li><p>软件实现：软件体系庞大 实现复杂</p>
-</li>
-</ul>
-<p>计算机组成与计算机体系结构从研究内容上的区别：</p>
-<blockquote>
-<p>计算机体系结构：程序员所见到的计算机系统的属性概念性的结构与功能特性(机器语言程序员)=&gt;有无乘法指令</p>
-<p>计算机组成：实现计算机体系结构所体现的属性(具体指令的实现)=&gt;如何实现乘法指令</p>
-</blockquote>
-]]></content>
-      
-        <categories>
-            
-            <category> 组成原理 </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> 概论 </tag>
-            
-            <tag> 计算机体系结构 </tag>
-            
-            <tag> 计算机组成 </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
       <title><![CDATA[计算机网络基本概念]]></title>
       <url>/2017/10/24/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E8%B7%AF/%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/</url>
       <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>计算机网络是通信技术和计算机技术紧密结合的产物</p>
@@ -1572,6 +1617,89 @@ compile group: &#39;mysql&#39;, name: &#39;mysql-connector-java&#39;, version: &
             <tag> 基本概念 </tag>
             
             <tag> 网络协议 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[计算机系统概论]]></title>
+      <url>/2017/10/24/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%AE%BA/</url>
+      <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>物联网：把感应器嵌入和装备到电网、铁路、桥梁、隧道、公路、建筑、供水系统、大坝、油气管道等各种物体中，并且被普遍连接，形成所谓的“物联网”，然后将“物联网”与现有的互联网整合起来，实现人类社会与无力系统的整合，形成智慧地球</p>
+<a id="more"></a>      
+<h2 id="计算机系统简介"><a href="#计算机系统简介" class="headerlink" title="计算机系统简介"></a>计算机系统简介</h2><p>计算机系统分为硬件和软件</p>
+<p>硬件：计算机的实体，如主机、外设等</p>
+<p>软件：由具有各类特殊功能的信息（程序）组成</p>
+<ul>
+<li><p>分类：系统软件、应用软件</p>
+<p> 系统软件： 用来管理整个计算机系统</p>
+<pre><code> e.g. : 语言处理程序、操作系统、服务性程序、数据库管理系统、网络软件
+</code></pre><p> 应用软件： 按任务需要编织成的各种程序</p>
+</li>
+</ul>
+<h2 id="计算机系统的层次结构"><a href="#计算机系统的层次结构" class="headerlink" title="计算机系统的层次结构"></a>计算机系统的层次结构</h2><p>层次结构：</p>
+<p><img src="http://oq5d32gij.bkt.clouddn.com/15088579483898.jpg" alt=""></p>
+<p>系统复杂性管理的方法：</p>
+<blockquote>
+<p>抽象：隐藏系统中不重要的细节</p>
+</blockquote>
+<p>从语言的角度划分层次</p>
+<pre><code>微指令系统  微程序机器M0
+              |
+              |
+机器语言    实际机器M1
+              |
+              |
+操作系统    虚拟机器
+              |
+              |
+汇编语言    虚拟机器M2
+              |
+              |
+高级语言    虚拟机器M3
+</code></pre><p>高级语言执行的过程</p>
+<pre><code>虚拟机器M4      用编译程序翻译成汇编语言程序
+    |
+    |
+虚拟机器M3      用汇编语言程序翻译成机器语言程序
+    |
+    |
+虚拟机器M2      用机器语言解释操作系统
+    |
+==============软硬件分界线=========
+    |
+实际机器M1      用微指令解释机器指令
+    |
+    |
+微程序机器M0     由硬件直接执行微指令
+</code></pre><p>软硬件对于功能的实现逻辑上等价</p>
+<ul>
+<li><p>硬件实现：造价贵</p>
+</li>
+<li><p>软件实现：软件体系庞大 实现复杂</p>
+</li>
+</ul>
+<p>计算机组成与计算机体系结构从研究内容上的区别：</p>
+<blockquote>
+<p>计算机体系结构：程序员所见到的计算机系统的属性概念性的结构与功能特性(机器语言程序员)=&gt;有无乘法指令</p>
+<p>计算机组成：实现计算机体系结构所体现的属性(具体指令的实现)=&gt;如何实现乘法指令</p>
+</blockquote>
+]]></content>
+      
+        <categories>
+            
+            <category> 组成原理 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> 概论 </tag>
+            
+            <tag> 计算机体系结构 </tag>
+            
+            <tag> 计算机组成 </tag>
             
         </tags>
         
@@ -4580,9 +4708,9 @@ Ritchie Yu
         
         <tags>
             
-            <tag> javaweb </tag>
-            
             <tag> gradle </tag>
+            
+            <tag> javaweb </tag>
             
             <tag> mybatis </tag>
             
@@ -4833,9 +4961,9 @@ task mybatisGenerate &lt;&lt; {
         
         <tags>
             
-            <tag> javaweb </tag>
-            
             <tag> gradle </tag>
+            
+            <tag> javaweb </tag>
             
             <tag> mybatis </tag>
             
@@ -6965,9 +7093,9 @@ public class AdviseDefine {
         
         <tags>
             
-            <tag> AOP </tag>
-            
             <tag> javaweb </tag>
+            
+            <tag> AOP </tag>
             
             <tag> Spring </tag>
             
@@ -7287,9 +7415,9 @@ public class SomeService {
         
         <tags>
             
-            <tag> AOP </tag>
-            
             <tag> javaweb </tag>
+            
+            <tag> AOP </tag>
             
             <tag> Spring </tag>
             

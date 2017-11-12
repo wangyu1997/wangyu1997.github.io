@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://wangyu1997.github.io/"/>
-  <updated>2017-11-09T01:56:25.000Z</updated>
+  <updated>2017-11-12T04:28:34.000Z</updated>
   <id>https://wangyu1997.github.io/</id>
   
   <author>
@@ -14,6 +14,136 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>在 Telegram 收发微信消息</title>
+    <link href="https://wangyu1997.github.io/2017/11/12/%E9%82%A3%E4%BA%9B%E5%B9%B4%E5%80%92%E8%85%BE%E8%BF%87%E7%9A%84%E6%9C%8D%E5%8A%A1%E5%99%A8/%E5%9C%A8%20Telegram%20%E6%94%B6%E5%8F%91%E5%BE%AE%E4%BF%A1%E6%B6%88%E6%81%AF/"/>
+    <id>https://wangyu1997.github.io/2017/11/12/那些年倒腾过的服务器/在 Telegram 收发微信消息/</id>
+    <published>2017-11-11T17:43:11.000Z</published>
+    <updated>2017-11-12T04:28:34.000Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><blockquote>
+<p>本教程是对于<a href="http://link.zhihu.com/?target=https%3A//blog.1a23.com/2017/01/09/EFB-How-to-Send-and-Receive-Messages-from-WeChat-on-Telegram-zh-CN/" target="_blank" rel="external">原文</a>的一些修改。 </p>
+</blockquote>
+<p>开发代号 EH Forwarder Bot（简称 EFB）是一个可扩展的聊天平台隧道框架，基于 Python 3。目前已内置了 Telegram 主端 (Master Channel) 和微信从端 (Slave Channel)，用来在 Telegram 收发微信消息。其他从端开发已在计划之中。同时 EFB 也配备了详尽的文档，欢迎有兴趣的朋友们开发自己的主端或从端，来支持更多的平台。EFB 在 GitHub 中开放了源代码，并且在 Read The Docs 平台上发布的开发文档（英文，en-US）。 </p>
+<p>本文主要介绍了如何在一个虚拟服务器 (VPS) 中安装并配置 EFB、Telegram 主端和微信从端，以及如何使用 Telegram 主端来收发微信消息。 </p>
+<h2 id="0x01-用料"><a href="#0x01-用料" class="headerlink" title="0x01: 用料"></a>0x01: 用料</h2><p>本教程面向具有一定背景知识的进阶用户，如有疑问，请您先在互联网上搜索（推荐 <a href="http://link.zhihu.com/?target=https%3A//google.com/" target="_blank" rel="external">Google</a>），若仍未解决、欢迎在 <a href="http://link.zhihu.com/?target=https%3A//telegram.me/efbsupport" target="_blank" rel="external">EFB Telegram 支持群组</a>留言。 </p>
+<p>在开始之前，请准备： </p>
+<ul>
+<li>一台能使用 SSH 终端的设备。 </li>
+</ul>
+<p>Windows 推荐使用 Putty，Android 用户推荐使用 JuiceSSH </p>
+<ul>
+<li><p>Telegram 账号一枚 </p>
+</li>
+<li><p>可用的科学上网方式 若干 </p>
+</li>
+<li><p>墙外 VPS 一枚 </p>
+</li>
+</ul>
+<p>没有 VPS 的可以尝试一下 Vultr 日本，速度还不错，顺带可以搭梯子。<a href="http://link.zhihu.com/?target=http%3A//www.vultr.com/%3Fref%3D6951220-3B" target="_blank" rel="external">新用户赠送 $20 链接</a></p>
+<p>首先通过 SSH 客户端连接到你的 VPS。 </p>
+<h2 id="0x021-安装-Python-与非-Python-依赖"><a href="#0x021-安装-Python-与非-Python-依赖" class="headerlink" title="0x021: 安装 Python 与非 Python 依赖"></a>0x021: 安装 Python 与非 Python 依赖</h2><p>输入以下指令。 </p>
+<p>注：以下安装的部分软件包可能已经预安装在你的系统中。但请注意将已安装的 Python 3 版本升级到 3.5 或以上。  </p>
+<pre><code># apt-get install python3-pip python3-dev python3-setuptools
+# apt-get install libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.5-dev tk8.5-dev
+# apt-get install libmagic-dev ffmpeg
+# 在 Ubuntu/mint 中安装的依赖
+  yaourt -S  python opus ffmpeg python-pip git
+# 在 Arch Linux 中安装的依赖
+# 类似于 Debian sid / CentOS 这种老旧系统可能需要自己编译 ffmpeg
+# 可使用类似于 screenfetch 类似的工具查看当前的系统版本
+</code></pre><h2 id="0x023-下载源码并安装-Python-依赖"><a href="#0x023-下载源码并安装-Python-依赖" class="headerlink" title="0x023: 下载源码并安装 Python 依赖"></a>0x023: 下载源码并安装 Python 依赖</h2><pre><code>git clone https://github.com/blueset/ehForwarderBot.git
+cd ehForwarderBot
+pip3 install -r requirements.txt
+</code></pre><p>接下来就是进行各种必要的配置和初始化的步骤了。 </p>
+<h2 id="0x030-创建-Telegram-Bot"><a href="#0x030-创建-Telegram-Bot" class="headerlink" title="0x030: 创建 Telegram Bot"></a>0x030: 创建 Telegram Bot</h2><p>Telegram Bot 是 EFB（Telegram 主端）的出口，也是呈献给用户的渠道。我们在这里使用了 Telegram 官方的 Bot API，以最大化利用 Telegram Bot 所提供的各种便利功能。 </p>
+<p>要创建一个新的 Bot，要先向 @BotFather 发起会话。发送指令 /newbot 以启动向导。期间，你需要指定这个 Bot 的名称与用户名（用户名必须以 bot 结尾）。完毕之后 @BotFather 会提供给你一个密钥（Token），妥善保存这个密钥。请注意，为保护您的隐私及信息安全，请不要向任何人提供你的 Bot 用户名及密钥，这可能导致聊天信息泄露等各种风险。 </p>
+<p>接下来还要对刚刚启用的 Bot 进行进一步的配置：允许 Bot 读取非指令信息、允许将 Bot 添加进群组、以及提供指令列表。 </p>
+<p>发送 /setprivacy 到 @BotFather，选择刚刚创建好的 Bot 用户名，然后选择 “Disable”.<br>发送 /setjoingroups 到 @BotFather，选择刚刚创建好的 Bot 用户名，然后选择 “Enable”.<br>发送 /setcommands 到 @BotFather，选择刚刚创建好的 Bot 用户名，然后发送如下内容： </p>
+<pre><code>link - 将会话绑定到 Telegram 群组
+chat - 生成会话头
+recog - 回复语音消息以进行识别
+extra - 获取更多功能
+</code></pre><p>然后还需要获取你自己的 Telegram ID，ID 应显示为一串数字。获取你自己的 ID 有很多方式，你可以选择任意一种。下面介绍两种可能的方式。 </p>
+<ul>
+<li>Plus Messenger </li>
+</ul>
+<p>如果你使用了 Plus Messenger 作为你的 Telegram 客户端，你可以直接打开你自己的资料页，在「自己」下面会显示你的 ID。 </p>
+<ul>
+<li>通过 Bot 查询 </li>
+</ul>
+<p>很多现存的 Bot 也提供了 ID 查询服务，直接向其发送特定的指令即可获得自己的数字 ID。在这里介绍一些接触过的。<br>@get_id_bot 发送 /start<br>@mokubot 发送 /whoami<br>@GroupButler_Bot 发送 /id<br>@jackbot 发送 /me<br>@userinfobot 发送任意文字<br>@orzdigbot 发送 /user<br>留存你的 Telegram ID 以便后续使用。 </p>
+<p>0x031: 配置 EFB 和 Telegram 主端<br>这差不多就是安装过程的最后一步了。首先创建存储用文件夹并赋予其权限。回到 VPS 上 ehForwarderBot 目录。（不出意外的话你应该还在这个目录） </p>
+<pre><code>mkdir storage
+chmod 777 storage
+</code></pre><p>然后复制并编辑配置文件。 </p>
+<pre><code>cp config.sample.py config.py
+editor config.py
+# 其中 editor 是你所喜欢的文本编辑器，比如 vim 则 vim config.py
+</code></pre><p>在配置文件中，token 后引号里面的内容替换为你之前获得的 Bot 密钥，admins 后方括号里面填入你自己的 Telegram ID。后面的 6 行是用来配置语音转文字功能的，不是必要功能，目前可以删除各行。如果有兴趣启用该功能的，请到各平台申请 API keys。详情请参见文档 的「ETM」章节。 </p>
+<p>注意<br>配置文件 (config.py) 是一个 Python 文件。Python 文件有着严格的格式要求。在编辑该文档的时候请全程使用英文输入模式，并避免更改缩进。每一个括号和引号都应该在适当的地方合上。错误的格式会导致 EFB 运行失败。<br>本文件使用 4 个空格作为一个缩进级别并避免使用 Tab 字符。<br>编辑好的结果应类似如下内容。token 和 admins 字段有所不同。 </p>
+<pre><code># ##############################
+#  Configs for EH Forwarder Bot
+# ##############################
+#
+#  Basic settings
+# ----------------
+#
+# Master/Slave Channels
+#
+# Master channel:
+# The channel that is mainly used to view/manage messages
+# from slave channels.
+# Currently only 1 master channel is supported.
+#
+# Slave channels:
+# Channels that are hosted on the server and being delivered
+# to and from the master channel.
+# You may have more than 1 slave channel.
+#
+master_channel = &#39;plugins.eh_telegram_master&#39;, &#39;TelegramChannel&#39;
+slave_channels = [(&#39;plugins.eh_wechat_slave&#39;, &#39;WeChatChannel&#39;)]
+#
+#  Plugin specific settings
+# --------------------------
+# Plugin specific settings should be written below in the format of:
+# `channel_name = {&quot;key1&quot;: &quot;value1&quot;, &quot;key2&quot;: &quot;value2&quot;}`
+# Please refer to docs of individual plugin for details
+#
+eh_telegram_master = {
+    &quot;token&quot;: &quot;12345678:QWFPGJLUYarstdheioZXCVBKM&quot;,
+    &quot;admins&quot;: [123456789]
+}
+</code></pre><p>到目前为止，EFB 的配置工作已经完成。现在我们只需要启动它，登陆微信就大功告成了。大多数时候，启动微信需要扫描屏幕上的二维码进行授权。这时需要你的 SSH 客户端字体缩小到适当的大小以完整显示整个二维码。 </p>
+<p>python3 daemon.py start<br>扫描完成之后，手机上会显示「网页微信已登录」，这是因为 EFB 微信从端使用了网页版微信的接口。当终端显示：Start auto replying. 时，即代表登陆成功，这时候就可以按下 Ctrl + C 来隐藏输出了。 </p>
+<p>0x05: 使用 EFB Telegram 主端<br>现在，在 Telegram 里面搜索你之前指定的 Bot 用户名，点击 Start（开始）即可开始与微信互通消息了。 </p>
+<p>在最初，所有来自微信的消息都会通过 Bot 直接发送给你，要回复其中的任意一条消息，你需要在 Telegram 中选中那条消息，选择 Reply（回复），再输入消息内容。 </p>
+<p>如果需要向新联系人发送消息，只需发送 /chat 指令，选择一个会话。之后这条消息就会变成一个「会话头」，回复这条消息就可以向指定的联系人或群组发送消息。 </p>
+<p>当消息过多时，来自不同会话的消息会使 Telegram 上面的会话混乱不堪。EFB 支持将来自指定会话的消息分流到一个 Telegram 群组中。 </p>
+<p>在 Telegram 中新建一个空群组，并将你的 Bot 加入到这个群组中。<br>（如果找不到自己的 Bot，请尝试在桌面版中创建，并在添加成员时搜索 Bot 的用户名）<br>回到 Bot 会话，发送 /link，选择一个会话，并点击 “Link”<br>在弹出的列表中选择刚刚创建的空群组即可<br>在绑定会话中，你可以像普通聊天一样直接发送消息。也可以通过指定回复的形式来 @ 其他人。 </p>
+<p>注意<br>虽然 Telegram 群组中的所有人可以看到会话全文，但是只有配置文件 (config.py) 中指定的管理员 (admins) 能够以你的名义发送消息到微信。EFB 支持设置多个管理员，但只有第一个管理员（按照输入排序）能够接收到所有消息，而且这有可能造成不必要的隐私问题，敬请注意。<br>以上就是 EFB Telegram 主端的基础用法。关于其他的功能（语音转文字、微信附加功能等）请参见文档 的「ETM」章节。 </p>
+<p>Q: EFB 微信从端稳定吗？<br>只要保持微信手机版网络连接长期稳定，根据上游项目 ItChat 的统计，可长达数个月不掉线。 </p>
+<p>Q: EFB 微信从端支持哪些类型的消息？<br>A: EFB 微信从端理论上支持所有网页版微信支持的消息类型。即： </p>
+<p>微信→Telegram：文字、图片、视频、分享链接、表情、文档、位置、语音、名片、好友请求、系统通知<br>Telegram→微信：文字、图片、表情（以图片发送）、视频<br>所以说，不支持红包、支付、朋友圈、转账、语音通话、视频聊天等网页版不支持的消息类型。 </p>
+<p>Q: 有些表情收不到<br>由于微信网页版的限制，部分受版权保护的表情包不能显示出来，故亦不能转发到 Telegram。 </p>
+<p>Q: 偶尔会丢消息怎么办？<br>这个是 Python 3 urllib3 的长时间网络连接出现的问题。上游项目 python-telegram-bot 已在着手解决这个问题。预计在近期（2017 年 1 月）修复。 </p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
+    
+    </summary>
+    
+      <category term="VueJs" scheme="https://wangyu1997.github.io/categories/VueJs/"/>
+    
+    
+      <category term="telegram" scheme="https://wangyu1997.github.io/tags/telegram/"/>
+    
+      <category term="wechat" scheme="https://wangyu1997.github.io/tags/wechat/"/>
+    
+  </entry>
   
   <entry>
     <title>ThreadLocal是什么</title>
@@ -1407,91 +1537,6 @@ compile group: &#39;mysql&#39;, name: &#39;mysql-connector-java&#39;, version: &
   </entry>
   
   <entry>
-    <title>计算机系统概论</title>
-    <link href="https://wangyu1997.github.io/2017/10/24/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%AE%BA/"/>
-    <id>https://wangyu1997.github.io/2017/10/24/计算机组成原理/计算机系统概论/</id>
-    <published>2017-10-24T14:43:11.000Z</published>
-    <updated>2017-10-24T15:39:57.000Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>物联网：把感应器嵌入和装备到电网、铁路、桥梁、隧道、公路、建筑、供水系统、大坝、油气管道等各种物体中，并且被普遍连接，形成所谓的“物联网”，然后将“物联网”与现有的互联网整合起来，实现人类社会与无力系统的整合，形成智慧地球</p>
-<a id="more"></a>      
-<h2 id="计算机系统简介"><a href="#计算机系统简介" class="headerlink" title="计算机系统简介"></a>计算机系统简介</h2><p>计算机系统分为硬件和软件</p>
-<p>硬件：计算机的实体，如主机、外设等</p>
-<p>软件：由具有各类特殊功能的信息（程序）组成</p>
-<ul>
-<li><p>分类：系统软件、应用软件</p>
-<p> 系统软件： 用来管理整个计算机系统</p>
-<pre><code> e.g. : 语言处理程序、操作系统、服务性程序、数据库管理系统、网络软件
-</code></pre><p> 应用软件： 按任务需要编织成的各种程序</p>
-</li>
-</ul>
-<h2 id="计算机系统的层次结构"><a href="#计算机系统的层次结构" class="headerlink" title="计算机系统的层次结构"></a>计算机系统的层次结构</h2><p>层次结构：</p>
-<p><img src="http://oq5d32gij.bkt.clouddn.com/15088579483898.jpg" alt=""></p>
-<p>系统复杂性管理的方法：</p>
-<blockquote>
-<p>抽象：隐藏系统中不重要的细节</p>
-</blockquote>
-<p>从语言的角度划分层次</p>
-<pre><code>微指令系统  微程序机器M0
-              |
-              |
-机器语言    实际机器M1
-              |
-              |
-操作系统    虚拟机器
-              |
-              |
-汇编语言    虚拟机器M2
-              |
-              |
-高级语言    虚拟机器M3
-</code></pre><p>高级语言执行的过程</p>
-<pre><code>虚拟机器M4      用编译程序翻译成汇编语言程序
-    |
-    |
-虚拟机器M3      用汇编语言程序翻译成机器语言程序
-    |
-    |
-虚拟机器M2      用机器语言解释操作系统
-    |
-==============软硬件分界线=========
-    |
-实际机器M1      用微指令解释机器指令
-    |
-    |
-微程序机器M0     由硬件直接执行微指令
-</code></pre><p>软硬件对于功能的实现逻辑上等价</p>
-<ul>
-<li><p>硬件实现：造价贵</p>
-</li>
-<li><p>软件实现：软件体系庞大 实现复杂</p>
-</li>
-</ul>
-<p>计算机组成与计算机体系结构从研究内容上的区别：</p>
-<blockquote>
-<p>计算机体系结构：程序员所见到的计算机系统的属性概念性的结构与功能特性(机器语言程序员)=&gt;有无乘法指令</p>
-<p>计算机组成：实现计算机体系结构所体现的属性(具体指令的实现)=&gt;如何实现乘法指令</p>
-</blockquote>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;物联网：把感应器嵌入和装备到电网、铁路、桥梁、隧道、公路、建筑、供水系统、大坝、油气管道等各种物体中，并且被普遍连接，形成所谓的“物联网”，然后将“物联网”与现有的互联网整合起来，实现人类社会与无力系统的整合，形成智慧地球&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="组成原理" scheme="https://wangyu1997.github.io/categories/%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/"/>
-    
-    
-      <category term="概论" scheme="https://wangyu1997.github.io/tags/%E6%A6%82%E8%AE%BA/"/>
-    
-      <category term="计算机体系结构" scheme="https://wangyu1997.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/"/>
-    
-      <category term="计算机组成" scheme="https://wangyu1997.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90/"/>
-    
-  </entry>
-  
-  <entry>
     <title>计算机网络基本概念</title>
     <link href="https://wangyu1997.github.io/2017/10/24/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E8%B7%AF/%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/"/>
     <id>https://wangyu1997.github.io/2017/10/24/计算机网路/基本概念/</id>
@@ -1603,6 +1648,91 @@ compile group: &#39;mysql&#39;, name: &#39;mysql-connector-java&#39;, version: &
       <category term="基本概念" scheme="https://wangyu1997.github.io/tags/%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/"/>
     
       <category term="网络协议" scheme="https://wangyu1997.github.io/tags/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>计算机系统概论</title>
+    <link href="https://wangyu1997.github.io/2017/10/24/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%AE%BA/"/>
+    <id>https://wangyu1997.github.io/2017/10/24/计算机组成原理/计算机系统概论/</id>
+    <published>2017-10-24T14:43:11.000Z</published>
+    <updated>2017-10-24T15:39:57.000Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><p>物联网：把感应器嵌入和装备到电网、铁路、桥梁、隧道、公路、建筑、供水系统、大坝、油气管道等各种物体中，并且被普遍连接，形成所谓的“物联网”，然后将“物联网”与现有的互联网整合起来，实现人类社会与无力系统的整合，形成智慧地球</p>
+<a id="more"></a>      
+<h2 id="计算机系统简介"><a href="#计算机系统简介" class="headerlink" title="计算机系统简介"></a>计算机系统简介</h2><p>计算机系统分为硬件和软件</p>
+<p>硬件：计算机的实体，如主机、外设等</p>
+<p>软件：由具有各类特殊功能的信息（程序）组成</p>
+<ul>
+<li><p>分类：系统软件、应用软件</p>
+<p> 系统软件： 用来管理整个计算机系统</p>
+<pre><code> e.g. : 语言处理程序、操作系统、服务性程序、数据库管理系统、网络软件
+</code></pre><p> 应用软件： 按任务需要编织成的各种程序</p>
+</li>
+</ul>
+<h2 id="计算机系统的层次结构"><a href="#计算机系统的层次结构" class="headerlink" title="计算机系统的层次结构"></a>计算机系统的层次结构</h2><p>层次结构：</p>
+<p><img src="http://oq5d32gij.bkt.clouddn.com/15088579483898.jpg" alt=""></p>
+<p>系统复杂性管理的方法：</p>
+<blockquote>
+<p>抽象：隐藏系统中不重要的细节</p>
+</blockquote>
+<p>从语言的角度划分层次</p>
+<pre><code>微指令系统  微程序机器M0
+              |
+              |
+机器语言    实际机器M1
+              |
+              |
+操作系统    虚拟机器
+              |
+              |
+汇编语言    虚拟机器M2
+              |
+              |
+高级语言    虚拟机器M3
+</code></pre><p>高级语言执行的过程</p>
+<pre><code>虚拟机器M4      用编译程序翻译成汇编语言程序
+    |
+    |
+虚拟机器M3      用汇编语言程序翻译成机器语言程序
+    |
+    |
+虚拟机器M2      用机器语言解释操作系统
+    |
+==============软硬件分界线=========
+    |
+实际机器M1      用微指令解释机器指令
+    |
+    |
+微程序机器M0     由硬件直接执行微指令
+</code></pre><p>软硬件对于功能的实现逻辑上等价</p>
+<ul>
+<li><p>硬件实现：造价贵</p>
+</li>
+<li><p>软件实现：软件体系庞大 实现复杂</p>
+</li>
+</ul>
+<p>计算机组成与计算机体系结构从研究内容上的区别：</p>
+<blockquote>
+<p>计算机体系结构：程序员所见到的计算机系统的属性概念性的结构与功能特性(机器语言程序员)=&gt;有无乘法指令</p>
+<p>计算机组成：实现计算机体系结构所体现的属性(具体指令的实现)=&gt;如何实现乘法指令</p>
+</blockquote>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;物联网：把感应器嵌入和装备到电网、铁路、桥梁、隧道、公路、建筑、供水系统、大坝、油气管道等各种物体中，并且被普遍连接，形成所谓的“物联网”，然后将“物联网”与现有的互联网整合起来，实现人类社会与无力系统的整合，形成智慧地球&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="组成原理" scheme="https://wangyu1997.github.io/categories/%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/"/>
+    
+    
+      <category term="概论" scheme="https://wangyu1997.github.io/tags/%E6%A6%82%E8%AE%BA/"/>
+    
+      <category term="计算机体系结构" scheme="https://wangyu1997.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/"/>
+    
+      <category term="计算机组成" scheme="https://wangyu1997.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90/"/>
     
   </entry>
   
@@ -4625,9 +4755,9 @@ Ritchie Yu
       <category term="JavaWeb" scheme="https://wangyu1997.github.io/categories/JavaWeb/"/>
     
     
-      <category term="javaweb" scheme="https://wangyu1997.github.io/tags/javaweb/"/>
-    
       <category term="gradle" scheme="https://wangyu1997.github.io/tags/gradle/"/>
+    
+      <category term="javaweb" scheme="https://wangyu1997.github.io/tags/javaweb/"/>
     
       <category term="mybatis" scheme="https://wangyu1997.github.io/tags/mybatis/"/>
     
@@ -4638,7 +4768,7 @@ Ritchie Yu
     <link href="https://wangyu1997.github.io/2017/10/09/JavaWeb/Gradle%E9%83%A8%E7%BD%B2mybatis/"/>
     <id>https://wangyu1997.github.io/2017/10/09/JavaWeb/Gradle部署mybatis/</id>
     <published>2017-10-09T02:43:11.000Z</published>
-    <updated>2017-10-24T07:01:03.000Z</updated>
+    <updated>2017-11-12T04:26:15.000Z</updated>
     
     <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
 <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><a href="http://www.mybatis.org/generator/index.html" target="_blank" rel="external">Mybatis Generator</a>是一个mybatis工具项目，用于生成mybatis的model,mapper,dao持久层代码。<strong>Mybatis Generator</strong>提供了maven plugin,ant target，java三种方式启动。现在主流的构建工具是<a href="https://gradle.org/" target="_blank" rel="external">Gradle</a>,虽然mybatis generator没有提供gradle的插件，但gradle可以调用ant任务，因此，gradle也能启动Mybatis Generator。 </p>
@@ -4880,9 +5010,9 @@ task mybatisGenerate &lt;&lt; {
       <category term="JavaWeb" scheme="https://wangyu1997.github.io/categories/JavaWeb/"/>
     
     
-      <category term="javaweb" scheme="https://wangyu1997.github.io/tags/javaweb/"/>
-    
       <category term="gradle" scheme="https://wangyu1997.github.io/tags/gradle/"/>
+    
+      <category term="javaweb" scheme="https://wangyu1997.github.io/tags/javaweb/"/>
     
       <category term="mybatis" scheme="https://wangyu1997.github.io/tags/mybatis/"/>
     
@@ -4893,7 +5023,7 @@ task mybatisGenerate &lt;&lt; {
     <link href="https://wangyu1997.github.io/2017/10/04/VueJs/flex%E5%B8%83%E5%B1%80/"/>
     <id>https://wangyu1997.github.io/2017/10/04/VueJs/flex布局/</id>
     <published>2017-10-03T17:43:11.000Z</published>
-    <updated>2017-10-24T07:12:07.000Z</updated>
+    <updated>2017-11-12T04:25:58.000Z</updated>
     
     <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
 <p>网页布局（layout）是 CSS 的一个重点应用。 </p>
@@ -6033,755 +6163,6 @@ div {
       <category term="loader" scheme="https://wangyu1997.github.io/tags/loader/"/>
     
       <category term="stylus" scheme="https://wangyu1997.github.io/tags/stylus/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Vue实战</title>
-    <link href="https://wangyu1997.github.io/2017/10/02/VueJs/Vue%E5%AE%9E%E6%88%98/"/>
-    <id>https://wangyu1997.github.io/2017/10/02/VueJs/Vue实战/</id>
-    <published>2017-10-01T17:43:11.000Z</published>
-    <updated>2017-10-24T07:13:50.000Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><a id="more"></a> 
-<p>这个系统使用的技术栈为：Vue+Webpack+Element+Axios+vueRouter.系统是一个快餐店的POS系统，当然我们不可能实现一个完整POS系统的所有功能（业余时间我会开发完成并开源），我们在视频中只完成收银模块的制作。你在这个视频中会学习到很多实战的技巧，让你在真实的工作中得心应手，脱颖而出。 </p>
-<p>如果你是一个Vue新手，你可能还不能完全掌握文章的内容，你需要一些Vue的初级知识和中级知识。如果你是新手是不是感到很无奈，幸运的是本站为你提供了全部的前置视频学习资源，你可以踏踏实实的学习。 </p>
-<h3 id="学习前置课程："><a href="#学习前置课程：" class="headerlink" title="学习前置课程："></a>学习前置课程：</h3><p><strong>初级课程：</strong></p>
-<ol>
-<li><a href="https://link.juejin.im?target=http%3A%2F%2Fjspang.com%2F2017%2F02%2F23%2Fvue2_01%2F" target="_blank" rel="external">【第一季】Vue2.0视频教程-内部指令(共8集)</a></li>
-<li><a href="https://link.juejin.im?target=http%3A%2F%2Fjspang.com%2F2017%2F03%2F14%2Fvue2_02%2F" target="_blank" rel="external">【第二季】Vue2.0视频教程-全局API(共9集)</a></li>
-<li><a href="https://link.juejin.im?target=http%3A%2F%2Fjspang.com%2F2017%2F03%2F26%2Fvue3%2F" target="_blank" rel="external">【第三季】Vue2.0视频教程-选项（共6集）</a></li>
-<li><a href="https://link.juejin.im?target=http%3A%2F%2Fjspang.com%2F2017%2F04%2F09%2Fvue2_4%2F" target="_blank" rel="external">【第四季】Vue2.0视频教程-实例和内置组件（共4集）</a></li>
-</ol>
-<p><strong>中级课程：</strong></p>
-<ol>
-<li><a href="https://link.juejin.im?target=http%3A%2F%2Fjspang.com%2F2017%2F04%2F10%2Fvue-cli%2F" target="_blank" rel="external">技术胖的Vue-cli 视频教程（共3集）</a></li>
-<li><a href="https://link.juejin.im?target=http%3A%2F%2Fjspang.com%2F2017%2F04%2F13%2Fvue-router%2F" target="_blank" rel="external">技术胖的Vue-router视频教程（共11集）</a></li>
-<li><a href="https://link.juejin.im?target=http%3A%2F%2Fjspang.com%2F2017%2F05%2F03%2Fvuex%2F" target="_blank" rel="external">技术胖的vuex视频教程（共6集）</a></li>
-</ol>
-<p>Mockplus是产品经理装逼使用的利器，但是真的很好用，作为一个已经工作的程序员必须舔产品经理的脸，所以你也要对Mockplus的使用有所了解，并会简单的使用。其实Mockplus就是一个线框图制作工具，能把我们的想法或者不太好用语言表达的地方，快速画出线框草图增加理解能力。 </p>
-<h3 id="为什么选择快餐店POS系统？"><a href="#为什么选择快餐店POS系统？" class="headerlink" title="为什么选择快餐店POS系统？"></a>为什么选择快餐店POS系统？</h3><p>刚开始我想作一套以酒水商城为背景的手机端应用，但是我发现网上这样的应用太多了，什么仿饿了么，什么知乎，什么购物车都可以在网上找到，所以你完全可以Github网站中下载，自学掌握。我觉的既然作了这个实战，就要够酷够复杂，我下面列举了三个原因，大家可以看一下（你其实可以忽略前两点）。 </p>
-<ul>
-<li>这个收银界面足够复杂：我们采用三栏布局，每栏的交互操作都很有技术技巧，让你快速掌握复杂应用的开发。</li>
-<li>用到的知识点多：用到实战中90%以上的知识点，让你把Vue的知识串联起来，快速成为单位中的技术牛人。</li>
-<li>为了更好的和女神啪啪啪：京东-强东哥的女神愿望就是开奶茶店，我的女神愿望就是开个快餐店。</li>
-</ul>
-<h3 id="MockPlus软件下载："><a href="#MockPlus软件下载：" class="headerlink" title="MockPlus软件下载："></a>MockPlus软件下载：</h3><p>Mockplus是一款免费的软件，你可以随便下载：<a href="https://link.juejin.im?target=https%3A%2F%2Fwww.mockplus.cn%2F" target="_blank" rel="external">www.mockplus.cn/</a> 。下载好后你需要注册一个账户，就可以正常使用了。 </p>
-<p><img src="https://user-gold-cdn.xitu.io/2017/6/15/fcb4c4f46535eea5ef279118eec3ce60?imageView2/0/w/1280/h/960" alt=""></p>
-<p>软件的基本需求分析和画的过程，请看视频，这里就不用文字描述了，去看视频吧。 </p>
-<h3 id="项目框线图；"><a href="#项目框线图；" class="headerlink" title="项目框线图；"></a>项目框线图；</h3><p>下面是我们用Mockplus制作的应用框线图，虽然简单，但是已经把我脑海中快餐店Pos系统的大体样式画出来了。在作项目之前，一定要画出框线图，反复讨论需求和技术实现，这样能避免开发中的大范围修改，在实际工作当中非常重要。 </p>
-<p><img src="https://user-gold-cdn.xitu.io/2017/6/15/5060628e6a2352003bd2ac33c04792b9?imageView2/0/w/1280/h/960" alt=""></p>
-<p>我们采用Vue-cli进行快速搭建，如果你对Vue-cli还不了解，请观看下面的文章，大概30分钟可完全掌握Vue-cli。 </p>
-<ol>
-<li><a href="https://link.juejin.im?target=http%3A%2F%2Fjspang.com%2F2017%2F04%2F10%2Fvue-cli%2F" target="_blank" rel="external">技术胖的Vue-cli 视频教程（共3集）</a></li>
-</ol>
-<h3 id="搭建项目架构："><a href="#搭建项目架构：" class="headerlink" title="搭建项目架构："></a>搭建项目架构：</h3><p>项目采用Webpack+Vue-router的架构方式，开始安装（全部在windows系统上操作，我也没有mac电脑）。 </p>
-<ol>
-<li><p>按Win+R，然后在文本框中输入cmd，回车打开命令行，输入vue-cli安装命令：</p>
-<p>mpm install vue-cli -g</p>
-</li>
-</ol>
-<p>这里的-g代表全局安装。 </p>
-<ol>
-<li><p>在命令行中初始化项目，我们采用的是webpack模板，输入初始化命令：</p>
-<p>vue init webpack AwesomePos</p>
-</li>
-</ol>
-<p>这里的AwesmonePos是我的项目文件夹名称，你可以起一个自己喜欢的名称。安装时根据项目需要配置所需要的模块。这里有一个小技巧，就是在你已经提前建立好了文件夹的时候，我们也进入了文件夹，这时候我们可以省略这个文件夹名称。如下情况： </p>
-<pre><code>mikdir AwesomePos
-cd AwesomePos
-vue init webpack
-</code></pre><ol>
-<li>在命令行中，进入项目目录，使用npm install 安装package.json里项目的依赖包。如果你网速较慢的话，可以使用淘宝镜像的cnpm来进行安装。</li>
-<li>查看是否安装正确。在命令行中输入 npm run dev ，如果能在浏览器中正常打开页面，说明安装正确。</li>
-</ol>
-<p>到这里为止，我们的项目架构就建立好了，我们需要对Vue-cli给我们生成的文件进行一些必要的修改。 </p>
-<h3 id="修改项目文件内容："><a href="#修改项目文件内容：" class="headerlink" title="修改项目文件内容："></a>修改项目文件内容：</h3><ol>
-<li><p>修改根目录下的index.html文件，我们想写一些CSS样式，这样作是为了更好的布局，然后修改一下标题栏。让标题符合项目这里起名叫“AwesomePOS-快餐店管理系统”。index.html修改后内容如下。</p>
-<p>   &lt;!DOCTYPE html&gt;<br>   <html></html></p>
-<pre><code> &lt;head&gt;
-   &lt;meta charset=&quot;utf-8&quot;&gt;
-   &lt;title&gt;AwesomePOS-快餐管理系统&lt;/title&gt;
-   &lt;link rel=&quot;stylesheet&quot; href=&quot;http://at.alicdn.com/t/font_wyhhdpv5lhvbzkt9.css&quot;&gt;
-   &lt;style&gt;
-     html,body,#app{height:100%;padding: 0;margin:0;}
-   &lt;/style&gt;
- &lt;/head&gt;
- &lt;body &gt;
-</code></pre></li>
-</ol>
-<pre><code>        &lt;div id=&quot;app&quot; &gt;&lt;/div&gt;
-        &lt;!-- built files will be auto injected --&gt;
-
-      &lt;/body&gt;
-
-    &lt;/html&gt;
-</code></pre><ol>
-<li><p>新建Pos组件，这个相当于程序员的入口文件。在src/components/page/目录下新建Pos.vue文件。文件内容写出vue模板的架构就可以。</p>
-   <template><br>     <div class="pos"><br>      Hello Pos Demo!<br>     </div><br>   </template>
-
-<p>   <script><br>   export default {</p>
-<pre><code> name: &#39;Pos&#39;
-</code></pre><p>   }<br>   </script></p>
-   <style scoped>
-
-   </style>
-
-
-</li>
-</ol>
-<ol>
-<li><p>修改路由文件，项目根目录/src/router/index.js，让入口文件变成Pos组件。<br>先用import引入了Pos模板组件，然后修改routes里边的内容。如果你对Vue-router的知识还不了解，可以去看我以前的课程，这里就不作过多的讲解了。</p>
-<p>import Vue from ‘vue’<br>import Router from ‘vue-router’<br>import Pos from ‘@/components/page/Pos’</p>
-<p>Vue.use(Router)</p>
-<p>export default new Router({<br> routes: [<br>   {</p>
-<pre><code> path: &#39;/&#39;,
- name: &#39;Pos&#39;,
- component: Pos
-</code></pre><p>   }<br> ]<br>})</p>
-</li>
-</ol>
-<p>这时候看一下浏览器中的网页，如果显示出了Hello Pos Demo.我们就算成功搭建项目架构了。下节课我们确定一下项目中使用的图标。 </p>
-<p>在开发中经常会遇到小图标的使用问题，小图标的使用可以让程序更美观和增加可用性。网上给程序加上小图标的方法有很多。曾经为了寻找一款使用简单，图标美观的图标库，我真的是到处搜索，直到遇到了IconFont，我觉的它能满足我的大部分要求。那在这里我推荐大家使用IconFont，这是阿里巴巴的矢量图标库。（这绝对不是广告，只是自己使用的一些感受） </p>
-<p>挑选自己喜欢的图标 </p>
-<p>Iconfont中有很多图标，我们可以像在超市逛街一样，挑选自己喜欢的商品，然后放入购物车。 </p>
-<h3 id="挑选图标的过程（共6步）"><a href="#挑选图标的过程（共6步）" class="headerlink" title="挑选图标的过程（共6步）"></a>挑选图标的过程（共6步）</h3><ol>
-<li>进入网站：Iconfont网址：[<a href="http://www.iconfont.cn][12" target="_blank" rel="external">http://www.iconfont.cn][12</a>]</li>
-<li>点击网站上方的“官方图标库”，选择自己喜欢的图标。在这里我选择天猫的图标库。</li>
-<li>选择好自己喜欢的图标，你可以有两个选择，下载代码 和 添加至项目。</li>
-<li>我们这两选择添加至项目，然后新建项目，并输入名称。</li>
-<li>项目添加好后，会自动给我们转入到我们项目库中。点击查看在线链接。</li>
-<li>生产css引入的代码，生成后就可以在项目首页index.html引入了。</li>
-</ol>
-<pre><code>   [12]: http://www.iconfont.cn
-
- &lt;link rel=&quot;stylesheet&quot; href=&quot;http://at.alicdn.com/t/font_wyhhdpv5lhvbzkt9.css&quot;&gt;
-</code></pre><h3 id="图标的使用："><a href="#图标的使用：" class="headerlink" title="图标的使用："></a>图标的使用：</h3><p>图标顺利引入到项目中，已经可以使用它们了，在“我的项目中”你会看到图标的font class值。可以直接复制代码粘贴，也可以自己写代码。 </p>
-<pre><code>&lt;i class=&quot;icon iconfont icon-hanbao&quot;&gt;&lt;/i&gt;
-</code></pre><p>这样在页面中就可以看到图标了。 </p>
-<h3 id="添加更多图标："><a href="#添加更多图标：" class="headerlink" title="添加更多图标："></a>添加更多图标：</h3><p>如果在项目中觉的图标不够用了，需要添加更多图标。可以利用下面四步进行添加。 </p>
-<ol>
-<li>去Iconfont网站继续挑选，把相中的图标加入购物车中。</li>
-<li>把购物车中的图标加入到项目中。</li>
-<li>重新生成在线链接。（这部很重要）</li>
-<li>在项目主页中(index.html)，更换css引入链接。</li>
-</ol>
-<p>实战项目开发的知识点就是很多，也很杂，但是这些都很实用，你也会快速成长，不要感觉和Vue无关就忽略，让我们共同努力，变成更好的自己。 </p>
-<p>上节学习了inconFont的使用，可以在项目中加入漂亮的icon图标了。这节课我们要快速撸一个侧边栏组件出来。组件的作用就是在可以复用，想在那个页面使用都可以，并且像写html标签一样简单。 </p>
-<h3 id="建立leftNav-vue文件："><a href="#建立leftNav-vue文件：" class="headerlink" title="建立leftNav.vue文件："></a>建立leftNav.vue文件：</h3><p>我们在src/components目录下，先新建一个common和page文件夹。 </p>
-<ul>
-<li>common文件夹用来放共用组件，下面写的leftNav.vue组件就放到这里。</li>
-<li>page文件夹用来放我们的页面模板组件，页面的模板文件放到这里。</li>
-</ul>
-<p>在common文件夹下，新建leftNav.vue文件。 </p>
-<p>开始动手写代码： </p>
-<p>建立好文件后，我们先给components来个基本组件结构，你可以复制粘贴也可以手写。 </p>
-<pre><code>&lt;template&gt;
-  &lt;div class=&quot;left-nav&quot;&gt;
-
-  &lt;/div&gt;
-&lt;/template&gt;
-
-&lt;script&gt;
-export default {
-  name: &#39;leftNav&#39;,
-  data () {
-    return {
-    }
-  }
-}
-&lt;/script&gt;
-&lt;style&gt;
-
-&lt;/style&gt;
-</code></pre><p>开始写html结构，我们用列表li来代表导航。菜单栏有收银、店铺、商品、会员、统计。我们编写的html结构如下 </p>
-<pre><code> &lt;ul&gt;
-        &lt;li&gt;
-            &lt;i class=&quot;icon iconfont icon-wodezichan&quot;&gt;&lt;/i&gt;
-            &lt;div&gt;收银&lt;/div&gt;
-        &lt;/li&gt;
-
-        &lt;li&gt;
-            &lt;i class=&quot;icon iconfont icon-dianpu&quot;&gt;&lt;/i&gt;
-            &lt;div&gt;店铺&lt;/div&gt;
-        &lt;/li&gt;
-
-        &lt;li&gt;
-            &lt;i class=&quot;icon iconfont icon-hanbao&quot;&gt;&lt;/i&gt;
-            &lt;div&gt;商品&lt;/div&gt;
-        &lt;/li&gt;
-
-         &lt;li&gt;
-            &lt;i class=&quot;icon iconfont icon-huiyuanqia&quot;&gt;&lt;/i&gt;
-            &lt;div&gt;会员&lt;/div&gt;
-        &lt;/li&gt;
-
-
-        &lt;li&gt;
-            &lt;i class=&quot;icon iconfont icon-tongji&quot;&gt;&lt;/i&gt;
-            &lt;div&gt;统计&lt;/div&gt;
-        &lt;/li&gt;
-&lt;/ul&gt;
-</code></pre><p>注意：这里你也许和我使用的图标不一样，请自行改成你图标用的代码，不要无脑拷贝，图标会显示不出来。 </p>
-<p>components（组件）基本结构写好后，开始动手写CSS样式，让我们的组件变的好看。 </p>
-<pre><code>&lt;style&gt;
-    .left-nav{
-       color:#fff;
-       font-size:10px;
-       height:100%;
-       background-color: #1D8ce0;
-       float:left;
-       width:5%;
-    }
-    .iconfont{
-       font-size:24px;
-    }
-    .left-nav ul{
-        padding:0px;
-        margin: 0px;
-    }
-    .left-nav li{
-        list-style: none;
-        text-align: center;
-        border-bottom:1px solid #20a0ff;
-        padding:10px;
-    }
-&lt;/style&gt;
-</code></pre><p>编写完CSS样式，这个组件算是大体写好了，以后根据需求我们会在组件里添加标签。但是现在还没有这个需求，所以暂时不添加。 </p>
-<h3 id="把leftNav组件放到模板中"><a href="#把leftNav组件放到模板中" class="headerlink" title="把leftNav组件放到模板中"></a>把leftNav组件放到模板中</h3><p>先用import在App.vue中引入leftNav组件。 </p>
-<pre><code>import leftNav from &#39;@/components/common/leftNav&#39;
-</code></pre><p>引入后在vue的构造器里添加components属性，并放入我们的leftNav组件。 </p>
-<pre><code>export default {
-  name: &#39;app&#39;,
-  components:{
-    leftNav
-  }
-}
-</code></pre><p>这样组件就算在也页面引入成功了，接下来我们就可以在区域里愉快的使用它（）。贴出引入使用全部代码，方便大家学习查看。 </p>
-<pre><code>&lt;template&gt;
-  &lt;div id=&quot;app&quot;&gt;
-    &lt;!--左侧导航--&gt;
-
-        &lt;leftNav&gt;&lt;/leftNav&gt;
-
-    &lt;!--操作区域--&gt;
-    &lt;div class=&quot;main&quot;&gt;
-      &lt;router-view&gt;&lt;/router-view&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-&lt;/template&gt;
-
-&lt;script&gt;
-import leftNav from &#39;@/components/common/leftNav&#39;
-export default {
-  name: &#39;app&#39;,
-  components:{
-    leftNav
-  }
-}
-&lt;/script&gt;
-
-&lt;style&gt;
-#app {
-  font-family: &#39;Microsoft YaHei&#39;,&#39;Avenir&#39;, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: left;
-  color: #2c3e50;
-   height:100%;
-}
-
-.main{
-  float:left;
-  width:95%; 
-  background-color: #EFF2F7;
-  height:100%;
-  overflow: auto;
-
-}
-&lt;/style&gt;
-</code></pre><p>Element是一套为开发者、设计师和产品经理准备的基于Vue2.0的组件库，提供了配套设计资源，帮助你的网站快速成型。在项目中自己写组件虽然灵活，但是效率并不高效，所以要学会站在巨人的肩膀上干活，Element就是巨人的肩旁，也是现在国内比较成熟的以一套Vue的组件库。所以我决定 使用这个组件库开发项目。 </p>
-<h3 id="npm安装"><a href="#npm安装" class="headerlink" title="npm安装"></a>npm安装</h3><p>这里使用npm的方式安装，它能更好地和webpack打包工具配合使用。 </p>
-<pre><code>npm install element-ui --save
-</code></pre><p>如果你网络状况不佳可以使用cnpm来进行安装。 </p>
-<h3 id="完整引入项目"><a href="#完整引入项目" class="headerlink" title="完整引入项目"></a>完整引入项目</h3><p>在main.js中写入以下内容: </p>
-<pre><code>import Vue from &#39;vue&#39;
-import ElementUI from &#39;element-ui&#39;
-import &#39;element-ui/lib/theme-default/index.css&#39;
-import App from &#39;./App.vue&#39;
-
-Vue.use(ElementUI)
-
-new Vue({
-  el: &#39;#app&#39;,
-  render: h =&gt; h(App)
-})
-</code></pre><p>以上代码便完成了Element的引入。需要注意的是，样式文件需要单独引入。 </p>
-<h3 id="用Element的el-row的布个局"><a href="#用Element的el-row的布个局" class="headerlink" title="用Element的el-row的布个局"></a>用Element的el-row的布个局</h3><p>安装好，先做个简单的布局小试牛刀，这里作两栏布局，Element支持用24栏的形式进行布局。 </p>
-<p><strong>在Pos.vue里添加模版布局：</strong></p>
-<pre><code>&lt;template&gt;
-  &lt;div class=&quot;pos&quot;&gt;
-    &lt;div&gt;
-        &lt;el-row &gt;
-            &lt;el-col :span=&#39;7&#39;&gt;
-            我是订单栏
-            &lt;/el-col&gt;
-            &lt;!--商品展示--&gt;
-            &lt;el-col :span=&quot;17&quot;&gt;
-             我是产品栏
-            &lt;/el-col&gt;
-        &lt;/el-row&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-&lt;/template&gt;
-
-&lt;script&gt;
-export default {
-  name: &#39;Pos&#39;,
-  data () {
-    return { 
-    }
-  }
-}
-&lt;/script&gt;
-&lt;style scoped&gt;
-&lt;/style&gt;
-</code></pre><h3 id="解决100-高的问题"><a href="#解决100-高的问题" class="headerlink" title="解决100%高的问题"></a>解决100%高的问题</h3><p>在页面中使用了Element组件，这样他会自动给我们生产虚拟DOM，我们无法设置高度100%； </p>
-<p>这时候可以利用javascript，来设置100%高度问题。先要给我们的标签上添加一个id，我们这里把ID设置为 </p>
-<p>order-list。然后在vue构造器里使用mounted钩子函数来设置高度。 </p>
-<pre><code>  mounted:function(){
-      var orderHeight=document.body.clientHeight;
-      document.getElementById(&quot;order-list&quot;).style.height=orderHeight+&#39;px&#39;;
-  },
-</code></pre><p>布局的基本架构，我们已经做好，剩下的就是一些细节。下节课我们将用一节课的时间制作大部分CSS样式内容。 </p>
-<p>这节课我们将快速利用Element进行布局页面，这章视频中我会直接拷贝Style代码，因为我觉的你学Vue，那CSS也没有任何问题的，所以不耽误大家的宝贵事件。 </p>
-<h3 id="el-tabs标签页组件"><a href="#el-tabs标签页组件" class="headerlink" title="el-tabs标签页组件"></a>el-tabs标签页组件</h3><p>用Element里提供的el-tabs组件可以快速制作我们的tabs标签页效果，具体使用方法可以到Element的官网查看API。 </p>
-<p>基本用法很简单，可以直接在模板中引入标签，标签里边用来代表每个每个标签页。 </p>
-<p>先看一个最简单的代码： </p>
-<pre><code>&lt;el-tabs&gt;
-      &lt;el-tab-pane label=&quot;点餐&quot;&gt;
-       点餐   
-      &lt;/el-tab-pane&gt;
-      &lt;el-tab-pane label=&quot;挂单&quot;&gt;
-      挂单
-      &lt;/el-tab-pane&gt;
-      &lt;el-tab-pane label=&quot;外卖&quot;&gt;
-      外卖
-     &lt;/el-tab-pane&gt;
-&lt;/el-tabs&gt;
-</code></pre><p>细心的小伙伴会看到每个里会有一个label属性，这个属性就是你标签页的标题。内容可以直接写在里。 </p>
-<h3 id="el-table组件制作表格"><a href="#el-table组件制作表格" class="headerlink" title="el-table组件制作表格"></a>el-table组件制作表格</h3><p>需要在订单的tab标签页里放入表格，把点选的食品放入到待结账列表里,可以使用Element的内置组件el-table。如果你对el-table不了解， 可以去Element官网去查看一下。我这里不作太多的解释，先把代码贴过来，然后根据代码在讲解。 </p>
-<pre><code>&lt;el-table :data=&quot;tableData&quot; border show-summary style=&quot;width: 100%&quot; &gt;
-
-    &lt;el-table-column prop=&quot;goodsName&quot; label=&quot;商品&quot;  &gt;&lt;/el-table-column&gt;
-    &lt;el-table-column prop=&quot;count&quot; label=&quot;量&quot; width=&quot;50&quot;&gt;&lt;/el-table-column&gt;
-    &lt;el-table-column prop=&quot;price&quot; label=&quot;金额&quot; width=&quot;70&quot;&gt;&lt;/el-table-column&gt;
-    &lt;el-table-column  label=&quot;操作&quot; width=&quot;100&quot; fixed=&quot;right&quot;&gt;
-        &lt;template scope=&quot;scope&quot;&gt;
-            &lt;el-button type=&quot;text&quot; size=&quot;small&quot;&gt;删除&lt;/el-button&gt;
-            &lt;el-button type=&quot;text&quot; size=&quot;small&quot;&gt;增加&lt;/el-button&gt;
-
-        &lt;/template&gt;
-    &lt;/el-table-column&gt;
-&lt;/el-table&gt;
-</code></pre><p>这里我们采用了五列布表格， 在第1行中的:data是用来绑定数据源的， border代表表格有边框效果。在这视频里我会有详细的讲解。 </p>
-<p>tableData中的数据源的值，为了布局方便，所以我们进行了写死，以后会改成动态添加的数据。 </p>
-<pre><code> tableData: [{
-
-          goodsName: &#39;可口可乐&#39;,
-          price: 8,
-          count:1
-        }, {
-
-          goodsName: &#39;香辣鸡腿堡&#39;,
-          price: 15,
-          count:1
-        }, {
-
-          goodsName: &#39;爱心薯条&#39;,
-          price: 8,
-          count:1
-        }, {
-
-          goodsName: &#39;甜筒&#39;,
-          price: 8,
-          count:1
-        }]
-</code></pre><p>你现在可以打开浏览器进行一下预览，看一下效果了。如果效果正常，我们可以继续往下编写了。 </p>
-<h3 id="el-button-按钮组件"><a href="#el-button-按钮组件" class="headerlink" title="el-button 按钮组件"></a>el-button 按钮组件</h3><p>需要在点餐表格的下方放入三个功能性按钮，分别是挂单按钮、删除按钮、结账按钮。同样使用Element里的组件，进行快速写入。el-button 的type属性是设置按钮样式的，为了学些和区分我们这里用三个属性来设置按钮。 </p>
-<pre><code>&lt;el-button type=&quot;warning&quot; &gt;挂单&lt;/el-button&gt;
-&lt;el-button type=&quot;danger&quot; &gt;删除&lt;/el-button&gt;
-&lt;el-button type=&quot;success&quot; &gt;结账&lt;/el-button&gt;
-</code></pre><p>到这里我们左边最重要的订单操作区域就布局完成了，下节课我们布局右侧的商品布局。 </p>
-<p>上节完成了左边订单栏的布局，这节我们还是利用Element完成大部分布局。 </p>
-<p><img src="https://user-gold-cdn.xitu.io/2017/6/15/6ddcd9473d6c915981d98eec79f41aad?imageView2/0/w/1280/h/960" alt=""></p>
-<p>这是完成布局的图片 </p>
-<h3 id="常用商品区域布局："><a href="#常用商品区域布局：" class="headerlink" title="常用商品区域布局："></a>常用商品区域布局：</h3><p>在标签里增加一个层，然后在层内进行布局。因为里边的商品实际意义上是列表，所以用无序列表 </p>
-<ul>
-<li>来布局商品。贴出布局的html代码。</li>
-<li><div class="often-goods"><br>    <div class="title">常用商品</div><br>    <div class="often-goods-list"><br><br>        <ul><br>            <li><br>                <span>香辣鸡腿堡</span><br>                <span class="o-price">￥15元</span><br>            </li><br><br>        </ul><br>    </div><br></div>
-
-
-</li>
-</ul>
-<p>有了基本html结构后，需要增加一些css样式来美化页面： </p>
-<pre><code> .title{
-       height: 20px;
-       border-bottom:1px solid #D3DCE6;
-       background-color: #F9FAFC;
-       padding:10px;
-   }
-   .often-goods-list ul li{
-      list-style: none;
-      float:left;
-      border:1px solid #E5E9F2;
-      padding:10px;
-      margin:5px;
-      background-color:#fff;
-   }
-  .o-price{
-      color:#58B7FF; 
-   }
-</code></pre><p>现在页面变的漂亮了，我们这时候为了页面更逼近真实效果，我们在Vue的构造器里临时加一个数组，用作常用商品使用。声明的变量叫oftenGoods（真实项目不能这样起名字，这里只是练习使用）。 </p>
-<pre><code> oftenGoods:[
-          {
-              goodsId:1,
-              goodsName:&#39;香辣鸡腿堡&#39;,
-              price:18
-          }, {
-              goodsId:2,
-              goodsName:&#39;田园鸡腿堡&#39;,
-              price:15
-          }, {
-              goodsId:3,
-              goodsName:&#39;和风汉堡&#39;,
-              price:15
-          }, {
-              goodsId:4,
-              goodsName:&#39;快乐全家桶&#39;,
-              price:80
-          }, {
-              goodsId:5,
-              goodsName:&#39;脆皮炸鸡腿&#39;,
-              price:10
-          }, {
-              goodsId:6,
-              goodsName:&#39;魔法鸡块&#39;,
-              price:20
-          }, {
-              goodsId:7,
-              goodsName:&#39;可乐大杯&#39;,
-              price:10
-          }, {
-              goodsId:8,
-              goodsName:&#39;雪顶咖啡&#39;,
-              price:18
-          }, {
-              goodsId:9,
-              goodsName:&#39;大块鸡米花&#39;,
-              price:15
-          }, {
-              goodsId:20,
-              goodsName:&#39;香脆鸡柳&#39;,
-              price:17
-          }
-
-      ]
-</code></pre><p>有了数据，可以使用v-for循环来输出到html模板中。 </p>
-<h3 id="商品分类布局："><a href="#商品分类布局：" class="headerlink" title="商品分类布局："></a>商品分类布局：</h3><p>这样我们商品的上半部分就布局完成了，现在需要布局下半部分，我们在下半部分先添加一个tabs的标签样式。 </p>
-<pre><code>&lt;div class=&quot;goods-type&quot;&gt;
-
-    &lt;el-tabs&gt;
-        &lt;el-tab-pane label=&quot;汉堡&quot;&gt;
-            汉堡
-        &lt;/el-tab-pane&gt;
-            &lt;el-tab-pane label=&quot;小食&quot;&gt;
-            小食
-        &lt;/el-tab-pane&gt;
-        &lt;el-tab-pane label=&quot;饮料&quot;&gt;
-            饮料
-        &lt;/el-tab-pane&gt;
-        &lt;el-tab-pane label=&quot;套餐&quot;&gt;
-            套餐
-        &lt;/el-tab-pane&gt;
-
-    &lt;/el-tabs&gt;
-&lt;/div&gt;
-</code></pre><p>有上节课作tabs标签页的经验，这个变的异常简单。 </p>
-<p>制作商品的无序列表： </p>
-<pre><code>&lt;ul class=&#39;cookList&#39;&gt;
-    &lt;li&gt;
-        &lt;span class=&quot;foodImg&quot;&gt;&lt;img src=&quot;http://7xjyw1.com1.z0.glb.clouddn.com/pos001.jpg&quot; width=&quot;100%&quot;&gt;&lt;/span&gt;
-        &lt;span class=&quot;foodName&quot;&gt;香辣鸡腿堡&lt;/span&gt;
-        &lt;span class=&quot;foodPrice&quot;&gt;￥20.00元&lt;/span&gt;
-    &lt;/li&gt;
-&lt;/ul&gt;
-</code></pre><p>对无序列表进行CSS样式编写： </p>
-<pre><code>.cookList li{
-       list-style: none;
-       width:23%;
-       border:1px solid #E5E9F2;
-       height: auot;
-       overflow: hidden;
-       background-color:#fff;
-       padding: 2px;
-       float:left;
-       margin: 2px;
-
-   }
-   .cookList li span{
-
-        display: block;
-        float:left;
-   }
-   .foodImg{
-       width: 40%;
-   }
-   .foodName{
-       font-size: 18px;
-       padding-left: 10px;
-       color:brown;
-
-   }
-   .foodPrice{
-       font-size: 16px;
-       padding-left: 10px;
-       padding-top:10px;
-   }
-</code></pre><p>有了基本的样式，我们可以在Vue的构造器里添加汉堡类的数据。声明一个type0Goods的数据，数据格式如下。 </p>
-<pre><code>    type0Goods:[
-          {
-              goodsId:1,
-              goodsImg:&quot;http://7xjyw1.com1.z0.glb.clouddn.com/pos001.jpg&quot;,
-              goodsName:&#39;香辣鸡腿堡&#39;,
-              price:18
-          }, {
-              goodsId:2,
-              goodsImg:&quot;http://7xjyw1.com1.z0.glb.clouddn.com/pos002.jpg&quot;,
-              goodsName:&#39;田园鸡腿堡&#39;,
-              price:15
-          }, {
-              goodsId:3,
-              goodsImg:&quot;http://7xjyw1.com1.z0.glb.clouddn.com/pos004.jpg&quot;,
-              goodsName:&#39;和风汉堡&#39;,
-              price:15
-          }, {
-              goodsId:4,
-               goodsImg:&quot;http://7xjyw1.com1.z0.glb.clouddn.com/pos003.jpg&quot;,
-              goodsName:&#39;快乐全家桶&#39;,
-              price:80
-          }, {
-              goodsId:5,
-               goodsImg:&quot;http://7xjyw1.com1.z0.glb.clouddn.com/pos003.jpg&quot;,
-              goodsName:&#39;脆皮炸鸡腿&#39;,
-              price:10
-          }, {
-              goodsId:6,
-               goodsImg:&quot;http://7xjyw1.com1.z0.glb.clouddn.com/pos004.jpg&quot;,
-              goodsName:&#39;魔法鸡块&#39;,
-              price:20
-          }, {
-              goodsId:7,
-               goodsImg:&quot;http://7xjyw1.com1.z0.glb.clouddn.com/pos001.jpg&quot;,
-              goodsName:&#39;可乐大杯&#39;,
-              price:10
-          }, {
-              goodsId:8,
-               goodsImg:&quot;http://7xjyw1.com1.z0.glb.clouddn.com/pos003.jpg&quot;,
-              goodsName:&#39;雪顶咖啡&#39;,
-              price:18
-          }, {
-              goodsId:9,
-               goodsImg:&quot;http://7xjyw1.com1.z0.glb.clouddn.com/pos002.jpg&quot;,
-              goodsName:&#39;大块鸡米花&#39;,
-              price:15
-          }, {
-              goodsId:20,
-               goodsImg:&quot;http://7xjyw1.com1.z0.glb.clouddn.com/pos002.jpg&quot;,
-              goodsName:&#39;香脆鸡柳&#39;,
-              price:17
-          }
-
-      ],
-</code></pre><p>用v-for改造我们的无序列表： </p>
-<pre><code>&lt;li v-for=&quot;goods in type0Goods&quot;&gt;
-    &lt;span class=&quot;foodImg&quot;&gt;&lt;img :src=&quot;goods.goodsImg&quot; width=&quot;100%&quot;&gt;&lt;/span&gt;
-    &lt;span class=&quot;foodName&quot;&gt;{{goods.goodsName}}&lt;/span&gt;
-    &lt;span class=&quot;foodPrice&quot;&gt;￥{{goods.price}}元&lt;/span&gt;
-&lt;/li&gt;
-</code></pre><p>页面的基本布局我们已经制作完成，终于看起来像个收银界面了。但是现在的数据都是写死的，下节课我们将从后端用Axios拉去数据。 </p>
-<p>上节课我们利用Elemnt已经把页面布局的差不多了，如果你觉的不够美观，可以自己再进行美化，因为课程的原因css细节我们这里就不深入美化了。这节课我们开始学习Axios的知识，并把商品数据从远端读取到页面上。学这节课时技术胖已经为大家准备好了后端数据，你们只要调用相应的页面就可以调取，在实际开发中，这些后台数据是需要后端程序员和你共同讨论制作的。我们现在只做前端，数据大家只要会调用即可。 </p>
-<h3 id="安装Axios"><a href="#安装Axios" class="headerlink" title="安装Axios"></a>安装Axios</h3><p>我们直接使用npm install来进行安装。 </p>
-<pre><code>npm install axios --save
-</code></pre><p>由于axios是需要打包到生产环境中的，所以我们使用–save来进行安装。 </p>
-<h3 id="引入Axios"><a href="#引入Axios" class="headerlink" title="引入Axios"></a>引入Axios</h3><p>我们在Pos.vue页面引入Axios，由于使用了npm来进行安装，所以这里不需要填写路径。 </p>
-<pre><code>import axios from &#39;axios&#39;
-</code></pre><h3 id="服务端拉取常用商品数据"><a href="#服务端拉取常用商品数据" class="headerlink" title="服务端拉取常用商品数据"></a>服务端拉取常用商品数据</h3><p>远端服务器地址：<a href="http://jspang.com/DemoApi/oftenGoods.php" target="_blank" rel="external">http://jspang.com/DemoApi/oftenGoods.php</a></p>
-<p>（在实际项目中这个后台接口地址是后端程序员提供给你的，你可以随便调用这个接口，我已经放到服务器上了。） </p>
-<p>可以先把地址放到地址栏访问一下，是可以正常访问的，并且输出了json格式的字符串，这就是我们需要的远端数据了。这里我们使用Axios的get 方式来获得数据。 </p>
-<pre><code>  created(){
-      axios.get(&#39;http://jspang.com/DemoApi/oftenGoods.php&#39;)
-      .then(response=&gt;{
-         console.log(response);
-         this.oftenGoods=response.data;
-      })
-      .catch(error=&gt;{
-          console.log(error);
-          alert(&#39;网络错误，不能访问&#39;);
-      })
-  },
-</code></pre><p>把axios的方法写到了created钩子函数中，我们使用了get 方法进行拉取数据，如果拉取成功用远端数据对oftenGoods进行赋值。 </p>
-<p>拉取报错，一般有两种情况： </p>
-<pre><code>1. 网络不通：网络状况不是很好，这可以在失败后隔5秒再次请求。
-2. 报决绝访问：这种多是后端程序员设置了不允许跨域访问，需要你和后端程序员一起调试解决。
-</code></pre><h3 id="拉取分类商品数据："><a href="#拉取分类商品数据：" class="headerlink" title="拉取分类商品数据："></a>拉取分类商品数据：</h3><p>远端服务器地址：<a href="http://jspang.com/DemoApi/typeGoods.php" target="_blank" rel="external">http://jspang.com/DemoApi/typeGoods.php</a></p>
-<p>依然用Get进行拉取，拉取后先用consoe.log(response)查看一下数据结构，让后进行赋值。由于知识跟上边的很像，文字版我就不多描述了，详细可以查看视频教程。 </p>
-<p>在这里贴出拉取和分配不同分类代码： </p>
-<pre><code>       //读取分类商品列表
-      axios.get(&#39;http://jspang.com/DemoApi/typeGoods.php&#39;)
-      .then(response=&gt;{
-         console.log(response);
-         //this.oftenGoods=response.data;
-         this.type0Goods=response.data[0];
-         this.type1Goods=response.data[1];
-         this.type2Goods=response.data[2];
-         this.type3Goods=response.data[3];
-
-      })
-      .catch(error=&gt;{
-          console.log(error);
-          alert(&#39;网络错误，不能访问&#39;);
-      })
-</code></pre><p>html模板输出代码： </p>
-<pre><code>&lt;ul class=&#39;cookList&#39;&gt;
-     &lt;li v-for=&quot;goods in type3Goods&quot;&gt;
-         &lt;span class=&quot;foodImg&quot;&gt;&lt;img :src=&quot;goods.goodsImg&quot; width=&quot;100%&quot;&gt;&lt;/span&gt;
-         &lt;span class=&quot;foodName&quot;&gt;{{goods.goodsName}}&lt;/span&gt;
-         &lt;span class=&quot;foodPrice&quot;&gt;￥{{goods.price}}元&lt;/span&gt;
-      &lt;/li&gt;
-&lt;/ul&gt;
-</code></pre><p>在实际开发中类别也是循环出来的，这里为了教学演示，没有写的那么复杂，你只要明白了如何操作，以后你可以自己增加。就像我这个项目一样，在视频结束后，会慢慢写完善所有功能，最后送给女神，赢得女神芳心。 </p>
-<p>下节课我们学习订单操作里需要的功能，比如点击商品，添加到左边的订单栏里，增加，删除商品，模拟订单提交到后台。如果下节课一节讲不完，我们就分成两节课来讲。 </p>
-<p>经过上节课的学习，我们已经可以从后台取得数据了。这节课要完成的任务是实现页面左侧的订单列表页面的添加操作。本来我想一节课讲完的，但是内容还是比较多的，又不想让大家每节课学习很长时间，所以我把这个内容进行了划分。 </p>
-<h3 id="添加商品到订单页面"><a href="#添加商品到订单页面" class="headerlink" title="添加商品到订单页面"></a>添加商品到订单页面</h3><p>我们在vue的构造器里加入methods方法，在methods方法里再加入addOrderList方法。这个方法的作用是点击右侧的商品，然后把商品添加到左边的列表里。 </p>
-<p>addOrderList方法(也许你只看文字版无法理解，推荐查看视频)： </p>
-<pre><code>methods:{
-      //添加订单列表的方法
-      addOrderList(goods){
-            this.totalCount=0; //汇总数量清0
-            this.totalMoney=0;
-            let isHave=false;
-            //判断是否这个商品已经存在于订单列表
-            for (let i=0; i&lt;this.tableData.length;i++){
-                console.log(this.tableData[i].goodsId);
-                if(this.tableData[i].goodsId==goods.goodsId){
-                    isHave=true; //存在
-                }
-            }
-            //根据isHave的值判断订单列表中是否已经有此商品
-            if(isHave){
-                //存在就进行数量添加
-                 let arr = this.tableData.filter(o =&gt;o.goodsId == goods.goodsId);
-                 arr[0].count++;
-                 //console.log(arr);
-            }else{
-                //不存在就推入数组
-                let newGoods={goodsId:goods.goodsId,goodsName:goods.goodsName,price:goods.price,count:1};
-                 this.tableData.push(newGoods);
-
-            }
-
-            //进行数量和价格的汇总计算
-            this.tableData.forEach((element) =&gt; {
-                this.totalCount+=element.count;
-                this.totalMoney=this.totalMoney+(element.price*element.count);   
-            });
-
-      }
-  }
-</code></pre><p>在作这个方法的时候，在订单列表的下方又添加了订单的统计功能，其实也就两项：<strong>订单价格汇总</strong>和订单商品数量汇总。我们在data里声明的值是totalMoney和totalCount。 </p>
-<p>写完这个方法后，我们还需要在我们的商品上绑定方法，来进行调用添加方法。 </p>
-<pre><code> @click=&quot;addOrderList(goods)&quot;
-</code></pre><p>这样在点击商品时订单列表就会根据我们的程序逻辑发生变化。 </p>
-<h3 id="订单列表中的增加按钮"><a href="#订单列表中的增加按钮" class="headerlink" title="订单列表中的增加按钮"></a><strong>订单列表中的增加按钮</strong></h3><p>商品中绑定addOrderList方法是非常容易的，如果在订单列表中绑定是需要特殊处理一下的，需要用到template的scope值，让后进行绑定。 </p>
-<pre><code>&lt;el-button type=&quot;text&quot; size=&quot;small&quot; @click=&quot;addOrderList(scope.row)&quot;&gt;增加&lt;/el-button&gt;
-</code></pre><p>这节课我们把订单增加的操作制作完成了，下节课我们要制作订单商品的删除和订单的整体删除功能，最后模拟一下订单的结账功能。 </p>
-<p>继续制作订单模块，这节课主要三个功能的制作，删除列表中的单个商品，删除列表中的全部商品，简单模拟结账。 </p>
-<h3 id="删除单个商品"><a href="#删除单个商品" class="headerlink" title="删除单个商品"></a>删除单个商品</h3><p>在veu构造器methods属性里增加一个delSingleGoods方法，并接收goods对象为参数，用数组的filter可以轻松删除数组中单个的商品。 </p>
-<pre><code>    //删除单个商品
-      delSingleGoods(goods){
-        console.log(goods);
-        this.tableData=this.tableData.filter(o =&gt; o.goodsId !=goods.goodsId);
-
-      },
-</code></pre><p>现在可以npm run dev试一下了，会发现现在商品可以正确的删除了，但是统计的数量和金额是不正确的，我们需要写一些统计的代码。在下手之前你会发现在增加商品方法中也有类似统计的方法，既然两个功能很像，我们就重新写一个方法。 </p>
-<pre><code>//汇总数量和金额
-getAllMoney(){
-    this.totalCount=0;
-    this.totalMoney=0;
-    if(this.tableData){
-            this.tableData.forEach((element) =&gt; {
-        this.totalCount+=element.count;
-        this.totalMoney=this.totalMoney+(element.price*element.count);   
-    });
-    }
-
-}
-</code></pre><p>需要注意的是，以前我们是单独使用的，所以不用把totoalCount和totalMoney清零，但是做成公用方法了，记得清零。方法做好了，我们在需要的地方直接用this.getAllMoney()引用就可以了。 </p>
-<p>功能做好了，我们还需要为删除按钮绑定事件： </p>
-<pre><code>&lt;el-button type=&quot;text&quot; size=&quot;small&quot; @click=&quot;delSingleGoods(scope.row)&quot;&gt;删除&lt;/el-button&gt;
-</code></pre><p>这样我们就把删除单个订单商品的功能做好了，我们可以测试调试一下。 </p>
-<h3 id="删除全部订单商品"><a href="#删除全部订单商品" class="headerlink" title="删除全部订单商品"></a>删除全部订单商品</h3><p>这个功能其实很简单，只要把this.tableData清空就可以了，在methods属性中写一个delAllGoods的方法。 </p>
-<pre><code>      //删除所有商品
-        delAllGoods() {
-            this.tableData = [];
-            this.totalCount = 0;
-            this.totalMoney = 0;
-        },
-</code></pre><p>有的小伙伴会好奇，你完全可以再次复用getAllMoney()方法进行汇总，为什么不用那？汇总方法里毕竟是有业务逻辑的，我们只做两个清零，这样消耗的资源更少，所以我们没有使用。 </p>
-<h3 id="模拟结账"><a href="#模拟结账" class="headerlink" title="模拟结账"></a>模拟结账</h3><p>因为模拟结账需要Post数据到后台，我的服务器又不能提供这样的借口给大家，所以我只说制作思路，大家可以在自己的服务器上去实现。 </p>
-<p>1、设置我们Aixos的Pos方法。 </p>
-<p>2、接受返回值进行处理。 </p>
-<p>3、如果成功，清空现有构造器里的tableData，totalMoney，totalCount数据。 </p>
-<p>4、进行用户的友好提示。 </p>
-<p>由于前两个步骤不能演示，所以这里我们只模拟3和4步。在methods里作一个结账方法，清空数据和进行友好提示。 </p>
-<pre><code>checkout() {
-    if (this.totalCount!=0) {
-        this.tableData = [];
-        this.totalCount = 0;
-        this.totalMoney = 0;
-        this.$message({
-            message: &#39;结账成功，感谢你又为店里出了一份力!&#39;,
-            type: &#39;success&#39;
-        });
-
-    }else{
-        this.$message.error(&#39;不能空结。老板了解你急切的心情！&#39;);
-    }
-
-}
-</code></pre><p>订单模块基本的功能就制作完成了，我希望大家都能动手练习一下，如果你不动手练习你永远学不会的。 </p>
-<p>一直追看的小伙伴可能知道原来还有一节挂单功能的制作，但是在录制的过程中我发现90%的知识点都是重复的，不重复的知识点讲的还和Vue没有关系，是html5的localStorage操作，所以我去掉了这节。这节我们主要讲一下打包需要注意的事项和总结一下我们学习的知识。 </p>
-<h3 id="打包注意事项："><a href="#打包注意事项：" class="headerlink" title="打包注意事项："></a>打包注意事项：</h3><p>1、把绝对路径改为相对路径 </p>
-<p>我们打开config/index.js 会看到一个build属性，这里就我们打包的基本配置了。你在这里可以修改打包的目录，打包的文件名。最重要的是一定要把绝对目录改为相对目录。 </p>
-<pre><code>assetsPublicPath:&#39;./&#39;
-</code></pre><p>这样才能保证我们打包出去的项目可以正常预览。 </p>
-<p>2、在命令行中用npm run build 进行打包。 </p>
-<pre><code>npm run build
-</code></pre><h3 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h3>]]></content>
-    
-    <summary type="html">
-    
-      &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/assets/css/DPlayer.min.css&quot;&gt;&lt;script src=&quot;/assets/js/DPlayer.min.js&quot;&gt; &lt;/script&gt;&lt;script src=&quot;/as
-    
-    </summary>
-    
-      <category term="VueJs" scheme="https://wangyu1997.github.io/categories/VueJs/"/>
-    
-    
-      <category term="vue" scheme="https://wangyu1997.github.io/tags/vue/"/>
-    
-      <category term="实战" scheme="https://wangyu1997.github.io/tags/%E5%AE%9E%E6%88%98/"/>
     
   </entry>
   

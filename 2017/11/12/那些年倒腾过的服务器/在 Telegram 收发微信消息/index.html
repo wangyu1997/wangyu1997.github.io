@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <link rel="stylesheet" href="/css iconfont.css"></%->
+<head>
+    <!--
+        © Material Theme
+        https://github.com/viosey/hexo-theme-material
+        Version: 1.3.3 -->
+
+    <!-- Title -->
+    
+    <title>
+        
+            在 Telegram 收发微信消息 | 
+        
+        人不如故
+    </title>
+
+    <!-- Meta & Info -->
+    <meta charset="utf-8">
+
+    <!-- dns prefetch -->
+    <meta http-equiv="x-dns-prefetch-control" content="on">
+    
+    
+    
+    
+        <link rel="dns-prefetch" href="https://hm.baidu.com"/>
+    
+    
+        <link rel="dns-prefetch" href="https://www.google-analytics.com"/>
+    
+    
+        <link rel="dns-prefetch" href="https://busuanzi.ibruce.info"/>
+    
+
+    <meta http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#000">
+    <meta name="author" content="人不如故">
+    <meta name="description" content="世间一场大梦，人生几度秋凉。">
+    <meta name="keywords" content="null,telegram,wechat">
+
+    <!-- Favicons -->
+    <link rel="icon shortcut" type="image/ico" href="/img/favicon.png">
+    <link rel="icon" sizes="192x192" href="/img/favicon.png">
+    <link rel="apple-touch-icon" href="/img/favicon.png">
+
+    <!--iOS -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-title" content="Title">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="480">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="人不如故">
+
+    <!-- The Open Graph protocol -->
+    <meta property="og:url" content="https://wangyu1997.github.io">
+    <meta property="og:type" content="blog">
+    <meta property="og:title" content="在 Telegram 收发微信消息 | 人不如故">
+    <meta property="og:description" content="世间一场大梦，人生几度秋凉。">
+    <meta property="og:article:tag" content="telegram"> <meta property="og:article:tag" content="wechat"> 
+
+    <!--[if lte IE 9]>
+        <link rel="stylesheet" href="/css/ie-blocker.css">
+
+        
+            <script src="/js/ie-blocker.zhCN.js"></script>
+        
+    <![endif]-->
+    <!-- Import CSS & jQuery -->
+    
+        <link rel="stylesheet" href="/css/material.min.css">
+        <link rel="stylesheet" href="/css/style.min.css">
+        <!-- Config CSS -->
+
+
+<!-- Other Styles -->
+<style>
+  body, html {
+    font-family: Roboto, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+  }
+
+  a {
+    color: #000;
+  }
+
+  .mdl-card__media,
+  #search-label,
+  #search-form-label:after,
+  #scheme-Paradox .hot_tags-count,
+  #scheme-Paradox .sidebar_archives-count,
+  #scheme-Paradox .sidebar-colored .sidebar-header,
+  #scheme-Paradox .sidebar-colored .sidebar-badge{
+    background-color: #000 !important;
+  }
+
+  /* Sidebar User Drop Down Menu Text Color */
+  #scheme-Paradox .sidebar-colored .sidebar-nav>.dropdown>.dropdown-menu>li>a:hover,
+  #scheme-Paradox .sidebar-colored .sidebar-nav>.dropdown>.dropdown-menu>li>a:focus {
+    color: #000 !important;
+  }
+
+  #post_entry-right-info,
+  .sidebar-colored .sidebar-nav li:hover > a,
+  .sidebar-colored .sidebar-nav li:hover > a i,
+  .sidebar-colored .sidebar-nav li > a:hover,
+  .sidebar-colored .sidebar-nav li > a:hover i,
+  .sidebar-colored .sidebar-nav li > a:focus i,
+  .sidebar-colored .sidebar-nav > .open > a,
+  .sidebar-colored .sidebar-nav > .open > a:hover,
+  .sidebar-colored .sidebar-nav > .open > a:focus,
+  #ds-reset #ds-ctx .ds-ctx-entry .ds-ctx-head a {
+    color: #000 !important;
+  }
+
+  .toTop {
+    background: #000 !important;
+  }
+
+  .material-layout .material-post>.material-nav,
+  .material-layout .material-index>.material-nav,
+  .material-nav a {
+    color: #000;
+  }
+
+  #scheme-Paradox .MD-burger-layer {
+    background-color: #000;
+  }
+
+  #scheme-Paradox #post-toc-trigger-btn {
+    color: #000;
+  }
+
+  .post-toc a:hover {
+    color: #000;
+    text-decoration: underline;
+  }
+
+</style>
+
+
+<!-- Theme Background Related-->
+
+    <style>
+      body{
+        background-image: url(/img/bg.jpg);
+      }
+    </style>
+
+
+
+
+<!-- Fade Effect -->
+
+    <style>
+      .fade {
+        transition: all 800ms linear;
+        -webkit-transform: translate3d(0,0,0);
+        -moz-transform: translate3d(0,0,0);
+        -ms-transform: translate3d(0,0,0);
+        -o-transform: translate3d(0,0,0);
+        transform: translate3d(0,0,0);
+        opacity: 1;
+      }
+
+      .fade.out{
+        opacity: 0;
+      }
+    </style>
+
+
+        <script src="/js/jquery.min.js"></script>
+        <script src="/js/queue.js"></script>
+    
+
+    <!-- UC Browser Compatible -->
+    <script>
+        var agent = navigator.userAgent.toLowerCase();
+        if(agent.indexOf('ucbrowser')>0) {
+            document.write("<link rel=\"stylesheet\" href=\"/css/uc.css\">");
+            alert('由于 UC 浏览器使用极旧的内核，而本网站使用了一些新的特性。\n为了您能更好的浏览，推荐使用 Chrome 或 Firefox 浏览器。');
+        }
+    </script>
+
+    
+    <!-- Baidu Analytics -->
+    <script>
+        var _hmt = _hmt || [];
+        (function() {var hm = document.createElement('script');
+        hm.src = 'https://hm.baidu.com/hm.js?0c1235d6c5795e257894fa96152e0154';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    
+
+    
+    <!-- Google Analytics -->
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-99567775-1', 'auto');ga('send', 'pageview');
+    </script>
+    
+
+
+    <!-- Bing Background -->
+    
+
+    <!-- Custom Head -->
+    
+<link rel="stylesheet" href="/css/prism-dark.css" type="text/css"></head>
+
+
+    
+        <body id="scheme-Paradox" class="lazy">
+            <div class="material-layout  mdl-js-layout has-drawer is-upgraded">
+                
+
+                <!-- Main Container -->
+                <main class="material-layout__content" id="main">
+
+                    <!-- Top Anchor -->
+                    <div id="top">
+                        <!---->
+                    </div>
+
+                    
+                        <!-- Hamburger Button -->
+                        <button class="MD-burger-icon sidebar-toggle">
+                            <span class="MD-burger-layer"></span>
+                        </button>
+                    
+
+                    <!-- Post TOC -->
+
+    
+    <!-- Back Button -->
+    <!--
+    <div class="material-back" id="backhome-div" tabindex="0">
+        <a class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
+           href="#" onclick="window.history.back();return false;"
+           target="_self"
+           role="button"
+           data-upgraded=",MaterialButton,MaterialRipple">
+            <i class="material-icons" role="presentation">arrow_back</i>
+            <span class="mdl-button__ripple-container">
+                <span class="mdl-ripple"></span>
+            </span>
+        </a>
+    </div>
+    -->
+
+    <!-- Left aligned menu below button -->
+    <button id="post-toc-trigger-btn"
+        class="mdl-button mdl-js-button mdl-button--icon">
+        <i class="material-icons">format_list_numbered</i>
+    </button>
+
+    <ul class="post-toc-wrap mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="post-toc-trigger-btn" style="max-height:80vh; overflow-y:scroll;">
+        <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#0x01-用料"><span class="post-toc-number">1.</span> <span class="post-toc-text">0x01: 用料</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#0x021-安装-Python-与非-Python-依赖"><span class="post-toc-number">2.</span> <span class="post-toc-text">0x021: 安装 Python 与非 Python 依赖</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#0x023-下载源码并安装-Python-依赖"><span class="post-toc-number">3.</span> <span class="post-toc-text">0x023: 下载源码并安装 Python 依赖</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#0x030-创建-Telegram-Bot"><span class="post-toc-number">4.</span> <span class="post-toc-text">0x030: 创建 Telegram Bot</span></a></li></ol>
+
+        <!--
+        <li class="mdl-menu__item">
+            Some Action
+        </li>
+        -->
+    </ul>
+
+
+
+
+<!-- Layouts -->
+
+    <!-- Post Module -->
+    <div class="material-post_container">
+
+        <div class="material-post mdl-grid">
+            <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
+
+                <!-- Post Header(Thumbnail & Title) -->
+                
+    <!-- Paradox Post Header -->
+    
+        <!-- Custom Thumbnail -->
+        <div class="post_thumbnail-custom mdl-card__media mdl-color-text--grey-50" style="background-image:url(http://oq5d32gij.bkt.clouddn.com/15104608316051.jpg)">
+    
+            <p class="article-headline-p">
+                在 Telegram 收发微信消息
+            </p>
+        </div>
+
+
+
+
+
+                
+                    <!-- Paradox Post Info -->
+                    <div class="mdl-color-text--grey-700 mdl-card__supporting-text meta">
+
+    <!-- Author Avatar -->
+    <div id="author-avatar">
+        <img src="/img/avatar.png" width="44px" height="44px" alt="Author Avatar"/>
+    </div>
+    <!-- Author Name & Date -->
+    <div>
+        <strong>人不如故</strong>
+        <span>11月 12, 2017</span>
+    </div>
+
+    <div class="section-spacer"></div>
+
+    <!-- Favorite -->
+    <!--
+        <button id="article-functions-like-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon btn-like">
+            <i class="material-icons" role="presentation">favorite</i>
+            <span class="visuallyhidden">favorites</span>
+        </button>
+    -->
+
+    <!-- Qrcode -->
+    
+        <button id="article-functions-qrcode-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+            <i class="material-icons" role="presentation">devices other</i>
+            <span class="visuallyhidden">devices other</span>
+        </button>
+        <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-qrcode-button">
+            <li class="mdl-menu__item">在其它设备中阅读本文章</li>
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASYAAAEmCAAAAADqr2IGAAAELUlEQVR42u3aQXIbMQwEQP3/08k1VS6tZ4B1LFHNk0vWUmTvAQSIxx8jGA8EmDBhwoQJk4EJEyZML8/0iMe/3//692a2r/Nc/9b1Gp59J18VJkyYMGE6j+mb0PiE4xlQ/tT1NvKVzH73m5kxYcKECdNxTMkhIHn2Otjni24PKMknxTyYMGHChOkjmZJNtsttk95khZsZMGHChAkTpva4sAn2d82DCRMmTJgwJaH9UY7rjV1vfvOSfrkWjgkTJkyYXoxp37jz+n+/RH8TJkyYMGH670ztSK4S25DfNuLkTTyrnWLChAkTpiOY2qacdhGzIL1vxLnhVzBhwoQJ0xFM16G0TSxn29izzoCuXzkmTJgwYTqDqW2gSYA2yWqeWm9woyMRJkyYMGE6iClPYjdl3Pxl5Mn5rNQbtfJgwoQJE6YjmGZBdF9yzY8as6NJssLiQIAJEyZMmI5gyouwSdk0L6fOmn7uTdcxYcKECdPZTPmi24Lspr1mFtRn/40adzBhwoQJ0xsytWntXe01eQtOjpUUhfNjASZMmDBhOoNp1i7Tllln224/mbX1rK4zMWHChAnTmzDVBdA4sZwdPtr0e9ZUVB8IMGHChAnT2zK16WtbtM1fySbZXiW6mDBhwoTpaKY8ZCY07fztUSA/srQvCRMmTJgwncc0u27MC6kt1l2Hj836MWHChAnTqUxtKJ01zeSBfPMyZvNjwoQJE6ZPYNoUVa9Db349OTtA5MXi6MiCCRMmTJiOYNoH1Db5bFuCksA/mx8TJkyYMH0mU1tsnZWA85nbY8f+AIEJEyZMmE5iygNke1zYpLWzK8/9L2LChAkTplOZ8iJp8tRshpasXW2bWmPChAkTpvOY8qu+dkFJmp3/4vB6si0HY8KECROmI5hm4XmzpfYK8/plJCE/3yMmTJgwYTqPaVMkzWfIS7T7EnO7r1WFABMmTJgwvTxTkqa2Bdy7kuSiyWZRVn76fUyYMGHCdATTprV0c1mYP7u5NJ2tHBMmTJgwnc2Up7J56N00m7afzNLm4a0vJkyYMGF6Q6afTkdnReFZkfe2xh1MmDBhwvS2THlSurmG3BdqNy04bTKPCRMmTJjOY5qF4bw0PNvq7KI0T+y/eRYTJkyYMB3BtGmCmfG1pd72gnN2iImuMzFhwoQJ0xsytSMP6i1i8ko2Ref2wIEJEyZMmM5g2jfT5FeMbXqcH0fa9DtKqjFhwoQJ00FMbSF1H87zxqCc+K7XhgkTJkyYTmXKW0jzq9A8BW0LsncVkaPGHUyYMGHC9DFMbQm4Df/XGxi24JSFY0yYMGHChKktts62+hPPFhermDBhwoTpOKa7AmqSXubXlvl1Zvv9X7vOxIQJEyZM/51pVhJtLzU3heP91Wn9kjBhwoQJ0xFMRnQgMDBhwoQJEyZMBiZMmF5l/AU275DQGH/IfQAAAABJRU5ErkJggg==">
+        </ul>
+    
+
+    <!-- Tags (bookmark) -->
+    
+    <button id="article-functions-viewtags-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+        <i class="material-icons" role="presentation">bookmark</i>
+        <span class="visuallyhidden">bookmark</span>
+    </button>
+    <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-viewtags-button">
+        <li class="mdl-menu__item">
+        <a class="post_tag-link" href="/tags/telegram/">telegram</a></li><li class="mdl-menu__item"><a class="post_tag-link" href="/tags/wechat/">wechat</a>
+    </ul>
+    
+
+    <!-- Share -->
+    <button id="article-fuctions-share-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+    <i class="material-icons" role="presentation">share</i>
+    <span class="visuallyhidden">share</span>
+</button>
+<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-fuctions-share-button">
+    
+
+    
+        
+            <!-- Busuanzi Views -->
+            <a class="post_share-link" href="#">
+                <li class="mdl-menu__item">
+                    <span id="busuanzi_container_page_pv">
+                        <span id="busuanzi_value_page_pv"></span>&nbsp;浏览量
+                    </span>
+                </li>
+            </a>
+        
+    
+
+    <!-- Share Weibo -->
+    
+        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=在 Telegram 收发微信消息&url=https://wangyu1997.github.io//2017/11/12/那些年倒腾过的服务器/在 Telegram 收发微信消息/index.html&pic=&searchPic=false&style=simple" target="_blank">
+            <li class="mdl-menu__item">
+                分享到微博
+            </li>
+        </a>
+    
+
+    <!-- Share Twitter -->
+    
+        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=在 Telegram 收发微信消息&url=https://wangyu1997.github.io//2017/11/12/那些年倒腾过的服务器/在 Telegram 收发微信消息/index.html&via=人不如故" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Twitter
+            </li>
+        </a>
+    
+
+    <!-- Share Facebook -->
+    
+        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=https://wangyu1997.github.io//2017/11/12/那些年倒腾过的服务器/在 Telegram 收发微信消息/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Facebook
+            </li>
+        </a>
+    
+
+    <!-- Share Google+ -->
+    
+        <a class="post_share-link" href="https://plus.google.com/share?url=https://wangyu1997.github.io//2017/11/12/那些年倒腾过的服务器/在 Telegram 收发微信消息/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Google+
+            </li>
+        </a>
+    
+
+    <!-- Share LinkedIn -->
+    
+
+    <!-- Share QQ -->
+    
+        <a class="post_share-link" href="http://connect.qq.com/widget/shareqq/index.html?site=人不如故&title=在 Telegram 收发微信消息&summary=世间一场大梦，人生几度秋凉。&pics=https://wangyu1997.github.io/img/favicon.png&url=https://wangyu1997.github.io/2017/11/12/那些年倒腾过的服务器/在 Telegram 收发微信消息/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 QQ
+            </li>
+        </a>
+    
+
+    <!-- Share Telegram -->
+    
+</ul>
+
+</div>
+
+                
+
+                <!-- Post Content -->
+                <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
+   
+    
+            <link rel="stylesheet" type="text/css" href="/assets/css/DPlayer.min.css"><script src="/assets/js/DPlayer.min.js"> </script><script src="/assets/js/APlayer.min.js"> </script><blockquote>
+<p>本教程是对于<a href="http://link.zhihu.com/?target=https%3A//blog.1a23.com/2017/01/09/EFB-How-to-Send-and-Receive-Messages-from-WeChat-on-Telegram-zh-CN/" target="_blank" rel="external">原文</a>的一些修改。 </p>
+</blockquote>
+<p>开发代号 EH Forwarder Bot（简称 EFB）是一个可扩展的聊天平台隧道框架，基于 Python 3。目前已内置了 Telegram 主端 (Master Channel) 和微信从端 (Slave Channel)，用来在 Telegram 收发微信消息。其他从端开发已在计划之中。同时 EFB 也配备了详尽的文档，欢迎有兴趣的朋友们开发自己的主端或从端，来支持更多的平台。EFB 在 GitHub 中开放了源代码，并且在 Read The Docs 平台上发布的开发文档（英文，en-US）。 </p>
+<p>本文主要介绍了如何在一个虚拟服务器 (VPS) 中安装并配置 EFB、Telegram 主端和微信从端，以及如何使用 Telegram 主端来收发微信消息。 </p>
+<h2 id="0x01-用料"><a href="#0x01-用料" class="headerlink" title="0x01: 用料"></a>0x01: 用料</h2><p>本教程面向具有一定背景知识的进阶用户，如有疑问，请您先在互联网上搜索（推荐 <a href="http://link.zhihu.com/?target=https%3A//google.com/" target="_blank" rel="external">Google</a>），若仍未解决、欢迎在 <a href="http://link.zhihu.com/?target=https%3A//telegram.me/efbsupport" target="_blank" rel="external">EFB Telegram 支持群组</a>留言。 </p>
+<p>在开始之前，请准备： </p>
+<ul>
+<li>一台能使用 SSH 终端的设备。 </li>
+</ul>
+<p>Windows 推荐使用 Putty，Android 用户推荐使用 JuiceSSH </p>
+<ul>
+<li><p>Telegram 账号一枚 </p>
+</li>
+<li><p>可用的科学上网方式 若干 </p>
+</li>
+<li><p>墙外 VPS 一枚 </p>
+</li>
+</ul>
+<p>没有 VPS 的可以尝试一下 Vultr 日本，速度还不错，顺带可以搭梯子。<a href="http://link.zhihu.com/?target=http%3A//www.vultr.com/%3Fref%3D6951220-3B" target="_blank" rel="external">新用户赠送 $20 链接</a></p>
+<p>首先通过 SSH 客户端连接到你的 VPS。 </p>
+<h2 id="0x021-安装-Python-与非-Python-依赖"><a href="#0x021-安装-Python-与非-Python-依赖" class="headerlink" title="0x021: 安装 Python 与非 Python 依赖"></a>0x021: 安装 Python 与非 Python 依赖</h2><p>输入以下指令。 </p>
+<p>注：以下安装的部分软件包可能已经预安装在你的系统中。但请注意将已安装的 Python 3 版本升级到 3.5 或以上。  </p>
+<pre><code># apt-get install python3-pip python3-dev python3-setuptools
+# apt-get install libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.5-dev tk8.5-dev
+# apt-get install libmagic-dev ffmpeg
+# 在 Ubuntu/mint 中安装的依赖
+  yaourt -S  python opus ffmpeg python-pip git
+# 在 Arch Linux 中安装的依赖
+# 类似于 Debian sid / CentOS 这种老旧系统可能需要自己编译 ffmpeg
+# 可使用类似于 screenfetch 类似的工具查看当前的系统版本
+</code></pre><h2 id="0x023-下载源码并安装-Python-依赖"><a href="#0x023-下载源码并安装-Python-依赖" class="headerlink" title="0x023: 下载源码并安装 Python 依赖"></a>0x023: 下载源码并安装 Python 依赖</h2><pre><code>git clone https://github.com/blueset/ehForwarderBot.git
+cd ehForwarderBot
+pip3 install -r requirements.txt
+</code></pre><p>接下来就是进行各种必要的配置和初始化的步骤了。 </p>
+<h2 id="0x030-创建-Telegram-Bot"><a href="#0x030-创建-Telegram-Bot" class="headerlink" title="0x030: 创建 Telegram Bot"></a>0x030: 创建 Telegram Bot</h2><p>Telegram Bot 是 EFB（Telegram 主端）的出口，也是呈献给用户的渠道。我们在这里使用了 Telegram 官方的 Bot API，以最大化利用 Telegram Bot 所提供的各种便利功能。 </p>
+<p>要创建一个新的 Bot，要先向 @BotFather 发起会话。发送指令 /newbot 以启动向导。期间，你需要指定这个 Bot 的名称与用户名（用户名必须以 bot 结尾）。完毕之后 @BotFather 会提供给你一个密钥（Token），妥善保存这个密钥。请注意，为保护您的隐私及信息安全，请不要向任何人提供你的 Bot 用户名及密钥，这可能导致聊天信息泄露等各种风险。 </p>
+<p>接下来还要对刚刚启用的 Bot 进行进一步的配置：允许 Bot 读取非指令信息、允许将 Bot 添加进群组、以及提供指令列表。 </p>
+<p>发送 /setprivacy 到 @BotFather，选择刚刚创建好的 Bot 用户名，然后选择 “Disable”.<br>发送 /setjoingroups 到 @BotFather，选择刚刚创建好的 Bot 用户名，然后选择 “Enable”.<br>发送 /setcommands 到 @BotFather，选择刚刚创建好的 Bot 用户名，然后发送如下内容： </p>
+<pre><code>link - 将会话绑定到 Telegram 群组
+chat - 生成会话头
+recog - 回复语音消息以进行识别
+extra - 获取更多功能
+</code></pre><p>然后还需要获取你自己的 Telegram ID，ID 应显示为一串数字。获取你自己的 ID 有很多方式，你可以选择任意一种。下面介绍两种可能的方式。 </p>
+<ul>
+<li>Plus Messenger </li>
+</ul>
+<p>如果你使用了 Plus Messenger 作为你的 Telegram 客户端，你可以直接打开你自己的资料页，在「自己」下面会显示你的 ID。 </p>
+<ul>
+<li>通过 Bot 查询 </li>
+</ul>
+<p>很多现存的 Bot 也提供了 ID 查询服务，直接向其发送特定的指令即可获得自己的数字 ID。在这里介绍一些接触过的。<br>@get_id_bot 发送 /start<br>@mokubot 发送 /whoami<br>@GroupButler_Bot 发送 /id<br>@jackbot 发送 /me<br>@userinfobot 发送任意文字<br>@orzdigbot 发送 /user<br>留存你的 Telegram ID 以便后续使用。 </p>
+<p>0x031: 配置 EFB 和 Telegram 主端<br>这差不多就是安装过程的最后一步了。首先创建存储用文件夹并赋予其权限。回到 VPS 上 ehForwarderBot 目录。（不出意外的话你应该还在这个目录） </p>
+<pre><code>mkdir storage
+chmod 777 storage
+</code></pre><p>然后复制并编辑配置文件。 </p>
+<pre><code>cp config.sample.py config.py
+editor config.py
+# 其中 editor 是你所喜欢的文本编辑器，比如 vim 则 vim config.py
+</code></pre><p>在配置文件中，token 后引号里面的内容替换为你之前获得的 Bot 密钥，admins 后方括号里面填入你自己的 Telegram ID。后面的 6 行是用来配置语音转文字功能的，不是必要功能，目前可以删除各行。如果有兴趣启用该功能的，请到各平台申请 API keys。详情请参见文档 的「ETM」章节。 </p>
+<p>注意<br>配置文件 (config.py) 是一个 Python 文件。Python 文件有着严格的格式要求。在编辑该文档的时候请全程使用英文输入模式，并避免更改缩进。每一个括号和引号都应该在适当的地方合上。错误的格式会导致 EFB 运行失败。<br>本文件使用 4 个空格作为一个缩进级别并避免使用 Tab 字符。<br>编辑好的结果应类似如下内容。token 和 admins 字段有所不同。 </p>
+<pre><code># ##############################
+#  Configs for EH Forwarder Bot
+# ##############################
+#
+#  Basic settings
+# ----------------
+#
+# Master/Slave Channels
+#
+# Master channel:
+# The channel that is mainly used to view/manage messages
+# from slave channels.
+# Currently only 1 master channel is supported.
+#
+# Slave channels:
+# Channels that are hosted on the server and being delivered
+# to and from the master channel.
+# You may have more than 1 slave channel.
+#
+master_channel = &#39;plugins.eh_telegram_master&#39;, &#39;TelegramChannel&#39;
+slave_channels = [(&#39;plugins.eh_wechat_slave&#39;, &#39;WeChatChannel&#39;)]
+#
+#  Plugin specific settings
+# --------------------------
+# Plugin specific settings should be written below in the format of:
+# `channel_name = {&quot;key1&quot;: &quot;value1&quot;, &quot;key2&quot;: &quot;value2&quot;}`
+# Please refer to docs of individual plugin for details
+#
+eh_telegram_master = {
+    &quot;token&quot;: &quot;12345678:QWFPGJLUYarstdheioZXCVBKM&quot;,
+    &quot;admins&quot;: [123456789]
+}
+</code></pre><p>到目前为止，EFB 的配置工作已经完成。现在我们只需要启动它，登陆微信就大功告成了。大多数时候，启动微信需要扫描屏幕上的二维码进行授权。这时需要你的 SSH 客户端字体缩小到适当的大小以完整显示整个二维码。 </p>
+<p>python3 daemon.py start<br>扫描完成之后，手机上会显示「网页微信已登录」，这是因为 EFB 微信从端使用了网页版微信的接口。当终端显示：Start auto replying. 时，即代表登陆成功，这时候就可以按下 Ctrl + C 来隐藏输出了。 </p>
+<p>0x05: 使用 EFB Telegram 主端<br>现在，在 Telegram 里面搜索你之前指定的 Bot 用户名，点击 Start（开始）即可开始与微信互通消息了。 </p>
+<p>在最初，所有来自微信的消息都会通过 Bot 直接发送给你，要回复其中的任意一条消息，你需要在 Telegram 中选中那条消息，选择 Reply（回复），再输入消息内容。 </p>
+<p>如果需要向新联系人发送消息，只需发送 /chat 指令，选择一个会话。之后这条消息就会变成一个「会话头」，回复这条消息就可以向指定的联系人或群组发送消息。 </p>
+<p>当消息过多时，来自不同会话的消息会使 Telegram 上面的会话混乱不堪。EFB 支持将来自指定会话的消息分流到一个 Telegram 群组中。 </p>
+<p>在 Telegram 中新建一个空群组，并将你的 Bot 加入到这个群组中。<br>（如果找不到自己的 Bot，请尝试在桌面版中创建，并在添加成员时搜索 Bot 的用户名）<br>回到 Bot 会话，发送 /link，选择一个会话，并点击 “Link”<br>在弹出的列表中选择刚刚创建的空群组即可<br>在绑定会话中，你可以像普通聊天一样直接发送消息。也可以通过指定回复的形式来 @ 其他人。 </p>
+<p>注意<br>虽然 Telegram 群组中的所有人可以看到会话全文，但是只有配置文件 (config.py) 中指定的管理员 (admins) 能够以你的名义发送消息到微信。EFB 支持设置多个管理员，但只有第一个管理员（按照输入排序）能够接收到所有消息，而且这有可能造成不必要的隐私问题，敬请注意。<br>以上就是 EFB Telegram 主端的基础用法。关于其他的功能（语音转文字、微信附加功能等）请参见文档 的「ETM」章节。 </p>
+<p>Q: EFB 微信从端稳定吗？<br>只要保持微信手机版网络连接长期稳定，根据上游项目 ItChat 的统计，可长达数个月不掉线。 </p>
+<p>Q: EFB 微信从端支持哪些类型的消息？<br>A: EFB 微信从端理论上支持所有网页版微信支持的消息类型。即： </p>
+<p>微信→Telegram：文字、图片、视频、分享链接、表情、文档、位置、语音、名片、好友请求、系统通知<br>Telegram→微信：文字、图片、表情（以图片发送）、视频<br>所以说，不支持红包、支付、朋友圈、转账、语音通话、视频聊天等网页版不支持的消息类型。 </p>
+<p>Q: 有些表情收不到<br>由于微信网页版的限制，部分受版权保护的表情包不能显示出来，故亦不能转发到 Telegram。 </p>
+<p>Q: 偶尔会丢消息怎么办？<br>这个是 Python 3 urllib3 的长时间网络连接出现的问题。上游项目 python-telegram-bot 已在着手解决这个问题。预计在近期（2017 年 1 月）修复。 </p>
+
+           
+         <style type="text/css">
+.hljs-comment,
+.hljs-quote {
+  color: #999999;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+  color: #f2777a;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+  color: #f99157;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+  color: #ffcc66;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+  color: #99cc99;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+  color: #6699cc;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+  color: #cc99cc;
+}
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  background: #2d2d2d !important;
+  color: #cccccc !important;
+  padding: 1em !important;
+}
+
+pre{
+    background: #2d2d2d !important;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+</style>
+<script type="text/javascript">
+// $(function(){
+// 	//代码高亮自定义
+// 	$("code").each(function(){
+// 		$(this).html("<ul><li>" + $(this).html().replace(/\n/g,"\n</li><li>") +"\n</li></ul>");
+// 	});
+// });
+</script>
+
+<style type="text/css">
+/*.hljs {
+	border: 0;
+	font-family: "Consulas", "Courier New", Courier, mono, serif;
+	font-size: 12px;
+	background: #eee !important;
+	display: block;
+	padding: 1px;
+	margin: 0;
+	width: 100%;
+	font-weight: 200;
+	color: #333;
+	white-space: pre-wrap
+}*/
+/*.hljs ul {
+	list-style: decimal;
+	background-color: #fff;
+	margin: 0px 0px 0 0px !important;
+	padding: 0px;
+}*/
+/*.hljs ul li {
+	list-style: decimal-leading-zero;
+	border-left: 1px solid #ddd !important;
+	background: #fff;
+	padding: 5px!important;
+	margin: 0 !important;
+  width: 20px !important;
+	line-height: 14px;
+	word-break: break-all;
+	word-wrap: break-word;
+}*/
+/*.hljs ul li:nth-of-type(even) {
+	background-color: #fcfcfc;
+	color: inherit;
+}*/
+</style>
+<script src="https://cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+       <script >hljs.initHighlightingOnLoad();</script>  
+         
+    
+             
+           <style type="text/css">
+           #rewardButton {
+    cursor: pointer;
+    border: 0;
+    outline: 0;
+    border-radius: 100%;
+    padding: 0;
+    margin: 0;
+    letter-spacing: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+}
+#rewardButton span {
+    display: inline-block;
+    width: 80px;
+    height: 35px;
+    border-radius: 5px;
+    padding-top: 5px;
+    color: #fff;
+    font-weight: 400;
+    font-style: normal;
+    font-variant: normal;
+    font-stretch: normal;
+    font-size: 18px;
+    font-family: "Microsoft Yahei";
+    background: #F44336;
+}
+#rewardButton span:hover{
+    background: #F7877F;
+}
+#QR{
+    padding-top:20px;
+}
+#QR a{
+    border:0;
+}
+#QR img{
+    width: 180px;
+    max-width: 100%;
+    display: inline-block;
+    margin: 0.8em 2em 0 2em;
+}
+#wechat:hover p{
+    animation: roll 0.1s infinite linear;
+    -webkit-animation: roll 0.1s infinite linear;
+    -moz-animation: roll 0.1s infinite linear;
+}
+#alipay:hover p{
+    animation: roll 0.1s infinite linear;
+    -webkit-animation: roll 0.1s infinite linear;
+    -moz-animation: roll 0.1s infinite linear;
+}
+@keyframes roll {
+    from {
+      transform(rotateZ(30deg));
+    }
+    to {
+      transform(rotateZ(-30deg));
+    }
+}
+
+           </style>
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/uploads/wechat.JPG" alt="人不如故 WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/uploads/ali.JPG" alt="人不如故 Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+           
+
+
+     
+    
+    
+</div>
+
+
+                
+
+                <!-- Post Comments -->
+                
+                    
+
+
+
+
+    <!-- 使用 DISQUS -->
+    <div id="disqus-comment">
+        <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+        this.page.url = 'https://wangyu1997.github.io/2017/11/12/那些年倒腾过的服务器/在 Telegram 收发微信消息/';  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'https://wangyu1997.github.io/2017/11/12/那些年倒腾过的服务器/在 Telegram 收发微信消息/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    queue.offer(function() {
+            (function() { // DON'T EDIT BELOW THIS LINE
+                var d = document;
+                var s = d.createElement('script');
+                s.src = '//https-wangyu1997-github-io.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', + new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        });
+</script>
+
+    </div>
+    <style>
+        #disqus-comment{
+            background-color: #eee;
+            padding: 2pc;
+        }
+    </style>
+
+
+
+
+                
+            </div>
+
+            <!-- Post Prev & Next Nav -->
+            <nav class="material-nav mdl-color-text--grey-50 mdl-cell mdl-cell--12-col">
+    <!-- Prev Nav -->
+    
+
+    <!-- Section Spacer -->
+    <div class="section-spacer"></div>
+
+    <!-- Next Nav -->
+    
+        <a href="/2017/11/09/JAVA/ThreadLocal是什么/" id="post_nav-older" class="next-content">
+            旧篇
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_forward</i>
+            </button>
+        </a>
+    
+</nav>
+
+        </div>
+    </div>
+
+
+
+                    
+                        <!-- Overlay For Active Sidebar -->
+<div class="sidebar-overlay"></div>
+
+<!-- Material sidebar -->
+<aside id="sidebar" class="sidebar sidebar-colored sidebar-fixed-left" role="navigation">
+    <div id="sidebar-main">
+        <!-- Sidebar Header -->
+        <div class="sidebar-header header-cover" style="background-image: url(/img/sidebar_header.png);">
+    <!-- Top bar -->
+    <div class="top-bar"></div>
+
+    <!-- Sidebar toggle button -->
+    <button type="button" class="sidebar-toggle mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" style="display: initial;" data-upgraded=",MaterialButton,MaterialRipple">
+        <i class="material-icons">clear_all</i>
+        <span class="mdl-button__ripple-container">
+            <span class="mdl-ripple">
+            </span>
+        </span>
+    </button>
+
+    <!-- Sidebar Avatar -->
+    <div class="sidebar-image">
+        <img src="/img/avatar.png" alt="人不如故's avatar">
+    </div>
+
+    <!-- Sidebar Email -->
+    <a data-toggle="dropdown" class="sidebar-brand" href="#settings-dropdown">
+        wangyu19970819@gmail.com
+        <b class="caret"></b>
+    </a>
+</div>
+
+
+        <!-- Sidebar Navigation  -->
+        <ul class="nav sidebar-nav">
+    <!-- User dropdown  -->
+    <li class="dropdown">
+        <ul id="settings-dropdown" class="dropdown-menu">
+            
+                <li>
+             
+                    <a href="mailto:wangyu19970819@gmail.com" target="_blank" title="Email Me">
+               
+                        
+                            <i class="material-icons sidebar-material-icons sidebar-indent-left1pc-element">email</i>
+                        
+                        Email Me
+                    </a>
+                </li>
+            
+                <li>
+             
+                    <a href="/about" target="_self" title="关于">
+              
+                        
+                            <i class="material-icons sidebar-material-icons sidebar-indent-left1pc-element">person</i>
+                        
+                        关于
+                    </a>
+                </li>
+            
+        </ul>
+    </li>
+
+    <!-- Homepage -->
+    
+        <li id="sidebar-first-li">
+            <a href="/" target="_self">
+                
+                    <i class="material-icons sidebar-material-icons">home</i>
+                
+                主页
+            </a>
+        </li>
+        
+    
+
+
+    <!-- Categories  -->
+    
+        <li class="dropdown">
+            <a href="#" class="ripple-effect dropdown-toggle" data-toggle="dropdown">
+                
+                    <i class="material-icons sidebar-material-icons">chrome_reader_mode</i>
+                
+                分类
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                <a class="sidebar_archives-link" href="/categories/Android/">Android<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/categories/Java/">Java<span class="sidebar_archives-count">3</span></a></li><li><a class="sidebar_archives-link" href="/categories/JavaWeb/">JavaWeb<span class="sidebar_archives-count">7</span></a></li><li><a class="sidebar_archives-link" href="/categories/Python/">Python<span class="sidebar_archives-count">5</span></a></li><li><a class="sidebar_archives-link" href="/categories/Spring/">Spring<span class="sidebar_archives-count">8</span></a></li><li><a class="sidebar_archives-link" href="/categories/VueJs/">VueJs<span class="sidebar_archives-count">6</span></a></li><li><a class="sidebar_archives-link" href="/categories/iOS/">iOS<span class="sidebar_archives-count">6</span></a></li><li><a class="sidebar_archives-link" href="/categories/machine-learning/">machine learning<span class="sidebar_archives-count">2</span></a></li><li><a class="sidebar_archives-link" href="/categories/操作系统/">操作系统<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/categories/杂记/">杂记<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/categories/组成原理/">组成原理<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/categories/计算机网络/">计算机网络<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/categories/那些年倒腾过的服务器/">那些年倒腾过的服务器<span class="sidebar_archives-count">3</span></a>
+            </ul>
+        </li>
+        
+    
+
+    <!-- Pages  -->
+    
+        <li>
+            <a href="/links" title="小伙伴们">
+                
+                    <i class="material-icons sidebar-material-icons">group</i>
+                
+                小伙伴们
+            </a>
+        </li>
+        
+    
+        <li>
+            <a href="/tags" title="标签">
+                
+                    <i class="material-icons sidebar-material-icons">loyalty</i>
+                
+                标签
+            </a>
+        </li>
+        
+    
+
+            <!-- Archives  -->
+    
+        <li class="dropdown">
+            <a href="#" class="ripple-effect dropdown-toggle" data-toggle="dropdown">
+                
+                    <i class="material-icons sidebar-material-icons">inbox</i>
+                
+                    归档
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+            <li>
+                <a class="sidebar_archives-link" href="/archives/2017/11/">十一月 2017<span class="sidebar_archives-count">6</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/10/">十月 2017<span class="sidebar_archives-count">17</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/09/">九月 2017<span class="sidebar_archives-count">3</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/08/">八月 2017<span class="sidebar_archives-count">2</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/07/">七月 2017<span class="sidebar_archives-count">7</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/06/">六月 2017<span class="sidebar_archives-count">7</span></a></li><li><a class="sidebar_archives-link" href="/archives/2017/05/">五月 2017<span class="sidebar_archives-count">3</span></a>
+            </ul>
+        </li>
+        
+    
+
+          <!-- rss -->
+    
+        <li id="sidebar-first-li">
+            <a href="/gallery" target="_self">
+                
+                    <i class="material-icons sidebar-material-icons">favorite</i>
+                
+                情愫
+            </a>
+        </li>
+        
+    
+
+      <!-- board -->
+    
+        <li id="sidebar-first-li">
+            <a href="/board" target="_self">
+                
+                    <i class="material-icons sidebar-material-icons">question_answer</i>
+                
+                留言板
+            </a>
+        </li>
+        
+    
+
+      <!-- rss -->
+    
+        <li id="sidebar-first-li">
+            <a href="/atom.xml" target="_blank">
+                
+                    <i class="material-icons sidebar-material-icons">cast_connected</i>
+                
+                RSS订阅
+            </a>
+        </li>
+        
+            <li class="divider"></li>
+        
+    
+
+    <!-- Article Number  -->
+    
+        <li>
+            <a href="/archives">
+                文章总数
+                <span class="sidebar-badge">45</span>
+            </a>
+        </li>
+        
+    
+</ul>
+
+
+        <!-- Sidebar Footer -->
+        <!--
+I'm glad you use this theme, the development is no so easy, I hope you can keep the copyright, I will thank you so much.
+If you still want to delete the copyrights, could you still retain the first one? Which namely "Theme Material"
+It will not impact the appearance and can give developers a lot of support :)
+
+很高兴您使用并喜欢该主题，开发不易 十分谢谢与希望您可以保留一下版权声明。
+如果您仍然想删除的话 能否只保留第一项呢？即 "Theme Material"
+它不会影响美观并可以给开发者很大的支持和动力。 :)
+-->
+
+<!-- Sidebar Divider -->
+
+
+<!-- Theme Material -->
+
+
+<!-- Help & Support -->
+<!--
+
+-->
+
+<!-- Feedback -->
+<!--
+
+-->
+
+<!-- About Theme -->
+<!--
+
+-->
+
+    </div>
+
+    <!-- Sidebar Image -->
+    
+
+</aside>
+
+                    
+
+                    
+                        <!-- Footer Top Button -->
+                        <div class="toTop-wrap">
+    <a href="#top" class="toTop">
+        <i class="material-icons footer_top-i">expand_less</i>
+    </a>
+</div>
+
+                    
+
+                    
+ 
+  <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+   <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+ 
+
+
+                    <!--Footer-->
+<footer class="mdl-mini-footer" id="bottom">
+    
+        <!-- Paradox Footer Left Section -->
+        <div class="mdl-mini-footer--left-section sns-list">
+    <!-- Twitter -->
+    
+
+    <!-- Facebook -->
+    
+        <a href="https://www.facebook.com/renburugu" target="_blank">
+            <button class="mdl-mini-footer--social-btn social-btn" style="background-image: url(/img/footer/footer_ico-facebook.svg);">
+                <span class="visuallyhidden">Facebook</span>
+            </button><!--
+     --></a>
+    
+
+    <!-- Google + -->
+    
+
+    <!-- Weibo -->
+    
+
+    <!-- Instagram -->
+    
+
+    <!-- Tumblr -->
+    
+
+    <!-- Github -->
+    
+        <a href="https://github.com/wangyu1997" target="_blank">
+            <button class="mdl-mini-footer--social-btn social-btn" style="background-image: url(/img/footer/footer_ico-github.svg);">
+                <span class="visuallyhidden">Github</span>
+            </button><!--
+     --></a>
+    
+
+    <!-- LinkedIn -->
+    
+
+    <!-- Zhihu -->
+    
+
+    <!-- Bilibili -->
+    
+
+    <!-- Telegram -->
+    
+</div>
+
+
+        <!--Copyright-->
+        <div id="copyright">
+            Copyright&nbsp;©&nbsp;
+            <script type="text/javascript">
+                var fd = new Date();
+                document.write(fd.getFullYear());
+            </script>
+            &nbsp;人不如故
+        </div>
+
+        <!-- Paradox Footer Right Section -->
+
+        <!--
+        I am glad you use this theme, the development is no so easy, I hope you can keep the copyright.
+        It will not impact the appearance and can give developers a lot of support :)
+
+        很高兴您使用该主题，开发不易，希望您可以保留一下版权声明。
+        它不会影响美观并可以给开发者很大的支持。 :)
+        -->
+
+        <div class="mdl-mini-footer--right-section">
+            <div>
+                <div class="footer-develop-div">Follow me on - <a href="https://www.facebook.com/renburugu" target="_blank" class="footer-develop-a">FaceTime</a></div>
+                <div class="footer-develop-div">Fork me on - <a href="https://github.com/wangyu1997" target="_blank" class="footer-develop-a">GitHub</a></div>
+            </div>
+        </div>
+    
+</footer>
+
+
+                    <!-- Import File -->
+
+    <script src="/js/lazyload.min.js"></script>
+    <script src="/js/js.min.js"></script>
+
+
+
+    <script src="/js/nprogress.js"></script>
+
+
+<script type="text/javascript">
+    NProgress.configure({
+        showSpinner: true
+    });
+    NProgress.start();
+    $('#nprogress .bar').css({
+        'background': '#29d'
+    });
+    $('#nprogress .peg').css({
+        'box-shadow': '0 0 10px #29d, 0 0 15px #29d'
+    });
+    $('#nprogress .spinner-icon').css({
+        'border-top-color': '#29d',
+        'border-left-color': '#29d'
+    });
+    setTimeout(function() {
+        NProgress.done();
+        $('.fade').removeClass('out');
+    }, 800);
+</script>
+
+
+
+    
+        <script src="/js/smoothscroll.js"></script>
+    
+
+
+
+
+
+    <!-- Busuanzi -->
+    <script src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+
+
+    <!-- 使用 DISQUS js 代码 -->
+    <script id="dsq-count-scr" src="//https-wangyu1997-github-io.disqus.com/count.js" async></script>
+
+
+
+
+
+<!-- Window Load-->
+<script>
+    $(window).load(function() {
+        // Post_Toc parent position fixed
+        $('.post-toc-wrap').parent('.mdl-menu__container').css('position', 'fixed');
+    });
+</script>
+
+<!-- MathJax Load-->
+
+<script>
+    <!-- Offer LazyLoad -->
+    queue.offer(function(){
+        $('.lazy').lazyload({
+            effect : 'show'
+        });
+    });
+
+    <!-- Start Queue -->
+    $(document).ready(function(){
+        setTimeout(function(){
+            setInterval(function(){
+                queue.execNext();
+            },200);
+        },3000);
+    });
+</script>
+
+                </main>
+            </div>
+        </body>
+    
+</html>
